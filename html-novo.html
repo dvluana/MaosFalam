@@ -404,18 +404,178 @@
         padding: 16px 20px;
       }
       .nav-logo svg { filter: drop-shadow(0 0 10px rgba(201,162,74,0.10)); }
-      .nav-menu {
-        width: 30px; height: 30px;
-        border: 1px solid rgba(201,162,74,0.09);
+      /* ── MENU TRIGGER ── */
+      .menu-trigger {
+        width: 36px; height: 36px;
+        border: 1px solid rgba(201,162,74,0.12);
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(8px);
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
-        gap: 4px; cursor: pointer; transition: border-color 0.3s;
+        gap: 5px; cursor: pointer;
+        border-radius: 0 5px 0 5px;
+        position: relative;
+        transition: border-color 0.3s;
       }
-      .nav-menu:hover { border-color: rgba(201,162,74,0.22); }
-      .nav-menu span { display: block; height: 1px; background: var(--gold-dim); }
-      .nav-menu span:nth-child(1) { width: 14px; }
-      .nav-menu span:nth-child(2) { width: 10px; }
-      .nav-menu span:nth-child(3) { width: 6px; }
+      .menu-trigger::before, .menu-trigger::after {
+        content: ''; position: absolute;
+        width: 7px; height: 7px;
+        border-style: solid; border-color: rgba(201,162,74,0.3);
+        transition: all 0.3s;
+      }
+      .menu-trigger::before { top:-1px; left:-1px; border-width:1px 0 0 1px; }
+      .menu-trigger::after  { bottom:-1px; right:-1px; border-width:0 1px 1px 0; }
+      .menu-trigger:hover { border-color: rgba(201,162,74,0.28); }
+      .burger-line {
+        display: block; height: 1px; background: var(--gold-dim);
+        transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+      }
+      .burger-line:nth-child(1) { width: 16px; }
+      .burger-line:nth-child(2) { width: 11px; }
+      .burger-line:nth-child(3) { width: 6px; }
+      .menu-trigger.open .burger-line:nth-child(1) { width:14px; transform:translateY(6px) rotate(45deg); background:var(--gold); }
+      .menu-trigger.open .burger-line:nth-child(2) { opacity:0; transform:scaleX(0); }
+      .menu-trigger.open .burger-line:nth-child(3) { width:14px; transform:translateY(-6px) rotate(-45deg); background:var(--gold); }
+
+      /* ── MENU OVERLAY ── */
+      .menu-overlay {
+        position: fixed; inset: 0; z-index: 200;
+        pointer-events: none;
+      }
+      .menu-panel {
+        position: absolute; inset: 0;
+        background: #000;
+        transform: translateY(-100%);
+        transition: transform 0.72s cubic-bezier(0.86,0,0.07,1);
+        overflow: hidden;
+      }
+      .menu-panel::after {
+        content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+        opacity: 0.035;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      .menu-overlay.open { pointer-events: all; }
+      .menu-overlay.open .menu-panel { transform: translateY(0); }
+      .menu-glow {
+        position: absolute; width: 340px; height: 340px;
+        left: 50%; top: 50%; transform: translate(-50%,-50%);
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center, rgba(201,162,74,0.055) 0%, rgba(123,107,165,0.04) 40%, transparent 70%);
+        filter: blur(40px); pointer-events: none; z-index: 1;
+        opacity: 0; transition: opacity 0.8s ease 0.4s;
+      }
+      .menu-overlay.open .menu-glow { opacity: 1; }
+      .menu-sweep {
+        position: absolute; top: 50%; left: -10%; right: -10%; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201,162,74,0.18) 20%, rgba(201,162,74,0.35) 50%, rgba(201,162,74,0.18) 80%, transparent);
+        transform: scaleX(0); transform-origin: left center;
+        z-index: 2; pointer-events: none;
+      }
+      .menu-overlay.open .menu-sweep { animation: menuSweep 0.55s cubic-bezier(0.4,0,0.2,1) 0.38s forwards; }
+      @keyframes menuSweep {
+        0%  { transform: scaleX(0); opacity: 1; }
+        70% { transform: scaleX(1); opacity: 1; }
+        100%{ transform: scaleX(1); opacity: 0; }
+      }
+      .menu-inner {
+        position: relative; z-index: 3;
+        height: 100%; display: flex; flex-direction: column;
+        padding: 88px 28px 48px;
+        justify-content: space-between;
+      }
+      .menu-brand {
+        display: flex; align-items: center; gap: 12px;
+        opacity: 0; transform: translateY(10px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      .menu-overlay.open .menu-brand { opacity:1; transform:translateY(0); transition-delay:0.55s; }
+      .menu-brand-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8px; letter-spacing: 5px; text-transform: uppercase;
+        color: var(--gold-dim);
+      }
+      .menu-nav { display: flex; flex-direction: column; gap: 0; margin-top: -16px; }
+      .menu-nav-item {
+        display: block; position: relative;
+        padding: 20px 0;
+        border-bottom: 1px solid rgba(201,162,74,0.05);
+        cursor: pointer; text-decoration: none;
+        overflow: hidden;
+        opacity: 0; transform: translateX(-20px);
+        transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.23,1,0.32,1);
+      }
+      .menu-nav-item:first-child { border-top: 1px solid rgba(201,162,74,0.05); }
+      .menu-overlay.open .menu-nav-item:nth-child(1) { opacity:1; transform:none; transition-delay:0.48s; }
+      .menu-overlay.open .menu-nav-item:nth-child(2) { opacity:1; transform:none; transition-delay:0.56s; }
+      .menu-overlay.open .menu-nav-item:nth-child(3) { opacity:1; transform:none; transition-delay:0.64s; }
+      .menu-overlay.open .menu-nav-item:nth-child(4) { opacity:1; transform:none; transition-delay:0.72s; }
+      .menu-nav-item::before {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(90deg, rgba(201,162,74,0.04) 0%, transparent 60%);
+        transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+      }
+      .menu-nav-item:hover::before { transform: translateX(0); }
+      .menu-nav-item.active::after {
+        content: ''; position: absolute; left:0; top:0; bottom:0; width:2px;
+        background: linear-gradient(180deg, transparent, var(--gold), transparent);
+        box-shadow: 0 0 12px rgba(201,162,74,0.5);
+      }
+      .menu-nav-item .corner-tl, .menu-nav-item .corner-br {
+        position: absolute; width:8px; height:8px;
+        border-style: solid; border-color: rgba(201,162,74,0.35);
+        opacity: 0; transition: opacity 0.3s;
+      }
+      .menu-nav-item .corner-tl { top:8px; left:8px; border-width:1px 0 0 1px; }
+      .menu-nav-item .corner-br { bottom:8px; right:8px; border-width:0 1px 1px 0; }
+      .menu-nav-item.active .corner-tl,
+      .menu-nav-item.active .corner-br { opacity: 1; }
+      .item-inner { display: flex; align-items: baseline; gap: 16px; padding-left: 16px; }
+      .item-num {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8px; letter-spacing: 3px; color: var(--gold-dim);
+        flex-shrink: 0; transition: color 0.3s;
+      }
+      .menu-nav-item.active .item-num,
+      .menu-nav-item:hover .item-num { color: var(--gold); }
+      .item-label {
+        font-family: "Cinzel", serif;
+        font-size: clamp(20px, 6.5vw, 28px);
+        font-weight: 400; letter-spacing: 0.04em;
+        color: var(--bone-dim); transition: color 0.3s, text-shadow 0.3s; line-height: 1;
+      }
+      .menu-nav-item.active .item-label { color: var(--bone); }
+      .menu-nav-item:hover .item-label { color: var(--bone); text-shadow: 0 0 28px rgba(201,162,74,0.18); }
+      .item-sub {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 11px; font-style: italic; font-weight: 300;
+        color: var(--gold-dim); margin-top: 3px; padding-left: 40px;
+        letter-spacing: 0.03em;
+        opacity: 0; max-height: 0; overflow: hidden;
+        transition: opacity 0.3s, max-height 0.3s;
+      }
+      .menu-nav-item.active .item-sub { opacity: 1; max-height: 20px; }
+      .menu-footer {
+        display: flex; flex-direction: column; gap: 14px;
+        opacity: 0; transform: translateY(10px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      .menu-overlay.open .menu-footer { opacity:1; transform:translateY(0); transition-delay:0.82s; }
+      .menu-orn { display: flex; align-items: center; gap: 12px; }
+      .menu-orn::before, .menu-orn::after {
+        content: ''; flex: 1; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201,162,74,0.12), transparent);
+      }
+      .menu-orn-d { width:4px; height:4px; background:var(--gold-dim); transform:rotate(45deg); flex-shrink:0; }
+      .menu-tagline {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px; font-style: italic; font-weight: 300;
+        color: var(--bone-dim); text-align: center; letter-spacing: 0.04em; opacity: 0.7;
+      }
+      .menu-version {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 7px; letter-spacing: 3px; text-transform: uppercase;
+        color: rgba(201,162,74,0.22); text-align: center;
+      }
 
       /* ═══════════════════════════════════
          HERO
@@ -711,9 +871,237 @@
         52%,92% { opacity: 0; }
         100%    { opacity: 0.85; }
       }
+
+      /* ═══════════════════════════════════════════════════════════
+         EFFECT 1 — CINEMATIC GRAIN
+         ═══════════════════════════════════════════════════════════ */
+      #grainCanvas {
+        position: fixed; inset: 0; z-index: 14;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+        opacity: 0.55;
+        width: 100%; height: 100%;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         EFFECT 3 — PRESSÁGIOS EMERGENTES
+         ═══════════════════════════════════════════════════════════ */
+      .pressagio {
+        position: fixed;
+        pointer-events: none;
+        z-index: 40;
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-size: 11px;
+        letter-spacing: 6px;
+        color: rgba(201,162,74,0.45);
+        opacity: 0;
+        transition: none;
+        white-space: nowrap;
+        text-transform: uppercase;
+      }
+      .pressagio.fade-in  { animation: pressagioIn  2s ease forwards; }
+      .pressagio.fade-out { animation: pressagioOut 2s ease forwards; }
+      @keyframes pressagioIn {
+        from { opacity: 0; } to { opacity: 1; }
+      }
+      @keyframes pressagioOut {
+        from { opacity: 1; } to { opacity: 0; }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         EFFECT 5 — CONSTELAÇÕES
+         ═══════════════════════════════════════════════════════════ */
+      #constellationCanvas {
+        position: fixed; inset: 0; z-index: 1;
+        pointer-events: none;
+        width: 100%; height: 100%;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         EFFECT 6 — CURSOR DE CRISTAL
+         ═══════════════════════════════════════════════════════════ */
+      body { cursor: none; }
+      .crystal-cursor {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        border: 1px solid rgba(201,162,74,0.4);
+        background: rgba(201,162,74,0.03);
+        backdrop-filter: blur(2px) brightness(1.15);
+        -webkit-backdrop-filter: blur(2px) brightness(1.15);
+        transform: translate(-50%, -50%);
+        transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
+        filter: url(#crystalDistort);
+        top: -100px; left: -100px;
+      }
+      .crystal-cursor.expanded {
+        width: 44px; height: 44px;
+        border-color: rgba(201,162,74,0.7);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         EFFECT 7 — ÁUDIO AMBIENTE
+         ═══════════════════════════════════════════════════════════ */
+      .audio-toggle {
+        position: fixed;
+        bottom: 24px; right: 20px;
+        z-index: 60;
+        width: 28px; height: 28px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        background: none; border: none; padding: 0;
+      }
+      .audio-toggle.show { opacity: 1; }
+      .audio-toggle svg { transition: filter 0.3s ease; }
+      .audio-toggle.active svg {
+        filter: drop-shadow(0 0 4px rgba(201,162,74,0.6));
+      }
+      .audio-toggle svg path, .audio-toggle svg rect {
+        transition: fill 0.3s ease, stroke 0.3s ease;
+      }
+      .audio-toggle.active svg path,
+      .audio-toggle.active svg rect {
+        stroke: rgba(201,162,74,0.8);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         EFFECT 8 — HORA E FASE LUNAR
+         ═══════════════════════════════════════════════════════════ */
+      .lunar-clock {
+        position: fixed;
+        bottom: 24px; left: 20px;
+        z-index: 60;
+        display: flex; align-items: center; gap: 7px;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+      }
+      .lunar-clock.show { opacity: 1; }
+      .lunar-clock svg { flex-shrink: 0; }
+      .lunar-time {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8px;
+        letter-spacing: 3px;
+        color: rgba(201,162,74,0.45);
+        font-weight: 300;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         MOBILE ADAPTATIONS & PERFORMANCE
+         ═══════════════════════════════════════════════════════════ */
+
+      /* Cursor: desabilita em touch (sem mouse) */
+      @media (hover: none) {
+        body { cursor: auto !important; }
+        .crystal-cursor { display: none !important; }
+      }
+
+      /* Presságios: menores em telas pequenas, evitam hero content */
+      @media (max-width: 480px) {
+        .pressagio {
+          font-size: 9px;
+          letter-spacing: 3px;
+        }
+      }
+
+      /* Fumaça: apenas 2 wisps em mobile (blur é caro na GPU) */
+      @media (max-width: 480px) {
+        .smoke-orb:nth-child(n+3) { display: none; }
+      }
+
+      /* Relógio lunar e áudio: posição mobile */
+      @media (max-width: 480px) {
+        .lunar-clock {
+          bottom: 14px;
+          left: 14px;
+          gap: 5px;
+        }
+        .lunar-time {
+          font-size: 7px;
+          letter-spacing: 2px;
+        }
+        .audio-toggle {
+          bottom: 14px;
+          right: 14px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      /* Subtitle: mínimo legível em mobile */
+      @media (max-width: 480px) {
+        .hero-subtitle {
+          font-size: 10px !important;
+          letter-spacing: 0.02em;
+        }
+        .hero-title {
+          font-size: clamp(17px, 5vw, 22px);
+        }
+      }
+
+      /* ── MENU MOBILE: grid adaptado ── */
+      @media (max-width: 480px) {
+        .menu-inner {
+          padding: 72px 20px 36px;
+        }
+        .menu-nav { margin-top: -8px; }
+        .menu-nav-item { padding: 16px 0; }
+        .item-label {
+          font-size: clamp(22px, 7vw, 28px);
+        }
+        .item-sub { padding-left: 32px; font-size: 10px; }
+        .menu-tagline { font-size: 12px; }
+        .menu-footer { gap: 10px; }
+      }
+
+      /* ── LUNAR CLOCK: centralizado e legível em mobile ── */
+      @media (max-width: 480px) {
+        .lunar-clock {
+          bottom: 12px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0,0,0,0.4);
+          padding: 4px 10px;
+          border: 1px solid rgba(201,162,74,0.08);
+          border-radius: 0 3px 0 3px;
+        }
+        .lunar-time {
+          font-size: 8px;
+          letter-spacing: 2px;
+        }
+        /* audio toggle fica acima do clock no mobile */
+        .audio-toggle {
+          bottom: 12px;
+          right: 14px;
+        }
+      }
     </style>
   </head>
   <body>
+    <!-- SVG filters for crystal cursor distortion -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+      <defs>
+        <filter id="crystalDistort" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" seed="2" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+    </svg>
+
+    <!-- Effect 1: Cinematic grain canvas -->
+    <canvas id="grainCanvas"></canvas>
+
+    <!-- Effect 5: Constellation canvas -->
+    <canvas id="constellationCanvas"></canvas>
+
+    <!-- Effect 6: Crystal cursor -->
+    <div class="crystal-cursor" id="crystalCursor"></div>
+
     <!-- Permanent vignette frame -->
     <div class="scene-vignette" id="sceneVignette"></div>
 
@@ -773,7 +1161,54 @@
             fill="#C9A24A"/>
         </svg>
       </div>
-      <div class="nav-menu"><span></span><span></span><span></span></div>
+      <button class="menu-trigger" id="menuTrigger" aria-label="Abrir menu" aria-expanded="false">
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+      </button>
+      </div>
+    </div>
+
+    <!-- MENU OVERLAY -->
+    <div class="menu-overlay" id="menuOverlay" role="dialog" aria-modal="true">
+      <div class="menu-panel">
+        <div class="menu-glow"></div>
+        <div class="menu-sweep"></div>
+        <div class="menu-inner">
+          <div class="menu-brand">
+            <svg width="24" viewBox="0 0 613 366" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M288.841 46.146C293.104 63.164 294.411 81.573 303.299 97.107C325.889 136.609 370.568 149.719 409.266 166.602C448.926 183.898 485.101 198.622 526.441 211.064C554.06 219.031 584.428 226.543 613 229.958C589.772 232.047 567.585 233.251 545.348 241.341C490.896 261.154 455.302 309.301 405.034 336.378C376.118 352.549 342.428 363.614 309.407 365.631C228.034 370.594 156.821 324.788 100.808 270.409C69.826 240.329 46.14 231.59 3.873 233.998C39.206 222.563 76.544 210.374 110.893 196.244C131.719 187.677 153.615 176.583 174.614 167.361C201.576 155.521 232.546 143.208 255.681 125.206C282.259 104.522 285.384 77.21 288.841 46.146Z" fill="#7a6832" opacity="0.7"/>
+            </svg>
+            <span class="menu-brand-label">MãosFalam</span>
+          </div>
+          <nav class="menu-nav">
+            <a href="#" class="menu-nav-item active" data-sub="Você está aqui">
+              <div class="corner-tl"></div><div class="corner-br"></div>
+              <div class="item-inner"><span class="item-num">01</span><span class="item-label">Início</span></div>
+              <div class="item-sub">Você está aqui</div>
+            </a>
+            <a href="#" class="menu-nav-item" data-sub="Nossa essência">
+              <div class="corner-tl"></div><div class="corner-br"></div>
+              <div class="item-inner"><span class="item-num">02</span><span class="item-label">Manifesto</span></div>
+              <div class="item-sub">Nossa essência</div>
+            </a>
+            <a href="#" class="menu-nav-item" data-sub="Regras do jogo">
+              <div class="corner-tl"></div><div class="corner-br"></div>
+              <div class="item-inner"><span class="item-num">03</span><span class="item-label">Termos de uso</span></div>
+              <div class="item-sub">Regras do jogo</div>
+            </a>
+            <a href="#" class="menu-nav-item" data-sub="Seus dados, protegidos">
+              <div class="corner-tl"></div><div class="corner-br"></div>
+              <div class="item-inner"><span class="item-num">04</span><span class="item-label">Privacidade</span></div>
+              <div class="item-sub">Seus dados, protegidos</div>
+            </a>
+          </nav>
+          <div class="menu-footer">
+            <div class="menu-orn"><div class="menu-orn-d"></div></div>
+            <p class="menu-tagline">Me mostre sua mão e eu te conto quem você é</p>
+            <p class="menu-version">© 2025 · MãosFalam</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -831,6 +1266,21 @@
       </div>
     </div>
 
+    <!-- Effect 7: Audio toggle button -->
+    <button class="audio-toggle" id="audioToggle" aria-label="Áudio ambiente" title="Áudio ambiente">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 5.5h2.5L8 2v12l-3.5-3.5H2a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5Z" stroke="rgba(201,162,74,0.35)" stroke-width="1" fill="none"/>
+        <path d="M10.5 5a3.5 3.5 0 0 1 0 6" stroke="rgba(201,162,74,0.35)" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <path d="M12 3a6 6 0 0 1 0 10" stroke="rgba(201,162,74,0.22)" stroke-width="1" stroke-linecap="round" fill="none"/>
+      </svg>
+    </button>
+
+    <!-- Effect 8: Lunar clock -->
+    <div class="lunar-clock" id="lunarClock">
+      <svg id="lunarIcon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+      <span class="lunar-time" id="lunarTime">00:00</span>
+    </div>
+
     <script>
       /* ══════════════════════════════════════════════════════════
          VELVET CURTAIN — canvas cloth simulation
@@ -842,7 +1292,7 @@
           this.side   = side;
           this.FOLDS  = 9; this.ROWS = 52;
           this.t = 0; this.openP = 0; this.antP = 0;
-          this.opening = false; this.anticipating = false;
+          this.opening = false; this.anticipating = false; this.alive = true;
           this._resize();
           window.addEventListener('resize', () => this._resize());
           requestAnimationFrame(ts => this._loop(ts));
@@ -931,7 +1381,7 @@
           // slower open — majestic sweep
           if (this.opening && this.openP < 1) this.openP = Math.min(1, this.openP + 0.0065);
           this._draw(this.t);
-          requestAnimationFrame(ts => this._loop(ts));
+          if (this.alive) requestAnimationFrame(ts => this._loop(ts));
         }
         open() {
           this.anticipating = true;
@@ -1003,8 +1453,12 @@
       // t=7.2s  curtains fade out
       setTimeout(() => { pre.classList.add('fade'); document.body.classList.add('loaded'); }, 7200);
 
-      // t=8.2s  remove preloader
-      setTimeout(() => pre.style.display = 'none', 8200);
+      // t=8.2s  remove preloader + kill curtain RAF loops
+      setTimeout(() => {
+        pre.style.display = 'none';
+        curtL.alive = false;
+        curtR.alive = false;
+      }, 8500);
 
       // slow video
       document.querySelector('.diorama-img').playbackRate = 0.6;
@@ -1081,6 +1535,564 @@
         }
         setTimeout(()=>{ emit(); setInterval(emit, 700); }, 6800);
       })();
+    </script>
+
+    <script>
+    /* ══════════════════════════════════════════════════════════════
+       EFFECT 1 — CINEMATIC GRAIN (animated ImageData noise)
+       ══════════════════════════════════════════════════════════════ */
+    (function() {
+      const canvas = document.getElementById('grainCanvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, frame = 0;
+
+      function resize() {
+        // Draw at capped resolution (max 400px wide) — CSS scales up.
+        // Avoids 2.7M-pixel fills on Retina/mobile DPR screens.
+        const scale = Math.min(1, 400 / window.innerWidth);
+        W = canvas.width  = Math.ceil(window.innerWidth  * scale);
+        H = canvas.height = Math.ceil(window.innerHeight * scale);
+        canvas.style.width  = window.innerWidth  + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+      }
+
+      function drawGrain() {
+        const imageData = ctx.createImageData(W, H);
+        const data = imageData.data;
+        const len = data.length;
+        for (let i = 0; i < len; i += 4) {
+          const v = (Math.random() * 255) | 0;
+          data[i] = data[i+1] = data[i+2] = v;
+          data[i + 3] = (18 + Math.random() * 4) | 0;
+        }
+        ctx.putImageData(imageData, 0, 0);
+      }
+
+      function loop() {
+        drawGrain();
+        setTimeout(loop, 80); // ~12fps — imperceptível para grain
+      }
+
+      resize();
+      window.addEventListener('resize', resize);
+      loop();
+    })();
+
+    /* ══════════════════════════════════════════════════════════════
+       EFFECT 2 — TILT MAGNÉTICO NO VÍDEO (3D parallax)
+       ══════════════════════════════════════════════════════════════ */
+    (function() {
+      const wrap = document.querySelector('.diorama-wrap');
+      if (!wrap) return;
+
+      let targetX = 0, targetY = 0;
+      let currentX = 0, currentY = 0;
+      const LERP = 0.06;
+      const MAX_X = 6;  // deg rotateX
+      const MAX_Y = 9;  // deg rotateY
+
+      // Set perspective on parent (hero)
+      const hero = document.getElementById('hero');
+      if (hero) hero.style.perspective = '900px';
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      function tick() {
+        currentX = lerp(currentX, targetX, LERP);
+        currentY = lerp(currentY, targetY, LERP);
+        wrap.style.transform = `rotateX(${currentX.toFixed(3)}deg) rotateY(${currentY.toFixed(3)}deg)`;
+        requestAnimationFrame(tick);
+      }
+
+      document.addEventListener('mousemove', function(e) {
+        const cx = window.innerWidth  / 2;
+        const cy = window.innerHeight / 2;
+        // normalize [-1,1]
+        const nx = (e.clientX - cx) / cx;
+        const ny = (e.clientY - cy) / cy;
+        // rotateX: mouse up → tilt top toward viewer (positive)
+        targetX = -ny * MAX_X;
+        targetY =  nx * MAX_Y;
+      });
+
+      // Mobile: deviceorientation
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', function(e) {
+          if (e.beta == null || e.gamma == null) return;
+          const nx = Math.max(-1, Math.min(1, e.gamma / 30));
+          const ny = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+          targetX = -ny * (MAX_X * 0.5);
+          targetY =  nx * (MAX_Y * 0.5);
+        });
+      }
+
+      requestAnimationFrame(tick);
+    })();
+
+    /* ══════════════════════════════════════════════════════════════
+       EFFECT 3 — PRESSÁGIOS EMERGENTES
+       ══════════════════════════════════════════════════════════════ */
+    (function() {
+      const words = ['REVELAÇÃO','SEGREDO','VEM','SABE','VEJO','SEMPRE','NUNCA','AGORA','ESPERA','SINTO'];
+      const MARGIN = 0.15;
+
+      function showPressagio() {
+        const word = words[Math.floor(Math.random() * words.length)];
+        const el = document.createElement('span');
+        el.className = 'pressagio';
+        el.textContent = word;
+
+        const mobile = window.innerWidth < 480;
+        // Em mobile: evita topo (nav), meio (hero content) e rodapé (clock/audio)
+        const topMin  = mobile ? 0.08 : MARGIN;
+        const topMax  = mobile ? 0.35 : 1 - MARGIN * 2; // só aparece na metade superior
+        const leftMax = mobile ? 0.55 : 1 - MARGIN * 2; // evita borda direita em telas estreitas
+        const left = MARGIN + Math.random() * leftMax;
+        const top  = topMin  + Math.random() * (topMax - topMin);
+        el.style.left = (left * 100).toFixed(1) + '%';
+        el.style.top  = (top  * 100).toFixed(1) + '%';
+
+        document.body.appendChild(el);
+
+        // fade in
+        requestAnimationFrame(() => {
+          el.classList.add('fade-in');
+        });
+
+        // fade out after fade-in(2s) + stay(3s) = 5s
+        setTimeout(() => {
+          el.classList.remove('fade-in');
+          el.classList.add('fade-out');
+          setTimeout(() => el.remove(), 2000);
+        }, 5000);
+
+        // schedule next
+        const next = 18000 + Math.random() * 7000;
+        setTimeout(showPressagio, next);
+      }
+
+      // start after 12s
+      setTimeout(showPressagio, 12000);
+    })();
+
+    /* ══════════════════════════════════════════════════════════════
+       EFFECT 4 — TEXTO QUE SE DISSOLVE EM FUMAÇA
+       ══════════════════════════════════════════════════════════════ */
+    (function() {
+      function dissolveAndReform() {
+        const cursor = document.getElementById('typeCursor');
+        if (!cursor || !cursor.classList.contains('done')) {
+          // typewriter not done yet, try again later
+          setTimeout(dissolveAndReform, 5000);
+          return;
+        }
+
+        const titleEl = document.getElementById('heroTitle');
+        const chars = Array.from(titleEl.querySelectorAll('.type-char'));
+        if (chars.length === 0) {
+          setTimeout(dissolveAndReform, 40000);
+          return;
+        }
+
+        // Dissolve: scatter each char with random translate + blur
+        chars.forEach((ch, i) => {
+          setTimeout(() => {
+            const dx = (Math.random() - 0.5) * 30;
+            const dy = (Math.random() - 0.5) * 20;
+            ch.style.transition = 'opacity 0.7s ease, filter 0.7s ease, transform 0.7s ease';
+            ch.style.transform  = `translate(${dx}px, ${dy}px)`;
+            ch.style.opacity    = '0';
+            ch.style.filter     = 'blur(8px)';
+          }, i * 30);
+        });
+
+        // Reconstitute in reverse order after 1.5s
+        const totalDissolve = chars.length * 30 + 700;
+        setTimeout(() => {
+          const reversed = [...chars].reverse();
+          reversed.forEach((ch, i) => {
+            setTimeout(() => {
+              ch.style.transition = 'opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease';
+              ch.style.transform  = '';
+              ch.style.opacity    = '1';
+              ch.style.filter     = 'blur(0)';
+            }, i * 28);
+          });
+        }, totalDissolve + 500);
+
+        // Schedule next dissolve after 40s
+        setTimeout(dissolveAndReform, 40000);
+      }
+
+      // Start after 20s
+      setTimeout(dissolveAndReform, 20000);
+    })();
+
+    /* ══════════════════════════════════════════════════════════════
+       EFFECT 5 — CONSTELAÇÕES NO FUNDO
+       ══════════════════════════════════════════════════════════════ */
+    (function() {
+      const canvas = document.getElementById('constellationCanvas');
+      const ctx = canvas.getContext('2d');
+      let W, H;
+      const isMobile = window.innerWidth < 480;
+      const NUM_STARS = isMobile ? 25 : 55;
+      const LINK_DIST = isMobile ? 80  : 120;
+      let stars = [], constFrame = 0;
+
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        W = canvas.width  = Math.ceil(window.innerWidth  * dpr);
+        H = canvas.height = Math.ceil(window.innerHeight * dpr);
+        canvas.style.width  = window.innerWidth  + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        // rescale star positions if already created
+        if (stars.length) {
+          stars.forEach(s => {
+            s.x = s.rx * W;
+            s.y = s.ry * H;
+          });
+        }
+      }
+
+      function createStars() {
+        stars = [];
+        for (let i = 0; i < NUM_STARS; i++) {
+          const rx = Math.random();
+          const ry = Math.random();
+          stars.push({
+            rx, ry,
+            x: rx * W, y: ry * H,
+            r: 0.5 + Math.random() * 1.3,
+            base_opacity: 0.1 + Math.random() * 0.4,
+            pulse_speed: 0.004 + Math.random() * 0.008,
+            pulse_offset: Math.random() * Math.PI * 2,
+            vx: (Math.random() - 0.5) * 0.12,
+            vy: (Math.random() - 0.5) * 0.12,
+          });
+        }
+      }
+
+      function draw(ts) {
+        constFrame++;
+        if (isMobile && constFrame % 2 !== 0) { requestAnimationFrame(draw); return; }
+        ctx.clearRect(0, 0, W, H);
+        const t = ts * 0.001;
+
+        // update positions
+        stars.forEach(s => {
+          s.x += s.vx;
+          s.y += s.vy;
+          // bounce
+          if (s.x < 0)  { s.x = 0;  s.vx *= -1; }
+          if (s.x > W)  { s.x = W;  s.vx *= -1; }
+          if (s.y < 0)  { s.y = 0;  s.vy *= -1; }
+          if (s.y > H)  { s.y = H;  s.vy *= -1; }
+          // update relative position for resize
+          s.rx = s.x / W;
+          s.ry = s.y / H;
+        });
+
+        // draw connections
+        for (let i = 0; i < stars.length; i++) {
+          for (let j = i + 1; j < stars.length; j++) {
+            const dx = stars[i].x - stars[j].x;
+            const dy = stars[i].y - stars[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < LINK_DIST) {
+              const alpha = (1 - dist / LINK_DIST) * 0.06;
+              ctx.beginPath();
+              ctx.moveTo(stars[i].x, stars[i].y);
+              ctx.lineTo(stars[j].x, stars[j].y);
+              ctx.strokeStyle = `rgba(201,162,74,${alpha.toFixed(3)})`;
+              ctx.lineWidth = 0.4;
+              ctx.stroke();
+            }
+          }
+        }
+
+        // draw stars
+        stars.forEach(s => {
+          const pulse = 0.5 + 0.5 * Math.sin(t * s.pulse_speed * 1000 + s.pulse_offset);
+          const opacity = s.base_opacity * (0.6 + 0.4 * pulse);
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(201,162,74,${opacity.toFixed(3)})`;
+          ctx.fill();
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      createStars();
+      window.addEventListener('resize', () => {
+        resize();
+      });
+      requestAnimationFrame(draw);
+    })();
+
+    /* ══════════════════════════════════════════════════════════════
+       EFFECT 6 — CURSOR DE CRISTAL COM DISTORÇÃO
+       ══════════════════════════════════════════════════════════════ */
+    (function() {
+      const cursor = document.getElementById('crystalCursor');
+      if (!cursor) return;
+
+      let mouseX = -200, mouseY = -200;
+      let curX = -200, curY = -200;
+      const LERP = 0.12;
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      document.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      // expand on clickable elements
+      const clickables = 'button, a, [role="button"], input, select, label';
+      document.addEventListener('mouseover', function(e) {
+        if (e.target.closest(clickables)) {
+          cursor.classList.add('expanded');
+        }
+      });
+      document.addEventListener('mouseout', function(e) {
+        if (e.target.closest(clickables)) {
+          cursor.classList.remove('expanded');
+        }
+      });
+
+      // hide cursor when it leaves the window
+      document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+      document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+
+      function tick() {
+        curX = lerp(curX, mouseX, LERP);
+        curY = lerp(curY, mouseY, LERP);
+        cursor.style.left = curX.toFixed(2) + 'px';
+        cursor.style.top  = curY.toFixed(2) + 'px';
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      // hide cursor on mobile (touch devices)
+      window.addEventListener('touchstart', () => cursor.style.display = 'none', { once: true });
+    })();
+
+    /* ══════════════════════════════════════════════════════════════
+       EFFECT 7 — ÁUDIO AMBIENTE OPT-IN
+       ══════════════════════════════════════════════════════════════ */
+    (function() {
+      const btn = document.getElementById('audioToggle');
+      if (!btn) return;
+
+      let audioCtx = null;
+      let nodes = [];
+      let active = false;
+
+      function createPinkNoise(ctx) {
+        const bufSize = ctx.sampleRate * 2;
+        const buffer = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+        for (let i = 0; i < bufSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          data[i] = (b0+b1+b2+b3+b4+b5+b6 + white * 0.5362) / 7.0;
+          b6 = white * 0.115926;
+        }
+        return buffer;
+      }
+
+      function startAudio() {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // 1) Low drone — 40Hz presence
+        const drone = audioCtx.createOscillator();
+        drone.type = 'sine';
+        drone.frequency.value = 40;
+        const droneGain = audioCtx.createGain();
+        droneGain.gain.value = 0.04;
+        drone.connect(droneGain);
+        droneGain.connect(audioCtx.destination);
+        drone.start();
+
+        // 2) Pink noise filtered ambient
+        const pinkBuf = createPinkNoise(audioCtx);
+        const pinkSrc = audioCtx.createBufferSource();
+        pinkSrc.buffer = pinkBuf;
+        pinkSrc.loop = true;
+        const lpf = audioCtx.createBiquadFilter();
+        lpf.type = 'lowpass';
+        lpf.frequency.value = 800;
+        const pinkGain = audioCtx.createGain();
+        pinkGain.gain.value = 0.018;
+        pinkSrc.connect(lpf);
+        lpf.connect(pinkGain);
+        pinkGain.connect(audioCtx.destination);
+        pinkSrc.start();
+
+        // 3) Crystal tone 432Hz with LFO vibrato
+        const crystal = audioCtx.createOscillator();
+        crystal.type = 'sine';
+        crystal.frequency.value = 432;
+        const lfo = audioCtx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.value = 0.08;
+        const lfoGain = audioCtx.createGain();
+        lfoGain.gain.value = 3; // ±3Hz vibrato
+        lfo.connect(lfoGain);
+        lfoGain.connect(crystal.frequency);
+        const crystalGain = audioCtx.createGain();
+        crystalGain.gain.value = 0.012;
+        crystal.connect(crystalGain);
+        crystalGain.connect(audioCtx.destination);
+        crystal.start();
+        lfo.start();
+
+        nodes = [drone, pinkSrc, crystal, lfo];
+      }
+
+      function stopAudio() {
+        if (!audioCtx) return;
+        nodes.forEach(n => { try { n.stop(); } catch(e) {} });
+        audioCtx.close();
+        audioCtx = null;
+        nodes = [];
+      }
+
+      btn.addEventListener('click', function() {
+        active = !active;
+        if (active) {
+          startAudio();
+          btn.classList.add('active');
+        } else {
+          stopAudio();
+          btn.classList.remove('active');
+        }
+      });
+    })();
+
+    /* ══════════════════════════════════════════════════════════════
+       EFFECT 8 — HORA E FASE LUNAR
+       ══════════════════════════════════════════════════════════════ */
+    (function() {
+      const timeEl = document.getElementById('lunarTime');
+      if (!timeEl) return;
+
+      // Lunar phase calculation
+      // Known new moon: 2000-01-06T18:14:00Z (Julian Date ~2451549.5)
+      function getLunarPhase(date) {
+        const knownNewMoon = new Date('2000-01-06T18:14:00Z');
+        const msPerDay = 86400000;
+        const synodicPeriod = 29.53058867;
+        const daysSince = (date - knownNewMoon) / msPerDay;
+        let phase = ((daysSince % synodicPeriod) + synodicPeriod) % synodicPeriod;
+        // 0 = new moon, ~14.75 = full moon
+        return phase;
+      }
+
+      // Draw moon into the container SVG element
+      function renderMoon(phase) {
+        const container = document.getElementById('lunarIcon');
+        if (!container) return;
+        const p = phase / 29.53058867;
+        const sector = Math.round(p * 8) % 8;
+        const r = 5, cx = 7, cy = 7;
+        const gold = 'rgba(201,162,74,0.5)';
+        const dark = 'rgba(20,12,35,0.95)';
+        const outline = 'rgba(201,162,74,0.3)';
+
+        container.innerHTML = '';
+        container.setAttribute('viewBox', '0 0 14 14');
+        container.setAttribute('width', '14');
+        container.setAttribute('height', '14');
+
+        function addEl(tag, attrs) {
+          const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+          Object.keys(attrs).forEach(k => el.setAttribute(k, attrs[k]));
+          container.appendChild(el);
+        }
+
+        // base circle
+        addEl('circle', { cx, cy, r, fill: sector >= 4 ? gold : dark, stroke: outline, 'stroke-width': '0.5' });
+
+        if (sector === 0 || sector === 4) {
+          // new or full — just the base circle
+        } else if (sector === 2) {
+          // first quarter — right half lit
+          addEl('path', { d: `M${cx},${cy-r} A${r},${r} 0 0,1 ${cx},${cy+r} Z`, fill: gold });
+        } else if (sector === 6) {
+          // last quarter — left half lit
+          addEl('path', { d: `M${cx},${cy-r} A${r},${r} 0 0,0 ${cx},${cy+r} Z`, fill: gold });
+        } else if (sector === 1) {
+          // waxing crescent
+          addEl('circle', { cx, cy, r, fill: dark, stroke: outline, 'stroke-width': '0.5' });
+          addEl('path', { d: `M${cx},${cy-r} A${r*0.3},${r} 0 0,1 ${cx},${cy+r} A${r},${r} 0 0,1 ${cx},${cy-r} Z`, fill: gold });
+        } else if (sector === 3) {
+          // waxing gibbous
+          addEl('path', { d: `M${cx},${cy-r} A${r*0.3},${r} 0 0,0 ${cx},${cy+r} A${r},${r} 0 0,1 ${cx},${cy-r} Z`, fill: dark });
+        } else if (sector === 5) {
+          // waning gibbous
+          addEl('path', { d: `M${cx},${cy-r} A${r*0.3},${r} 0 0,1 ${cx},${cy+r} A${r},${r} 0 0,0 ${cx},${cy-r} Z`, fill: dark });
+        } else if (sector === 7) {
+          // waning crescent
+          addEl('circle', { cx, cy, r, fill: dark, stroke: outline, 'stroke-width': '0.5' });
+          addEl('path', { d: `M${cx},${cy-r} A${r*0.3},${r} 0 0,0 ${cx},${cy+r} A${r},${r} 0 0,0 ${cx},${cy-r} Z`, fill: gold });
+        }
+      }
+
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        timeEl.textContent = h + ':' + m;
+        renderMoon(getLunarPhase(now));
+      }
+
+      updateClock();
+      setInterval(updateClock, 1000);
+    })();
+
+    /* ── MENU MOBILE ── */
+    (function() {
+      const trigger = document.getElementById('menuTrigger');
+      const overlay = document.getElementById('menuOverlay');
+      if (!trigger || !overlay) return;
+      const items = overlay.querySelectorAll('.menu-nav-item');
+
+      function open()  { trigger.classList.add('open'); overlay.classList.add('open'); trigger.setAttribute('aria-expanded','true');  document.body.style.overflow='hidden'; }
+      function close() { trigger.classList.remove('open'); overlay.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
+
+      trigger.addEventListener('click', () => overlay.classList.contains('open') ? close() : open());
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+      items.forEach(item => {
+        item.addEventListener('click', e => {
+          e.preventDefault();
+          items.forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          setTimeout(close, 320);
+        });
+      });
+    })();
+
+    /* ══════════════════════════════════════════════════════════════
+       Show audio + lunar clock with nav (effect 7 & 8 visibility)
+       ══════════════════════════════════════════════════════════════ */
+    setTimeout(function() {
+      const audioToggle = document.getElementById('audioToggle');
+      const lunarClock  = document.getElementById('lunarClock');
+      if (audioToggle) audioToggle.classList.add('show');
+      if (lunarClock)  lunarClock.classList.add('show');
+    }, 6200);
+
     </script>
   </body>
 </html>
