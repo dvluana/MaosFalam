@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manifesto · MãosFalam</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Raleway:wght@200;300;400;500&family=JetBrains+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black:#000000; --deep:#0E0A18; --surface:#161030;
+      --gold:#C9A24A; --gold-light:#D9B86A; --gold-dim:#7A6832;
+      --bone:#E8DFD0; --bone-dim:#9B9284;
+      --violet:#8B7BBF; --violet-dim:#4A3D6E;
+      --rose:#C4647A;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family:'Raleway',sans-serif;
+      background:#000;
+      color:var(--bone);
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::after {
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
+      opacity:.045;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── CONSTELLATION BG ── */
+    #constellationCanvas {
+      position:fixed;inset:0;z-index:0;
+      pointer-events:none;width:100%;height:100%;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position:fixed;top:0;left:0;right:0;z-index:50;
+      background:linear-gradient(180deg,rgba(0,0,0,0.85),transparent);
+      padding:16px 20px;
+      display:flex;justify-content:space-between;align-items:center;
+      max-width:820px;margin:0 auto;
+    }
+    .nav-wrap {
+      position:fixed;top:0;left:0;right:0;z-index:50;
+      background:linear-gradient(180deg,rgba(0,0,0,0.85),transparent);
+    }
+    .nav-inner {
+      max-width:820px;margin:0 auto;
+      display:flex;justify-content:space-between;align-items:center;
+      padding:16px 20px;
+    }
+    .nav-back {
+      font-family:'JetBrains Mono',monospace;
+      font-size:8px;letter-spacing:4px;text-transform:uppercase;
+      color:var(--gold-dim);text-decoration:none;
+      display:flex;align-items:center;gap:10px;
+      transition:color 0.3s;
+    }
+    .nav-back:hover { color:var(--gold); }
+    .nav-back svg { transition:transform 0.3s; }
+    .nav-back:hover svg { transform:translateX(-3px); }
+    .nav-logo svg { filter:drop-shadow(0 0 8px rgba(201,162,74,0.12)); }
+
+    /* ── HERO ── */
+    .manifesto-hero {
+      position:relative;
+      min-height:100vh;
+      display:flex;flex-direction:column;
+      justify-content:flex-end;
+      padding:0 24px 10vh;
+      z-index:1;
+      overflow:hidden;
+    }
+    .manifesto-hero::before {
+      content:'';position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 20%, rgba(201,162,74,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 100% 40% at 50% 100%, rgba(0,0,0,0.9) 0%, transparent 60%);
+    }
+
+    /* Hand visual — atmospheric blur silhouette */
+    .hero-hand {
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      pointer-events:none;z-index:0;
+    }
+    .hero-hand-img {
+      width:min(480px, 88vw);
+      opacity:0.05;
+      filter:blur(2px) sepia(1) saturate(0.3);
+      animation:handBreath 8s ease-in-out infinite;
+    }
+    @keyframes handBreath {
+      0%,100%{opacity:0.045;transform:scale(1) translateY(0);}
+      50%{opacity:0.07;transform:scale(1.018) translateY(-6px);}
+    }
+
+    .hero-inner {
+      position:relative;z-index:2;
+      max-width:640px;
+    }
+    .hero-badge {
+      font-family:'JetBrains Mono',monospace;
+      font-size:8px;letter-spacing:5px;text-transform:uppercase;
+      color:var(--gold-dim);
+      border:1px solid rgba(201,162,74,0.1);
+      padding:7px 18px;display:inline-block;
+      margin-bottom:40px;
+    }
+    .hero-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(38px,8vw,72px);
+      font-weight:300;font-style:italic;
+      color:var(--bone);
+      line-height:1.1;letter-spacing:-0.01em;
+      margin-bottom:28px;
+    }
+    .hero-title em {
+      color:var(--gold);font-style:normal;
+    }
+    .hero-sub {
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(13px,2.2vw,16px);
+      font-weight:300;line-height:1.9;
+      color:var(--bone-dim);
+      max-width:480px;
+    }
+    .hero-orn {
+      display:flex;align-items:center;gap:10px;
+      margin-top:48px;width:80px;
+    }
+    .hero-orn::before,.hero-orn::after {
+      content:'';flex:1;height:1px;
+      background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);
+    }
+    .hero-orn-d {
+      width:5px;height:5px;
+      background:var(--gold);transform:rotate(45deg);flex-shrink:0;
+    }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+      z-index:2;
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+      opacity:0;animation:scrollHintIn 1s ease 1.6s forwards;
+    }
+    @keyframes scrollHintIn { to{opacity:1;} }
+    .scroll-hint-line {
+      width:1px;height:40px;
+      background:linear-gradient(180deg,transparent,var(--gold-dim),transparent);
+      animation:scrollDrop 2s ease-in-out 2s infinite;
+    }
+    @keyframes scrollDrop {
+      0%{transform:scaleY(0);transform-origin:top;}
+      50%{transform:scaleY(1);transform-origin:top;}
+      51%{transform:scaleY(1);transform-origin:bottom;}
+      100%{transform:scaleY(0);transform-origin:bottom;}
+    }
+    .scroll-hint-label {
+      font-family:'JetBrains Mono',monospace;
+      font-size:7px;letter-spacing:4px;text-transform:uppercase;
+      color:rgba(201,162,74,0.4);
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      position:relative;z-index:1;
+      max-width:820px;margin:0 auto;
+      padding:0 24px;
+    }
+
+    /* ── CHAPTER BLOCKS ── */
+    .chapter {
+      padding:100px 0;
+      border-top:1px solid rgba(201,162,74,0.06);
+      position:relative;
+    }
+    .chapter:first-child { border-top:none; }
+
+    .chapter-num {
+      font-family:'JetBrains Mono',monospace;
+      font-size:7px;letter-spacing:5px;text-transform:uppercase;
+      color:var(--gold-dim);margin-bottom:20px;display:block;
+    }
+    .chapter-title {
+      font-family:'Cinzel',serif;
+      font-size:clamp(18px,3.5vw,26px);
+      font-weight:400;letter-spacing:.04em;
+      color:var(--bone);margin-bottom:48px;
+      position:relative;padding-left:20px;
+    }
+    .chapter-title::before {
+      content:'';
+      position:absolute;left:0;top:50%;transform:translateY(-50%);
+      width:2px;height:100%;
+      background:linear-gradient(180deg,transparent,var(--gold),transparent);
+    }
+
+    .body-text {
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(15px,2.4vw,18px);
+      font-weight:300;line-height:2.0;
+      color:var(--bone-dim);
+      max-width:600px;
+    }
+    .body-text + .body-text { margin-top:28px; }
+    .body-text strong {
+      color:var(--bone);font-weight:400;
+    }
+    .body-text em {
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic;color:var(--gold);
+      font-size:1.08em;
+    }
+
+    /* ── PULLQUOTE ── */
+    .pullquote {
+      margin:60px 0;
+      padding:40px 32px;
+      border-left:2px solid rgba(201,162,74,0.25);
+      position:relative;
+      background:linear-gradient(90deg,rgba(201,162,74,0.03) 0%,transparent 100%);
+    }
+    .pullquote::before {
+      content:'"';
+      position:absolute;top:-20px;left:20px;
+      font-family:'Cormorant Garamond',serif;
+      font-size:80px;line-height:1;
+      color:rgba(201,162,74,0.12);
+    }
+    .pullquote-text {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(20px,4vw,30px);
+      font-weight:300;font-style:italic;
+      line-height:1.5;letter-spacing:.01em;
+      color:var(--bone);
+    }
+    .pullquote-attr {
+      margin-top:16px;
+      font-family:'JetBrains Mono',monospace;
+      font-size:8px;letter-spacing:4px;text-transform:uppercase;
+      color:var(--gold-dim);
+    }
+
+    /* ── LINES GRID — the four lines ── */
+    .lines-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:2px;
+      margin:48px 0;
+    }
+    @media(max-width:520px){.lines-grid{grid-template-columns:1fr;}}
+    .line-card {
+      padding:32px 28px;
+      background:rgba(14,10,24,0.7);
+      border:1px solid rgba(201,162,74,0.06);
+      position:relative;overflow:hidden;
+      transition:border-color 0.3s;
+    }
+    .line-card:hover { border-color:rgba(201,162,74,0.15); }
+    .line-card::before {
+      content:'';position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(ellipse 80% 60% at 70% 20%,rgba(139,123,191,0.07) 0%,transparent 70%);
+    }
+    .line-card-num {
+      font-family:'JetBrains Mono',monospace;
+      font-size:7px;letter-spacing:4px;text-transform:uppercase;
+      color:var(--gold-dim);margin-bottom:12px;display:block;
+    }
+    .line-card-name {
+      font-family:'Cinzel',serif;
+      font-size:clamp(14px,2.5vw,17px);
+      font-weight:500;letter-spacing:.05em;
+      color:var(--gold);margin-bottom:14px;
+    }
+    .line-card-desc {
+      font-family:'Raleway',sans-serif;
+      font-size:13px;font-weight:300;
+      line-height:1.8;color:var(--bone-dim);
+    }
+    /* Corner accents */
+    .line-card-corner-tl,.line-card-corner-br {
+      position:absolute;width:10px;height:10px;
+      border-style:solid;border-color:rgba(201,162,74,0.2);
+    }
+    .line-card-corner-tl{top:8px;left:8px;border-width:1px 0 0 1px;}
+    .line-card-corner-br{bottom:8px;right:8px;border-width:0 1px 1px 0;}
+
+    /* ── HAND SPLIT ── */
+    .hands-split {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:32px;
+      margin:48px 0;
+      padding:40px;
+      background:rgba(14,10,24,0.5);
+      border:1px solid rgba(139,123,191,0.08);
+      position:relative;
+    }
+    @media(max-width:520px){.hands-split{grid-template-columns:1fr;gap:24px;padding:24px;}}
+    .hands-split::before {
+      content:'';
+      position:absolute;left:50%;top:40px;bottom:40px;
+      width:1px;
+      background:linear-gradient(180deg,transparent,rgba(201,162,74,0.15),transparent);
+    }
+    @media(max-width:520px){.hands-split::before{display:none;}}
+    .hand-col-label {
+      font-family:'JetBrains Mono',monospace;
+      font-size:8px;letter-spacing:4px;text-transform:uppercase;
+      color:var(--violet);margin-bottom:16px;display:block;
+    }
+    .hand-col-title {
+      font-family:'Cinzel',serif;
+      font-size:clamp(15px,2.5vw,19px);
+      font-weight:400;letter-spacing:.04em;
+      color:var(--bone);margin-bottom:14px;
+    }
+    .hand-col-text {
+      font-family:'Raleway',sans-serif;
+      font-size:14px;font-weight:300;
+      line-height:1.9;color:var(--bone-dim);
+    }
+
+    /* ── WHAT WE DO BLOCK ── */
+    .what-we-do {
+      margin:48px 0;
+      padding:48px 40px;
+      background:linear-gradient(135deg,rgba(201,162,74,0.04) 0%,rgba(139,123,191,0.03) 100%);
+      border:1px solid rgba(201,162,74,0.1);
+      position:relative;
+    }
+    @media(max-width:520px){.what-we-do{padding:32px 24px;}}
+    .what-we-do::after {
+      content:'';position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(ellipse 60% 50% at 85% 20%,rgba(139,123,191,0.1) 0%,transparent 70%);
+    }
+
+    /* ── SOCIAL PROOF TRIO ── */
+    .proof-trio {
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:2px;
+      margin:48px 0;
+    }
+    @media(max-width:520px){.proof-trio{grid-template-columns:1fr;}}
+    .proof-card {
+      padding:32px 24px;
+      background:rgba(8,5,14,0.8);
+      border:1px solid rgba(201,162,74,0.05);
+      position:relative;
+    }
+    .proof-card-quote {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(14px,2.2vw,16px);
+      font-style:italic;font-weight:300;
+      line-height:1.75;color:var(--bone);
+      margin-bottom:16px;
+    }
+    .proof-card-sub {
+      font-family:'JetBrains Mono',monospace;
+      font-size:7px;letter-spacing:3px;text-transform:uppercase;
+      color:var(--gold-dim);
+    }
+
+    /* ── FREE LINE HIGHLIGHT ── */
+    .free-highlight {
+      margin:48px 0;
+      display:grid;
+      grid-template-columns:1fr 2fr;
+      gap:0;
+      border:1px solid rgba(201,162,74,0.12);
+    }
+    @media(max-width:520px){.free-highlight{grid-template-columns:1fr;}}
+    .free-label-col {
+      background:rgba(201,162,74,0.06);
+      display:flex;flex-direction:column;
+      justify-content:center;align-items:center;
+      padding:40px 24px;
+      border-right:1px solid rgba(201,162,74,0.1);
+      text-align:center;gap:12px;
+    }
+    @media(max-width:520px){.free-label-col{border-right:none;border-bottom:1px solid rgba(201,162,74,0.1);padding:28px;}}
+    .free-label {
+      font-family:'Cinzel',serif;
+      font-size:11px;letter-spacing:.06em;
+      color:var(--gold);
+    }
+    .free-tag {
+      font-family:'JetBrains Mono',monospace;
+      font-size:7px;letter-spacing:3px;text-transform:uppercase;
+      color:var(--gold-dim);
+    }
+    .free-content-col { padding:40px 36px; }
+    @media(max-width:520px){.free-content-col{padding:28px 24px;}}
+    .free-title {
+      font-family:'Cinzel',serif;
+      font-size:clamp(15px,2.8vw,20px);
+      font-weight:400;color:var(--bone);
+      margin-bottom:16px;
+    }
+    .free-list {
+      list-style:none;display:flex;flex-direction:column;gap:10px;
+    }
+    .free-list li {
+      font-family:'Raleway',sans-serif;
+      font-size:13px;font-weight:300;
+      line-height:1.7;color:var(--bone-dim);
+      padding-left:18px;position:relative;
+    }
+    .free-list li::before {
+      content:'';position:absolute;left:0;top:8px;
+      width:5px;height:5px;
+      background:var(--gold-dim);transform:rotate(45deg);
+    }
+
+    /* ── FULL READING LIST ── */
+    .full-list {
+      list-style:none;display:flex;flex-direction:column;gap:0;
+      margin:32px 0;
+      border:1px solid rgba(201,162,74,0.07);
+    }
+    .full-list li {
+      padding:18px 24px;
+      border-bottom:1px solid rgba(201,162,74,0.05);
+      font-family:'Raleway',sans-serif;
+      font-size:14px;font-weight:300;
+      line-height:1.7;color:var(--bone-dim);
+      display:flex;gap:16px;align-items:baseline;
+    }
+    .full-list li:last-child{border-bottom:none;}
+    .full-list-num {
+      font-family:'JetBrains Mono',monospace;
+      font-size:8px;letter-spacing:2px;
+      color:var(--gold-dim);flex-shrink:0;
+    }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      padding:120px 24px 100px;
+      position:relative;z-index:1;
+      text-align:center;
+      max-width:620px;margin:0 auto;
+    }
+    .cta-section::before {
+      content:'';
+      position:absolute;top:0;left:50%;transform:translateX(-50%);
+      width:1px;height:80px;
+      background:linear-gradient(180deg,transparent,rgba(201,162,74,0.2),transparent);
+    }
+    .cta-tagline {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(26px,5.5vw,46px);
+      font-weight:300;font-style:italic;
+      line-height:1.25;letter-spacing:.01em;
+      color:var(--bone);margin-bottom:24px;
+    }
+    .cta-sub {
+      font-family:'Raleway',sans-serif;
+      font-size:13px;font-weight:300;
+      color:var(--bone-dim);letter-spacing:.02em;
+      margin-bottom:48px;line-height:1.9;
+    }
+    .cta-btn {
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:18px 52px;
+      background:linear-gradient(160deg,#1e1838,#2a2150,#1e1838);
+      color:var(--bone);
+      font-family:'Raleway',sans-serif;
+      font-size:10px;font-weight:400;
+      letter-spacing:.08em;text-transform:uppercase;
+      border:none;border-radius:0 6px 0 6px;
+      cursor:pointer;position:relative;overflow:visible;
+      text-decoration:none;
+      box-shadow:0 0 0 1px rgba(201,162,74,0.12),0 0 28px rgba(123,107,165,0.14);
+      animation:btnCrystal 7s ease-in-out infinite;
+      transition:transform 0.4s cubic-bezier(0.23,1,0.32,1);
+    }
+    .cta-btn::before,.cta-btn::after {
+      content:'';position:absolute;
+      width:9px;height:9px;
+      border-color:rgba(201,162,74,0.28);border-style:solid;
+      transition:all 0.4s;
+    }
+    .cta-btn::before{top:-1px;left:-1px;border-width:1px 0 0 1px;}
+    .cta-btn::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0;}
+    .cta-btn:hover{transform:translateY(-2px);}
+    .cta-btn:hover::before,.cta-btn:hover::after{width:14px;height:14px;border-color:rgba(201,162,74,0.45);}
+    @keyframes btnCrystal {
+      0%,100%{box-shadow:0 0 0 1px rgba(201,162,74,0.18),0 0 10px rgba(201,162,74,0.10),0 0 28px rgba(139,123,191,0.14);}
+      40%{box-shadow:0 0 0 1px rgba(218,185,80,0.38),0 0 18px rgba(218,185,80,0.22),0 0 48px rgba(175,155,235,0.30);}
+    }
+
+    /* ── VIGNETTE ── */
+    .vignette {
+      position:fixed;inset:0;z-index:2;pointer-events:none;
+      background:radial-gradient(ellipse 72% 65% at 50% 38%,transparent 18%,rgba(0,0,0,0.28) 48%,rgba(0,0,0,0.72) 74%,rgba(0,0,0,0.96) 90%);
+    }
+
+    /* ── ENTRY ANIMATIONS ── */
+    .fade-up {
+      opacity:0;transform:translateY(20px);
+      transition:opacity 0.9s ease, transform 0.9s cubic-bezier(0.23,1,0.32,1);
+    }
+    .fade-up.visible { opacity:1;transform:translateY(0); }
+
+    /* ── READING PROGRESS ── */
+    .progress-bar {
+      position:fixed;top:0;left:0;z-index:100;
+      height:1px;width:0%;
+      background:linear-gradient(90deg,rgba(201,162,74,0.4),rgba(201,162,74,0.9),rgba(201,162,74,0.4));
+      transition:width 0.1s linear;
+    }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      text-align:center;padding:48px 24px 60px;
+      border-top:1px solid rgba(201,162,74,0.05);
+      position:relative;z-index:1;
+    }
+    .footer-orn { display:flex;align-items:center;gap:10px;width:60px;margin:0 auto 20px; }
+    .footer-orn::before,.footer-orn::after { content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent); }
+    .footer-orn-d { width:4px;height:4px;background:var(--gold);transform:rotate(45deg);flex-shrink:0; }
+    .footer-text {
+      font-family:'JetBrains Mono',monospace;
+      font-size:7px;letter-spacing:3px;text-transform:uppercase;
+      color:rgba(201,162,74,0.25);
+    }
+
+    @media(max-width:480px){
+      .chapter{padding:72px 0;}
+      .cta-section{padding:80px 0 72px;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Constellation background -->
+  <canvas id="constellationCanvas"></canvas>
+
+  <!-- Permanent vignette -->
+  <div class="vignette"></div>
+
+  <!-- NAV -->
+  <div class="nav-wrap">
+    <div class="nav-inner">
+      <a href="html-novo.html" class="nav-back">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M8 2L4 6L8 10" stroke="#7A6832" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Início
+      </a>
+      <div class="nav-logo">
+        <svg width="36" viewBox="0 0 613 366" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M288.841 46.146C293.104 63.164 294.411 81.573 303.299 97.107C325.889 136.609 370.568 149.719 409.266 166.602C448.926 183.898 485.101 198.622 526.441 211.064C554.06 219.031 584.428 226.543 613 229.958C589.772 232.047 567.585 233.251 545.348 241.341C490.896 261.154 455.302 309.301 405.034 336.378C376.118 352.549 342.428 363.614 309.407 365.631C228.034 370.594 156.821 324.788 100.808 270.409C69.826 240.329 46.14 231.59 3.873 233.998C39.206 222.563 76.544 210.374 110.893 196.244C131.719 187.677 153.615 176.583 174.614 167.361C201.576 155.521 232.546 143.208 255.681 125.206C282.259 104.522 285.384 77.21 288.841 46.146ZM186.868 189.901C162.296 196.041 135.412 203.801 112.617 215.05C140.258 268.656 185.396 302.01 242.39 320.92C289.186 336.445 335.486 330.379 379.135 307.728C408.246 292.444 433.675 271.037 453.652 244.989C462.06 233.667 468.287 224.416 475.31 211.92C446.699 201.199 427.791 195.122 397.098 190.419C385.734 217.643 373.703 233.21 347.931 248.771C328.926 260.244 307.287 266.407 298.388 288.461C292.152 302.791 292.83 314.962 290.316 329.469C283.284 284.931 282.968 270.655 241.441 252.165C219 242.174 195.323 215.339 188.641 192.39C188.055 190.675 188.244 191.161 186.868 189.901ZM291.189 119.862C285.757 140.802 285.287 167.666 264.068 179.993C250.004 188.164 231.156 191.659 215.317 194.703C237.911 198.153 260.984 201.515 276.27 220.408C286.936 233.594 287.25 259.37 292.278 265.801C295.962 244.728 297.927 223.026 317.462 210.068C331.665 200.65 351.476 197.325 368.006 194.537C345.642 190.728 320.292 187.484 306.06 167.68C295.167 152.512 296.944 134.946 291.189 119.862Z" fill="#C9A24A"/>
+          <path d="M174.092 27.061C216.082 5.198 264.16-3.393 311.107 1.2C385.635 7.242 445.195 45.298 492.124 101.452C517.484 131.787 543.237 164.456 573.822 189.931C585.854 199.957 597.257 203.796 612.029 208.232C589.528 208.793 569.548 204.094 548.51 196.162C525.939 187.769 504.902 175.732 486.241 160.537C441.876 124.183 412.773 75.612 354.471 53.625C284.215 27.133 207.402 44.015 154.972 97.537C131.109 121.896 112.03 148.118 86.776 170.051C60.877 192.542 30.905 204.67 0 218.127C13.719 208.345 26.438 181.177 37.791 169.08C82.573 121.359 113.787 58.461 174.092 27.061Z" fill="#C9A24A"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══════════════════════════════════════════ -->
+  <section class="manifesto-hero">
+    <div class="hero-hand" aria-hidden="true">
+      <!-- Abstract hand SVG — atmospheric outline -->
+      <svg class="hero-hand-img" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M200 480 C120 460 60 380 50 300 C40 220 80 160 100 140 C110 130 110 100 120 80 C130 60 150 55 160 70 C165 78 165 100 165 120 C165 90 168 60 180 48 C192 36 210 38 215 55 C220 68 218 100 218 120 C218 95 222 65 235 55 C248 45 262 52 264 70 C266 85 262 110 262 130 C263 108 268 85 280 78 C292 71 305 80 305 100 C305 118 300 145 298 165 C310 148 325 138 338 145 C352 153 355 172 348 195 C335 240 310 285 300 320 C285 370 260 440 200 480Z" stroke="rgba(201,162,74,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Palm lines -->
+        <path d="M90 270 C130 260 180 255 230 258 C270 261 300 268 320 275" stroke="rgba(201,162,74,0.25)" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <path d="M75 320 C110 308 160 302 210 305 C250 308 285 316 310 325" stroke="rgba(201,162,74,0.2)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+        <path d="M120 370 C145 362 175 358 205 360 C230 362 252 368 270 376" stroke="rgba(201,162,74,0.15)" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+        <path d="M175 200 C185 250 188 310 185 380" stroke="rgba(201,162,74,0.2)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <span class="hero-badge">Manifesto · MãosFalam</span>
+      <h1 class="hero-title">
+        Cinco mil anos<br>de <em>silêncio</em><br>acabaram.
+      </h1>
+      <p class="hero-sub">
+        Sua mão tem um mapa. Esse mapa tá falando desde o dia que você nasceu.<br>
+        Você só nunca parou pra ouvir.
+      </p>
+      <div class="hero-orn"><div class="hero-orn-d"></div></div>
+    </div>
+
+    <div class="scroll-hint">
+      <div class="scroll-hint-line"></div>
+      <span class="scroll-hint-label">Rolar</span>
+    </div>
+  </section>
+
+  <!-- ═══ CONTENT ═══════════════════════════════════════ -->
+  <div class="section">
+
+    <!-- Intro sensorial -->
+    <div class="chapter fade-up">
+      <span class="chapter-num">Antes de qualquer coisa</span>
+      <h2 class="chapter-title">Fecha os olhos. Abre a mão.</h2>
+      <p class="body-text">
+        Passa o dedo pela palma. Devagar. Sente as linhas? Umas são fundas. Outras são finas, quase invisíveis. Tem umas que se cruzam. Tem umas que param no meio.
+      </p>
+      <p class="body-text" style="margin-top:28px">
+        Agora abre os olhos e olha.
+      </p>
+      <div class="pullquote fade-up">
+        <p class="pullquote-text">Essa mão que você usa pra destrancar o celular, pra segurar o café, pra tocar quem você ama — essa mão tem um mapa.</p>
+        <span class="pullquote-attr">E esse mapa tá falando desde o dia que você nasceu</span>
+      </div>
+      <p class="body-text">
+        Você só nunca parou pra ouvir.
+      </p>
+    </div>
+
+    <!-- História -->
+    <div class="chapter fade-up">
+      <span class="chapter-num">01 · A história que ninguém te contou</span>
+      <h2 class="chapter-title">Cinco mil anos atrás</h2>
+      <p class="body-text">
+        Antes de existir escrita, antes de existir religião organizada, antes de alguém pensar em inventar horóscopo — uma mulher olhou pra palma da mão de outra mulher e disse: <em>eu sei o que vai acontecer com você.</em>
+      </p>
+      <p class="body-text">
+        Não tinha bola de cristal. Não tinha carta. Não tinha app. Tinha a mão aberta e alguém que sabia ler.
+      </p>
+      <p class="body-text">
+        Na Índia, chamavam de <strong>Jyotish Shastra</strong>. Na China, era parte da medicina. Os gregos deram o nome que ficou: <em>quiromancia</em>. Quiro, mão. Mancia, adivinhação. Hipócrates usava pra diagnosticar. Júlio César lia as mãos dos soldados antes de mandar pra guerra.
+      </p>
+      <p class="body-text">
+        Não era misticismo. Era a forma mais antiga de olhar pra uma pessoa e dizer: <em>eu vejo você.</em>
+      </p>
+      <p class="body-text">
+        E aí vieram os séculos. A igreja baniu. A ciência riu. A quiromancia foi empurrada pras tendas de feira, pros becos, pros acampamentos. Virou "coisa de cigana".
+      </p>
+      <div class="pullquote fade-up">
+        <p class="pullquote-text">Mas a cigana nunca parou de ler.</p>
+      </div>
+      <p class="body-text">
+        Ela sabia que as linhas mudam. Que a mão que você tem aos 15 não é a mesma aos 30. Que a linha do coração fica mais funda quando você ama de verdade e mais fina quando você se protege demais.
+      </p>
+      <p class="body-text">
+        A cigana sabia que a mão não prevê o futuro. <strong>A mão conta quem você é. E quem você é determina pra onde você vai.</strong>
+      </p>
+    </div>
+
+    <!-- As quatro linhas -->
+    <div class="chapter fade-up">
+      <span class="chapter-num">02 · O que a sua mão diz</span>
+      <h2 class="chapter-title">As quatro linhas. Quatro capítulos.</h2>
+      <p class="body-text" style="margin-bottom:40px">
+        Sua mão tem quatro linhas principais. Cada uma é um capítulo da pessoa que você é — não da pessoa que você finge ser.
+      </p>
+
+      <div class="lines-grid">
+        <div class="line-card fade-up">
+          <div class="line-card-corner-tl"></div>
+          <div class="line-card-corner-br"></div>
+          <span class="line-card-num">Linha 01</span>
+          <div class="line-card-name">Do Coração</div>
+          <p class="line-card-desc">Como você ama. Não como você <em>acha</em> que ama. O que você esconde. O que você entrega rápido demais. O que você segura até não aguentar mais.</p>
+        </div>
+        <div class="line-card fade-up">
+          <div class="line-card-corner-tl"></div>
+          <div class="line-card-corner-br"></div>
+          <span class="line-card-num">Linha 02</span>
+          <div class="line-card-name">Da Cabeça</div>
+          <p class="line-card-desc">Como sua mente funciona. Se você pensa reto ou torto. Se você decide rápido ou fica girando no mesmo pensamento às 3 da manhã.</p>
+        </div>
+        <div class="line-card fade-up">
+          <div class="line-card-corner-tl"></div>
+          <div class="line-card-corner-br"></div>
+          <span class="line-card-num">Linha 03</span>
+          <div class="line-card-name">Da Vida</div>
+          <p class="line-card-desc">Ela não diz quando você vai morrer. Ela diz como você vive. Com que energia. Com que intensidade. Onde você quebrou e como levantou.</p>
+        </div>
+        <div class="line-card fade-up">
+          <div class="line-card-corner-tl"></div>
+          <div class="line-card-corner-br"></div>
+          <span class="line-card-num">Linha 04</span>
+          <div class="line-card-name">Do Destino</div>
+          <p class="line-card-desc">Nem todo mundo tem. Se você tem, ela mostra o caminho que você tá trilhando. Se ela só aparece na mão direita, você inventou esse caminho sozinha.</p>
+        </div>
+      </div>
+
+      <p class="body-text" style="margin-top:16px">
+        Além das linhas, tem os montes — sete elevações na palma, cada uma ligada a um planeta. Júpiter é ambição. Saturno é destino. Sol é sucesso. Mercúrio é comunicação. Vênus é amor. Marte é coragem. <strong>Ninguém tem a mesma mão.</strong>
+      </p>
+    </div>
+
+    <!-- Mão esquerda vs direita -->
+    <div class="chapter fade-up">
+      <span class="chapter-num">03 · Duas mãos. Duas histórias.</span>
+      <h2 class="chapter-title">A esquerda e a direita</h2>
+      <p class="body-text" style="margin-bottom:36px">
+        Coloca as duas lado a lado. Olha. Elas não são iguais.
+      </p>
+
+      <div class="hands-split fade-up">
+        <div class="hand-col">
+          <span class="hand-col-label">Mão Esquerda</span>
+          <div class="hand-col-title">Quem você nasceu</div>
+          <p class="hand-col-text">A programação original. O que veio com você. A promessa que foi feita antes de você escolher qualquer coisa.</p>
+        </div>
+        <div class="hand-col">
+          <span class="hand-col-label">Mão Direita</span>
+          <div class="hand-col-title">Quem você virou</div>
+          <p class="hand-col-text">O que a vida fez. As decisões, os traumas, os amores, as fugas. As diferenças entre uma e outra contam tudo o que aconteceu no meio.</p>
+        </div>
+      </div>
+
+      <p class="body-text">
+        Se a linha do coração da esquerda é mais profunda que a da direita, você nasceu com uma intensidade que a vida te ensinou a esconder. Se a da direita é mais profunda, você aprendeu a amar com mais força do que veio programada pra sentir.
+      </p>
+      <div class="pullquote fade-up">
+        <p class="pullquote-text">Uma é promessa. A outra é escolha.</p>
+      </div>
+    </div>
+
+    <!-- O que o MãosFalam faz -->
+    <div class="chapter fade-up">
+      <span class="chapter-num">04 · O que MãosFalam faz</span>
+      <h2 class="chapter-title">Não é genérico. Nunca é genérico.</h2>
+
+      <div class="what-we-do fade-up">
+        <p class="body-text">
+          Pega tudo isso. Os cinco mil anos. As quatro linhas. Os sete montes. A mão esquerda e a direita. Cada cruzamento, cada bifurcação, cada marca que apareceu nos últimos anos.
+        </p>
+        <p class="body-text" style="margin-top:24px">
+          E <em>lê</em>.
+        </p>
+        <p class="body-text" style="margin-top:24px">
+          Não é "você é uma pessoa sensível que às vezes se fecha". Isso qualquer um fala. MãosFalam te conta como você ama, por que se protege, o que te derrubou e como você levantou. <strong>Com nome. Com detalhe. Com a precisão de quem tá olhando pra sua palma e vendo o que você não vê.</strong>
+        </p>
+      </div>
+
+      <p class="body-text" style="margin-top:40px">
+        A leitura é construída cruzando mais de dez mil referências de quiromancia profissional. Cada linha da sua mão é comparada, medida, interpretada. Não por achismo. Por um sistema que estudou o que as melhores leitoras de mão do mundo levam décadas pra aprender.
+      </p>
+      <p class="body-text">
+        A diferença é que agora isso cabe na tela do seu celular. E demora 30 segundos.
+      </p>
+    </div>
+
+    <!-- O que as pessoas sentem -->
+    <div class="chapter fade-up">
+      <span class="chapter-num">05 · O que as pessoas sentem</span>
+      <h2 class="chapter-title">Depois de ler, você não olha do mesmo jeito.</h2>
+
+      <div class="proof-trio">
+        <div class="proof-card fade-up">
+          <p class="proof-card-quote">"Tem gente que lê e chora."</p>
+          <span class="proof-card-sub">Reconhecimento</span>
+        </div>
+        <div class="proof-card fade-up">
+          <p class="proof-card-quote">"Tem gente que lê e manda pro ex."</p>
+          <span class="proof-card-sub">Revelação</span>
+        </div>
+        <div class="proof-card fade-up">
+          <p class="proof-card-quote">"Tem gente que lê e fica quieta por horas."</p>
+          <span class="proof-card-sub">Silêncio necessário</span>
+        </div>
+      </div>
+
+      <p class="body-text">
+        Eu não sei o que você vai fazer. Mas eu sei que depois de ler, você não vai olhar pra sua mão do mesmo jeito.
+      </p>
+    </div>
+
+    <!-- Leitura grátis -->
+    <div class="chapter fade-up">
+      <span class="chapter-num">06 · Por onde começar</span>
+      <h2 class="chapter-title">A Linha do Coração é grátis. Sempre.</h2>
+      <p class="body-text" style="margin-bottom:36px">
+        Porque eu quero que você sinta o que é ser lida de verdade antes de decidir qualquer coisa.
+      </p>
+
+      <div class="free-highlight fade-up">
+        <div class="free-label-col">
+          <span class="free-tag">Gratuito</span>
+          <span class="free-label">Linha do Coração</span>
+        </div>
+        <div class="free-content-col">
+          <div class="free-title">O que você descobre de graça</div>
+          <ul class="free-list">
+            <li>Como você ama de verdade</li>
+            <li>O que você esconde de quem te ama</li>
+            <li>Seu padrão quando confia em alguém</li>
+            <li>Por que você se protege tanto</li>
+            <li>Uma frase sobre você que vai doer um pouco</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="body-text">
+        Só a Linha do Coração. Mas já é o suficiente pra você ficar em silêncio.
+      </p>
+    </div>
+
+    <!-- Leitura completa -->
+    <div class="chapter fade-up">
+      <span class="chapter-num">07 · A leitura completa</span>
+      <h2 class="chapter-title">Sua mão não tem só uma linha.</h2>
+      <p class="body-text" style="margin-bottom:32px">
+        A Linha do Coração é só a porta. O que tá lá dentro é outra coisa.
+      </p>
+
+      <ul class="full-list fade-up">
+        <li><span class="full-list-num">01</span>Linha do Coração — como você ama, o que esconde quando ama</li>
+        <li><span class="full-list-num">02</span>Linha da Cabeça — como sua mente funciona, por que não para</li>
+        <li><span class="full-list-num">03</span>Linha da Vida — o que te derrubou, como você levantou</li>
+        <li><span class="full-list-num">04</span>Linha do Destino — pra onde você tá indo, mesmo sem saber</li>
+        <li><span class="full-list-num">05</span>Seis montes mapeados · tipo de mão · elemento</li>
+        <li><span class="full-list-num">06</span>Compatibilidade · amor, sexo e intimidade</li>
+        <li><span class="full-list-num">07</span>Sinais raros e marcas de proteção</li>
+        <li><span class="full-list-num">08</span>Mão esquerda versus mão direita — promessa e escolha</li>
+      </ul>
+
+      <p class="body-text" style="margin-top:32px">
+        Resultado com seu nome. Só seu. Só pra você. Nenhuma leitura é genérica. A sua é só sua.
+      </p>
+      <p class="body-text">
+        O sistema não chuta. Ele <em>lê</em>. Mede a profundidade de cada linha. Identifica bifurcações. Mapeia os sete montes. Compara a esquerda com a direita. Encontra padrões que a olho nu passam despercebidos.
+      </p>
+    </div>
+
+  </div><!-- /section -->
+
+  <!-- ═══ CTA FINAL ════════════════════════════════════ -->
+  <div class="cta-section fade-up">
+    <div class="footer-orn"><div class="footer-orn-d"></div></div>
+    <p class="cta-tagline">
+      Tá tudo aí.<br>Sempre esteve.
+    </p>
+    <p class="cta-sub">
+      Você só nunca parou pra ver.<br>
+      Me mostre sua mão e eu te conto quem você é.
+    </p>
+    <a href="html-novo.html" class="cta-btn">Em Breve</a>
+  </div>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════ -->
+  <div class="page-footer">
+    <div class="footer-orn"><div class="footer-orn-d"></div></div>
+    <p class="footer-text">© 2025 · MãosFalam · Todos os direitos reservados</p>
+  </div>
+
+  <script>
+  /* ── CONSTELLATION ── */
+  (function(){
+    const canvas=document.getElementById('constellationCanvas');
+    const ctx=canvas.getContext('2d');
+    let W,H,stars=[],f=0;
+    const N=40,L=110;
+    function resize(){
+      const d=window.devicePixelRatio||1;
+      W=canvas.width=Math.ceil(window.innerWidth*d);
+      H=canvas.height=Math.ceil(window.innerHeight*d);
+      canvas.style.width=window.innerWidth+'px';
+      canvas.style.height=window.innerHeight+'px';
+      stars.forEach(s=>{s.x=s.rx*W;s.y=s.ry*H;});
+    }
+    function init(){
+      stars=[];
+      for(let i=0;i<N;i++){
+        const rx=Math.random(),ry=Math.random();
+        stars.push({rx,ry,x:rx*W,y:ry*H,r:0.4+Math.random()*1.2,
+          op:0.08+Math.random()*0.32,ps:0.004+Math.random()*0.007,
+          po:Math.random()*Math.PI*2,vx:(Math.random()-.5)*.1,vy:(Math.random()-.5)*.1});
+      }
+    }
+    function draw(ts){
+      f++;if(f%2!==0){requestAnimationFrame(draw);return;}
+      ctx.clearRect(0,0,W,H);
+      const t=ts*.001;
+      stars.forEach(s=>{
+        s.x+=s.vx;s.y+=s.vy;
+        if(s.x<0){s.x=0;s.vx*=-1;}if(s.x>W){s.x=W;s.vx*=-1;}
+        if(s.y<0){s.y=0;s.vy*=-1;}if(s.y>H){s.y=H;s.vy*=-1;}
+        s.rx=s.x/W;s.ry=s.y/H;
+      });
+      for(let i=0;i<stars.length;i++){
+        for(let j=i+1;j<stars.length;j++){
+          const dx=stars[i].x-stars[j].x,dy=stars[i].y-stars[j].y;
+          const d=Math.sqrt(dx*dx+dy*dy);
+          if(d<L){
+            ctx.beginPath();ctx.moveTo(stars[i].x,stars[i].y);ctx.lineTo(stars[j].x,stars[j].y);
+            ctx.strokeStyle=`rgba(201,162,74,${((1-d/L)*.05).toFixed(3)})`;
+            ctx.lineWidth=.35;ctx.stroke();
+          }
+        }
+      }
+      stars.forEach(s=>{
+        const p=.5+.5*Math.sin(t*s.ps*1000+s.po);
+        ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(201,162,74,${(s.op*(.6+.4*p)).toFixed(3)})`;ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    resize();init();window.addEventListener('resize',()=>{resize();});
+    requestAnimationFrame(draw);
+  })();
+
+  /* ── SCROLL PROGRESS ── */
+  (function(){
+    const bar=document.getElementById('progressBar');
+    if(!bar)return;
+    window.addEventListener('scroll',()=>{
+      const h=document.body.scrollHeight-window.innerHeight;
+      bar.style.width=(h>0?(window.scrollY/h*100).toFixed(1):0)+'%';
+    },{passive:true});
+  })();
+
+  /* ── INTERSECTION OBSERVER — fade-up ── */
+  (function(){
+    const els=document.querySelectorAll('.fade-up');
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(el=>obs.observe(el));
+  })();
+  </script>
+</body>
+</html>
