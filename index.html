@@ -1014,6 +1014,13 @@
         .smoke-orb:nth-child(n+3) { display: none; }
       }
 
+      /* Cortinas: mais largas no mobile pra cada dobra ter mais presença */
+      @media (max-width: 480px) {
+        .curtain-left, .curtain-right {
+          width: 58%;
+        }
+      }
+
       /* Relógio lunar e áudio: posição mobile */
       @media (max-width: 480px) {
         .lunar-clock {
@@ -1080,6 +1087,179 @@
           right: 14px;
         }
       }
+
+      /* ── MOBILE VIDEO CENTERING ── */
+      @media (max-width: 480px) {
+        .diorama-wrap {
+          margin-left: auto;
+          margin-right: auto;
+          width: 88vw;
+        }
+        .hero {
+          align-items: center;
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════
+         LOGO REVEAL — appears in the black gap after curtains open
+         z:190 — above lamp/hero (≤30), below preloader curtains (200-207)
+         ═══════════════════════════════════════════════ */
+      .logo-reveal {
+        position: fixed;
+        inset: 0;
+        z-index: 190;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .logo-reveal-bg {
+        position: absolute;
+        width: 560px; height: 360px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse 70% 55% at 50% 50%,
+          rgba(201,162,74,0.16) 0%,
+          rgba(139,123,191,0.09) 42%,
+          transparent 72%);
+        filter: blur(52px);
+        opacity: 0;
+      }
+      /* Expanding ring from center */
+      .logo-reveal-ring {
+        position: absolute;
+        width: 20px; height: 20px;
+        border-radius: 50%;
+        border: 1px solid rgba(201,162,74,0.7);
+        opacity: 0;
+      }
+      /* Second ring, delayed */
+      .logo-reveal-ring2 {
+        position: absolute;
+        width: 20px; height: 20px;
+        border-radius: 50%;
+        border: 1px solid rgba(139,123,191,0.5);
+        opacity: 0;
+      }
+      .logo-reveal svg {
+        position: relative;
+        z-index: 2;
+        width: min(280px, 82vw);
+        opacity: 0;
+      }
+      /* Scan line sweep */
+      .logo-reveal-scan {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(201,162,74,0.6) 30%,
+          rgba(228,200,100,0.9) 50%,
+          rgba(201,162,74,0.6) 70%,
+          transparent 100%);
+        opacity: 0;
+        z-index: 3;
+      }
+
+      /* ── ENTRY STATE ── */
+      .logo-reveal.visible .logo-reveal-bg {
+        animation: lrBgIn 2.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      }
+      .logo-reveal.visible svg {
+        animation: lrLogoIn 1.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      }
+      .logo-reveal.visible .logo-reveal-ring {
+        animation: lrRing 1.4s cubic-bezier(0.12, 0, 0.39, 0) 0.2s forwards;
+      }
+      .logo-reveal.visible .logo-reveal-ring2 {
+        animation: lrRing 1.8s cubic-bezier(0.12, 0, 0.39, 0) 0.5s forwards;
+      }
+      .logo-reveal.visible .logo-reveal-scan {
+        animation: lrScan 0.9s ease 0.4s forwards;
+      }
+
+      @keyframes lrBgIn {
+        0%   { opacity: 0; transform: scale(0.4); }
+        25%  { opacity: 1; transform: scale(0.9); }
+        70%  { opacity: 0.85; transform: scale(1.05); }
+        100% { opacity: 0.75; transform: scale(1.0); }
+      }
+      @keyframes lrLogoIn {
+        0%   { opacity: 0; filter: brightness(5) blur(28px); transform: scale(0.82) translateY(12px); }
+        14%  { opacity: 1; filter: brightness(2.8) blur(12px); transform: scale(0.93) translateY(5px); }
+        32%  { opacity: 1; filter: brightness(1.4) blur(4px); transform: scale(0.99) translateY(1px); }
+        48%  { opacity: 1; filter: brightness(1.0) blur(0); transform: scale(1.0) translateY(0); }
+        100% { opacity: 1; filter: drop-shadow(0 0 8px rgba(201,162,74,0.35)) brightness(1.0); transform: scale(1.0); }
+      }
+      @keyframes lrRing {
+        0%   { width: 30px; height: 30px; opacity: 1; }
+        100% { width: 700px; height: 440px; opacity: 0; }
+      }
+      @keyframes lrScan {
+        0%   { top: 20%; opacity: 0.8; }
+        100% { top: 80%; opacity: 0; }
+      }
+
+      /* ── EXIT STATE ── */
+      .logo-reveal.hiding svg {
+        animation: lrLogoOut 0.7s cubic-bezier(0.64, 0, 0.78, 0) forwards;
+      }
+      .logo-reveal.hiding .logo-reveal-bg {
+        animation: lrBgOut 0.6s ease forwards;
+      }
+      @keyframes lrLogoOut {
+        0%   { opacity: 1; filter: drop-shadow(0 0 8px rgba(201,162,74,0.35)) brightness(1.0); transform: scale(1.0); }
+        30%  { opacity: 1; filter: brightness(2.2) blur(0) drop-shadow(0 0 28px rgba(201,162,74,0.9)); transform: scale(1.02); }
+        65%  { opacity: 0.5; filter: brightness(5) blur(8px); transform: scale(1.07); }
+        100% { opacity: 0; filter: brightness(12) blur(28px); transform: scale(1.16); }
+      }
+      @keyframes lrBgOut {
+        0%   { opacity: 0.75; }
+        100% { opacity: 0; transform: scale(1.4); }
+      }
+
+      /* Idle glow pulse between entry and exit */
+      @keyframes lrLogoPulse {
+        0%,100% { filter: drop-shadow(0 0 6px rgba(201,162,74,0.3)) brightness(1.0); }
+        50%      { filter: drop-shadow(0 0 18px rgba(201,162,74,0.6)) brightness(1.08); }
+      }
+
+      /* ── MENU CLOSE BUTTON ── */
+      .menu-close {
+        position: absolute;
+        top: 18px; right: 20px;
+        z-index: 10;
+        width: 36px; height: 36px;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid rgba(201,162,74,0.12);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        border-radius: 0 5px 0 5px;
+        opacity: 0;
+        transition: opacity 0.4s ease 0s, border-color 0.3s;
+        position: absolute;
+      }
+      .menu-overlay.open .menu-close {
+        opacity: 1;
+        transition-delay: 0.52s;
+      }
+      .menu-close:hover { border-color: rgba(201,162,74,0.3); }
+      .menu-close::before, .menu-close::after {
+        content: ''; position: absolute;
+        width: 7px; height: 7px;
+        border-style: solid; border-color: rgba(201,162,74,0.25);
+        transition: all 0.3s;
+      }
+      .menu-close::before { top:-1px; left:-1px; border-width:1px 0 0 1px; }
+      .menu-close::after  { bottom:-1px; right:-1px; border-width:0 1px 1px 0; }
+      .menu-close:hover::before, .menu-close:hover::after { border-color: rgba(201,162,74,0.5); }
+      .menu-close svg line { transition: stroke 0.3s; }
+      .menu-close:hover svg line { stroke: var(--gold); }
     </style>
   </head>
   <body>
@@ -1149,6 +1329,29 @@
       </div>
     </div>
 
+    <!-- Logo reveal — materializes in the black gap as curtains open -->
+    <div class="logo-reveal" id="logoReveal">
+      <div class="logo-reveal-bg"></div>
+      <div class="logo-reveal-ring"></div>
+      <div class="logo-reveal-ring2"></div>
+      <div class="logo-reveal-scan"></div>
+      <svg viewBox="0 0 721 468" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M257.8 0.23838C262.6 -0.396988 270.556 0.359165 275.301 1.08732C315.658 7.27934 346.428 38.7534 385.708 48.0496C392.606 49.6826 403.549 50.279 410.939 49.6317C428.932 48.0562 450.646 43.4346 463.813 30.487C471.987 22.3741 464.361 13.2905 454.026 15.1126C445.424 16.6299 439.042 20.2833 433.705 27.2202C434.269 22.5433 434.817 19.0871 437.449 14.978C444.401 3.83954 463.638 0.943571 474.347 7.88828C483.953 14.1168 483.801 24.1427 477.948 32.7944C452.889 63.7743 381.819 56.1467 347.837 46.6945C336.739 43.5322 325.802 39.8426 315.062 35.6382C289.217 25.7705 258.359 10.8991 231.556 26.2281C222.558 31.374 216.839 38.425 212.018 47.3771C213.41 34.9034 184.664 44.925 193.019 35C188.019 22.5 243.833 1.41381 257.8 0.23838Z" fill="#C9A24A"/>
+        <path d="M634.089 18.2723C644.824 17.0418 666.399 19.9973 675.094 26.8078C680.189 30.7998 678.894 54.1338 678.819 61.1018C672.794 45.4298 666.774 30.8913 648.709 26.3948C640.669 24.3768 632.154 25.6338 625.039 29.8893C619.854 33.0398 614.164 39.4308 613.384 45.1658C609.059 76.8593 668.994 98.8909 690.159 113.713C698.434 119.318 706.374 126.074 711.819 134.577C727.924 159.731 718.629 196.083 693.074 211.153C666.299 226.948 632.949 228.658 603.404 222.013C579.714 215.978 555.394 202.528 538.019 185.165C562.664 200.708 585.969 210.798 615.609 213.048C639.329 214.848 666.394 213.703 682.029 192.782C718.044 144.588 641.614 122.535 613.594 100.322C602.469 91.5003 592.979 80.7223 591.354 65.9513C588.614 38.4278 608.189 21.2603 634.089 18.2723Z" fill="#C9A24A"/>
+        <path d="M52.7998 7.19629C61.9077 6.2473 76.5266 8.85289 84.9512 12.4228C100.637 19.0698 109.716 36.4194 117.723 50.6104C131.281 74.6438 142.158 100.057 152.113 125.758C155.341 119.431 159.242 109.513 162.147 102.69C168.3 88.3756 174.315 74.0021 180.192 59.5723C183.048 52.5418 190.437 31.5812 196.115 27.2002C205.793 19.7333 231.954 20.7911 244.193 21.3701C239.506 22.5746 233.676 23.7626 230.479 27.6846C222.129 37.9312 232.051 113.655 233.914 128.525L236.483 139.059C237.876 144.488 239.538 149.845 241.463 155.109C248.062 172.992 260.094 195.274 278.317 203.307C295.355 210.822 310.998 207.212 327.516 201.082C317.566 210.737 304.223 213.907 290.661 214.227C268.556 214.757 248.55 208.671 232.522 193.082C205.089 166.399 204.659 126.264 203.775 90.6982C203.324 76.8549 202.961 63.0085 202.686 49.1602C199.507 53.5351 192.39 68.7953 189.748 74.293C179.496 95.71 169.558 117.277 159.939 138.985C147.586 166.479 147.173 180.629 115.011 188.672C120.986 182.859 127.058 175.419 129.106 167.152C134.447 145.6 103.559 78.4839 91.6367 58.9678C92.1412 65.3221 91.5326 72.6788 91.0566 79.0557C88.8931 109.636 74.8607 135.347 58.9277 160.856C50.0646 175.046 28.2821 199.483 44.334 215.981C50.7589 222.581 57.3672 223.546 66.0801 223.706C51.1292 227.616 26.9729 229.401 17.3223 213.927C6.03194 195.824 19.2902 179.471 30.3271 165.858L30.373 165.802C41.165 152.492 53.8656 139.516 63.6045 125.495C72.0975 113.288 78.0294 99.4863 81.0439 84.9238C84.7419 67.3253 86.5976 41.5466 75.9727 25.8906C67.8982 13.9929 58.7525 10.5889 45.4961 7.83594L52.7998 7.19629Z" fill="#C9A24A"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M499.942 63.7947C501.771 71.0949 502.332 78.9917 506.145 85.655C515.837 102.6 535.006 108.224 551.609 115.466C568.625 122.885 584.145 129.201 601.882 134.538C613.731 137.956 626.76 141.178 639.019 142.643C629.053 143.539 619.534 144.056 609.993 147.526C586.631 156.025 571.36 176.678 549.793 188.293C537.387 195.23 522.933 199.977 508.766 200.842C473.854 202.971 443.301 183.322 419.269 159.995C405.977 147.092 395.814 143.343 377.68 144.376C392.839 139.471 408.859 134.242 423.596 128.181C432.531 124.506 441.925 119.747 450.935 115.791C462.502 110.713 475.79 105.431 485.715 97.7087C497.118 88.8359 498.459 77.1199 499.942 63.7947ZM456.192 125.46C445.65 128.094 434.115 131.423 424.336 136.248C436.195 159.243 455.561 173.551 480.013 181.663C500.09 188.322 519.955 185.72 538.682 176.003C551.172 169.447 562.081 160.265 570.652 149.091C574.259 144.234 576.931 140.266 579.944 134.906C567.669 130.307 559.557 127.7 546.388 125.682C541.513 137.361 536.351 144.038 525.294 150.713C517.14 155.635 507.856 158.279 504.038 167.739C501.363 173.886 501.654 179.107 500.575 185.329C497.558 166.225 497.423 160.1 479.606 152.169C469.978 147.883 459.819 136.372 456.953 126.528C456.701 125.792 456.782 126.001 456.192 125.46ZM500.95 95.4164C498.619 104.399 498.417 115.922 489.313 121.21C483.28 124.715 475.193 126.214 468.398 127.52C478.091 129 487.991 130.442 494.549 138.546C499.125 144.203 499.26 155.26 501.417 158.018C502.997 148.979 503.84 139.669 512.222 134.111C518.315 130.071 526.815 128.645 533.907 127.449C524.312 125.815 513.436 124.423 507.33 115.928C502.656 109.422 503.419 101.886 500.95 95.4164Z" fill="#C9A24A"/>
+        <path d="M450.711 55.6079C468.726 46.2295 489.353 42.5443 509.495 44.5146C541.47 47.1063 567.024 63.4311 587.158 87.5192C598.039 100.531 609.088 114.545 622.21 125.473C627.372 129.774 632.264 131.421 638.602 133.324C628.948 133.564 620.376 131.549 611.35 128.146C601.666 124.546 592.64 119.382 584.634 112.864C565.6 97.2698 553.114 76.4345 528.1 67.0031C497.957 55.6389 465.002 62.8805 442.507 85.8395C432.269 96.2886 424.084 107.537 413.249 116.945C402.137 126.593 389.278 131.795 376.019 137.568C381.905 133.372 387.362 121.718 392.232 116.529C411.445 96.0582 424.837 69.0776 450.711 55.6079Z" fill="#C9A24A"/>
+        <path d="M273.231 135.397C259.219 154.762 250.501 176.122 235.124 194.924C243.289 194.834 254.762 194.371 262.649 195.097C268.386 150.574 301.384 160.709 332.504 153.928C347.49 150.664 381.869 137.238 393.759 128.072L394.767 127.311L394.805 127.281C394.99 127.137 395.177 126.992 395.362 126.839C374.916 125.833 377.468 128.707 358.194 133.548C338.824 138.181 319.373 137.165 300.006 133.584C293.012 132.288 277.897 128.952 273.231 135.397Z" fill="#C9A24A"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M286.685 22.0088C341.407 21.5555 337.93 38.5637 352.87 85.208C357.627 99.8223 362.627 114.346 367.87 128.788C354.159 128.625 340.446 128.597 326.735 128.715C303.042 128.606 285.686 122.868 262.059 121.472L261.011 120.193L261.505 118.108C264.157 115.833 268.635 115.198 272.156 114.337C273.759 112.424 275.204 110.384 276.476 108.227C284.313 95.0084 305.692 54.2932 301.465 39.1621C299.075 30.6129 293.79 26.2335 286.685 22.0088ZM309.294 65.8066C301.981 80.1217 291.894 99.5501 288.858 115.017C294.604 116.114 299.574 117.065 305.393 117.736C311.911 117.99 319.542 118.48 325.961 118.335C323.702 110.067 313.477 72.3434 309.294 65.8066Z" fill="#C9A24A"/>
+        <path d="M375.467 151.843L376.778 151.625C378.368 153.23 380.631 165.641 381.921 169.603C391.221 198.152 400.838 228.677 422.963 249.827C440.342 266.436 438.821 269.771 461.019 269C445.928 272.88 454.393 272.175 438.895 271.984C365.307 271.205 359.911 210.055 337.762 155.061L375.467 151.843Z" fill="#C9A24A"/>
+        <path d="M632.025 266.843C643.25 265.55 667.071 266.353 678.636 267.21C674.949 268.346 670.412 269.276 667.282 271.6C664.905 273.37 663.513 275.408 663.099 278.378C661.598 289.333 679.865 372.477 684.483 387.688C686.425 394.095 688.897 401.68 692.944 406.994C699.483 415.577 710.009 417.545 720.019 418.836C704.013 420.493 677.06 421.823 663.377 412.133C659.88 409.691 657.103 406.355 655.317 402.469C652.329 396.046 646.726 361.861 644.954 352.217C643.385 344.374 636.88 304.116 634.496 299.99C632.636 300.418 630.856 302.757 629.94 304.399C615.706 330.059 604.787 357.565 590.975 383.461C588.367 388.348 585.99 391.65 582.187 395.674C569.115 369.295 546.896 330.124 531.671 304.862C531.488 321.397 527.217 389.782 533.24 399.237C536.832 404.871 543.521 405.803 549.49 407.106C542.482 407.789 497.45 429.493 495.019 421C496.064 419.355 510.186 398.719 510.831 396.868C515.401 383.831 517.126 309.724 516.188 294.65C515.883 289.745 515.36 283.232 512.977 278.859C509.133 271.825 500.101 269.322 493.019 267.258C496.984 267.061 500.95 266.829 504.916 266.561C512.922 265.174 529.879 266.583 537.824 268.346C557.883 272.798 564.226 290.926 573.414 307.809C579.946 320.03 586.676 332.145 593.603 344.146C601.072 329.648 624.052 275.455 632.025 266.843Z" fill="#C9A24A"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M405.519 259.5C419.117 260.84 435.4 269.388 449.019 268.5C453.264 268.243 463.24 264.963 465.519 269C458.913 270.983 451.415 276.103 454 284.375C459.374 301.606 467.027 318.861 473.789 335.601L488.143 371.524C499.959 401.398 509.313 420.857 538.51 438.408C573.36 459.359 611.196 462.563 650.053 453.092C647.107 454.636 644.087 456.017 640.992 457.229C600.87 473.028 561.346 470.525 522.21 453.398C494.36 439.402 479.775 424.713 468.211 396.042C465.313 388.842 458.619 375.101 454.449 368.677C441.47 366.324 410.823 366.802 397.633 369.178C396.089 372.989 394.837 376.916 393.898 380.921C389.137 401.227 403.334 403.012 418.77 406.271C402.994 408.655 376.511 407.84 360.661 407.054C363.722 394.931 370.389 390.946 374.756 380.373C385.157 354.583 395.034 328.515 404.83 302.481C409.095 291.143 410.076 271.31 405.519 259.5ZM426.714 291.462C417.013 309.908 406.504 337.323 400.871 357.003L426.156 357.004C434.177 357.166 442.204 357.219 450.225 357.164C448.109 347 432.102 299.403 426.714 291.462Z" fill="#C9A24A"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M188.886 267.261C205.854 267.177 222.449 266.756 239.415 267.23C231.66 269.968 221.118 271.96 224.396 283.498C232.482 311.965 246.175 340.724 255.365 368.731C266.824 403.649 283.298 430.241 317.923 445.953C348.361 459.759 379.476 462.535 410.993 451.206C373.17 474.218 330.436 471.449 290.928 454.282C242.956 430.466 244.734 410.153 223.753 368.608C212.239 366.595 180.624 366.575 168.688 368.027C167.86 370.341 167.118 372.687 166.466 375.057C160.138 398.758 169.022 402.16 189.757 406.29C171.952 408.795 139.091 407.087 120.64 405.049C121.032 404.875 121.423 404.699 121.812 404.52C140.687 395.811 145.605 384.021 152.378 365.699C145.047 362.644 138.313 361.525 130.557 360.162C139.684 359.795 146.326 359.235 155.445 358.143C159.73 348.847 165.337 332.206 168.954 322.242C175.492 304.233 182.828 285.358 188.886 267.261ZM196.134 291.47C187.375 312.345 178.25 335.754 172.313 357.624L196.906 357.512C204.528 357.487 212.719 357.619 220.29 357.409C217.401 348.568 200.274 296.262 196.134 291.47Z" fill="#C9A24A"/>
+        <path d="M48.1536 222C60.1522 219.867 103.199 225.145 115.03 227.537C159.631 236.558 214.986 256.67 258.019 232.871C231.37 258.364 178.387 257.546 144.82 252.797C125.52 250.067 106.684 245.776 87.1066 244.097C86.5164 264.733 86.9533 287.458 86.9533 308.235C105.927 311.256 165.427 310.533 184.519 310.214C160.118 320.78 113.179 320.105 87.0466 318.749C86.6643 339.956 86.913 362.01 86.8578 383.285C87.0753 401.037 86.8919 418.498 73.659 432.266C57.9852 448.571 35.3143 452.41 13.8505 453C61.3229 435.059 57.9436 407.701 57.9477 363.968C58.0629 346.983 57.8652 329.998 57.3554 313.02C54.5847 312.034 51.0296 311.075 48.154 310.214L57.5837 307.848C57.7064 286.223 57.5933 264.598 57.2443 242.975C38.3112 244.427 11.3007 250.953 8.88378 274.418C7.82936 284.654 13.7619 292.87 20.2369 300.274C11.1712 294.703 0.397351 285.633 0.0402007 274.245C-1.06192 239.104 20.6353 224.748 48.1536 222Z" fill="#C9A24A"/>
+        <path d="M285.949 266.076C297.594 265.77 306.976 266.418 318.558 267.445C313.237 269.833 308.156 272.242 307.426 278.689C305.661 294.286 306.537 310.277 306.517 325.977C306.494 345.423 306.648 364.904 306.863 384.346C306.888 386.542 307.241 394.705 308.617 395.709C311.596 397.885 323.313 397.253 326.884 396.862C345.683 394.803 354.866 386.483 366.019 372.785C363.514 379.969 360.832 387.09 357.979 394.143C356.337 398.454 354.606 402.729 352.779 406.967L269.019 427.5C270.896 424.845 276.958 401.627 278.006 398.521C281.249 388.907 279.234 306.446 277.871 291.638C277.411 286.639 276.909 280.599 274.521 276.137C271.669 270.808 266.425 269.2 261.019 267.499C269.314 266.796 277.627 266.321 285.949 266.076Z" fill="#C9A24A"/>
+      </svg>
+    </div>
+
     <!-- NAV -->
     <div class="nav" id="nav">
       <div class="nav-inner">
@@ -1172,6 +1375,12 @@
     <!-- MENU OVERLAY -->
     <div class="menu-overlay" id="menuOverlay" role="dialog" aria-modal="true">
       <div class="menu-panel">
+        <button class="menu-close" id="menuClose" aria-label="Fechar menu">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <line x1="2" y1="2" x2="12" y2="12" stroke="#7a6832" stroke-width="1.3" stroke-linecap="round"/>
+            <line x1="12" y1="2" x2="2" y2="12" stroke="#7a6832" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </button>
         <div class="menu-glow"></div>
         <div class="menu-sweep"></div>
         <div class="menu-inner">
@@ -1187,7 +1396,7 @@
               <div class="item-inner"><span class="item-num">01</span><span class="item-label">Início</span></div>
               <div class="item-sub">Você está aqui</div>
             </a>
-            <a href="#" class="menu-nav-item" data-sub="Nossa essência">
+            <a href="manifesto.html" class="menu-nav-item" data-sub="Nossa essência">
               <div class="corner-tl"></div><div class="corner-br"></div>
               <div class="item-inner"><span class="item-num">02</span><span class="item-label">Manifesto</span></div>
               <div class="item-sub">Nossa essência</div>
@@ -1261,7 +1470,7 @@
         <p class="hero-subtitle" id="heroSubtitle"></p>
         <button class="cta-btn">
           <span class="btn-shimmer-layer"></span>
-          <span class="btn-text">Começar leitura</span>
+          <span class="btn-text">Em Breve</span>
         </button>
       </div>
     </div>
@@ -1290,7 +1499,9 @@
           this.canvas = canvas;
           this.ctx    = canvas.getContext('2d');
           this.side   = side;
-          this.FOLDS  = 9; this.ROWS = 52;
+          const isMob = window.innerWidth <= 480;
+          this.FOLDS  = isMob ? 5 : 9;
+          this.ROWS   = isMob ? 42 : 52;
           this.t = 0; this.openP = 0; this.antP = 0;
           this.opening = false; this.anticipating = false; this.alive = true;
           this._resize();
@@ -1462,6 +1673,36 @@
 
       // slow video
       document.querySelector('.diorama-img').playbackRate = 0.6;
+
+      /* ── LOGO REVEAL in the black gap after curtains open ── */
+      // t=3.2s: logo materializes (curtains opened enough, stage-dark still ~85% dark)
+      setTimeout(() => {
+        const lr = document.getElementById('logoReveal');
+        if (lr) lr.classList.add('visible');
+      }, 3200);
+
+      // t=5.3s: logo flares out (stage-dark ~65% faded, scene starting to emerge)
+      setTimeout(() => {
+        const lr = document.getElementById('logoReveal');
+        if (lr) {
+          // switch to idle pulse briefly before exit
+          const svg = lr.querySelector('svg');
+          if (svg) svg.style.animation = 'lrLogoPulse 1.8s ease-in-out infinite';
+        }
+      }, 4600);
+
+      setTimeout(() => {
+        const lr = document.getElementById('logoReveal');
+        if (lr) {
+          lr.classList.remove('visible');
+          lr.classList.add('hiding');
+        }
+      }, 5200);
+
+      setTimeout(() => {
+        const lr = document.getElementById('logoReveal');
+        if (lr) lr.remove();
+      }, 6100);
 
       /* ── TYPEWRITER — título e subtítulo ── */
       (function () {
@@ -2073,9 +2314,14 @@
       trigger.addEventListener('click', () => overlay.classList.contains('open') ? close() : open());
       document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
+      // Close button inside the menu panel
+      const closeBtn = document.getElementById('menuClose');
+      if (closeBtn) closeBtn.addEventListener('click', close);
+
       items.forEach(item => {
         item.addEventListener('click', e => {
-          e.preventDefault();
+          const href = item.getAttribute('href');
+          if (!href || href === '#') e.preventDefault();
           items.forEach(i => i.classList.remove('active'));
           item.classList.add('active');
           setTimeout(close, 320);
