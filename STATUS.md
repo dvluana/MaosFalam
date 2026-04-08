@@ -1,11 +1,57 @@
 # STATUS
 
-Ultima atualizacao: 2026-04-08 (Sprint 1: Landing migrada pra React + integracao com fluxo de leitura, build verde 30 rotas)
+Ultima atualizacao: 2026-04-08 (Sprint 3: Bíblia da mão + polimento UI. Build verde, push pra main feito.)
 
 ## Estado atual
 
-Sprint: 1 (Landing + Manifesto) — quase fechado, manifesto pendente
-Branch: main
+Sprint: 3 (refinamento + bíblia da mão) — fechado
+Branch: main (sincronizada com origin)
+
+## Sprint 3 — resumo
+
+### Hero do resultado + bíblia da mão
+- ElementHero reescrito: fala fluída cigana com nome do elemento como clímax ("Suas mãos queimam, Luana. Eu sei antes de olhar que seu elemento é → FOGO"), sem aspas no impact, sem "Luana." prefixado
+- ElementGlyph com efeitos por elemento (brasas fire, ondas water, poeira earth, vento air)
+- ElementAtmosphere animada atrás do h1, com mask radial pra fade nas bordas (fogo suavizado depois de iterações)
+- ReadingOverview "O que eu vi na sua mão" — capitular + parágrafos
+- ReadingSection estendido: LineGlyph (batimento/espiral/árvore/seta) no header + tagline + body intercalado com body_extras + cigana_quotes em blocos com borda lateral + TechnicalStrip no rodapé
+- /completo como bíblia: HandSummary (retrato + métricas em barras de medição) + SectionDivider numerado entre linhas + seção intimacy "Na cama" + CompatibilityGrid com CompatibilityGlyph por par (Faísca/Vapor/Fundação/etc) + Montes com MountGlyph + barra de força + quote + CrossingGlyph nos cruzamentos + RareSignGlyph nos sinais raros
+
+### 4 mocks com paridade completa
+- fire/Marina: Mercúrio dominante, 18% rarity, Coração reto longo
+- water/Camila: Lua dominante, 22% rarity, Coração curvado
+- earth/Beatriz: Saturno dominante, 31% rarity, Coração medido reto
+- air/Helena: Mercúrio dominante, 14% rarity (mais raro), 3 sinais raros, Destino triplo
+- Cada um ~247 linhas: stats + 4 sections com tagline/body_extras/cigana_quotes/technical + 6 mounts detalhados + crosses + rare_signs + compatibility + intimacy
+
+### Componentes novos
+LineGlyph, MountGlyph, RareSignGlyph, CompatibilityGlyph, CrossingGlyph, SectionDivider, TechnicalStrip (painel de medição com parse CAPS→sentence case), MeasurementBar (ticks + fill + agulha rotada), CompatibilityGrid, HandSummary, ReadingOverview, ElementAtmosphere, BlurredDeck (baralho empilhado com hover fan + click expand), ResultStateSwitcher (dev-only: trocar elemento + tier no canto)
+
+### Funil de leitura reescrito
+- /ler/toque: sumiu a HandTouch. Virou **esfera branca pressure-hold** (180px radial gradient, anel SVG de progresso, 2.4s press-and-hold, vibração haptic, scale 1→1.35→1.6→fade out)
+- /ler/camera: sumiu HandOverlay. Moldura 3:4 vazia com corner accents animados + crosshair + scan line em loop
+- /ler/revelacao: virou **carta de tarot com flip 3D** (rotateY -180→0 com perspective 1200px + preserve-3d). Aspect 5:7, moldura dupla ornamental, numeral romano "I · A Verdade", shine sweep diagonal após flip, borda pulsante após digitação, partículas de luz subindo. Typewriter só inicia depois do flip. Botão Continuar fora do card.
+- /ler/nome: gate do nome com flag maosfalam_name_fresh. Bug de StrictMode double-run corrigido com useRef guard
+- Funil inteiro com linguagem visual unificada: eyebrow JetBrains gold + linhas laterais + radial atmosphere sutil
+
+### Créditos
+- Storytelling humanizado por pacote: Avulsa (pra você sozinha), Dupla (pra você e quem te importa), Roda (pra fechar o círculo), Tsara (pra quando é festa)
+- Pacotes viraram **deck de tarot navegável**: 1 carta por vez, setas laterais, swipe Framer Motion drag, dots retangulares, peeks laterais. Click → scrollIntoView('#pagamento')
+- Modal requires_login redesenhado: backdrop fullscreen com backdrop-blur, card estilo tarot, botão único Google (SVG oficial 4 cores) com loading, formulário email/senha removido (vai pro checkout)
+
+### Polimento UI
+- Noise sutil nos cards: classe `.card-noise` com 2 camadas SVG feTurbulence (manchas multiply + grão ember screen) via ::before/::after em z-index -1 com isolation isolate
+- Sweep de fontes: JetBrains labels 7-8px → 9.5-10px com tracking reduzido (1.5-1.8px) + cor gold brilhante (era gold-dim)
+- Impact phrases e cigana quotes mudadas de text-violet/text-rose (baixo contraste) pra text-bone com text-shadow colorido (carrega identidade via halo)
+- Input placeholder em Raleway regular (era Cormorant italic ilegível) + label JetBrains gold
+- Cards com gap-8 pra respiração (era gap-[2px])
+- Headers com linguagem visual consistente (eyebrow + linhas + losango ornamental)
+- Tipografia unificada: Cinzel nomes/headings, Cormorant italic cigana voice, Raleway body/UI, JetBrains mono labels/data
+
+### Git
+- Commit 93562e1 "feat: scaffold completo do webapp MaosFalam" pushed pra origin/main
+- 147 arquivos (scaffold inteiro do Next.js + componentes + docs + mocks)
+- Working tree limpo, branch sincronizada
 
 ## Feito
 

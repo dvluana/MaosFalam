@@ -2,27 +2,29 @@
 
 Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa, mova pra DONE com a data. Quando identificar subtarefas, adicione aqui.
 
-## AGORA (Sprint 1 fechamento)
+## AGORA (Sprint 4: Backend + integrações reais)
 
 - [ ] Migrar manifesto.html pra src/app/manifesto/page.tsx (ainda servido estatico via proxy)
 - [ ] Remover rewrite de /manifesto do src/proxy.ts apos migracao
 - [ ] Deletar public/manifesto.html apos migracao
+- [ ] Integrar MediaPipe real na tela /ler/camera (hoje simula com setTimeout encadeado)
+- [ ] Implementar upload manual funcional no fallback da camera
+- [ ] Backend captura + API de visão multimodal (retornar JSON de atributos da mão)
+- [ ] Motor de leitura: consumir blocks.md como banco de conteúdo + cruzar com atributos + montar report dinâmico
+- [ ] Google OAuth real no modal de login (hoje mock com setTimeout 1.4s)
+- [ ] AbacatePay real no /creditos (hoje os 9 estados são mocks)
+- [ ] Geração real da share image (canvas/OG dinâmica em /api/share/[token]/og)
 - [ ] Definir comportamento do Menu pra usuario logado (mostrar "Minhas leituras" / "Sair"?)
-- [ ] Verificar redirect pos-login (outro chat — pra qual rota o useAuth manda?)
+- [ ] Verificar redirect pos-login
 
-## PROXIMO (Sprint 2+)
+## BACKLOG
 
-## BACKLOG (Sprint 2+)
-
-- [ ] Sprint 4: Backend captura + IA
-- [ ] Sprint 5: Motor de leitura (blocos)
-- [ ] Sprint 6: Pagamento + Auth
-- [ ] Sprint 7: Polish + Launch
-- [ ] Integrar MediaPipe real na tela /ler/camera
-- [ ] Implementar upload manual funcional no fallback
-- [ ] Geracao real da share image (canvas/OG)
 - [ ] Decidir destino da pasta /src/app/preview/* (deletar ou gitignore antes do deploy)
-- [ ] Adicionar `cursor: none` no wrapper da landing pra esconder cursor nativo do CrystalCursor (sem vazar pras outras paginas)
+- [ ] Adicionar `cursor: none` no wrapper da landing pra esconder cursor nativo do CrystalCursor
+- [ ] Polish + Launch
+- [ ] Revisar copy final de todas as telas com o banco real de blocks
+- [ ] Testes E2E dos fluxos críticos (toque → camera → scan → resultado; checkout)
+- [ ] Auditoria de acessibilidade
 
 ## DONE
 
@@ -45,3 +47,32 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 - [2026-04-08] Bloco 6: not-found global + OfflineDetector integrado no layout
 - [2026-04-08] Bloco 3: Autenticacao mockada (useAuth via localStorage) + telas /login, /registro, /esqueci-senha, /redefinir-senha/[token] com todos os estados
 - [2026-04-08] Bloco 4: Area logada mockada — /conta/layout, /conta/leituras, /conta/leituras/[id], /conta/creditos, /conta/perfil, /ler/nova + mocks/user.json + components/account/ReadingCard
+
+## Sprint 3 DONE — refinamento + bíblia da mão
+
+- [2026-04-08] /ler/nome: gate do nome com flags sessionStorage + bug StrictMode double-run fix com useRef guard
+- [2026-04-08] /ler/toque reescrito: HandTouch removido, esfera branca pressure-hold (180px radial gradient, anel SVG de progresso, vibração haptic, 2.4s charge, scale 1→1.35→1.6→fade)
+- [2026-04-08] /ler/camera: HandOverlay removido, moldura 3:4 vazia com corner accents animados + crosshair + scan line
+- [2026-04-08] /ler/revelacao: carta de tarot com flip 3D (rotateY -180→0 perspective 1200px), moldura dupla, numeral romano, shine sweep, borda pulsante, partículas de luz, typewriter após flip, botão fora do card
+- [2026-04-08] /ler/scan + /ler/nome: linguagem visual unificada (eyebrow + linhas laterais + Cormorant italic grande)
+- [2026-04-08] ElementHero: fala fluída cigana com nome do elemento como clímax, sem aspas, aberturas por elemento ("Suas mãos queimam, {n}. Eu sei antes de olhar que seu elemento é → FOGO")
+- [2026-04-08] ElementGlyph com efeitos por elemento (brasas fire, ondas water, poeira earth, vento air via SVG animate)
+- [2026-04-08] ElementAtmosphere animada atrás do h1 com mask radial pra fade nas bordas; fire suavizado (6 brasas, sem fogueira)
+- [2026-04-08] ReadingOverview "O que eu vi na sua mão" — capitular na primeira letra, parágrafos divididos, aberturas por elemento
+- [2026-04-08] ReadingSection estendido: LineGlyph no header (batimento heart, espiral head, árvore life, seta fate) + tagline + fluxo body/body_extras/cigana_quotes intercalados + TechnicalStrip rodapé
+- [2026-04-08] Componentes novos: LineGlyph, MountGlyph, RareSignGlyph, CompatibilityGlyph, CrossingGlyph, SectionDivider, TechnicalStrip, MeasurementBar (reusável ticks+fill+agulha), CompatibilityGrid, HandSummary, ReadingOverview, ElementAtmosphere, BlurredDeck, ResultStateSwitcher
+- [2026-04-08] /completo reescrito: HandSummary (retrato com 3 barras de medição) + SectionDivider numerado entre linhas + seção intimacy + CompatibilityGrid + Montes com MountGlyph + CrossingGlyph + RareSignGlyph
+- [2026-04-08] BlurredDeck: as 3 linhas seladas viram baralho empilhado com hover fan + click expand (Framer Motion spring)
+- [2026-04-08] TechnicalStrip virou painel "MEDIÇÃO DA PALMA" com grid 2-col + MeasurementBar + parser toSentenceCase pra converter CAPS do mock ("LONGA, TERMINA NO MONTE DE JÚPITER" → "Longa, termina no Monte de Júpiter")
+- [2026-04-08] /creditos com storytelling humanizado (Avulsa/Dupla/Roda/Tsara) + virou deck de tarot navegável (setas, swipe, dots, peeks laterais)
+- [2026-04-08] Modal requires_login redesenhado: backdrop-blur fullscreen + card estilo tarot + botão Google único com SVG oficial + loading state; formulário email/senha removido
+- [2026-04-08] Mocks water/earth/air expandidos com paridade ao fire (~247 linhas cada): stats, 4 sections com tagline/body_extras/cigana_quotes/technical, 6 mounts detalhados, compatibility, intimacy
+- [2026-04-08] Types estendidos: ReadingSection com tagline/body_extras/cigana_quotes/technical opcionais; ReadingReport com stats/compatibility/intimacy; MountDetail com strength/word/planet_symbol/cigana_quote
+- [2026-04-08] Noise sutil nos cards via classe .card-noise (2 camadas SVG feTurbulence: manchas multiply + grão ember screen) em ::before/::after z-index -1 + isolation isolate
+- [2026-04-08] Sweep de fontes: JetBrains labels 7-8px → 9.5-10px com tracking 1.5-1.8px + cor gold brilhante
+- [2026-04-08] Impact phrases e cigana quotes: text-bone com text-shadow colorido (era text-violet/text-rose com baixo contraste)
+- [2026-04-08] Input: placeholder em Raleway regular + label em JetBrains gold (era Cormorant italic ilegível)
+- [2026-04-08] velvet-bg aplicada em auth/conta/creditos (body segue bg-black)
+- [2026-04-08] PageHeader global reusando logo da landing com grid max-w-xl próprio
+- [2026-04-08] useAuth com useEffect hydration + evento custom maosfalam:auth pra sync cross-componente (era lazy init que não rehidratava)
+- [2026-04-08] Commit 93562e1 "feat: scaffold completo do webapp MaosFalam" pushed pra origin/main (147 arquivos)
