@@ -1,0 +1,185 @@
+/* ═══════════════════════════════════════════════════════════
+   LOGO REVEAL — logo dourado que materializa no gap entre as
+   cortinas. z:190 (acima da lamp/hero, abaixo das cortinas).
+   ═══════════════════════════════════════════════════════════ */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg {
+  position: absolute;
+  width: 560px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 50%,
+    rgba(201, 162, 74, 0.16) 0%,
+    rgba(139, 123, 191, 0.09) 42%,
+    transparent 72%
+  );
+  filter: blur(52px);
+  opacity: 0;
+}
+
+.ring {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 162, 74, 0.7);
+  opacity: 0;
+}
+
+.ring2 {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 123, 191, 0.5);
+  opacity: 0;
+}
+
+.logo {
+  position: relative;
+  z-index: 2;
+  width: min(280px, 82vw);
+  opacity: 0;
+}
+
+.scan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 162, 74, 0.6) 30%,
+    rgba(228, 200, 100, 0.9) 50%,
+    rgba(201, 162, 74, 0.6) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  z-index: 3;
+}
+
+/* ── ENTRY ── */
+.visible .bg {
+  animation: lrBgIn 2.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+.visible .logo {
+  animation: lrLogoIn 1.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+.visible .ring {
+  animation: lrRing 1.4s cubic-bezier(0.12, 0, 0.39, 0) 0.2s forwards;
+}
+.visible .ring2 {
+  animation: lrRing 1.8s cubic-bezier(0.12, 0, 0.39, 0) 0.5s forwards;
+}
+.visible .scan {
+  animation: lrScan 0.9s ease 0.4s forwards;
+}
+
+@keyframes lrBgIn {
+  0% { opacity: 0; transform: scale(0.4); }
+  25% { opacity: 1; transform: scale(0.9); }
+  70% { opacity: 0.85; transform: scale(1.05); }
+  100% { opacity: 0.75; transform: scale(1); }
+}
+@keyframes lrLogoIn {
+  0% {
+    opacity: 0;
+    filter: brightness(5) blur(28px);
+    transform: scale(0.82) translateY(12px);
+  }
+  14% {
+    opacity: 1;
+    filter: brightness(2.8) blur(12px);
+    transform: scale(0.93) translateY(5px);
+  }
+  32% {
+    opacity: 1;
+    filter: brightness(1.4) blur(4px);
+    transform: scale(0.99) translateY(1px);
+  }
+  48% {
+    opacity: 1;
+    filter: brightness(1) blur(0);
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(201, 162, 74, 0.35)) brightness(1);
+    transform: scale(1);
+  }
+}
+@keyframes lrRing {
+  0% { width: 30px; height: 30px; opacity: 1; }
+  100% { width: 700px; height: 440px; opacity: 0; }
+}
+@keyframes lrScan {
+  0% { top: 20%; opacity: 0.8; }
+  100% { top: 80%; opacity: 0; }
+}
+
+/* ── PULSE (entre entry e exit) ── */
+.pulsing .logo {
+  animation: lrLogoPulse 1.8s ease-in-out infinite;
+}
+@keyframes lrLogoPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgba(201, 162, 74, 0.3)) brightness(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgba(201, 162, 74, 0.6)) brightness(1.08);
+  }
+}
+
+/* ── EXIT ── */
+.hiding .logo {
+  animation: lrLogoOut 0.7s cubic-bezier(0.64, 0, 0.78, 0) forwards;
+}
+.hiding .bg {
+  animation: lrBgOut 0.6s ease forwards;
+}
+@keyframes lrLogoOut {
+  0% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(201, 162, 74, 0.35)) brightness(1);
+    transform: scale(1);
+  }
+  30% {
+    opacity: 1;
+    filter: brightness(2.2) blur(0)
+      drop-shadow(0 0 28px rgba(201, 162, 74, 0.9));
+    transform: scale(1.02);
+  }
+  65% {
+    opacity: 0.5;
+    filter: brightness(5) blur(8px);
+    transform: scale(1.07);
+  }
+  100% {
+    opacity: 0;
+    filter: brightness(12) blur(28px);
+    transform: scale(1.16);
+  }
+}
+@keyframes lrBgOut {
+  0% { opacity: 0.75; }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+.gone {
+  display: none;
+}

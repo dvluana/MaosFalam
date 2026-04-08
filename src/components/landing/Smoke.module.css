@@ -1,0 +1,135 @@
+/* Smoke — porta fiel de .smoke / .smoke-orb do home.html legado.
+   Preserva exatamente tamanhos, cores, blurs, durations e delays. */
+
+.smoke {
+  position: fixed;
+  inset: 0;
+  z-index: 16;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+
+/* wisp principal — sobe lentamente do centro-baixo */
+.orb:nth-child(1) {
+  width: 320px;
+  height: 520px;
+  bottom: -80px;
+  left: 50%;
+  margin-left: -160px;
+  background: radial-gradient(
+    ellipse 50% 60% at 50% 70%,
+    rgba(210, 200, 230, 0.07) 0%,
+    rgba(180, 170, 210, 0.04) 45%,
+    transparent 80%
+  );
+  filter: blur(18px);
+  animation: wispRise 18s ease-in-out infinite;
+}
+
+/* wisp esquerdo */
+.orb:nth-child(2) {
+  width: 220px;
+  height: 380px;
+  bottom: -40px;
+  left: 10%;
+  background: radial-gradient(
+    ellipse 50% 60% at 50% 70%,
+    rgba(210, 200, 230, 0.055) 0%,
+    transparent 75%
+  );
+  filter: blur(16px);
+  animation: wispRise 24s ease-in-out 3s infinite;
+}
+
+/* wisp direito */
+.orb:nth-child(3) {
+  width: 240px;
+  height: 360px;
+  bottom: -30px;
+  right: 8%;
+  background: radial-gradient(
+    ellipse 50% 60% at 50% 70%,
+    rgba(210, 200, 230, 0.05) 0%,
+    transparent 75%
+  );
+  filter: blur(16px);
+  animation: wispRise 20s ease-in-out 7s infinite;
+}
+
+/* pool raso no chão — névoa rasteira */
+.orb:nth-child(4) {
+  width: 100%;
+  height: 200px;
+  bottom: 0;
+  left: 0;
+  border-radius: 0;
+  background: linear-gradient(
+    0deg,
+    rgba(180, 165, 215, 0.06) 0%,
+    transparent 100%
+  );
+  filter: blur(12px);
+  animation: groundFog 12s ease-in-out infinite;
+}
+
+/* wisp alto fino */
+.orb:nth-child(5) {
+  width: 140px;
+  height: 300px;
+  bottom: 20%;
+  left: 38%;
+  background: radial-gradient(
+    ellipse 40% 55% at 50% 80%,
+    rgba(210, 200, 230, 0.045) 0%,
+    transparent 75%
+  );
+  filter: blur(14px);
+  animation: wispRise 28s ease-in-out 11s infinite;
+}
+
+@keyframes wispRise {
+  0% {
+    transform: translateY(0) translateX(0) scaleX(1);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-180px) translateX(12px) scaleX(1.15);
+    opacity: 0.85;
+  }
+  85% {
+    transform: translateY(-320px) translateX(-8px) scaleX(0.9);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-400px) translateX(4px) scaleX(0.7);
+    opacity: 0;
+  }
+}
+
+@keyframes groundFog {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1.04);
+  }
+}
+
+/* Fumaça: apenas 2 wisps em mobile (blur é caro na GPU) */
+@media (max-width: 480px) {
+  .orb:nth-child(n + 3) {
+    display: none;
+  }
+}

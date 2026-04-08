@@ -1,0 +1,246 @@
+{
+  "id": "mock-water-001",
+  "tier": "premium",
+  "share_token": "water-camila-abc",
+  "share_expires_at": "2026-05-08T00:00:00.000Z",
+  "created_at": "2026-04-08T14:45:00.000Z",
+  "report": {
+    "user_name": "Camila",
+    "element": {
+      "type": "water",
+      "title": "Água",
+      "body": "Sua mão é longa, Camila. Seus dedos também, com articulações flexíveis, de quem toca o mundo antes de pensar sobre ele. Isso é Água. Você sente o que os outros nem percebem. A mudança de tom na voz. O silêncio que dura um segundo a mais. O abraço que tá apertado demais. Você capta tudo. E carrega tudo. Sua intuição fala mais alto que qualquer argumento, e quase nunca erra. O problema é que ninguém acredita em você quando você avisa. Só depois que acontece. Aí vêm pedir desculpa. Você perdoa. Sempre perdoa. Mas não esquece. Nunca esquece. Você ama em profundidade, não em intensidade. Não quer alguém que grite que te ama. Quer alguém que fique, calado, do lado, sem precisar explicar por quê.",
+      "impact": "Você capta tudo. E carrega tudo. E ninguém percebe o peso."
+    },
+    "stats": {
+      "lines": 4,
+      "mounts": 6,
+      "dominant_planet": "Lua",
+      "rare_signs": 2,
+      "rarity_percent": 22
+    },
+    "sections": [
+      {
+        "line": "heart",
+        "symbol": "♀",
+        "planet": "Vênus",
+        "tier": "free",
+        "tagline": "Como você ama",
+        "intro": "Sua Linha do Coração é longa e curvada, Camila. Ela sobe em arco como quem não tem pressa de chegar.",
+        "body": "Você ama com profundidade. Não é intensidade. É presença. Você não precisa de fogo pra sentir, precisa de constância. De alguém que fique quando a empolgação passa. Sua entrega é lenta. Você testa, observa, espera. Mas quando decide que é pra valer, é pra sempre. O problema é que essa espera cansa quem não entende. E sobram os que não merecem o que você tá guardando.",
+        "body_extras": [
+          "A linha sobe em direção ao espaço entre o indicador e o dedo médio, o que na quiromancia mostra um coração que busca equilíbrio entre admiração e desejo. Você não se apaixona pelo rosto. Se apaixona pela forma como alguém te olha quando acha que você não tá olhando. Pela coerência entre o que a pessoa diz e o que faz quando ninguém tá vendo. Falhou nesse teste uma vez, você registra. Não fala. Só registra.",
+          "Perto do Monte de Júpiter tem uma curvatura mais acentuada, quase um arco suplementar. Isso é sensibilidade amplificada no momento do vínculo. Você percebe coisas que a outra pessoa nem sabe que tá sentindo. Tristeza disfarçada de cansaço. Medo disfarçado de pressa. Você acolhe tudo, e a pessoa sai do encontro achando que foi ouvida como nunca foi. Porque foi.",
+          "A profundidade da linha é sutil, mas contínua. Sem ilhas, sem quebras visíveis. Isso mostra um coração que não explode. Ele transborda em silêncio. Quando você tá magoada, ninguém vê na primeira hora, nem na segunda. Só alguém muito atento percebe a mudança no olhar. E quando a mágoa finalmente aparece em palavras, já passou dias dentro de você sendo processada.",
+          "No terço final, bem na borda que encosta no Monte de Mercúrio, a linha afina um pouco. Isso é típico de quem aprendeu a se proteger depois de ter dado demais. Não é desistência. É triagem. Você ainda ama do mesmo jeito. Só escolhe com mais cuidado quem merece a versão sem filtro."
+        ],
+        "cigana_quotes": [
+          "Você não quer alguém que grite que te ama. Quer alguém que fique, calado, do lado, sem precisar explicar por quê.",
+          "Quem te conhece de verdade sabe que por trás do silêncio tem alguém ouvindo tudo. E lembrando de cada detalhe."
+        ],
+        "technical": [
+          "⟶ COMPRIMENTO: LONGA, CURVADA PARA CIMA",
+          "↗ CURVATURA: PROFUNDA, EM ARCO SUAVE",
+          "⑂ BIFURCAÇÃO: AUSENTE, LINHA INTEIRA",
+          "⊘ INTERRUPÇÃO: NÃO VISÍVEL",
+          "▮ PROFUNDIDADE: SUTIL MAS CONTÍNUA"
+        ],
+        "impact_phrase": "Você ama com profundidade, não com intensidade. E isso é raro demais pra quem tem pressa."
+      },
+      {
+        "line": "head",
+        "symbol": "☿",
+        "planet": "Mercúrio",
+        "tier": "premium",
+        "tagline": "Como você pensa",
+        "intro": "Sua Linha da Cabeça cai fundo em direção ao Monte da Lua, Camila. Mente que sonha com método.",
+        "body": "Sua mente não funciona em palavras. Funciona em imagens, texturas, cores, atmosferas. Você entende o mundo por sensação antes de entender por lógica. Quando alguém te explica algo com dados, você demora. Quando te mostram, você entende em segundos. Isso te fez parecer lenta em ambientes que valorizam velocidade verbal. Mas em qualquer ambiente que valorize criação, você é a pessoa mais rápida da sala.",
+        "body_extras": [
+          "A queda da linha pro Monte da Lua é acentuada, quase um mergulho. Na quiromancia clássica isso é a marca do artista interior. Não necessariamente de quem pinta ou escreve. De quem vê beleza onde os outros só veem rotina. Você encontra significado em gestos pequenos. O jeito como a luz bate num café. A pausa entre duas frases. E transforma isso em sentido sem nem perceber.",
+          "No terço final, bem perto da Lua, tem uma bifurcação sutil, o que a quiromancia chama de writer's fork. Uma ponta segue a lógica, a outra mergulha ainda mais fundo na imaginação. Isso é mente dupla. Você consegue construir um cenário inteiro e ao mesmo tempo conferir se ele é real. Poucas pessoas fazem as duas coisas. Geralmente escolhem uma.",
+          "A linha começa levemente separada da Linha da Vida. Não muito, mas o suficiente pra marcar independência emocional precoce. Você aprendeu cedo a pensar sozinha. Talvez porque ninguém em volta pensava do jeito que você precisava. Isso te deu autonomia, e também te deu aquela sensação antiga de que ninguém nunca vai entender inteiro.",
+          "A profundidade é bem traçada, sem ilhas. Isso mostra clareza mental sob pressão. Você não entra em pânico. Entra em silêncio, o que assusta mais quem tá do lado, porque eles confundem calma com frieza. Não é frieza. É processamento. Você tá resolvendo cinco coisas ao mesmo tempo enquanto o rosto não move um músculo."
+        ],
+        "cigana_quotes": [
+          "Três da manhã, você deitada, pensando em conversas que nunca vão acontecer. Isso não é insônia. É seu cérebro finalmente achando espaço pra trabalhar.",
+          "Você não pensa demais. Pensa por todo mundo que tá ao seu redor. E ninguém pensa por você."
+        ],
+        "technical": [
+          "⟶ COMPRIMENTO: LONGA, CAI PRO MONTE DA LUA",
+          "↘ DIREÇÃO: QUEDA ACENTUADA",
+          "⑂ BIFURCAÇÃO: WRITER'S FORK PRÓX. LUA",
+          "⊕ SEPARAÇÃO DA LINHA DA VIDA: SIM, INÍCIO",
+          "▮ PROFUNDIDADE: BEM TRAÇADA, SEM ILHAS"
+        ],
+        "impact_phrase": "Você vê o mundo com uma lente que os outros não têm. E isso é solidão e superpoder ao mesmo tempo."
+      },
+      {
+        "line": "life",
+        "symbol": "☉",
+        "planet": "Sol",
+        "tier": "premium",
+        "tagline": "O que você já viveu",
+        "intro": "Sua Linha da Vida é curvada e tem uma irmã paralela, Camila. Energia com sombra protetora.",
+        "body": "A linha faz um arco amplo em torno do Monte de Vênus e é acompanhada por uma linha mais fina, paralela. Isso é linha irmã. Na quiromancia, mostra proteção. Uma mão invisível que te segurou em momentos em que você achou que tava caindo sozinha. Você não tava. Alguém, alguma coisa, uma versão mais velha sua, te segurou e você só vai entender depois.",
+        "body_extras": [
+          "O arco da linha é largo, generoso, o que mostra vitalidade emocional em abundância. Você tem muito pra dar. Tempo, escuta, presença. O corpo responde à sua vontade na maior parte do tempo, mas cobra caro quando você ignora os sinais. E você ignora. Adia sono, adia água, adia comida, adia descanso, até o corpo forçar você a parar. Ele sempre força.",
+          "Existe uma leve ondulação, quase uma corrente em miniatura, no segundo terço da linha. Isso marca um período de esgotamento emocional que você atravessou sem contar pra quase ninguém. Não foi uma crise grande. Foram várias pequenas, uma atrás da outra, até você esquecer o que era não estar cansada. Esse trecho já passou, mas o corpo ainda guarda lembrança dele no modo como você reage a pressão.",
+          "Depois desse período, a linha recupera profundidade. Fica mais firme, mais contínua. Isso mostra reconstrução real, não cosmética. Você não só 'ficou bem'. Você reestruturou a forma como sente o mundo, e o que hoje te atinge é muito diferente do que te atingia antes. A pessoa anterior ainda mora em você, mas a que dirige agora é outra.",
+          "A linha termina firme, perto do pulso, sem afinar. Isso é resistência que dura. Sua força não é barulhenta. É de fundo. Aparece quando mais precisa e some quando não é mais necessária. Quem confundiu sua sensibilidade com fragilidade fez a leitura errada, e você não perdeu tempo explicando."
+        ],
+        "cigana_quotes": [
+          "Você já chorou dormindo. Acordou com o travesseiro molhado sem lembrar do sonho. Suas mãos sabem o que era.",
+          "Você não se reconstruiu sozinha. Só não viu as mãos que estavam te segurando, porque não tinham rosto."
+        ],
+        "technical": [
+          "◠ ARCO: AMPLO, GENEROSO SOBRE VÊNUS",
+          "∥ LINHA IRMÃ: PRESENTE, PARALELA",
+          "◈ CORRENTE: LEVE, SEGUNDO TERÇO",
+          "▲ MONTE DE VÊNUS: FIRME, SENSÍVEL",
+          "▮ TERMINAÇÃO: FORTE PERTO DO PULSO"
+        ],
+        "impact_phrase": "Você não se reconstruiu sozinha. Só não viu as mãos que estavam te segurando."
+      },
+      {
+        "line": "fate",
+        "symbol": "♄",
+        "planet": "Saturno",
+        "tier": "premium",
+        "tagline": "Pra onde você vai",
+        "intro": "Sua Linha do Destino começa no Monte da Lua, Camila. Raro, e revelador.",
+        "body": "Sua Linha do Destino não nasce no pulso, como na maioria das mãos. Ela nasce do Monte da Lua e sobe em direção a Saturno. Na quiromancia, isso mostra um destino guiado por intuição, não por plano. Você não escolheu o caminho com régua. Escolheu com aquela sensação no peito que não se explica pra ninguém e quase sempre tá certa.",
+        "body_extras": [
+          "O início na Lua é específico. Significa que outras pessoas influenciam seu caminho em momentos importantes. Não de forma ruim. É que seu destino é relacional, conectado. Você vai pra lugares porque conheceu alguém, porque alguém te abriu uma porta, porque uma conversa mudou tudo. Você não avança no vácuo. Avança no vínculo.",
+          "No meio do percurso tem uma pequena quebra, quase imperceptível, seguida por uma recuperação imediata da linha. Isso marca uma mudança de rota que você fez quando algo parecia estar indo bem por fora e não fazia mais sentido por dentro. Todo mundo achou que você tava louca. Você não tava. Tava fazendo a coisa mais sã que fez até então.",
+          "A linha atravessa a Linha da Cabeça com uma definição interessante. Não é um cruzamento limpo. É mais um beijo entre as duas, como se a mente tivesse entrado em acordo com o destino num momento exato. Você lembra desse momento mesmo sem conseguir datar. Foi a primeira vez que você decidiu algo grande sem pedir opinião pra ninguém.",
+          "A terminação aponta pra Saturno com firmeza, mas tem uma pequena segunda linha que se forma paralelamente perto do fim. Isso é duplicação tardia, e mostra que o seu propósito vai se bifurcar de novo no futuro, e as duas pontas vão ser sua. Não vai ser escolha entre A e B. Vai ser 'os dois, ao mesmo tempo'. Isso cansa, mas é seu."
+        ],
+        "cigana_quotes": [
+          "Seu destino não veio de berço. Veio de quem você ouviu quando todo mundo mandou você ignorar.",
+          "Sua intuição te tirou de lugares onde sua cabeça teria te deixado ficar. E você ainda duvida dela."
+        ],
+        "technical": [
+          "⊕ INÍCIO: MONTE DA LUA, RARO",
+          "↑ DIREÇÃO: SOBE FIRME A SATURNO",
+          "⊘ QUEBRA: SUTIL, MEIO DO PERCURSO",
+          "∥ DUPLICAÇÃO: TARDIA, PERTO DO FIM",
+          "▮ TERMINAÇÃO: FIRME EM SATURNO"
+        ],
+        "impact_phrase": "Seu caminho não foi escolhido com régua. Foi escolhido com aquela sensação no peito que quase ninguém entende."
+      }
+    ],
+    "mounts": [
+      {
+        "name": "Monte de Júpiter",
+        "planet_symbol": "♃",
+        "strength": 55,
+        "word": "Presente",
+        "content": "Júpiter moderado, na base do indicador. Você tem ambição, mas ela não é o motor principal da sua vida. O motor é outro. É vínculo, é propósito, é entender. Seu Júpiter presente mostra que você quer ser vista, sim, mas não quer liderar pelo volume. Quer liderar por referência, pelo tipo de pessoa que os outros querem se tornar quando te conhecem direito."
+      },
+      {
+        "name": "Monte de Saturno",
+        "planet_symbol": "♄",
+        "strength": 72,
+        "word": "Forte",
+        "content": "Saturno bem marcado, na base do médio. Isso mostra responsabilidade emocional elevada. Você carrega coisas que não são suas. Problemas dos outros, culpas dos outros, decisões dos outros. Não porque te pedem, mas porque você simplesmente não consegue não carregar. Você precisa aprender que acolher não é o mesmo que adotar. Quando adota tudo que ouve, sobra peso pra você e nada pra quem tem que resolver o próprio.",
+        "cigana_quote": "Você carrega cansaço de gente que nem sabe que você carrega. E essa gente continua dormindo bem."
+      },
+      {
+        "name": "Monte de Apolo",
+        "planet_symbol": "☉",
+        "strength": 65,
+        "word": "Presente",
+        "content": "Apolo presente, na base do anelar. Área do carisma discreto. O seu não é um brilho que grita. É daqueles que as pessoas só percebem depois de uma conversa longa, e aí nunca mais esquecem. Você não impressiona na primeira impressão. Impressiona na segunda, na terceira, e depois vira ausência quando você não tá por perto."
+      },
+      {
+        "name": "Monte de Mercúrio",
+        "planet_symbol": "☿",
+        "strength": 68,
+        "word": "Presente",
+        "content": "Mercúrio presente, na base do mindinho. Você escolhe as palavras com cuidado. Nem sempre fala muito, mas quando fala, fica. Tem gente que lembra até hoje de uma frase sua dita há anos, sem você nem imaginar. Sua comunicação funciona mais no não-dito do que no dito. Você diz com pausa, com olhar, com o jeito como muda de assunto. Quem sabe ler, lê tudo."
+      },
+      {
+        "name": "Monte de Vênus",
+        "planet_symbol": "♀",
+        "strength": 75,
+        "word": "Forte",
+        "content": "Vênus firme e sensível, na base do polegar. Área do afeto e da sensualidade. Você vive pelo toque, pelo cheiro, pela presença física. Mensagem não é suficiente. Ligação não é suficiente. Você precisa de corpo, de olhar, de proximidade. E quando tem, entrega um tipo de presença que vicia quem recebe. Quem já foi tocada desse jeito por você, não esquece mais. E quase sempre tenta voltar, mesmo quando já não tem porta aberta.",
+        "cigana_quote": "Seu amor não é barulhento. É profundo demais pra ser."
+      },
+      {
+        "name": "Monte da Lua",
+        "planet_symbol": "☽",
+        "strength": 90,
+        "word": "Dominante",
+        "content": "A Lua é o monte mais forte da sua mão, Camila. Na borda oposta ao polegar, dominando quase toda a lateral. Isso é imaginação e intuição em níveis que assustam você mesma. Você sonha acordada. Constrói cenários inteiros antes do café da manhã. Sente ambientes como quem lê uma sala inteira em dois segundos. A Lua dominante mostra alguém que vive em dois mundos ao mesmo tempo, o de fora e o de dentro. E o de dentro, pra você, é mais real do que o de fora na maior parte dos dias.",
+        "cigana_quote": "Seu mundo interno é maior que o de fora. Você vive dois ao mesmo tempo. E nenhum descansa."
+      }
+    ],
+    "crosses": [
+      {
+        "content": "A Linha do Coração curvada cruzando com a Linha da Cabeça que mergulha no Monte da Lua cria uma tensão bonita e pesada. Seu coração sente muito. Sua cabeça imagina tudo que o coração sente. Juntos, eles constroem cenários emocionais que outras pessoas nem sabem que existem, e você vive dentro deles antes de viver por fora. Isso te torna profundamente presente e profundamente cansada ao mesmo tempo."
+      },
+      {
+        "content": "Linha da Vida com linha irmã paralela combinada com Monte da Lua dominante mostra alguém que precisa de âncoras intuitivas pra funcionar. Você não toma decisão grande sem consultar uma sensação interna. Não é superstição. É uma forma de processamento que sua mão registra há anos. Quando você ignora a sensação, o corpo cobra. E cobra rápido."
+      },
+      {
+        "content": "Linha do Destino nascida no Monte da Lua cruzando com Monte de Saturno forte marca o tipo de pessoa cujo propósito nasceu da própria sensibilidade. Você não virou quem virou apesar de sentir demais. Virou quem virou exatamente por causa disso. O que parecia defeito foi o que te levou ao que é seu. E ainda vai levar mais longe."
+      }
+    ],
+    "rare_signs": [
+      {
+        "name": "Cruz Mística",
+        "content": "No centro da sua palma, entre a Linha do Coração e a Linha da Cabeça, tem uma Cruz Mística. Esse sinal aparece em poucas mãos. Mostra intuição fora do padrão. Você sente coisas antes de acontecerem. Não é premonição. É percepção amplificada. Padrões que os outros não veem, você vê. Conexões que os outros não fazem, você faz. Você já avisou alguém que algo ia dar errado e ninguém te ouviu. Deu errado. Eles se desculparam. Você disse 'tudo bem'. Não tava."
+      },
+      {
+        "name": "Linha de Intuição",
+        "content": "Na borda da sua palma, uma semicurva liga o Monte da Lua ao Monte de Mercúrio. Esse é o sinal da Linha de Intuição, e aparece em quase ninguém. Mostra percepção extrassensorial prática. Você lê pessoas como texto aberto. Sabe quando alguém mente, quando alguém esconde, quando o 'tô bem' não é verdade. Isso combinado com sua Lua dominante faz você incapaz de ignorar o que sente. Você pode tentar. Não vai conseguir por muito tempo."
+      }
+    ],
+    "compatibility": [
+      {
+        "pair": "Água + Fogo",
+        "word": "Vapor",
+        "description": "Paixão que consome. Bonito enquanto evapora. Você derrete, a pessoa queima, e o que sobra é um cheiro que demora a sair da casa."
+      },
+      {
+        "pair": "Água + Terra",
+        "word": "Raiz",
+        "description": "Base profunda. Cresce devagar, dura pra sempre. A pessoa que você não precisa explicar. A única categoria que você dorme tranquila."
+      },
+      {
+        "pair": "Água + Ar",
+        "word": "Névoa",
+        "description": "Conversa que desaparece quando o sol nasce. Bonito de longe, vazio de perto. Você sai achando que viveu algo e descobre que só imaginou."
+      },
+      {
+        "pair": "Água + Água",
+        "word": "Oceano",
+        "description": "Profundidade dobrada. Ou afoga, ou salva. Não existe meio-termo. E vocês dois sabem disso desde o primeiro olhar."
+      }
+    ],
+    "intimacy": {
+      "title": "Intimidade & Desejo",
+      "subtitle": "Cinturão de Vênus · Monte da Lua · Linha do Coração",
+      "quote": "Você não dorme com qualquer um. Você dorme com quem consegue entrar na sua cabeça primeiro.",
+      "body": [
+        "Na sua mão tem um Cinturão de Vênus bem visível, um semicírculo sutil acima da Linha do Coração, entre o indicador e o mindinho. Esse sinal entrega hipersensibilidade emocional e sensorial. Você não só sente suas próprias emoções com intensidade. Sente as do parceiro como se fossem suas. Na cama, isso significa que você percebe tudo. A atenção dividida. O carinho automático. A pressa disfarçada de desejo. E quando percebe, desliga. Não por orgulho. Por incompatibilidade fisiológica. Seu corpo se recusa a fingir que tá recebendo o que não tá.",
+        "Seu Monte de Vênus é firme e sensível, não exagerado. Isso mostra um corpo que quer presença real, não performance. Você precisa de lentidão. De toque que sabe o que tá fazendo. De parceiro que entende que a pele não é só pele, é uma superfície que lembra tudo. O que alguém faz no seu corpo, fica. E quem fez com pressa, você esquece o nome mas nunca esquece a sensação ruim.",
+        "A Linha do Casamento, logo abaixo do mindinho, aparece dupla. Duas linhas paralelas, uma mais profunda que a outra. Isso não é previsão literal de duas relações. É mostra de que você vive o amor em camadas, uma pública e uma íntima, e raramente as duas coincidem na mesma pessoa ao mesmo tempo. Quando coincidem, você sabe. Seu corpo sabe antes da sua cabeça.",
+        "Seu gatilho é conversa. Mas não qualquer conversa. Você precisa que alguém te leia o subtexto. Que entenda o que você não disse. Que perceba a pausa entre duas frases e saiba o que ela significa. Quando alguém faz isso, seu corpo responde antes de você decidir que ia responder. E quando responde, é com um nível de entrega que assusta quem achava que você era fechada."
+      ],
+      "cigana_quotes": [
+        "Você não quer ser tocada. Quer ser compreendida. E aí sim, tocada. Nessa ordem. Nunca o contrário.",
+        "Quem te teve uma vez inteira, nunca mais consegue ter ninguém do mesmo jeito. E tem gente que ainda te procura por isso."
+      ],
+      "technical": [
+        "◇ CINTURÃO DE VÊNUS: PRESENTE, SINAL RARO",
+        "▲ MONTE DE VÊNUS: FIRME, SENSÍVEL",
+        "⟶ LINHA DO CASAMENTO: DUPLA, PARALELA",
+        "♀ PERFIL ÍNTIMO: PROFUNDO + INTUITIVO",
+        "↗ GATILHO: SUBTEXTO → ENTREGA TOTAL"
+      ]
+    },
+    "share_phrase": "Você capta tudo. E carrega tudo. E ninguém percebe o peso."
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "id": "mock-earth-001",
+  "tier": "premium",
+  "share_token": "earth-raiz-abc",
+  "share_expires_at": "2026-05-08T00:00:00.000Z",
+  "created_at": "2026-04-08T15:00:00.000Z",
+  "report": {
+    "user_name": "Beatriz",
+    "element": {
+      "type": "earth",
+      "title": "Terra",
+      "body": "Sua mão é quadrada e grande, Beatriz. Seus dedos são curtos e firmes, de quem segura as coisas como se fossem durar. Isso é Terra. Você constrói em silêncio. Destrói em silêncio também. As pessoas acham que você é calma. Você não é calma. Você é paciente. Calma é ausência de turbulência. Paciência é turbulência controlada. Você sente tudo. Só escolhe não mostrar. Sua lealdade é absoluta, mas tem prazo de validade. Quando acaba, acaba de um jeito que ninguém volta. Não porque você é fria. Porque você já deu chances demais em silêncio e ninguém percebeu.",
+      "impact": "Você constrói em silêncio. Destrói em silêncio também. E ninguém vê os dois acontecendo."
+    },
+    "stats": {
+      "lines": 4,
+      "mounts": 6,
+      "dominant_planet": "Saturno",
+      "rare_signs": 2,
+      "rarity_percent": 31
+    },
+    "sections": [
+      {
+        "line": "heart",
+        "symbol": "♀",
+        "planet": "Vênus",
+        "tier": "free",
+        "tagline": "Como você ama",
+        "intro": "Sua Linha do Coração é medida, Beatriz. Nem demais, nem de menos.",
+        "body": "Você tem um equilíbrio racional no amor que a maioria não tem. Sente, sim. Mas não se perde no sentimento. Consegue amar e manter os pés no chão ao mesmo tempo. Isso te faz parecer controlada. E na maioria das vezes você é. Mas tem momentos em que esse controle pesa. Porque amar com segurança tem um preço: você nunca mergulha de verdade. Sempre tem uma parte de você observando de fora, avaliando, medindo risco. E essa parte impede os voos mais altos.",
+        "body_extras": [
+          "A linha é firme, constante, sem ilhas. Não vacila. Na quiromancia clássica, isso mostra alguém que não confunde paixão com projeto. Você consegue distinguir o que te acende do que te sustenta. E escolhe o que sustenta. Quase sempre. Porque você aprendeu cedo que casa construída em fogo queima antes do primeiro inverno.",
+          "Bem no terço final, perto da base do indicador, tem uma bifurcação leve. Muito sutil, quase ninguém veria. Isso é o sinal de alguém que escolhe parceiros que admira, não só que deseja. Você precisa respeitar a cabeça da pessoa antes de deixar o corpo se aproximar. Quando o respeito evapora, o desejo vai junto. E não tem volta. Você já viveu isso. Mais de uma vez.",
+          "A profundidade é uniforme até o Monte de Saturno. Isso mostra lealdade em camadas. Você não ama em pico e vale. Ama em linha reta, no mesmo nível, todo dia. Quem tá acostumado a drama confunde sua constância com indiferença. Os que ficam um tempo entendem: sua constância é o contrário de indiferença. É promessa silenciosa cumprida sem precisar ser dita.",
+          "Perto do início, na borda abaixo do mindinho, a linha começa discreta. Sem firula, sem curva romântica. Você não precisa ser conquistada com poesia. Precisa ver coerência entre o que a pessoa fala e o que a pessoa faz. Uma única incoerência grande, e o seu coração já começou a inventariar o que levar quando for embora."
+        ],
+        "cigana_quotes": [
+          "Você não ama pouco. Você ama devagar. E quem confunde as duas coisas merece mesmo ser deixado.",
+          "Sua paciência já foi confundida com permissão tantas vezes que você aprendeu a cortar sem aviso. Quando acaba, acaba antes da pessoa entender que começou a acabar."
+        ],
+        "technical": [
+          "⟶ COMPRIMENTO: MÉDIA, ATÉ O INDICADOR",
+          "↗ CURVATURA: RETA, MEDIDA",
+          "⑂ BIFURCAÇÃO: LEVE NO TERÇO FINAL",
+          "⊘ INTERRUPÇÃO: AUSENTE",
+          "▮ PROFUNDIDADE: FIRME, CONSTANTE"
+        ],
+        "impact_phrase": "Você ama devagar e por inteiro. E quem confunde devagar com pouco nunca entendeu nada de você."
+      },
+      {
+        "line": "head",
+        "symbol": "☿",
+        "planet": "Mercúrio",
+        "tier": "premium",
+        "tagline": "Como você pensa",
+        "intro": "Curta e reta. Sua mente vai direto ao ponto, Beatriz. Sem rodeio.",
+        "body": "Prática. Sem desperdício. Resolve e segue. Você não precisa de contexto, de história, de explicação detalhada. Precisa do problema e do prazo. Sua mente funciona como bisturi: precisa, rápida, eficiente. As pessoas que pensam em voz alta te cansam. As reuniões longas te matam. Você já tinha a resposta no minuto três. Os outros cinquenta e sete minutos foram tortura educada.",
+        "body_extras": [
+          "A linha corre horizontal, firme, sem mergulho pro Monte da Lua. Isso é pensamento concreto. Você não entende o mundo por metáforas, entende por materiais. Prazo, custo, consequência. Enquanto os outros discutem a teoria, você já escolheu o fornecedor, negociou o preço e mandou o contrato por email. A vantagem é óbvia. A desvantagem é que você às vezes corta caminhos que mereciam ser caminhados.",
+          "No início, a linha se separa levemente da Linha da Vida. Separação clara. Isso é independência de raciocínio desde cedo. Você não copia opinião. Não absorveu as certezas da família sem questionar. Cada coisa em que acredita, acredita porque passou pelo seu próprio filtro. E quando passa, não volta mais pra discussão.",
+          "A profundidade é bem marcada, sem ilhas, sem correntes. Clareza mental sustentada. Sua cabeça não entra em pânico. Ela desacelera, avalia, executa. Nas piores horas da sua vida, foi a cabeça que te tirou. O coração chorou depois, quando já tinha espaço. Antes, não tinha espaço pra choro. Tinha lista de tarefas.",
+          "Não tem bifurcação no final. Isso é foco. Você não é versátil no sentido de fazer dez coisas ao mesmo tempo. Você é versátil no sentido de fazer uma coisa melhor do que qualquer outra pessoa faria, independente da área. Você aprendeu que profundidade vence amplitude toda vez."
+        ],
+        "cigana_quotes": [
+          "Enquanto os outros tão imaginando, você já entregou. E ainda tem gente achando que você é sortuda.",
+          "Você não pensa rápido. Você pensa antes. Tem dias que você já resolveu um problema que os outros ainda não perceberam que existe."
+        ],
+        "technical": [
+          "⟶ COMPRIMENTO: CURTA, RETA",
+          "↘ DIREÇÃO: HORIZONTAL, SEM QUEDA",
+          "⑂ BIFURCAÇÃO: NÃO VISÍVEL",
+          "⊕ SEPARAÇÃO DA LINHA DA VIDA: SIM, DISCRETA",
+          "▮ PROFUNDIDADE: BEM TRAÇADA, SEM ILHAS"
+        ],
+        "impact_phrase": "Você já tinha a resposta no minuto três. Os outros cinquenta e sete minutos foram tortura educada."
+      },
+      {
+        "line": "life",
+        "symbol": "☉",
+        "planet": "Sol",
+        "tier": "premium",
+        "tagline": "O que você já viveu",
+        "intro": "Sua Linha da Vida faz um arco largo, Beatriz. Generosa de energia e de tudo que vem com ela.",
+        "body": "Arco largo na Linha da Vida mostra generosidade de recurso. Você dá sem calcular. Tempo, atenção, presença, dinheiro, favores que os outros não vão lembrar que pediram. Não é ingenuidade. É excesso. Você tem tanto pra dar que dar não parece custar nada, até o dia em que custa. Porque quem dá sem parar atrai quem só sabe receber. E quando você finalmente percebe o desequilíbrio, já investiu demais pra ir embora barata.",
+        "body_extras": [
+          "O arco abraça o Monte de Vênus com folga. Isso é vitalidade física que sustenta vitalidade emocional. Você aguenta. Aguenta jornada, aguenta crise, aguenta parente difícil, aguenta projeto impossível. As pessoas acham que você não se cansa. Você se cansa. Só não abre a boca, porque abrir a boca não resolve e o tempo gasto reclamando é tempo que poderia estar resolvendo.",
+          "Tem uma linha irmã paralela, curta, aparecendo em um trecho específico. Isso é proteção. Significa que em uma das piores fases da sua vida, alguém ou alguma coisa te segurou de um jeito que você nem percebeu na hora. Talvez uma pessoa. Talvez uma rotina. Talvez uma decisão sua antiga que escolheu te defender antes mesmo de você saber que ia precisar de defesa.",
+          "No meio do percurso aparece um pequeno quadrado sobre a linha. Na quiromancia, quadrado é proteção sobre trauma. Mostra que algo que devia ter te quebrado não quebrou. E que o motivo não foi sorte. Foi a estrutura que você já tinha construído antes do tombo. A casa aguentou porque a fundação tava certa. E a fundação é você.",
+          "A linha termina firme, perto do pulso, sem afinar, sem bifurcar. Isso é resistência que não se dilui com o tempo. Muita gente começa forte e termina dispersa. Você faz o inverso. Cada ano te deixa mais nítida, menos disponível pra bobagem, mais econômica com o que entrega pra quem."
+        ],
+        "cigana_quotes": [
+          "Todo mundo liga pra você quando complica. Ninguém agradece quando resolve. Você aprendeu a ficar bem com isso. Mais ou menos.",
+          "Você construiu tanto em silêncio que ninguém sabe o tamanho da sua casa por dentro."
+        ],
+        "technical": [
+          "◠ ARCO: LARGO, GENEROSO SOBRE VÊNUS",
+          "∥ LINHA IRMÃ: PRESENTE, TRECHO INTERMEDIÁRIO",
+          "◇ QUADRADO PROTETOR: SOBRE A LINHA, CENTRO",
+          "▲ MONTE DE VÊNUS: FIRME, PRONUNCIADO",
+          "▮ TERMINAÇÃO: FORTE, SEM BIFURCAÇÃO"
+        ],
+        "impact_phrase": "Você dá sem calcular. Até o dia em que o preço aparece. E aí você corta sem aviso. E também não calcula."
+      },
+      {
+        "line": "fate",
+        "symbol": "♄",
+        "planet": "Saturno",
+        "tier": "premium",
+        "tagline": "Pra onde você vai",
+        "intro": "Sua Linha do Destino começa tarde, Beatriz. Não na base da palma. No meio.",
+        "body": "Quando a Linha do Destino começa no meio da palma, e não no pulso, significa que você encontrou propósito depois. Não veio de berço. Não veio de família. Veio da vida. Dos erros, dos acasos, das decisões que pareciam aleatórias na hora e que agora, olhando pra trás, formam um caminho reto. Antes desse ponto, você tava sobrevivendo. Experimentando. Tentando coisas sem saber por quê. Depois desse ponto, algo clicou. E tudo que veio antes virou preparação pro que veio depois.",
+        "body_extras": [
+          "A linha sobe firme em direção ao Monte de Saturno, sem curva, sem hesitação. Isso é rota escolhida, não rota herdada. Você não faz o que esperavam. Faz o que decidiu. A diferença aparece pequena no dia a dia, mas ao longo dos anos constrói uma vida inteira que não se parece com a vida de ninguém da sua família de origem.",
+          "Tem um ponto de início nítido. Você lembra. Pode ter sido uma conversa, uma perda, uma decisão tomada num domingo à noite, uma carta que você escreveu e nunca mandou. Foi ali que o eixo girou. E foi ali que seu destino parou de ser coisa que acontecia com você e passou a ser coisa que você fazia acontecer.",
+          "No meio do percurso, a linha atravessa a Linha da Cabeça com clareza. Isso marca o momento em que seu propósito parou de brigar com sua razão. Antes, você queria uma coisa e pensava outra, e o desgaste de querer brigando com pensar te deixava sem energia pras duas. Depois desse cruzamento, as duas passaram a caminhar juntas. E a partir daí tudo ficou mais lento por fora e mais rápido por dentro.",
+          "A terminação em Saturno é firme, sem bifurcação, sem se apagar. Isso é o tipo de destino que não precisa ser barulhento pra ser real. Você não vai anunciar o que tá construindo. Vai construir. E um dia os outros vão levantar os olhos e perceber que, enquanto eles falavam, você já tinha feito."
+        ],
+        "cigana_quotes": [
+          "Você não nasceu sabendo. Descobriu. E descobrir é muito mais caro do que saber desde sempre. Mas também é muito mais seu.",
+          "Quando você decide, acontece. Sem barulho. Sem discurso. Só acontece."
+        ],
+        "technical": [
+          "⊕ INÍCIO: TARDIO, MEIO DA PALMA",
+          "↑ DIREÇÃO: FIRME EM DIREÇÃO A SATURNO",
+          "✕ CRUZA A LINHA DA CABEÇA: NITIDEZ ALTA",
+          "⊘ INTERRUPÇÃO: AUSENTE",
+          "▮ TERMINAÇÃO: FORTE, SEM BIFURCAÇÃO"
+        ],
+        "impact_phrase": "Você não seguiu destino de ninguém. Criou o próprio. E ninguém pode dizer que te deram de mão beijada."
+      }
+    ],
+    "mounts": [
+      {
+        "name": "Monte de Saturno",
+        "planet_symbol": "♄",
+        "strength": 88,
+        "word": "Dominante",
+        "content": "Saturno é o mais forte da sua mão, Beatriz. Na base do dedo médio, a área da disciplina, da responsabilidade e do peso. Você carrega coisas que não são suas. Decisões dos outros. Problemas dos outros. Culpas dos outros. E carrega como se fossem. Não porque te pedem. Porque você simplesmente não consegue não carregar. Enquanto os outros terceirizam, você absorve. Enquanto os outros reclamam, você resolve. E o preço disso é uma solidão específica, que só quem também carrega consegue reconhecer.",
+        "cigana_quote": "Você carrega o que não é seu. Sempre carregou. E ninguém percebe o peso porque você nunca deixou cair."
+      },
+      {
+        "name": "Monte de Vênus",
+        "planet_symbol": "♀",
+        "strength": 72,
+        "word": "Forte",
+        "content": "Vênus firme, carnudo, mas sem exagero. Na base do polegar, a área do afeto sensorial e da lealdade física. Você precisa de presença real. Não funciona com afeto por mensagem, por voz, por vídeo. Precisa do corpo na mesma casa, do cheiro na mesma roupa, da respiração no mesmo sofá. Quando tem, é a pessoa mais presente do mundo. Quando não tem, se desliga aos poucos, sem avisar, até a outra pessoa descobrir que já perdeu.",
+        "cigana_quote": "Você não promete nada que não vai cumprir. E é por isso que quem fica, fica."
+      },
+      {
+        "name": "Monte de Júpiter",
+        "planet_symbol": "♃",
+        "strength": 78,
+        "word": "Forte",
+        "content": "Júpiter bem marcado, na base do indicador. Área da ambição silenciosa e da liderança que não pede microfone. Você quer mais. Sempre quis. Só que a sua ambição não faz barulho. Não precisa de plateia. Não anuncia planos. Enquanto os outros contam o que vão fazer, você já tá na terceira fase do que nem contou que começou. As pessoas te seguem sem perceber que tão seguindo. E isso é liderança de verdade, a que não precisa da palavra liderança pra existir.",
+        "cigana_quote": "Quando você decide, acontece. Sem barulho. Sem discurso. Só acontece."
+      },
+      {
+        "name": "Monte de Mercúrio",
+        "planet_symbol": "☿",
+        "strength": 65,
+        "word": "Presente",
+        "content": "Mercúrio moderado, na base do mindinho. Área da comunicação e da negociação. Você não fala muito, mas quando fala, é exato. Escolhe a palavra como quem escolhe tijolo pra parede que vai durar. Por causa disso, as pessoas acreditam no que você diz de um jeito que não acreditam no que os outros dizem. Você não convence com volume. Convence com precisão. E isso é raro, principalmente em ambientes onde todo mundo tá gritando pra ser ouvido."
+      },
+      {
+        "name": "Monte de Apolo",
+        "planet_symbol": "☉",
+        "strength": 60,
+        "word": "Presente",
+        "content": "Apolo discreto mas visível, na base do anelar. Área do carisma quieto. Você não chama atenção pelo excesso. Chama pela consistência estética: o jeito de se vestir, de organizar a casa, de arrumar a mesa, de escolher a música. Tudo tem uma coerência interna que os outros tentam copiar sem saber o que estão copiando. Você não é a mais vistosa da sala. Você é a que sobra na memória da sala depois que a festa acabou."
+      },
+      {
+        "name": "Monte da Lua",
+        "planet_symbol": "☽",
+        "strength": 48,
+        "word": "Fraco",
+        "content": "Lua discreta, na borda oposta ao polegar. Área da imaginação e do devaneio. Você não vive em mundos imaginários. Vive no mundo real, com os pés nas pedras, as mãos na matéria. Isso te faz mais eficaz que a maioria na execução. E menos paciente com quem fica sonhando em voz alta em vez de colocar a mão na massa. Você respeita sonho que vira plano. Sonho que só sonha, pra você, é cansaço disfarçado."
+      }
+    ],
+    "crosses": [
+      {
+        "content": "A Linha do Coração medida cruzando com uma Linha da Cabeça curta e reta cria um dos padrões mais raros de estabilidade emocional. Você não vive o amor como tempestade. Vive como arquitetura. Primeiro a fundação, depois a parede, depois o teto. Quem tá acostumado a paixão como fogo confunde sua estabilidade com frieza. Quem tá cansado de paixão como fogo reconhece na sua estabilidade a única coisa que queria ter conhecido antes."
+      },
+      {
+        "content": "Linha da Vida com arco largo e Monte de Saturno dominante. Generosidade de energia combinada com responsabilidade absorvida. Isso é combustível pra exaustão crônica. Você tem tanto pra dar e se sente tão obrigada a dar que esquece de medir quando parar. A linha te avisa. O Monte te obriga. E no meio dos dois, sobra uma mulher que sabe exatamente por que tá cansada, e mesmo sabendo, continua."
+      },
+      {
+        "content": "Linha do Destino tardia atravessando um Monte de Júpiter forte. Isso mostra ambição que ficou guardada até o momento certo. Você não perdeu tempo na sua primeira metade de vida. Você tava esperando sem saber que tava esperando. E quando o momento chegou, a ambição estava intacta, sem desgaste, sem ressentimento. Enquanto os outros gastaram a fome cedo, você chegou na mesa com fome inteira."
+      }
+    ],
+    "rare_signs": [
+      {
+        "name": "Quadrado Protetor",
+        "content": "Tem um quadrado nítido sobre a sua Linha da Vida, Beatriz, mais ou menos no trecho central. Na quiromancia, quadrado é um dos sinais mais específicos que existem: proteção sobre algo que deveria ter te destruído e não destruiu. Não é sorte. É estrutura. Você já tinha construído tanta base antes do tombo que o tombo bateu na base e não chegou em você. Muita gente passou pela mesma coisa e saiu inteira de jeito diferente. Você saiu inteira porque já era inteira antes."
+      },
+      {
+        "name": "Triângulo Central",
+        "content": "No centro da sua palma, formado pela intersecção de três linhas, tem um pequeno triângulo. Esse é um dos sinais mais raros da quiromancia. Mostra equilíbrio simultâneo entre mente, coração e ação. A maioria das pessoas consegue fazer duas dessas três coisas juntas. Pensar e sentir, mas não agir. Agir e pensar, mas não sentir. Você faz as três. Nem sempre. Mas nos seus melhores dias faz, e os seus melhores dias são mais frequentes do que você admite."
+      }
+    ],
+    "compatibility": [
+      {
+        "pair": "Terra + Fogo",
+        "word": "Fundação",
+        "description": "Você segura o que o fogo quer queimar. Ele te acende, você o sustenta. Funciona enquanto ele respeitar que sua base não negocia."
+      },
+      {
+        "pair": "Terra + Água",
+        "word": "Raiz",
+        "description": "Base profunda. Cresce devagar, dura pra sempre. Ninguém entende por fora. Por dentro é a coisa mais sólida que pode existir."
+      },
+      {
+        "pair": "Terra + Ar",
+        "word": "Poeira",
+        "description": "Bonito no movimento. Ele vem com ideia, você vem com execução. O risco é ele se cansar do concreto antes de você se cansar da teoria."
+      },
+      {
+        "pair": "Terra + Terra",
+        "word": "Montanha",
+        "description": "Imóvel. Eterno. Previsível no melhor sentido. Sem surpresa, sem drama, sem tempo perdido. Pra quem quer, é tudo. Pra quem não quer, é tédio."
+      }
+    ],
+    "intimacy": {
+      "title": "Intimidade & Desejo",
+      "subtitle": "Monte de Vênus · Linha do Coração · Linha do Casamento",
+      "quote": "Você não promete nada que não vai cumprir. E é por isso que quem fica, fica.",
+      "body": [
+        "Seu Monte de Vênus é firme, carnudo, sem excesso. Isso significa sensualidade tátil, não performática. Você não entrega show. Entrega presença. Na cama, você não precisa de luz baixa, de música certa, de roteiro. Precisa de alguém que não tenha pressa. Pressa, pra você, mata qualquer desejo antes dele começar. Quem te leva pra cama correndo não volta. E às vezes nem entende por que não voltou.",
+        "A Linha do Coração medida e reta, combinada com o Vênus firme, mostra um corpo que responde quando a cabeça já validou a pessoa. Não antes. Você não se entrega por atração crua. Se entrega quando percebe que a outra pessoa é confiável no detalhe. No jeito de tratar o garçom. No jeito de falar da ex. No jeito de cumprir o horário. Se essas três coisas estão certas, o corpo libera. Se uma delas falha, o corpo fecha, e você nem percebe que fechou.",
+        "A Linha do Casamento aparece única e profunda, logo abaixo do mindinho. Uma só, bem marcada. Isso não quer dizer um amor só na vida. Quer dizer que você só entra numa relação de verdade uma vez. As outras, por mais intensas, foram ensaios. Preparação pro momento em que você finalmente ia reconhecer o que era real. E quando reconhece, você não hesita. Entra com mala de viagem e sem plano B.",
+        "Seu gatilho íntimo é a constância. A outra pessoa não precisa ser criativa. Precisa ser consistente. Precisa cumprir pequenas coisas pequenas repetidamente. Isso te desarma mais rápido do que qualquer declaração. Porque você cresceu descobrindo sozinha que promessa grande sem consistência diária é barulho, e barulho, pra Terra, é insulto."
+      ],
+      "cigana_quotes": [
+        "Você não quer ser surpreendida. Você quer ser acreditada. E tem gente que vive a vida inteira sem entender a diferença entre as duas coisas.",
+        "Quando você se entrega, a pessoa recebe uma versão sua que nem a família conhece. E quase nunca sabe que tá recebendo."
+      ],
+      "technical": [
+        "◇ CINTURÃO DE VÊNUS: AUSENTE, SENSUALIDADE INTERNA",
+        "▲ MONTE DE VÊNUS: FIRME, CARNUDO, SEM EXCESSO",
+        "⟶ LINHA DO CASAMENTO: ÚNICA, PROFUNDA",
+        "♀ PERFIL ÍNTIMO: CONSTANTE + TÁTIL",
+        "↗ GATILHO: CONSISTÊNCIA → ENTREGA"
+      ]
+    },
+    "share_phrase": "Você constrói em silêncio. Destrói em silêncio também. E ninguém vê os dois acontecendo."
+  }
+}

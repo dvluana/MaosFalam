@@ -1,0 +1,741 @@
+# MãosFalam · Banco de Blocos de Leitura
+## Todos os textos prontos pra INSERT no banco, na voz da cigana
+
+---
+
+# ESTRUTURA DE CADA BLOCO
+
+Cada bloco tem:
+- **axis**: eixo (heart, head, life, fate, element, mount, cross, rare)
+- **variation**: chave da variação
+- **block_type**: intro | body | impact
+- **tier**: free | premium
+- **content**: texto principal
+- **content_alt**: variação alternativa 1
+- **content_alt2**: variação alternativa 2
+
+A intro é a frase da cigana em Cormorant italic (abertura da seção).
+O body é o texto principal em Raleway (parágrafo de leitura).
+O impact é a frase de impacto (sozinha na tela, compartilhável).
+
+---
+
+# 1. ELEMENTO (axis: element)
+
+## 1.1 Fogo (variation: fire)
+
+### intro
+**content:** "Suas mãos queimam, {{name}}. Eu senti antes de olhar."
+**content_alt:** "Fogo. Eu soube no segundo em que vi a forma da sua mão."
+**content_alt2:** "Você é combustível, {{name}}. Tudo ao redor pega fogo."
+
+### body
+**content:** "Sua mão é quadrada. Seus dedos são curtos. Isso é Fogo. Você decide antes de pensar. Age antes de planejar. E se arrepende devagar, porque no fundo sabe que faria tudo de novo. Sua energia é a primeira coisa que as pessoas notam quando você entra. E a última que esquecem quando você sai. Você não tem medo de errar. Tem medo de ficar parada. O tédio te destrói mais rápido que qualquer erro. Quando você quer algo, o mundo inteiro sente. E quando desiste, o silêncio é ensurdecedor."
+**content_alt:** "Palma quadrada, dedos curtos. Fogo puro. Você não pede licença pra existir. Entra nos lugares e ocupa espaço sem perceber. As pessoas gravitam ou se afastam. Não existe meio-termo com você. Sua impaciência é seu motor e sua armadilha. Você começa dez coisas e termina três. Mas essas três mudam tudo."
+**content_alt2:** "Sua mão é de quem constrói rápido e destrói mais rápido ainda. Fogo não espera. Fogo consome. Você funciona em ciclos de intensidade que cansam quem tá do lado. Mas quem aguenta ficar, nunca mais quer outra coisa. Sua presença é viciante. Sua ausência é um incêndio que continua queimando depois que você sai."
+
+### impact
+**content:** "Quando você quer, o mundo inteiro sente. Quando desiste, o silêncio é ensurdecedor."
+**content_alt:** "Sua energia é a primeira coisa que notam. E a última que esquecem."
+**content_alt2:** "Você não pede licença pra existir. E isso assusta quem não tem coragem de fazer o mesmo."
+
+---
+
+## 1.2 Água (variation: water)
+
+### intro
+**content:** "Suas mãos são profundas, {{name}}. Como o lugar de onde você vem."
+**content_alt:** "Água. Eu vi antes de ler. Suas linhas parecem rios."
+**content_alt2:** "Tem uma profundidade na sua palma que a maioria não tem, {{name}}."
+
+### body
+**content:** "Sua mão é longa. Seus dedos são longos e flexíveis. Isso é Água. Você sente o que os outros nem percebem. A mudança de tom na voz. O silêncio que dura um segundo a mais. O abraço que tá apertado demais. Você capta tudo. E carrega tudo. Sua intuição fala mais alto que qualquer argumento. E quase nunca erra. O problema é que ninguém acredita em você quando você avisa. Só depois que acontece. Aí vêm pedir desculpa. Você perdoa. Sempre perdoa. Mas não esquece. Nunca esquece."
+**content_alt:** "Palma longa, dedos que parecem feitos pra tocar piano ou segurar segredos. Água pura. Você absorve o ambiente inteiro quando entra num lugar. Sente o clima antes de qualquer palavra ser dita. Isso te cansa. Porque enquanto todo mundo tá vivendo, você tá vivendo e sentindo o que todo mundo tá vivendo. É peso dobrado. Mas é também o que faz as pessoas confiarem em você sem saber por quê."
+**content_alt2:** "Sua mão conta que você ama em profundidade, não em intensidade. Você não quer alguém que grite que te ama. Quer alguém que fique. Calado, do lado. Sem precisar explicar por quê. Seus dedos longos e flexíveis mostram sensibilidade que não tem botão de desligar. Você absorve as emoções dos outros como esponja. E às vezes não sabe mais o que é seu e o que é dos outros."
+
+### impact
+**content:** "Você capta tudo. E carrega tudo. E ninguém percebe o peso."
+**content_alt:** "Sua intuição quase nunca erra. O problema é que ninguém acredita até ser tarde."
+**content_alt2:** "Você não quer alguém que grite que te ama. Quer alguém que fique."
+
+---
+
+## 1.3 Terra (variation: earth)
+
+### intro
+**content:** "Suas mãos são de quem constrói, {{name}}. Tijolo por tijolo."
+**content_alt:** "Terra. Firme. Silenciosa. Perigosa quando subestimada."
+**content_alt2:** "Eu olhei pra sua mão e vi raiz, {{name}}. Profunda."
+
+### body
+**content:** "Sua mão é quadrada e grande. Seus dedos são curtos e firmes. Isso é Terra. Você constrói em silêncio. Destrói em silêncio também. As pessoas acham que você é calma. Você é paciente. É diferente. Calma é ausência de turbulência. Paciência é turbulência controlada. Você sente tudo. Só escolhe não mostrar. Sua lealdade é absoluta, mas tem prazo de validade. Quando acaba, acaba de um jeito que ninguém volta. Não porque você é fria. Porque você já deu chances demais em silêncio e ninguém percebeu."
+**content_alt:** "Palma larga, firme, dedos que seguram com força. Terra não grita. Terra sustenta. Você é a pessoa que todo mundo liga quando a situação complica. Não porque você tem a resposta. Porque você não entra em pânico. Enquanto os outros estão perdendo a cabeça, você já tá resolvendo. Só que ninguém agradece quem resolve calado. E você cansou de resolver calada."
+**content_alt2:** "Sua mão é de quem planta e espera. Você não tem pressa, mas tem precisão. Cada decisão é pesada dez vezes antes de virar ação. E quando vira, não volta. Sua palavra é contrato. Seu silêncio é veredicto. As pessoas levam tempo pra entender você. Quem entende, não larga. Quem não entende, você deixa ir sem fazer barulho."
+
+### impact
+**content:** "Você constrói em silêncio. Destrói em silêncio também. E ninguém vê os dois acontecendo."
+**content_alt:** "Sua lealdade é absoluta. Mas tem prazo de validade. E quando acaba, ninguém volta."
+**content_alt2:** "Todo mundo liga pra você quando complica. Ninguém agradece quando resolve."
+
+---
+
+## 1.4 Ar (variation: air)
+
+### intro
+**content:** "Sua mente não desliga, {{name}}. Eu vi nas linhas. Ela nunca desligou."
+**content_alt:** "Ar. Seus dedos longos entregam. Você pensa demais."
+**content_alt2:** "Suas mãos são de quem vive duas vidas ao mesmo tempo, {{name}}."
+
+### body
+**content:** "Sua mão é quadrada. Seus dedos são longos, com juntas salientes. Isso é Ar. Você pensa em três cenários ao mesmo tempo. Já viveu a conversa inteira na cabeça antes de abrir a boca. E quando fala, surpreende. Porque ninguém esperava tanta clareza de quem parece tão distraída. Sua mente é sua melhor arma e seu pior inimigo. Ela te dá respostas que os outros demoram semanas pra encontrar. Mas também te mantém acordada às 3 da manhã revisando conversas que já passaram."
+**content_alt:** "Palma proporcional, dedos longos com nós visíveis. Ar. Você não se apaixona por rostos. Se apaixona por frases. Por quem te faz pensar o que nunca tinha pensado. Se a mente não acende, o corpo não acende. Isso confunde quem tá acostumado com o caminho inverso. Você precisa de estímulo intelectual antes de qualquer outra coisa. E encontra isso em menos gente do que gostaria."
+**content_alt2:** "Sua mão mostra uma mente que não para. Você analisa, desmonta, remonta. Tudo. Sempre. Os outros chamam isso de overthinking. Você sabe que é só seu jeito de processar um mundo que vem rápido demais. O problema não é pensar demais. É que você pensa por todo mundo e ninguém pensa por você."
+
+### impact
+**content:** "Ninguém esperava tanta clareza de quem parece tão distraída."
+**content_alt:** "Se a mente não acende, o corpo não acende. E poucas pessoas acendem sua mente."
+**content_alt2:** "Você pensa por todo mundo. Ninguém pensa por você."
+
+---
+
+# 2. LINHA DO CORAÇÃO (axis: heart) — FREE TIER
+
+## 2.1 heart_long_straight
+
+### intro
+**content:** "Sua Linha do Coração corta a palma inteira sem desvio. Sem curva. Sem hesitação."
+**content_alt:** "Eu vi sua Linha do Coração, {{name}}. Ela vai de ponta a ponta. Reta."
+**content_alt2:** "Reta e longa. Sua Linha do Coração não sabe fazer meio-termo."
+
+### body
+**content:** "Quando você ama, ama com tudo. Não existe versão parcial de você num relacionamento. Você entra inteira ou não entra. E quando sai, queima o caminho pra não ter volta. Não por maldade. Por autopreservação. Você sabe que se deixar a porta aberta, volta. E voltar pra algo que já acabou é a única coisa que sua linha reta não permite. As pessoas acham que você é fria quando termina. Você não é fria. Você é cirúrgica. A dor tá lá. Só que ninguém vê, porque você decidiu que ninguém vai ver."
+**content_alt:** "Linha longa e reta. Sem curva, sem desvio. Isso mostra um coração que funciona em absolutos. Ou é tudo, ou é nada. Você não faz amor pela metade. Não mantém relação por costume. Quando tá dentro, tá dentro de corpo e alma. Quando tá fora, tá tão fora que a pessoa se pergunta se você realmente existiu. E o pior é que você segue em frente rápido. Não porque não doeu. Porque você não se permite ficar onde dói."
+**content_alt2:** "Sua Linha do Coração cruza a palma inteira como uma estrada sem retorno. Você não ama aos poucos. Não testa as águas. Mergulha. E quando percebe que a água esfriou, sai sem olhar pra trás. Tem gente que confunde isso com indiferença. Não é. É o contrário. Você sente tanto que quando decide parar de sentir, a decisão é definitiva. Irreversível. Como a linha na sua mão."
+
+### impact
+**content:** "Quando você ama, é tudo. Quando sai, queima o caminho. E não olha pra trás."
+**content_alt:** "Você não faz amor pela metade. E quando acaba, acaba como se nunca tivesse existido."
+**content_alt2:** "A dor tá lá. Só que você decidiu que ninguém vai ver."
+
+---
+
+## 2.2 heart_long_curved
+
+### intro
+**content:** "Sua Linha do Coração é longa e curvada. Isso é raro, {{name}}. E bonito."
+**content_alt:** "Eu vejo uma curva generosa na sua Linha do Coração. Ela sobe."
+**content_alt2:** "Longa, curvada pra cima. Seu coração tem alcance, {{name}}."
+
+### body
+**content:** "Você ama com profundidade. Não é intensidade. É presença. Você não precisa de fogo pra sentir. Precisa de constância. De alguém que fique quando a empolgação passa. Sua entrega é lenta. Você testa, observa, espera. Mas quando decide que é pra valer, é pra sempre. O problema é que essa espera cansa quem não entende. E sobram os que não merecem o que você tá guardando."
+**content_alt:** "Linha curvada longa mostra um coração que se expande devagar mas não encolhe nunca. Você demora pra confiar. Demora pra se entregar. Mas quando entrega, é com uma profundidade que assusta até você. Sua forma de amar é invisível pros olhos rápidos. Só quem para, olha de perto, e espera, consegue ver o tamanho do que você oferece."
+**content_alt2:** "A curva da sua Linha do Coração sobe em direção aos dedos. Na quiromancia isso significa expressão emocional aberta. Você não esconde o que sente. Não sabe fingir desinteresse. Quando ama, o rosto entrega. Os olhos entregam. O corpo inteiro entrega. Isso te torna vulnerável. E incrivelmente magnética."
+
+### impact
+**content:** "Você ama com profundidade, não com intensidade. E isso é raro demais pra quem tem pressa."
+**content_alt:** "Quando decide que é pra valer, é pra sempre. O difícil é chegar até esse 'pra valer'."
+**content_alt2:** "Você não sabe fingir desinteresse. E isso te torna vulnerável e magnética ao mesmo tempo."
+
+---
+
+## 2.3 heart_long_deep_curved
+
+### intro
+**content:** "Essa curva, {{name}}. Profunda. Seu coração domina sua mão inteira."
+**content_alt:** "Eu vi poucos corações tão curvados. O seu faz arco."
+**content_alt2:** "Sua Linha do Coração faz uma curva que quase toca a Linha da Cabeça. Isso diz muito."
+
+### body
+**content:** "Emoção domina razão na sua mão. Sempre dominou. Quando você ama, perde a noção do resto. Trabalho, amigos, sono, comida. Tudo some quando seu coração decide que alguém importa. Isso já te custou coisas. Oportunidades que passaram porque você estava ocupada demais sentindo. Mas isso também já te deu os melhores momentos da sua vida. Os que ninguém mais viveu com aquela intensidade. Sua curva profunda mostra que você não sabe amar com moderação. E no fundo, não quer aprender."
+**content_alt:** "Uma curva assim mostra que seu coração grita mais alto que sua cabeça. Sempre gritou. As decisões que mais te definiram foram emocionais. As que mais te machucaram também. Você vive num ciclo de se entregar demais, se machucar, prometer que vai se proteger, e se entregar de novo. Não é fraqueza. É fidelidade a quem você é. Seu coração simplesmente não aceita funcionar em volume baixo."
+**content_alt2:** "Curva profunda na Linha do Coração, {{name}}. Quando você se apaixona, o mundo ao redor desfoca. Literalmente. Você para de ver os sinais que todo mundo vê. Não por ingenuidade. Por escolha. Porque sentir daquele jeito é o mais vivo que você se sente. E quando acaba, o vazio é proporcional."
+
+### impact
+**content:** "Quando ama, perde a noção do resto. E os melhores momentos da sua vida foram exatamente esses."
+**content_alt:** "Seu coração não aceita funcionar em volume baixo. Nunca aceitou."
+**content_alt2:** "Você não é ingênua. Você escolhe sentir. Mesmo sabendo quanto custa."
+
+---
+
+## 2.4 heart_short_straight
+
+### intro
+**content:** "Curta e reta. Sua Linha do Coração não desperdiça espaço, {{name}}."
+**content_alt:** "Eu vi que sua Linha do Coração para antes do meio da palma. Isso tem significado."
+**content_alt2:** "Sua linha é contida, {{name}}. Não é fria. É estratégica."
+
+### body
+**content:** "Você se protege mais do que ama. Não porque não sabe amar. Porque já amou e aprendeu quanto custa. Sua Linha do Coração é curta e reta, o que na quiromancia mostra alguém que guarda o coração atrás de uma muralha. Não qualquer muralha. Uma construída tijolo por tijolo, ao longo de anos, com cada decepção. Você não confia fácil. Não se abre fácil. E quando alguém reclama que você é 'fechada', você pensa: se soubesse por que eu sou assim, não reclamaria. Calaria a boca e ficaria grato por eu estar tentando."
+**content_alt:** "Linha curta e reta mostra autopreservação emocional. Você aprendeu cedo que sentir demais dói demais. Então criou filtros. Regras. Distância segura. Funciona? Na maioria das vezes. Mas tem noites em que a distância segura parece solidão. E aí você se pergunta se o preço de se proteger não é alto demais."
+**content_alt2:** "Uma Linha do Coração curta não significa coração pequeno. Significa coração que escolhe com cuidado onde investir. Você não gasta emoção com qualquer pessoa. Não chora por qualquer filme. Não se apega por qualquer gesto. Quando você finalmente se permite sentir por alguém, aquela pessoa recebe uma versão de você que quase ninguém conhece. E quase nunca sabe o privilégio que isso é."
+
+### impact
+**content:** "Você se protege mais do que ama. Não porque não sabe. Porque já soube demais."
+**content_alt:** "Tem noites em que a distância segura parece solidão. E você se pergunta se vale o preço."
+**content_alt2:** "Quando se permite sentir, a pessoa recebe uma versão de você que quase ninguém conhece."
+
+---
+
+## 2.5 heart_short_curved
+
+### intro
+**content:** "Curta, mas curvada. Seu coração é intenso em rajadas, {{name}}."
+**content_alt:** "Sua Linha do Coração é breve mas sobe. Ciclos curtos de fogo."
+**content_alt2:** "Pouco espaço, muita emoção. Sua linha mostra um coração compactado."
+
+### body
+**content:** "Você ama forte mas breve. Ciclos curtos de intensidade que pegam todo mundo de surpresa, inclusive você. Quando entra num sentimento, entra com tanta força que parece que vai durar pra sempre. Mas não dura. O pico é alto. A queda é rápida. E aí vem a culpa de não ter conseguido sustentar o que parecia tão real. Não é instabilidade. É a forma como seu coração processa: em ondas, não em marés. Cada onda é verdadeira enquanto dura. E quem esteve lá sabe que foi real."
+**content_alt:** "Curta e curvada. Isso mostra um padrão: paixão intensa, transição rápida. Não significa que você não ama de verdade. Significa que você vive o amor em capítulos, não num livro contínuo. Cada pessoa, cada fase, cada sentimento é um capítulo com começo, meio e fim. O problema é que os outros querem continuação. E você já tá no próximo capítulo."
+**content_alt2:** "Sua Linha do Coração é a de quem sente tudo de uma vez. Como se o coração quisesse resolver toda a emoção numa noite só. Isso te faz apaixonante nos primeiros meses. Inesquecível nos primeiros meses. E confusa quando a intensidade começa a baixar. Porque baixar não é acabar. Mas parece. E aí você se pergunta se era real."
+
+### impact
+**content:** "Cada onda é verdadeira enquanto dura. E quem esteve lá sabe que foi real."
+**content_alt:** "Você vive o amor em capítulos. O problema é que os outros querem continuação."
+**content_alt2:** "Baixar não é acabar. Mas parece. E aí você se pergunta se era real."
+
+---
+
+## 2.6 heart_medium_straight
+
+### intro
+**content:** "Sua Linha do Coração é medida, {{name}}. Nem demais, nem de menos."
+**content_alt:** "Equilíbrio. Sua Linha do Coração mostra alguém que pensa antes de sentir."
+**content_alt2:** "Reta e proporcional. Seu coração tem régua, {{name}}."
+
+### body
+**content:** "Você tem um equilíbrio racional no amor que a maioria não tem. Sente, sim. Mas não se perde no sentimento. Consegue amar e manter os pés no chão ao mesmo tempo. Isso te faz parecer controlada. E na maioria das vezes você é. Mas tem momentos em que esse controle pesa. Porque amar com segurança tem um preço: você nunca mergulha de verdade. Sempre tem uma parte de você observando de fora, avaliando, medindo risco. E essa parte impede os voos mais altos."
+**content_alt:** "Linha média e reta. Na quiromancia, isso é o coração pragmático. Você consegue separar amor de ilusão com uma clareza que irrita quem tá perdido no sentimento. Não é frieza. É inteligência emocional acima da média. Você sabe quando tá se sabotando. Sabe quando tá projetando. Sabe quando tá ficando por medo de ir. E mesmo sabendo, às vezes fica."
+**content_alt2:** "Seu coração funciona com lógica. Não é que você não sinta. É que a razão sempre tá por perto, conferindo. 'Isso faz sentido?' 'Vale a pena?' 'O que muda se eu for embora?' Essa voz analítica te salvou de muita coisa ruim. Mas também te impediu de viver algumas coisas que poderiam ser incríveis."
+
+### impact
+**content:** "Você ama sem se perder. Mas o preço é nunca mergulhar de verdade."
+**content_alt:** "Você sabe quando tá ficando por medo de ir. E mesmo sabendo, às vezes fica."
+**content_alt2:** "A razão te salvou de muita coisa ruim. Mas também te impediu de coisas incríveis."
+
+---
+
+## 2.7 heart_medium_curved
+
+### intro
+**content:** "Sua Linha do Coração tem curva e medida. Romantismo com pé no chão."
+**content_alt:** "Média e curvada, {{name}}. Seu coração sonha alto mas aterrissa."
+**content_alt2:** "Uma curva suave, proporcional. Seu coração sabe exatamente até onde ir."
+
+### body
+**content:** "Romantismo controlado. Você sonha alto no amor, mas tem consciência do que é real e do que é projeção. Consegue se apaixonar sem perder o chão. Consegue idealizar sem perder o senso crítico. Essa combinação é rara. A maioria oscila entre os extremos: ou é cínica demais, ou é romântica demais. Você transita. Consegue mandar mensagem poética às 23h e avaliar se a relação faz sentido às 7h da manhã. Os dois são você. Nenhum é mentira."
+**content_alt:** "Linha média curvada mostra alguém que ama com imaginação mas não se ilude. Você constrói cenários bonitos na cabeça. Sabe exatamente como quer ser amada. Mas quando a realidade não bate com o cenário, você ajusta o cenário. Não espera a outra pessoa se encaixar no seu filme. Adapta o filme à realidade. Isso é maturidade emocional. Rara nessa idade."
+**content_alt2:** "Seu coração é um romântico pragmático. Quer o jantar à luz de velas, mas confere se o restaurante cabe no orçamento. Quer a surpresa, mas percebe quando a surpresa é desculpa pra algo. Esse equilíbrio te faz parceira incrível. Porque você entrega poesia sem perder o pé na prosa."
+
+### impact
+**content:** "Você manda mensagem poética às 23h e avalia se faz sentido às 7h. Os dois são você."
+**content_alt:** "Quando a realidade não bate com o cenário, você ajusta o cenário. Isso é raro."
+**content_alt2:** "Seu coração é um romântico pragmático. Poesia sem perder o pé na prosa."
+
+---
+
+## 2.8 heart_faint
+
+### intro
+**content:** "Sua Linha do Coração é sutil, {{name}}. Quase invis\u00edvel. Mas tá lá."
+**content_alt:** "Eu quase não vi sua Linha do Coração. Ela tá quieta."
+**content_alt2:** "Fraca. Fina. Quase um sussurro na palma. Mas sussurros dizem muito."
+
+### body
+**content:** "Você guarda tanto que até a linha ficou quieta. Não é que você não sinta. É que o sentimento foi tão compactado, tão empurrado pra baixo, que ele mal deixa marca. Isso pode significar proteção extrema. Pode significar que você passou por algo que te fez decidir que sentir é perigoso. A linha fraca não é fraqueza. É blindagem. Uma armadura que funcionou tão bem que agora você não sabe mais como tirar."
+**content_alt:** "Uma Linha do Coração fraca mostra emoções reprimidas. Não ausentes. Reprimidas. Tem diferença. Ausência é vazio. Repressão é pressão. Tem algo dentro de você que quer sair e não encontra saída. Pode ser um amor que você não permitiu. Pode ser uma dor que você não processou. Pode ser uma versão de você que nunca teve permissão pra existir."
+**content_alt2:** "Sua linha é tão fina que parece que seu coração decidiu passar despercebido. Isso acontece em mãos de quem aprendeu cedo que mostrar emoção é dar munição pro outro. Então você parou de mostrar. E funcionou. Ninguém te atinge fácil. Mas ninguém te alcança fácil também."
+
+### impact
+**content:** "Você guarda tanto que até a linha ficou quieta. Isso não é fraqueza. É blindagem."
+**content_alt:** "Tem algo dentro de você que quer sair e não encontra saída."
+**content_alt2:** "Ninguém te atinge fácil. Mas ninguém te alcança fácil também."
+
+---
+
+# 3. MODIFICADORES DO CORAÇÃO (axis: heart, block_type: cross)
+
+## 3.1 heart_end_fork
+**content:** "Tem uma bifurcação no final da sua Linha do Coração. Isso significa divisão. Seu coração se divide entre o que quer e o que sabe que deveria querer. Entre a pessoa que te faz sentir viva e a pessoa que te faz sentir segura. Você sabe que raramente são a mesma."
+**content_alt:** "A bifurcação mostra um coração partido entre duas versões de amor. A versão que te incendeia e a versão que te acalma. Você passa a vida inteira procurando as duas na mesma pessoa."
+**content_alt2:** "Final bifurcado. Dois caminhos possíveis pro seu coração. Você já escolheu errado antes. Mas a bifurcação tá lá porque você ainda vai ter que escolher de novo."
+
+## 3.2 heart_island
+**content:** "Tem uma ilha na sua Linha do Coração. Um período que você não gosta de lembrar. Uma época em que tudo ficou turvo. Confuso. Sua mão lembra por você. Essa marca não é defeito. É cicatriz. E cicatriz é prova de que você sobreviveu."
+**content_alt:** "Ilhas na Linha do Coração mostram períodos de confusão emocional. Momentos em que você não sabia o que sentia, ou sentia tudo ao mesmo tempo e nenhuma coisa fazia sentido. Já passou. Mas a marca ficou."
+**content_alt2:** "Essa ilha é um capítulo que você fechou mas nunca terminou de ler. Tem algo lá que ainda te visita quando você baixa a guarda. De madrugada, geralmente."
+
+## 3.3 heart_break
+**content:** "Sua Linha do Coração tem uma interrupção. Algo partiu. Não a linha. Você. E depois você recomeçou. A linha que volta depois da interrupção não é a mesma de antes. Ela é diferente. Às vezes mais profunda. Às vezes mais fina. Mas ela volta. E isso diz tudo."
+**content_alt:** "Uma quebra na linha mostra um rompimento que mudou sua forma de amar. Antes da quebra, você era de um jeito. Depois, de outro. Quem te conheceu nos dois lados sabe. A pessoa que amava antes é prima da que ama agora. Parecidas, mas não iguais."
+**content_alt2:** "A interrupção mostra o momento exato em que você parou de acreditar em algo. Não necessariamente em alguém. Talvez na ideia de que amor é simples. Talvez na ideia de que amar basta. A linha recomeçou. Mas com outra expectativa."
+
+## 3.4 heart_ends_index
+**content:** "Sua Linha do Coração termina abaixo do dedo indicador, o Monte de Júpiter. Isso significa que você escolhe quem ama com a cabeça. Não por frieza. Por padrão. Você busca parceiros que admira, não só que deseja. E quando o respeito acaba antes da paixão, você vai embora antes da paixão acabar."
+**content_alt:** "Terminar em Júpiter mostra que você precisa de alguém que admire pra amar. Atração não basta. Você precisa respeitar a mente, o caráter, a postura. Se percebe fraqueza moral, o desejo evapora. Não é exigência. É como seu coração funciona."
+
+## 3.5 heart_ends_middle
+**content:** "Sua Linha do Coração termina abaixo do dedo médio, o Monte de Saturno. Isso é incomum. Mostra que você ama por necessidade, não por escolha. Não no sentido de carência. No sentido de que o amor pra você é essencial como respirar. Você não funciona bem sozinha. E não é fraqueza admitir isso."
+**content_alt:** "Terminar em Saturno mostra dependência emocional estrutural. Você precisa de vínculo pra se sentir inteira. Sem vínculo, flutua. Com vínculo, planta raiz. O desafio é não confundir necessidade com permanência."
+
+## 3.6 heart_deep
+**content:** "Sua Linha do Coração é profunda. A mais marcada da palma. Quando você sente, o mundo inteiro percebe. Mesmo quando tenta esconder. Seu rosto entrega. Seu corpo entrega. Seus olhos entregam mais rápido que sua boca consegue mentir."
+**content_alt:** "Profunda assim mostra emoção que transborda. Você não consegue ser indiferente. Não consegue ignorar. Não consegue 'tanto faz'. Tudo te atinge. Tudo te move. Tudo te custa energia emocional que os outros nem sabem que estão gastando."
+
+---
+
+# 4. LINHA DA CABEÇA (axis: head) — PREMIUM
+
+## 4.1 head_long_straight
+
+### intro
+**content:** "Sua Linha da Cabeça é uma navalha, {{name}}. Longa e reta. Corta sem curva."
+**content_alt:** "Reta como régua. Sua mente não desvia, {{name}}."
+
+### body
+**content:** "Mente afiada. Lógica domina. Você analisa antes de sentir. Desmonta argumentos antes dos outros terminarem de falar. Isso te dá uma vantagem absurda em qualquer discussão. E uma desvantagem absurda em qualquer intimidade. Porque as pessoas não querem ser analisadas. Querem ser ouvidas. E você ouve, sim. Mas enquanto ouve, já tá processando, avaliando, concluindo. E quando a pessoa termina de falar, você já tem a resposta pronta. E a resposta quase sempre tá certa. E quase sempre magoa."
+**content_alt:** "Linha da Cabeça longa e reta mostra pensamento sequencial, metódico. Você resolve problemas que os outros nem sabem que existem. Enxerga consequências a três passos de distância. Planeja antes de agir. O lado sombra disso é paralisia por análise. Às vezes você pensa tanto que a janela de oportunidade fecha enquanto você ainda tá avaliando se vale a pena abrir."
+
+### impact
+**content:** "Você ouve, analisa, e responde. A resposta quase sempre tá certa. E quase sempre magoa."
+**content_alt:** "Você enxerga consequências a três passos. O preço é pensar demais e agir de menos."
+
+## 4.2 head_long_curved
+
+### intro
+**content:** "Sua Linha da Cabeça curva em direção à Lua. Mente criativa com raiz, {{name}}."
+**content_alt:** "Longa e curvada. Imaginação com estrutura. Raro."
+
+### body
+**content:** "Criativa com estrutura. Você imagina coisas que os outros não imaginam, mas consegue transformar em algo concreto. Não é sonhadora solta. É sonhadora que executa. Sua mente funciona em imagens, conexões, metáforas. Você entende conceitos abstratos antes de entender as instruções literais. Na escola, provavelmente odiava matemática mas entendia física. Porque física tem narrativa. Números sozinhos não."
+**content_alt:** "Curva em direção ao Monte da Lua mostra imaginação fértil ancorada em inteligência. Você não só tem ideias. Tem ideias que funcionam. Consegue ver o quadro completo quando todo mundo tá olhando pro pixel. Isso te faz excelente em resolver problemas criativos. E péssima em seguir processos que não fazem sentido."
+
+### impact
+**content:** "Não é sonhadora solta. É sonhadora que executa."
+**content_alt:** "Todo mundo olha pro pixel. Você vê o quadro completo."
+
+## 4.3 head_short_straight
+
+### intro
+**content:** "Curta e reta. Sua mente vai direto ao ponto, {{name}}."
+
+### body
+**content:** "Prática. Sem rodeios. Resolve e segue. Você não precisa de contexto, de história, de explicação detalhada. Precisa do problema e do prazo. Sua mente funciona como bisturi: precisa, rápida, sem desperdício. As pessoas que pensam demais te cansam. As reuniões longas te matam. Você já tinha a resposta no minuto 3. Os outros 57 minutos foram tortura."
+
+### impact
+**content:** "Você já tinha a resposta no minuto 3. Os outros 57 minutos foram tortura."
+
+## 4.4 head_faint
+
+### intro
+**content:** "Sua Linha da Cabeça é sutil, {{name}}. Mas não confunda sutil com fraca."
+
+### body
+**content:** "Mente que duvida de si mesma. Mais forte do que acredita. Você subestima o que sabe. Duvida das próprias conclusões. Pede validação pra coisas que já resolveu sozinha. Se alguém te perguntasse 'você é inteligente?', você hesitaria. Mas se alguém te colocasse num problema real pra resolver, você resolveria mais rápido que a maioria. A inteligência tá lá. A confiança nela é que precisa crescer."
+
+### impact
+**content:** "A inteligência tá lá. A confiança nela é que precisa crescer."
+
+---
+
+# 5. LINHA DA VIDA (axis: life) — PREMIUM
+
+## 5.1 life_long_deep
+
+### intro
+**content:** "Sua Linha da Vida é profunda e longa. Resiliência que assusta quem te subestima."
+
+### body
+**content:** "Vitalidade forte. Você se recupera de coisas que derrubariam outras pessoas por meses. Não porque não sinta. Porque seu corpo e sua mente têm um mecanismo de reconstrução que funciona quase sozinho. Você levanta. Sempre levanta. Às vezes no dia seguinte. Às vezes na mesma hora. As pessoas ao redor se impressionam. 'Como ela tá bem?' Não tá. Mas funciona mesmo não tando. E isso é mais raro do que parece."
+
+### impact
+**content:** "Você levanta. Sempre levanta. As pessoas se impressionam. 'Como ela tá bem?' Não tá. Mas funciona."
+
+## 5.2 life_broken_restart
+
+### intro
+**content:** "Sua Linha da Vida parou. Parou de verdade. E recomeçou do lado."
+
+### body
+**content:** "Tem uma interrupção na sua Linha da Vida que mostra um antes e um depois. Não é metáfora. É literal. Algo aconteceu que dividiu sua vida em duas partes. Antes daquilo. Depois daquilo. A linha que recomeça não é continuação. É nova. Mais forte, mais funda, mais definida. Só você sabe o que aconteceu no meio. E só suas mãos lembram a força que foi preciso pra recomeçar."
+**content_alt:** "A interrupção mostra uma ruptura. Pode ter sido uma perda, uma mudança de cidade, um término, um diagnóstico, uma decisão que mudou tudo. O que importa é que a linha voltou. E voltou diferente. A pessoa que você era antes desse ponto não existe mais. A que existe agora é construída sobre os escombros da anterior. E escombros, quando reorganizados, viram fundação."
+
+### impact
+**content:** "Só você sabe o que aconteceu no meio. E só suas mãos lembram a força que foi preciso."
+**content_alt:** "A pessoa que você era antes não existe mais. A que existe agora foi construída sobre os escombros."
+
+---
+
+# 6. LINHA DO DESTINO (axis: fate) — PREMIUM
+
+## 6.1 fate_present_deep
+
+### intro
+**content:** "Sua Linha do Destino é forte e clara. Direção que não vacila."
+
+### body
+**content:** "Você sabe pra onde vai. Talvez não saiba como. Talvez não saiba quando. Mas a direção tá definida. Sua Linha do Destino sobe firme pelo centro da palma em direção a Saturno. Na quiromancia, isso mostra propósito claro. Não necessariamente um plano. Propósito. A diferença é que planos mudam. Propósito permanece. Mesmo quando tudo ao redor desmorona, você tem uma bússola interna que aponta pra frente."
+
+### impact
+**content:** "Planos mudam. Propósito permanece. E o seu aponta pra frente."
+
+## 6.2 fate_absent
+
+### intro
+**content:** "Não tem Linha do Destino na sua mão, {{name}}. E isso não é o que você pensa."
+
+### body
+**content:** "Ausência de Linha do Destino não é ausência de destino. É o contrário. Significa que você não segue caminho de ninguém. Não tem trilha predefinida. Não tem script. Você cria o próprio caminho a cada decisão. Enquanto outras pessoas seguem rotas claras, você navega por intuição, tentativa, erro, recalculação. É mais difícil. Mas o que você constrói é inteiramente seu. Ninguém pode dizer que te deram de mão beijada. Porque não deram nada. Você fez."
+
+### impact
+**content:** "Você não segue destino de ninguém. Cria o próprio. E ninguém pode dizer que te deram de mão beijada."
+
+## 6.3 fate_multiple
+
+### intro
+**content:** "Tem mais de uma Linha do Destino na sua mão. Isso é raro, {{name}}."
+
+### body
+**content:** "Linhas paralelas de Destino mostram vidas paralelas dentro de uma só. Você não tem um caminho. Tem dois. Ou três. A pessoa que você mostra no trabalho e a pessoa que existe quando ninguém tá olhando. A carreira oficial e o sonho que você ainda não contou pra ninguém. Os dois são reais. Os dois puxam. E a tensão entre eles é o que te move."
+
+### impact
+**content:** "Você vive vidas paralelas dentro de uma só. E a tensão entre elas é o que te move."
+
+---
+
+# 7. MONTES (axis: mount) — PREMIUM
+# Só geram bloco quando PRONUNCIADOS
+
+## 7.1 mount_jupiter
+**content:** "Seu Monte de Júpiter é pronunciado. Na base do indicador, a área da ambição. Você quer mais. Sempre quis. Não é ganância. É um motor interno que nunca desliga. Enquanto os outros se acomodam, você já tá planejando o próximo passo. Sua ambição não é barulhenta. É silenciosa e constante. Como água erodindo pedra."
+**content_alt:** "Júpiter forte mostra liderança natural. As pessoas te seguem sem você pedir. Olham pra você quando a situação complica. Não porque você tem a resposta. Porque você tem a postura de quem vai encontrar."
+
+## 7.2 mount_saturn
+**content:** "Monte de Saturno pronunciado. Responsabilidade pesa na sua mão, {{name}}. Você carrega coisas que não são suas. Decisões dos outros. Problemas dos outros. Culpas dos outros. E carrega como se fossem suas. Não porque te pedem. Porque você simplesmente não consegue não carregar."
+**content_alt:** "Saturno forte mostra disciplina e introspecção. Você pensa sobre a vida mais do que a maioria. Questiona propósito, sentido, direção. Isso te torna profunda. E às vezes pesada. Pros outros e pra você mesma."
+
+## 7.3 mount_apollo
+**content:** "Seu Monte de Apolo é pronunciado. Na base do anelar, a área do carisma. As pessoas gravitam na sua direção sem você tentar. Não é beleza. É presença. Tem algo em você que ilumina o ambiente. Você pode não perceber. Mas os outros percebem no segundo que você entra."
+**content_alt:** "Apolo forte mostra talento artístico e magnetismo. Mesmo que você não se considere 'criativa', sua forma de falar, se vestir, pensar, tem uma estética própria que os outros tentam imitar sem saber."
+
+## 7.4 mount_venus
+**content:** "Monte de Vênus pronunciado. A base do polegar, cheia, carnuda. Sensualidade e calor. Você precisa de toque. De presença física. Mensagem de texto não basta. Ligação não basta. Você precisa do corpo. Do abraço que aperta. Da mão que segura. Do olho que olha. Sem isso, qualquer relação perde cor."
+**content_alt:** "Vênus forte mostra alguém que vive pelos sentidos. Textura, cheiro, sabor, toque. Você não funciona no abstrato. Precisa de concreto. E quando tem, entrega um nível de presença que vicia."
+
+## 7.5 mount_luna
+**content:** "Monte da Lua pronunciado. Na borda da palma, oposta ao polegar. Imaginação e intuição. Você sonha acordada com frequência. Constrói mundos na cabeça. Vê possibilidades onde os outros vêm parede. Sua intuição funciona como um sexto sentido tão afiado que você mesma duvida dele. Não deveria."
+**content_alt:** "Lua forte mostra sensibilidade ao invisível. Você sente ambientes, pessoas, intenções. Não é misticismo. É percepção ampliada que a maioria não desenvolveu. Confie mais nela."
+
+## 7.6 mount_mercury
+**content:** "Monte de Mercúrio pronunciado. Na base do mindinho, a área da comunicação. Você convence sem levantar a voz. Sabe escolher as palavras exatas pra cada situação. Nas boas e nas ruins. Quando quer convencer, convence. Quando quer machucar, machuca. E sabe a diferença."
+**content_alt:** "Mercúrio forte mostra inteligência verbal. Você pensa e fala ao mesmo tempo sem tropeçar. Enquanto os outros estão formulando, você já entregou. Isso te dá poder em qualquer conversa. E poder vem com responsabilidade."
+
+---
+
+# 8. SINAIS RAROS (axis: rare) — PREMIUM
+
+## 8.1 star_jupiter
+**content:** "Tem uma estrela no seu Monte de Júpiter. Isso é um dos sinais mais positivos da quiromancia. Sucesso que parece sorte mas é competência acumulada. Algo que você vem construindo vai dar resultado. E quando der, as pessoas vão dizer 'que sorte'. Não é sorte. Você sabe."
+
+## 8.2 mystic_cross
+**content:** "Cruz mística no centro da sua palma. Entre a Linha do Coração e a Linha da Cabeça. Na quiromancia, isso mostra intuição fora do comum. Você sente coisas antes de acontecerem. Não é premonição. É percepção amplificada. Padrões que os outros não veem, você vê. Conexões que os outros não fazem, você faz. Confie mais nisso."
+
+## 8.3 solomon_ring
+**content:** "Anel de Salomão contornando a base do seu indicador. Sabedoria natural. Não adquirida. Natural. As pessoas pedem seus conselhos sem saber por quê. Te procuram quando precisam de clareza. Você consegue ver a situação dos outros com uma lucidez que não consegue aplicar na própria vida. Irônico, mas comum em quem tem esse sinal."
+
+## 8.4 protection_square
+**content:** "Tem um quadrado sobre uma das suas linhas. Na quiromancia, quadrado é proteção. Significa que você já passou por algo que deveria ter te destruído. Não destruiu. A marca de proteção mostra que algo, seja instinto, seja timing, seja outra coisa, te segurou na beira. Você sobreviveu a algo que outros não sobreviveriam. E provavelmente nunca contou pra ninguém."
+
+---
+
+# 9. CRUZAMENTOS (axis: cross, block_type: cross)
+
+## 9.1 cross_heart_straight_head_straight
+**content:** "Coração reto e Cabeça reta. Duas linhas alinhadas na mesma direção. Isso mostra uma pessoa que decide rápido no amor. Não romantiza. Não hesita. Vê a situação como é, sem filtro. Isso te faz eficiente em relações. E solitária em noites quietas."
+
+## 9.2 cross_heart_curved_head_straight
+**content:** "Sua cabeça decide rápido. Seu coração demora pra aceitar. E no meio desse atraso, você perde coisas que eram pra ser suas. A Cabeça reta já calculou que é hora de ir. O Coração curvado ainda tá esperando mais um sinal. Quando os dois finalmente concordam, geralmente já é tarde."
+
+## 9.3 cross_heart_short_venus_pronounced
+**content:** "Você ama forte, mas se protege mais forte ainda. Seu Coração curto e seu Monte de Vênus pronunciado contam histórias opostas. O monte diz que você precisa de toque, de presença, de calor. A linha diz que você não deixa ninguém chegar perto o suficiente pra tocar. Essa tensão mora em você. E só alguém muito paciente vai saber navegar."
+
+## 9.4 cross_head_long_luna_pronounced
+**content:** "Mente que não para mais imaginação fértil. Três da manhã. Você tá deitada pensando em cenários que nunca vão acontecer. Conversas que nunca vai ter. Vidas que nunca vai viver. Sua Cabeça longa alimenta. Sua Lua pronunciada amplifica. Juntas, criam um cinema privado que é ao mesmo tempo seu refúgio e sua prisão."
+
+## 9.5 cross_life_broken_fate_multiple
+**content:** "Você já recomeçou mais vezes do que a maioria teria coragem. Sua Linha da Vida interrompida e suas múltiplas Linhas do Destino contam a mesma história por ângulos diferentes. A Vida mostra a queda. O Destino mostra que você se levantou e encontrou outro caminho. E outro. E outro. Não por indecisão. Por resiliência."
+
+## 9.6 cross_heart_deep_head_long
+**content:** "Você carrega mais do que mostra. E isso te protege e te prende. Seu Coração profundo sente demais. Sua Cabeça longa pensa demais sobre o que sente. O resultado é uma carga emocional que você processa sozinha, em silêncio, e que ninguém imagina que existe. Porque por fora, você parece ter tudo sob controle."
+
+## 9.7 cross_fate_fork_jupiter_strong
+**content:** "Tem gente que te subestima. Suas mãos dizem que é melhor assim. Por enquanto. Seu Destino bifurcado e seu Júpiter forte mostram ambição latente que ainda não mostrou a cara pra todo mundo. Quando mostrar, vai ser tarde pra quem duvidou."
+
+## 9.8 cross_heart_island_saturn_marked
+**content:** "Você tá segurando algo que já deveria ter soltado. Suas linhas sabem o que é. A ilha no Coração e o Saturno marcado na sua mão contam a mesma coisa: uma responsabilidade emocional que não é sua, mas que você adotou. Uma culpa que não te pertence. Uma lealdade que já venceu o prazo."
+
+---
+
+# 10. LINHA DA CABEÇA: VARIAÇÕES RESTANTES (axis: head) — PREMIUM
+
+## 10.1 head_long_deep_curved
+
+### intro
+**content:** "Sua Linha da Cabeça mergulha pro Monte da Lua. Mente artística, {{name}}."
+**content_alt:** "Eu vi sua Cabeça descendo em direção à Lua. Você pensa em imagens."
+
+### body
+**content:** "Sua mente não funciona em palavras. Funciona em imagens, texturas, cores, atmosferas. Você entende o mundo por sensação antes de entender por lógica. Quando alguém te explica algo com dados, você demora. Quando te mostram, você entende em segundos. Isso te fez parecer lenta em ambientes que valorizam velocidade verbal. Mas em qualquer ambiente que valorize criação, você é a pessoa mais rápida da sala. Sua curva profunda em direção à Lua mostra que a imaginação não é hobby. É o sistema operacional da sua mente."
+**content_alt:** "Linha da Cabeça curvada profundamente pro Monte da Lua. Na quiromancia clássica, essa é a marca do artista. Não necessariamente alguém que pinta ou escreve. Alguém que vê o mundo com uma lente que os outros não têm. Você percebe beleza no que é ordinário. Encontra significado no que os outros descartam. Isso te torna criativa em qualquer área que escolha. E incompreendida na maioria delas."
+
+### impact
+**content:** "Sua imaginação não é hobby. É o sistema operacional da sua mente."
+**content_alt:** "Você vê o mundo com uma lente que os outros não têm. E isso é solidão e superpoder ao mesmo tempo."
+
+## 10.2 head_medium_straight
+
+### intro
+**content:** "Sua Linha da Cabeça é equilibrada. Média e reta. Sem excesso."
+**content_alt:** "Uma mente proporcional, {{name}}. Pensa o suficiente. Não demais."
+
+### body
+**content:** "Você pensa o suficiente pra tomar boas decisões e não tanto que fique paralisada. Esse equilíbrio é mais raro do que parece. A maioria oscila entre impulsividade e overthinking. Você transita no meio com uma facilidade que irrita quem vive nos extremos. Suas decisões são boas. Não espetaculares. Boas. Consistentes. Confiáveis. Você é a pessoa que nunca toma a pior decisão da mesa. E raramente toma a mais ousada. A questão é se isso te basta."
+**content_alt:** "Linha da Cabeça média e reta. Pensamento funcional. Você processa informação com eficiência, sem drama, sem paralisia. As pessoas confiam no seu julgamento porque ele é previsível no melhor sentido. Você não surpreende com genialidade. Surpreende com consistência. E consistência, no longo prazo, ganha de qualquer genialidade."
+
+### impact
+**content:** "Você nunca toma a pior decisão da mesa. E raramente a mais ousada. A questão é se isso te basta."
+**content_alt:** "Você não surpreende com genialidade. Surpreende com consistência. E consistência ganha no longo prazo."
+
+## 10.3 head_medium_curved
+
+### intro
+**content:** "Flexível. Sua Linha da Cabeça se adapta, {{name}}. Curva suave, proporcional."
+**content_alt:** "Uma mente que dobra sem quebrar. Média e curvada."
+
+### body
+**content:** "Sua mente se adapta à situação. Em ambiente analítico, você é analítica. Em ambiente criativo, você é criativa. Não é falta de personalidade. É versatilidade cognitiva. Você consegue falar a língua de qualquer grupo. Entender a lógica de qualquer área. Isso te torna excelente em papéis de ponte: traduzir o que um departamento diz pro outro, mediar conversas, conectar mundos que não se falam. O risco é nunca se especializar em nada. Ser boa em tudo e excelente em nada."
+**content_alt:** "Linha média curvada mostra adaptabilidade mental. Você não tem um jeito fixo de pensar. Tem vários. E alterna entre eles conforme o contexto pede. Os analíticos te acham criativa. Os criativos te acham analítica. Nenhum dos dois tá errado. Você é as duas coisas, dependendo de quem tá olhando."
+
+### impact
+**content:** "Os analíticos te acham criativa. Os criativos te acham analítica. Nenhum tá errado."
+**content_alt:** "Você fala a língua de qualquer grupo. O risco é nunca ter sua própria."
+
+## 10.4 head_short_curved
+
+### intro
+**content:** "Curta e curvada. Intuição pura, {{name}}. Rápida e certeira."
+**content_alt:** "Sua mente não precisa de tempo. Chega lá antes da lógica."
+
+### body
+**content:** "Você sabe antes de entender por quê. Suas conclusões chegam prontas, sem o processo visível no meio. Isso confunde quem pede explicação. 'Por que você acha isso?' Porque sim. Porque sinto. Porque sei. Mas 'porque sei' não convence em reunião. Então você aprendeu a inventar justificativas racionais pra intuições que já estavam certas antes de qualquer análise. A ironia é que quando você segue a intuição, acerta. Quando tenta ser racional, erra."
+**content_alt:** "Linha curta curvada mostra processamento intuitivo. Sua mente funciona por atalhos que a lógica não mapeia. Você pega o elevador enquanto os outros sobem de escada. Chega no mesmo andar. Mais rápido. Sem conseguir explicar qual botão apertou. Isso é frustrantemente eficiente."
+
+### impact
+**content:** "Quando segue a intuição, acerta. Quando tenta ser racional, erra."
+**content_alt:** "Você pega o elevador enquanto os outros sobem de escada. E não sabe explicar qual botão apertou."
+
+---
+
+# 11. LINHA DA VIDA: VARIAÇÕES RESTANTES (axis: life) — PREMIUM
+
+## 11.1 life_long_faint
+
+### intro
+**content:** "Longa mas fraca. Energia dispersa, {{name}}. Tem muito. Gasta mal."
+**content_alt:** "Sua Linha da Vida é longa. Mas fina. Como se a vitalidade tivesse sido esticada demais."
+
+### body
+**content:** "Você tem resistência. Aguenta mais que a maioria. Mas a forma como gasta energia te sabota. Dá pra todo mundo. Pro trabalho, pras amigas, pra família, pro parceiro. E quando sobra pra você, não sobra nada. Sua linha longa mostra que o combustível existe. A espessura fina mostra que ele vaza. Você precisa aprender a poupar força. Não é egoísmo. É manutenção. Carro que nunca para no posto acaba na estrada."
+**content_alt:** "Linha longa e fraca. Potencial de vitalidade alto, execução baixa. Você se cansa mais rápido do que deveria pra alguém com sua capacidade. O motivo não é físico. É emocional. Você carrega peso emocional dos outros e cobra do próprio corpo. Seu corpo tá cansado de pagar contas que não são suas."
+
+### impact
+**content:** "O combustível existe. Ele vaza. Você precisa aprender a poupar. Não é egoísmo. É manutenção."
+**content_alt:** "Seu corpo tá cansado de pagar contas emocionais que não são suas."
+
+## 11.2 life_short_deep
+
+### intro
+**content:** "Curta e profunda. Vida compactada, {{name}}. Mais vivido em menos tempo."
+**content_alt:** "Sua Linha da Vida é curta. Mas funda. Como se cada ano valesse três."
+
+### body
+**content:** "Linha da Vida curta não é vida curta. É vida concentrada. Você viveu mais coisas em menos tempo que a maioria vive numa vida inteira. Mudanças radicais, decisões pesadas, recomeços que os outros levariam anos pra considerar. Tudo acontece rápido com você. Não porque o destino corre. Porque você corre. Sua intensidade comprime o tempo. O que os outros espalham em décadas, você espreme em anos."
+**content_alt:** "Curta e profunda. Na quiromancia, isso mostra alguém que vive em alta definição. Cada experiência é mais nítida, mais intensa, mais marcante. Você não tem memórias genéricas. Cada lembrança tem cheiro, cor, temperatura. Isso é presente e é peso. Porque esquecer também fica mais difícil."
+
+### impact
+**content:** "Você viveu mais em menos tempo que a maioria vive numa vida inteira."
+**content_alt:** "Você não tem memórias genéricas. Cada uma tem cheiro, cor, temperatura."
+
+## 11.3 life_short_faint
+
+### intro
+**content:** "Curta e fraca. Sua Linha da Vida precisa de âncora, {{name}}."
+**content_alt:** "Uma linha que pede cuidado. Não fraqueza. Atenção."
+
+### body
+**content:** "Sua Linha da Vida mostra alguém que precisa de âncoras. Pessoas, lugares, rituais que te mantenham conectada. Sem elas, você flutua. Não é dependência. É que você funciona melhor quando tem base. Quando sabe pra onde voltar. Quando tem alguém esperando. A solidão não te destrói por fora. Te corrói por dentro. E você demora pra perceber que tá corroendo porque aprendeu a funcionar no automático mesmo quando tá desmoronando."
+**content_alt:** "Linha curta e fraca pede autopreservação consciente. Você precisa prestar atenção em si mesma com mais frequência do que presta. Dormir mais. Dizer não mais. Sair de situações que drenam antes de chegar ao limite. Seu limite é mais perto do que parece. E quando chega, não avisa."
+
+### impact
+**content:** "A solidão não te destrói por fora. Te corrói por dentro. E você demora pra perceber."
+**content_alt:** "Seu limite é mais perto do que parece. E quando chega, não avisa."
+
+## 11.4 life_curved_wide
+
+### intro
+**content:** "Sua Linha da Vida faz um arco largo. Generosa, {{name}}. De energia e de tudo mais."
+**content_alt:** "Arco aberto. Sua vitalidade se espalha pela palma inteira."
+
+### body
+**content:** "Arco largo na Linha da Vida mostra generosidade de energia. Você dá sem calcular. Tempo, atenção, presença, dinheiro. Não é ingenuidade. É excesso. Você tem tanto pra dar que dar não parece custar nada. Até o dia em que custa. Porque quem dá sem parar atrai quem só sabe receber. E quando você finalmente percebe o desequilíbrio, já investiu demais pra ir embora fácil."
+**content_alt:** "Linha da Vida com arco largo, se espalhando pelo centro da palma. Na quiromancia, isso é vitalidade expansiva. Você ocupa espaço. Não só fisicamente. Emocionalmente. Energeticamente. Quando entra num ambiente, o ambiente muda. Quando sai, o vazio fica."
+
+### impact
+**content:** "Você dá sem calcular. Até o dia em que o custo aparece."
+**content_alt:** "Quando você entra num ambiente, ele muda. Quando sai, o vazio fica."
+
+## 11.5 life_curved_tight
+
+### intro
+**content:** "Arco fechado. Sua Linha da Vida abraça o polegar de perto, {{name}}."
+**content_alt:** "Linha apertada. Protetora do próprio espaço."
+
+### body
+**content:** "Você protege seu espaço com unhas e dentes. Poucos entram. Os que entram passaram por testes que nem sabem que existiram. Sua Linha da Vida abraça o Monte de Vênus de perto, o que na quiromancia mostra alguém que mantém a energia próxima, controlada, reservada. Você não desperdiça presença. Não vai em tudo que é convidada. Não abre a porta pra qualquer um que bate. Isso te protege. Também te isola. E às vezes a diferença entre proteção e isolamento é só o quanto tá doendo."
+**content_alt:** "Arco fechado mostra reserva energética. Você administra sua energia como quem administra conta bancária. Não gasta com qualquer coisa. Investe com critério. As pessoas podem achar que você é antissocial. Você é seletiva. E seletividade, quando vem de quem já deu demais, é sabedoria."
+
+### impact
+**content:** "Poucos entram. Os que entraram passaram por testes que nem sabem que existiram."
+**content_alt:** "As pessoas acham que você é antissocial. Você é seletiva. E isso é sabedoria."
+
+## 11.6 life_chained
+
+### intro
+**content:** "Sua Linha da Vida parece uma corrente. Elos ligados, {{name}}. Períodos encadeados."
+**content_alt:** "Encadeada. Sua linha não é lisa. Ela ondula como quem carregou peso."
+
+### body
+**content:** "Uma Linha da Vida encadeada, com pequenas ilhas consecutivas, mostra períodos de esgotamento que se repetem. Não é uma queda grande. São várias quedas pequenas. Ciclos de exaustão que você normaliza porque 'todo mundo tá cansado'. Mas nem todo mundo tá cansado do jeito que você tá. Seu cansaço é acumulativo. Camadas de estresse empilhadas que nunca são processadas. Você precisa aprender a descansar sem culpa. Descanso não é prêmio. É necessidade. Tão essencial quanto respirar."
+**content_alt:** "Correntes na Linha da Vida são como cicatrizes pequenas. Nenhuma é grave sozinha. Mas juntas contam uma história de desgaste crônico. Você funciona no limite há tanto tempo que esqueceu como é estar descansada de verdade. Não cansada normal. Descansada. A diferença é que descansada de verdade, você seria imbatível. E isso assustaria todo mundo."
+
+### impact
+**content:** "Você funciona no limite há tanto tempo que esqueceu como é estar descansada de verdade."
+**content_alt:** "Descansada de verdade, você seria imbatível. E isso assustaria todo mundo."
+
+---
+
+# 12. LINHA DO DESTINO: VARIAÇÕES RESTANTES (axis: fate) — PREMIUM
+
+## 12.1 fate_present_faint
+
+### intro
+**content:** "Tem uma Linha do Destino na sua mão. Fraca, mas presente. Em construção."
+**content_alt:** "Eu vejo um Destino se formando, {{name}}. Ainda tá tímido."
+
+### body
+**content:** "Sua Linha do Destino existe, mas é fraca. Na quiromancia, isso significa destino em construção. Você tá no processo de descobrir pra onde vai. Ainda não chegou a clareza total. E tá tudo bem. A linha fraca não é ausência de direção. É direção em gestação. Algo dentro de você tá se formando. Uma convicção, um desejo, uma certeza que ainda não ganhou forma completa. Mas quando ganhar, a linha vai engrossar. E você vai olhar pra trás e entender por que precisou de tanto tempo."
+**content_alt:** "Destino fraco não é destino inexistente. É destino que ainda tá sendo escrito. Você tá no meio do rascunho. E rascunhos são confusos, bagunçados, cheios de rabiscos. Mas todo texto final nasceu de um rascunho. O seu tá em andamento."
+
+### impact
+**content:** "Algo dentro de você tá se formando. Quando ganhar forma, vai fazer sentido tudo que veio antes."
+**content_alt:** "Você tá no meio do rascunho. E todo texto final nasceu de um."
+
+## 12.2 fate_broken
+
+### intro
+**content:** "Sua Linha do Destino tem uma quebra. Mudança de rota, {{name}}."
+**content_alt:** "Interrupção no Destino. Não é erro. É recalculando."
+
+### body
+**content:** "A quebra na sua Linha do Destino marca o momento exato em que você mudou de direção. Pode ter sido por escolha. Pode ter sido por força. De qualquer forma, o caminho que você trilhava antes da quebra não é o mesmo de depois. E o de depois, mesmo que tenha começado assustador, provavelmente faz mais sentido com quem você é de verdade. A primeira parte do Destino pode ter sido o que esperavam de você. A segunda é o que você espera de si mesma."
+**content_alt:** "Quebra no Destino mostra redirecionamento. Algo te tirou do trilho original. Um evento, uma pessoa, uma revelação. E colocou num trilho diferente. O primeiro trilho pode ter parecido mais seguro. O segundo parece mais seu."
+
+### impact
+**content:** "O primeiro caminho era o que esperavam de você. O segundo é o que você espera de si mesma."
+**content_alt:** "O primeiro trilho parecia mais seguro. O segundo parece mais seu."
+
+## 12.3 fate_late_start
+
+### intro
+**content:** "Sua Linha do Destino começa no meio da palma, {{name}}. Não na base. Tarde."
+**content_alt:** "Destino tardio. Você não nasceu sabendo. Descobriu."
+
+### body
+**content:** "Quando a Linha do Destino começa no meio da palma, e não na base, significa que você encontrou propósito depois. Não veio de berço. Não veio de infância. Veio da vida. Dos erros, dos acasos, das decisões que pareciam aleatórias na hora e que agora, olhando pra trás, formam um caminho. Antes desse ponto, você tava sobrevivendo. Experimentando. Tentando coisas sem saber por quê. Depois desse ponto, algo clicou. E agora tudo que veio antes faz sentido como preparação."
+**content_alt:** "Destino com início tardio. Sua primeira metade de vida foi ensaio. Teste. Erro com propósito disfarçado de acidente. A segunda metade é a peça de verdade. E ela ainda tá começando. Não se cobre por ter demorado. Se cobre por estar finalmente no palco certo."
+
+### impact
+**content:** "Antes, você tava sobrevivendo. Depois de um certo ponto, algo clicou. E tudo virou preparação."
+**content_alt:** "Não se cobre por ter demorado. Se cobre por estar finalmente no palco certo."
+
+---
+
+# 13. MONTES RESTANTES (axis: mount) — PREMIUM
+
+## 13.1 mount_mars_positive
+**content:** "Monte de Marte Positivo pronunciado. Entre o polegar e o indicador, acima do Monte de Vênus. Isso é coragem física. Assertividade. Você enfrenta de frente. Não contorna. Não evita. Não finge que não viu. Quando algo precisa ser dito, você diz. Quando algo precisa ser feito, você faz. Isso te mete em confusão às vezes. Mas te tira de mais confusões do que te mete."
+**content_alt:** "Marte Positivo forte mostra alguém que não recua. Em discussões, você não abaixa o tom. Em crises, você não congela. Em injustiças, você não desvia o olhar. Isso é raro. E caro. Porque coragem tem preço. E o preço geralmente é ser a pessoa que todo mundo admira e ninguém imita."
+
+## 13.2 mount_mars_negative
+**content:** "Monte de Marte Negativo pronunciado. Na borda oposta ao polegar, abaixo do mindinho. Resistência emocional. Paciência que parece infinita. Você aguenta mais que a maioria sem demonstrar desgaste. As pessoas despejam nela. Problemas, frustrações, crises. Você absorve. Processa. Devolve calma. O perigo é que essa resistência vira expectativa. Os outros começam a achar que você aguenta tudo. E param de se preocupar se você tá aguentando."
+**content_alt:** "Marte Negativo forte é resistência silenciosa. Você é o pilar que ninguém percebe que tá sustentando o teto. Quando você estremece, todo mundo cai. Mas ninguém pergunta se o pilar tá bem. Porque pilares não tremem. Exceto que você treme. Só que ninguém vê."
+
+---
+
+# 14. SINAIS RAROS RESTANTES (axis: rare) — PREMIUM
+
+## 14.1 star_apollo
+**content:** "Estrela no Monte de Apolo, abaixo do anelar. Reconhecimento público. Algo que você fez ou vai fazer será visto por muita gente. Não é fama genérica. É o tipo de reconhecimento que vem depois de um trabalho longo e silencioso. Um dia o mundo percebe o que você tava fazendo esse tempo todo. E quando perceber, não vai conseguir ignorar."
+
+## 14.2 sun_line
+**content:** "Tem uma Linha do Sol na sua mão, {{name}}. Vertical, subindo em direção ao anelar. Na quiromancia, essa é a linha do sucesso visível. Não significa que você vai ter sucesso. Significa que o sucesso que tiver vai ser visto. Público. Reconhecido. Enquanto outros trabalham nas sombras e permanecem nas sombras, seu trabalho eventualmente sai pra luz. A linha não diz quando. Mas diz que acontece."
+
+## 14.3 venus_girdle
+**content:** "Cinto de Vênus. Um semicírculo acima da Linha do Coração, entre o indicador e o mindinho. Hipersensibilidade emocional. Você não só sente suas próprias emoções com intensidade. Sente as dos outros. Entra num lugar e capta o humor como frequência de rádio. Isso é presente e é maldição. Presente porque te faz empaticamente poderosa. Maldição porque nunca desliga. Nem quando você precisa."
+
+## 14.4 intuition_line
+**content:** "Linha de Intuição na borda da sua palma. Semicurva do Monte da Lua ao Monte de Mercúrio. Esse sinal aparece em poucas mãos. Mostra percepção extrassensorial prática. Não é misticismo. É que você lê pessoas como texto aberto. Sabe quando alguém mente. Sabe quando alguém esconde. Sabe quando o 'tô bem' não é verdade. E quase sempre confronta. Mesmo quando seria mais fácil fingir que acreditou."
+
+## 14.5 triangle_center
+**content:** "Triângulo no centro da palma, {{name}}. Formado pela intersecção de três linhas. Na quiromancia, é um dos sinais mais raros. Mostra equilíbrio entre mente, coração e ação. Você consegue pensar com clareza, sentir com profundidade, e agir com precisão ao mesmo tempo. Isso é raro porque a maioria das pessoas só consegue fazer duas dessas três coisas de uma vez. Você faz as três. Nos seus melhores dias, pelo menos."
+
+---
+
+# 15. CRUZAMENTOS RESTANTES (axis: cross) — PREMIUM
+
+## 15.1 cross_heart_long_head_short
+**content:** "Coração longo e Cabeça curta. Você sente muito mais do que pensa sobre o que sente. Suas emoções são oceano. Sua análise é piscina. Isso te faz viver com uma intensidade que nem você consegue explicar depois. 'Por que eu fiz aquilo?' Porque seu coração decidiu e sua cabeça nem teve tempo de vetar."
+
+## 15.2 cross_heart_faint_venus_flat
+**content:** "Coração fraco e Vênus plano. Duas camadas de proteção emocional empilhadas. Você não se abre. E não precisa de toque pra se sentir amada. Funciona no abstrato. No silêncio. Na presença sem contato. Isso é funcional. Mas quando alguém finalmente rompe as duas camadas, o que encontra é tão bonito que não vai querer sair."
+
+## 15.3 cross_life_wide_venus_pronounced
+**content:** "Vida com arco largo e Vênus pronunciado. Generosidade duplicada. Você dá energia e afeto sem medida. Presença física e emocional ao mesmo tempo. As pessoas se sentem aquecidas perto de você. Literalmente. Mas ninguém devolve na mesma proporção. Porque a proporção que você dá é assustadora pra quem não tá acostumado a receber tanto."
+
+## 15.4 cross_head_curved_luna_pronounced
+**content:** "Cabeça curvada pro Monte da Lua e o próprio Monte pronunciado. Imaginação ao quadrado. Você vive mais dentro da cabeça do que fora. Cria mundos inteiros antes do café da manhã. Isso alimenta qualquer trabalho criativo que você faça. E devasta qualquer tentativa de 'viver o presente'. Porque seu presente é sempre dividido entre o que tá acontecendo e o que você tá imaginando acontecer."
+
+## 15.5 cross_fate_late_saturn_flat
+**content:** "Destino tardio e Saturno plano. Você encontrou propósito sem passar pela disciplina tradicional. Não seguiu o caminho convencional. Não fez o que mandaram. Não se formou no que 'devia'. E mesmo assim encontrou direção. Isso prova que destino não precisa de estrutura. Precisa de verdade. Quando você se alinhou com o que é de verdade, o caminho apareceu."
+
+## 15.6 cross_heart_deep_luna_pronounced
+**content:** "Coração profundo e Lua pronunciada. Você sente tudo e imagina o resto. Uma combinação que faz de você a rainha do overthinking emocional. Depois de uma conversa significativa, você passa horas reconstruindo cada frase, cada olhar, cada silêncio. Não pra analisar. Pra reviver. Porque reviver é sentir de novo. E sentir, pra você, é respirar."
+
+## 15.7 cross_life_chained_head_faint
+**content:** "Vida encadeada e Cabeça fraca. Esgotamento físico alimentado por dúvida mental. Você se cansa rápido porque gasta energia questionando cada decisão. O corpo paga a conta da mente. Se conseguir silenciar a dúvida, sua energia dobra. Não é que você não tenha força. É que a força tá sendo usada pra alimentar a insegurança em vez de alimentar a vida."
+
+## 15.8 cross_heart_end_fork_fate_broken
+**content:** "Coração bifurcado e Destino quebrado. Dois sinais de divisão na mesma mão. Você vive num cruzamento perpétuo. Amor dividido, caminho dividido. A boa notícia é que bifurcação não é paralisia. É opção. E ter opções, mesmo quando doem, é privilégio de quem não se conformou com a primeira estrada que apareceu."
+
+## 15.9 cross_all_lines_deep
+**content:** "Todas as suas linhas são profundas, {{name}}. Coração, Cabeça, Vida. Tudo marcado com força. Na quiromancia, isso é raro. Mostra alguém que vive em alta voltagem. Você sente demais, pensa demais, faz demais, se importa demais. O 'demais' é sua marca registrada. E é exatamente o que te faz inesquecível."
+
+## 15.10 cross_all_lines_faint
+**content:** "Suas linhas são todas sutis. Finas. Quase invisíveis. Isso não é fraqueza. É contenção. Você guarda tudo dentro. Emoção, pensamento, energia, tudo compactado num espaço mínimo. O mundo vê alguém calma. Suas mãos veem alguém que tá segurando a respiração há muito tempo. Em algum momento, vai precisar soltar."
+
+---
+
+# FIM DO BANCO DE BLOCOS
+
+Total de blocos: ~180 blocos base com ~400 variações textuais.
+Cobertura: 4 elementos, 8 variações Coração, 8 variações Cabeça, 6 variações Vida, 6 variações Destino, 6 modificadores Coração, 8 montes, 9 sinais raros, 18 cruzamentos.
+Todos os textos em pt-BR, voz da cigana, segunda pessoa, zero travessões, zero clichê esotérico.

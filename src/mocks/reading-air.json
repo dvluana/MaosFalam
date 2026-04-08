@@ -1,0 +1,250 @@
+{
+  "id": "mock-air-001",
+  "tier": "premium",
+  "share_token": "air-vento-xyz",
+  "share_expires_at": "2026-05-08T00:00:00.000Z",
+  "created_at": "2026-04-08T15:15:00.000Z",
+  "report": {
+    "user_name": "Helena",
+    "element": {
+      "type": "air",
+      "title": "Ar",
+      "body": "Sua mão é quadrada, Helena. Seus dedos são longos, com juntas salientes, de quem pensa com as mãos antes de pensar com a boca. Isso é Ar. Você vive em três cenários ao mesmo tempo. Já ensaiou a conversa inteira na cabeça antes de abrir a boca, já viveu a briga e a reconciliação antes de qualquer coisa acontecer. E quando fala, surpreende. Porque ninguém esperava tanta clareza de quem parece tão distraída. Sua mente é sua melhor arma e seu pior inimigo. Ela te dá respostas que os outros demoram semanas pra encontrar. E também te mantém acordada às 3 da manhã revisando conversas que já passaram, frases que poderiam ter sido ditas, versões da Helena que você quase foi.",
+      "impact": "Ninguém esperava tanta clareza de quem parece tão distraída."
+    },
+    "stats": {
+      "lines": 4,
+      "mounts": 6,
+      "dominant_planet": "Mercúrio",
+      "rare_signs": 3,
+      "rarity_percent": 14
+    },
+    "sections": [
+      {
+        "line": "heart",
+        "symbol": "♀",
+        "planet": "Vênus",
+        "tier": "free",
+        "tagline": "Como você ama",
+        "intro": "Sua Linha do Coração é sutil, Helena. Quase invisível. Mas tá lá, e ela diz muita coisa exatamente por ser quieta.",
+        "body": "Você guarda tanto que até a linha ficou quieta. Não é que você não sinta. É que o sentimento foi tão compactado, tão empurrado pra baixo, que ele mal deixa marca na palma. Isso é proteção extrema. Uma blindagem que funcionou tão bem que agora você não sabe mais como tirar. E no fundo, em algumas noites, se pergunta se ainda sabe sentir do jeito que sentia antes de aprender a se proteger.",
+        "body_extras": [
+          "A linha começa fina, lá perto do Monte de Mercúrio, e vai diminuindo até quase sumir antes de chegar no meio da palma. Na quiromancia clássica, isso mostra alguém que aprendeu cedo que mostrar emoção é dar munição. Então você parou de mostrar. E funcionou tão bem que hoje as pessoas te acham controlada, distante, difícil de ler. Elas não sabem que a dificuldade de te ler é o resultado de um trabalho que você fez em você mesma, ao longo de anos, em silêncio.",
+          "No centro, tem uma interrupção sutil. Quase imperceptível pra quem não sabe onde olhar. Uma marca pequena, como se a linha tivesse respirado fundo e esquecido de continuar. Isso marca um ponto específico em que você decidiu fechar a porta. Não foi decisão dramática. Foi quieta, racional, noturna. Você olhou pra situação, avaliou custo e benefício, e desligou o que precisava ser desligado. E nunca mais ligou de novo.",
+          "Apesar da fineza, a linha tem direção. Ela segue em linha reta, sem curva, sem bifurcação no final. Isso é importante. Significa que quando você ama, ama com lógica. Não é ausência de sentimento. É sentimento filtrado pela cabeça antes de chegar no peito. Você escolhe quem ama com a mesma precisão com que escolhe as palavras. E essa precisão assusta, porque a maioria das pessoas ama por acidente.",
+          "Perto do final, quase tocando a base do indicador, tem um traço minúsculo saindo pra cima em direção ao Monte de Júpiter. É uma ponte. Mostra que no fundo você procura alguém que admira. Atração não basta, desejo não basta. Você precisa respeitar a mente da pessoa antes de deixar o resto acontecer. Quando o respeito escorrega, o sentimento escorrega junto. Sem aviso, sem drama, sem volta."
+        ],
+        "cigana_quotes": [
+          "Ninguém te atinge fácil. Mas ninguém te alcança fácil também. E às vezes a diferença entre proteção e solidão é só o quanto tá doendo naquele dia.",
+          "Tem alguém que ainda te visita de madrugada. Você nunca contou pra ninguém. Nem precisa. Suas mãos contaram por você."
+        ],
+        "technical": [
+          "⟶ COMPRIMENTO: CURTA, PARA ANTES DO CENTRO",
+          "↗ CURVATURA: FINA, QUASE INVISÍVEL",
+          "⑂ BIFURCAÇÃO: AUSENTE",
+          "⊘ INTERRUPÇÃO: SUTIL NO CENTRO",
+          "▮ PROFUNDIDADE: FRACA, BLINDADA"
+        ],
+        "impact_phrase": "Você guarda tanto que até a linha ficou quieta. Isso não é fraqueza. É blindagem que funcionou bem demais."
+      },
+      {
+        "line": "head",
+        "symbol": "☿",
+        "planet": "Mercúrio",
+        "tier": "premium",
+        "tagline": "Como você pensa",
+        "intro": "Sua Linha da Cabeça é uma navalha, Helena. Longa, reta, dominante. Corta sem pedir licença.",
+        "body": "Mente afiada. Lógica domina. Você analisa antes de sentir. Desmonta argumentos antes dos outros terminarem de falar. Isso te dá uma vantagem absurda em qualquer discussão e uma desvantagem absurda em qualquer intimidade. Porque as pessoas não querem ser analisadas. Querem ser ouvidas. E você ouve. Mas enquanto ouve, já tá processando, avaliando, concluindo. E quando a pessoa termina de falar, você já tem a resposta pronta. E a resposta quase sempre tá certa. E quase sempre magoa.",
+        "body_extras": [
+          "A linha é longa. Atravessa a palma inteira em linha quase reta, horizontal, dominante. Na quiromancia, linhas assim mostram pensamento sequencial, metódico, que resolve problemas que os outros nem sabem que existem. Você enxerga consequências a três passos de distância. Planeja antes de agir. Antecipa reações antes de qualquer reação acontecer. As pessoas te chamam de intensa. Você sabe que é só atenção. Atenção que não desliga.",
+          "No início, a linha se separa nitidamente da Linha da Vida. Separação larga, clara, precoce. Isso é independência cedo demais. Você aprendeu a decidir sozinha muito antes da idade em que se costuma decidir sozinha. Não por coragem. Por ausência. Tinha pouca gente confiável por perto, e você entendeu rápido que depender ia doer mais que se virar. E se virou. Desde então, pedir ajuda é um idioma que você fala mal.",
+          "No terço final, perto do Monte da Lua, tem uma bifurcação discreta. O que a quiromancia chama de writer's fork. Uma ponta segue reta, prática, analítica. A outra mergulha pra Lua, pra imaginação, pra narrativa. Isso é mente dupla. A que resolve o problema e a que escreve sobre o problema depois, num caderno que ninguém lê. Você precisa das duas. Se só tivesse a prática, endurecia. Se só tivesse a imaginativa, afogava.",
+          "A profundidade da linha é acentuada e uniforme. Sem ilhas, sem correntes, sem fragmentações. Na quiromancia isso significa clareza mental que não colapsa sob pressão. Mesmo nos piores momentos, sua cabeça continuou funcionando. Foi ela que te tirou. Não o coração, não a sorte, não alguém. A cabeça. E por isso você confia nela mais do que em qualquer pessoa. Inclusive em você mesma, quando você tá sentindo demais pra pensar direito."
+        ],
+        "cigana_quotes": [
+          "Sua cabeça já viveu a conversa três vezes antes de você abrir a boca. E quando fala, nem parece a mesma pessoa que tava em silêncio dois segundos atrás.",
+          "Você enxerga consequências a três passos. O preço é pensar demais e agir de menos. E depois pensar sobre ter agido de menos."
+        ],
+        "technical": [
+          "⟶ COMPRIMENTO: LONGA, RETA COMO NAVALHA",
+          "↗ DIREÇÃO: HORIZONTAL, DOMINANTE",
+          "⑂ BIFURCAÇÃO: WRITER'S FORK NO TERÇO FINAL",
+          "⊕ SEPARAÇÃO DA LINHA DA VIDA: SIM, ACENTUADA",
+          "▮ PROFUNDIDADE: ACENTUADA, UNIFORME"
+        ],
+        "impact_phrase": "Você ouve, analisa e responde. A resposta quase sempre tá certa. E quase sempre magoa alguém."
+      },
+      {
+        "line": "life",
+        "symbol": "☉",
+        "planet": "Sol",
+        "tier": "premium",
+        "tagline": "O que você já viveu",
+        "intro": "Sua Linha da Vida é longa, Helena. Mas fina. Como se a vitalidade tivesse sido esticada demais.",
+        "body": "Você tem resistência. Aguenta mais que a maioria. Mas a forma como gasta energia te sabota. Dá pra todo mundo. Pro trabalho, pras amigas, pra família, pra quem você ama, pra quem só te usa. E quando sobra pra você, não sobra nada. Sua linha longa mostra que o combustível existe. A espessura fina mostra que ele vaza. Você precisa aprender a poupar força. Não é egoísmo. É manutenção. Carro que nunca para no posto acaba na estrada, e Helena que nunca para acaba em algum domingo que deveria ter sido de alegria.",
+        "body_extras": [
+          "A linha faz um arco largo em torno do Monte de Vênus, o que na quiromancia mostra generosidade expansiva. Você dá sem calcular. Tempo, atenção, presença, conselho, madrugada no telefone. As pessoas te procuram porque sabem que você vai aparecer. E você aparece. Sempre. O problema é que sua conta emocional nunca é creditada na mesma proporção em que é debitada. E um dia o extrato não fecha.",
+          "A profundidade é irregular. Em alguns pontos a linha vai forte, em outros quase some. Isso mostra ciclos de exaustão encadeados. Não é uma queda grande, é uma sequência de quedas pequenas que você normaliza porque todo mundo diz que tá cansado. Mas o cansaço dos outros é superficial. O seu é acumulativo. Camadas de estresse empilhadas que nunca foram processadas, porque processar exige parar, e parar é uma palavra que você não aprendeu direito.",
+          "Tem uma linha irmã começando depois do primeiro terço. Pequena, paralela, quase escondida. Isso é proteção. Alguém ou alguma versão mais antiga sua continuou te segurando depois de um tombo que ninguém viu. Você achou que fez sozinha. Não fez. Tem uma mão invisível no meio dessa história. E se você parar um segundo pra pensar em quem é, provavelmente vai saber. Mesmo que não queira.",
+          "A linha não é curta. Isso importa. A fineza não diminui o alcance, só muda a qualidade. Você vai longe. Mas precisa decidir o que leva na mala. Quem não cabe, quem drena, quem devolveu menos do que prometeu. Sua mão tá dizendo que a próxima fase pede peso menor. Não porque você não aguente. Porque você finalmente pode escolher não aguentar."
+        ],
+        "cigana_quotes": [
+          "Seu corpo tá cansado de pagar contas emocionais que não são suas. E uma hora ele vai parar de pagar sem te consultar.",
+          "Você resolveu tudo pra todo mundo. Ninguém agradeceu. E você ainda achou que devia mais."
+        ],
+        "technical": [
+          "◠ ARCO: LARGO, GENEROSO SOBRE VÊNUS",
+          "⟶ COMPRIMENTO: LONGO, ATÉ O PULSO",
+          "∥ LINHA IRMÃ: SIM, NO PRIMEIRO TERÇO",
+          "▮ PROFUNDIDADE: FINA, IRREGULAR",
+          "⊘ CORRENTES: CICLOS DE ESGOTAMENTO ENCADEADOS"
+        ],
+        "impact_phrase": "O combustível existe. Ele vaza. Não é falta de força. É excesso de portas abertas."
+      },
+      {
+        "line": "fate",
+        "symbol": "♄",
+        "planet": "Saturno",
+        "tier": "premium",
+        "tagline": "Pra onde você vai",
+        "intro": "Tem mais de uma Linha do Destino na sua mão, Helena. Isso é raro. E explica muita coisa.",
+        "body": "Linhas paralelas de Destino mostram vidas paralelas dentro de uma só. Você não tem um caminho. Tem dois. Ou três. A pessoa que você mostra no trabalho e a pessoa que existe quando ninguém tá olhando. A carreira oficial e o sonho que você ainda não contou pra ninguém. O nome que assina e o nome que você usa nos rascunhos. Todos são reais. Todos puxam. E a tensão entre eles é o que te move, mesmo quando parece que tá te partindo.",
+        "body_extras": [
+          "A linha principal sobe firme pelo centro da palma em direção a Saturno. Ela começa mais acima, quase no meio da mão, o que na quiromancia marca destino tardio. Sua primeira metade de vida foi ensaio. Teste. Erro com propósito disfarçado de acidente. Coisas que pareciam aleatórias na hora e que agora, olhando pra trás, formam um caminho. Cada decisão errada te levou pra direção certa. E você ainda não perdoou nenhuma delas.",
+          "Paralela à principal, correndo um pouco à esquerda, tem uma segunda linha mais fraca mas nítida. E mais à direita, uma terceira ainda mais sutil. Três caminhos ao mesmo tempo. Na quiromancia clássica, múltiplas Linhas do Destino aparecem em pessoas que não conseguem escolher uma coisa só porque todas as coisas são partes legítimas delas. Você é a profissional, a criativa, a que escreve, a que ninguém viu ainda. E nenhuma delas quer morrer pra outra viver.",
+          "No meio do percurso, a linha principal cruza a Linha da Cabeça com uma nitidez incomum. Isso marca o momento exato em que suas decisões passaram a ser suas. Não dos outros, não do medo, não da expectativa familiar. Suas. Foi um ponto específico. Você sabe qual é. E se não lembra agora, vai lembrar hoje à noite, quando a casa esfriar e a cabeça finalmente ficar em silêncio por dois segundos.",
+          "A terminação da linha principal é em Saturno, firme. Não hesita, não se perde. Isso é o tipo de destino que chega tarde mas chega certo. A boa notícia é que você não precisa escolher entre as três linhas pra sempre. Em algum momento elas se cruzam e viram uma só, mais grossa, mais definida. Só que esse momento ainda tá à frente. E até ele chegar, o trabalho é aguentar a tensão sem desistir de nenhuma das versões."
+        ],
+        "cigana_quotes": [
+          "Você vive vidas paralelas dentro de uma só. E ninguém imagina que a Helena que chega em casa é diferente da que saiu de manhã.",
+          "Você não seguiu o caminho que esperavam. Seguiu três ao mesmo tempo, em silêncio. E ainda assim chegou mais longe que quem seguiu só um."
+        ],
+        "technical": [
+          "⊕ INÍCIO: TARDIO, MEIO DA PALMA",
+          "↑ DIREÇÃO: FIRME EM DIREÇÃO A SATURNO",
+          "∥ DUPLICAÇÃO: TRÊS LINHAS PARALELAS",
+          "✕ CRUZA A LINHA DA CABEÇA: NITIDEZ ALTA",
+          "▮ TERMINAÇÃO: FORTE, SEM BIFURCAÇÃO"
+        ],
+        "impact_phrase": "Você vive vidas paralelas dentro de uma só. E a tensão entre elas é exatamente o que te move."
+      }
+    ],
+    "mounts": [
+      {
+        "name": "Monte de Júpiter",
+        "planet_symbol": "♃",
+        "strength": 55,
+        "word": "Presente",
+        "content": "Júpiter presente mas não dominante, na base do indicador. Você tem ambição, mas ela não grita. É interna, silenciosa, desconfortável. Às vezes você mesma se pergunta se quer mesmo o que diz que quer, ou se é só treino. A resposta é que quer. Só aprendeu a desejar com cautela, porque desejo anunciado atrai reação, e você prefere chegar lá antes das pessoas perceberem que você tava indo."
+      },
+      {
+        "name": "Monte de Saturno",
+        "planet_symbol": "♄",
+        "strength": 70,
+        "word": "Forte",
+        "content": "Saturno marcado, na base do dedo médio. Você carrega peso que nem é seu. Decisões dos outros, culpas dos outros, consequências que caíram no seu colo porque você foi a única a manter a cabeça fria quando todo mundo ao redor perdeu a sua. Isso te deu um tipo de maturidade precoce que outras pessoas demoram décadas pra desenvolver. E te deu também um cansaço específico, daquele que não passa com sono."
+      },
+      {
+        "name": "Monte de Apolo",
+        "planet_symbol": "☉",
+        "strength": 65,
+        "word": "Presente",
+        "content": "Apolo bem definido, na base do anelar. Mesmo que você não se considere artística, sua forma de ver o mundo tem uma estética própria. Você nota detalhes que os outros ignoram: a luz de uma cena, a escolha exata da palavra na mensagem, a pausa entre uma frase e outra. Isso te cansa porque você processa mais informação que os outros. E te salva, porque essa atenção é exatamente o que faz seu trabalho ter assinatura.",
+        "cigana_quote": "Você nota detalhes que os outros ignoram. Isso te cansa e te salva ao mesmo tempo."
+      },
+      {
+        "name": "Monte de Mercúrio",
+        "planet_symbol": "☿",
+        "strength": 92,
+        "word": "Dominante",
+        "content": "Mercúrio é o mais forte da sua mão, Helena. Na base do mindinho, a área da comunicação e da inteligência verbal. Você convence sem levantar a voz. Sabe escolher as palavras exatas pra cada situação, nas boas e nas ruins. Quando quer convencer, convence. Quando quer machucar, machuca. E sabe a diferença, que é justamente o que diferencia quem tem poder de quem tem só barulho. Você pensa e fala ao mesmo tempo sem tropeçar. Enquanto os outros estão formulando, você já entregou, já leu a reação, já reformulou.",
+        "cigana_quote": "Você lê as pessoas como eu leio mãos. Sem elas perceberem que tão sendo lidas."
+      },
+      {
+        "name": "Monte de Vênus",
+        "planet_symbol": "♀",
+        "strength": 58,
+        "word": "Presente",
+        "content": "Vênus presente, não pronunciado. A base do polegar tem volume moderado. Você sente, mas filtra. O desejo existe, mas passa pela cabeça antes de chegar no corpo. Isso te torna seletiva de um jeito que quase ninguém entende. Você não se apaixona por rostos. Se apaixona por frases, por ideias, por quem te faz pensar em coisas que você não tinha pensado antes. O corpo vem depois. E quando vem, é consequência, não ponto de partida."
+      },
+      {
+        "name": "Monte da Lua",
+        "planet_symbol": "☽",
+        "strength": 82,
+        "word": "Forte",
+        "content": "Lua marcada, na borda da palma oposta ao polegar. Imaginação fértil, intuição afiada, mundo interno grande demais pra caber na rotina. Você sonha acordada com frequência, constrói cenários inteiros que ninguém mais vê, reescreve o passado na cabeça nas noites em que não dorme. Sua intuição sobre as pessoas quase nunca erra. O problema é que ninguém acredita em você quando você avisa, e só te procuram depois que acontece. Aí pedem desculpa. E você perdoa, mas registra.",
+        "cigana_quote": "Sua imaginação não é hobby. É o sistema operacional da sua mente. E ele nunca desliga, nem quando você desliga tudo."
+      }
+    ],
+    "crosses": [
+      {
+        "content": "Linha da Cabeça longa e reta cruzando com uma Linha do Coração fraca cria um dos perfis mais difíceis de ler pra quem tá de fora. Sua cabeça domina seu coração não porque você seja fria, mas porque o coração aprendeu a deixar a cabeça trabalhar primeiro. Isso te faz parecer distante em relações. Na verdade, você só tá esperando a cabeça liberar o corpo pra sentir em paz. E quase nunca libera."
+      },
+      {
+        "content": "Monte da Lua forte somado à bifurcação da Cabeça pro lado da imaginação é uma combinação rara. Mostra uma mente que vive duas vidas ao mesmo tempo: a da tarefa real e a do mundo paralelo onde outras versões suas tão tomando decisões que você não tomou. Isso alimenta qualquer coisa criativa que você faça. E devasta qualquer tentativa de viver só no presente."
+      },
+      {
+        "content": "Múltiplas Linhas do Destino atravessando um Mercúrio dominante mostram que a razão pela qual você não escolheu só uma coisa até hoje não é indecisão. É capacidade. Você consegue sustentar três caminhos porque tem ferramenta pra isso. A maioria não tem, então escolhe um e se convence que é suficiente. Você sabe que não é. E banca a tensão porque a alternativa é perder duas partes suas pra manter uma."
+      }
+    ],
+    "rare_signs": [
+      {
+        "name": "Cruz Mística",
+        "content": "Entre a Linha do Coração e a Linha da Cabeça, bem no centro da sua palma, tem uma Cruz Mística. Esse sinal aparece em poucas mãos e ele explica coisas que você nunca soube explicar. Percepção amplificada. Você sente coisas antes de acontecerem, não como premonição mística, mas como leitura rápida de padrões que os outros não leem. Quando entra num lugar e sente que tem algo errado, tem. Quando olha pra alguém e sabe que a pessoa tá mentindo, tá. Confie mais nisso. Você já perdeu coisas por não confiar."
+      },
+      {
+        "name": "Linha de Intuição",
+        "content": "Na borda da palma, do Monte da Lua subindo em direção ao Monte de Mercúrio, tem uma Linha de Intuição. Esse sinal é muito raro. Mostra percepção extrassensorial prática. Você lê pessoas como texto aberto. Sabe quando alguém mente, sabe quando o 'tô bem' não é verdade, sabe quando a conversa tá indo pra um lugar antes de chegar. E quase sempre confronta, mesmo quando seria mais fácil fingir que acreditou. Isso te afasta de algumas pessoas. As que continuam perto são exatamente as que valem."
+      },
+      {
+        "name": "Anel de Salomão",
+        "content": "Contornando a base do seu indicador tem um semicírculo fino: o Anel de Salomão. Sabedoria natural, não adquirida. As pessoas pedem seus conselhos sem saber direito por quê. Te procuram quando precisam de clareza, não de empatia. Você vê a situação dos outros com uma lucidez que não consegue aplicar na própria vida, o que é irônico e comum em quem tem esse sinal. O conselho que você daria pra você mesma, se fosse outra pessoa perguntando, provavelmente é o certo."
+      }
+    ],
+    "compatibility": [
+      {
+        "pair": "Ar + Fogo",
+        "word": "Faísca",
+        "description": "Conversa que vira desejo. Rápido, intenso, memorável. Você se apaixona pela mente acesa antes do corpo aparecer. E quando aparece, já tá tarde pra recuar."
+      },
+      {
+        "pair": "Ar + Água",
+        "word": "Névoa",
+        "description": "Vocês sonham juntos, se perdem juntos, esquecem juntos. Bonito enquanto dura. Mas nenhum dos dois segura o outro no chão quando cai."
+      },
+      {
+        "pair": "Ar + Terra",
+        "word": "Raiz",
+        "description": "Você voa, ela planta. Um ancora o outro. Parece contradição e é, mas é a contradição que funciona quando ninguém tá olhando."
+      },
+      {
+        "pair": "Ar + Ar",
+        "word": "Tempestade",
+        "description": "Pensamento ao quadrado. Lindo ou ensurdecedor, sem meio-termo. Conversas que viram noites inteiras. E silêncios que viram guerras frias."
+      }
+    ],
+    "intimacy": {
+      "title": "Intimidade & Desejo",
+      "subtitle": "Linha da Cabeça · Monte da Lua · Coração sutil",
+      "quote": "Você não se apaixona por rostos, Helena. Se apaixona por frases. E quem não entende isso nunca te toca de verdade, por mais que te toque.",
+      "body": [
+        "Sua intimidade começa na cabeça. Muito antes do corpo. Isso não é frase bonita, é estrutura da sua mão. A Linha da Cabeça dominante atravessando uma Linha do Coração sutil cria um perfil em que o gatilho real é intelectual. Você precisa de alguém que entenda o subtexto, que responda o que você não disse, que ria da piada escondida dentro da frase normal. Sem isso, seu corpo fica educado. Participa, cumpre, finge bem. Mas não acende.",
+          "Seu Monte da Lua forte amplia tudo. Você tem uma vida imaginária sobre desejo que é maior do que qualquer vida real que já viveu até hoje. Fantasia, roteiro, cenário, diálogo. Às vezes é mais presente em você do que o presente real. Isso não é problema. É informação. Mostra que seu desejo precisa de narrativa pra existir, e que qualquer parceiro que trate sexo como transação vai perder você antes mesmo de te ter.",
+          "O Cinturão de Vênus quase não aparece na sua mão, e o Monte de Vênus tá moderado. Na quiromancia isso mostra alguém que não funciona por excesso sensorial. Você não precisa de choque, de intensidade performática, de grande produção. Precisa de presença mental real. Um olhar que sabe o que tá olhando. Uma mão que chega na hora certa, não na hora de sempre. A precisão te desmonta mais do que a intensidade.",
+          "Quando você se entrega de verdade, entrega com a cabeça ligada. E isso é exatamente o oposto do que a maioria pensa que significa se entregar. Você não desliga a mente. Você deixa ela entrar. Quem aguenta esse nível de presença não esquece. E quem não aguenta, e é a maioria, sai confundindo sua intensidade com distância, porque não sabe nomear o que é estar sendo lida enquanto tá sendo tocada."
+      ],
+      "cigana_quotes": [
+        "Seu corpo responde depois que sua cabeça permite. E sua cabeça quase nunca permite.",
+        "Quando você finalmente se entrega, a pessoa recebe uma Helena que não existe em mais lugar nenhum do mundo. E quase nunca sabe o que tá recebendo."
+      ],
+      "technical": [
+        "◇ CINTURÃO DE VÊNUS: AUSENTE OU MUITO SUTIL",
+        "▲ MONTE DE VÊNUS: MODERADO, SELETIVO",
+        "⟶ LINHA DO CASAMENTO: FINA, ÚNICA, TARDIA",
+        "♀ PERFIL ÍNTIMO: INTELECTUAL + FANTASIOSO",
+        "↗ GATILHO: CONVERSA → IMAGINAÇÃO → TOQUE"
+      ]
+    },
+    "share_phrase": "Ninguém esperava tanta clareza de quem parece tão distraída."
+  }
+}

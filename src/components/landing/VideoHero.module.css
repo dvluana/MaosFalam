@@ -1,0 +1,223 @@
+/* ═══════════════════════════════════
+   HERO — porta fiel de public/home.html
+   ═══════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  padding: 0 0 8vh;
+  overflow: hidden;
+  z-index: 25;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 200px at 50% 100%,
+    rgba(0, 0, 0, 0.9) 0%,
+    transparent 70%
+  );
+}
+
+/* ── MANDALA ── */
+.heroMandala {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  width: min(520px, 90vw);
+  height: min(520px, 90vw);
+  pointer-events: none;
+  z-index: 1;
+  animation: mandalaSpin 180s linear infinite;
+  opacity: 0.65;
+}
+@keyframes mandalaSpin {
+  from {
+    transform: translate(-50%, -52%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -52%) rotate(360deg);
+  }
+}
+
+/* ── DIORAMA / VIDEO ── */
+.dioramaWrap {
+  position: relative;
+  z-index: 2;
+  width: min(400px, 82vw);
+  margin-bottom: 8px;
+}
+.dioramaVoid {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78%;
+  height: 55px;
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 50%,
+    rgba(201, 162, 74, 0.12) 0%,
+    transparent 70%
+  );
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 0;
+}
+.dioramaGlow {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    rgba(201, 162, 74, 0.06) 0%,
+    transparent 80%
+  );
+  filter: blur(30px);
+  animation: glowPulse 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateX(-50%) scale(1.08);
+  }
+}
+.dioramaStage {
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 162, 74, 0.22),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 4;
+}
+.dioramaStage::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 18%;
+  width: 64%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(139, 123, 191, 0.14),
+    transparent
+  );
+}
+.dioramaImg {
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.95))
+    drop-shadow(0 0 30px rgba(0, 0, 0, 0.6));
+}
+
+/* ── HERO CONTENT ── */
+.heroContent {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  width: 100%;
+  max-width: 430px;
+  padding: 0 20px;
+  margin-top: -32px;
+}
+
+/* ── PARTICLES ── */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  z-index: 1;
+}
+.p1 {
+  top: 12%;
+  left: 18%;
+  background: var(--color-gold, #c9a24a);
+  animation: float 6s ease-in-out infinite;
+}
+.p2 {
+  top: 22%;
+  right: 15%;
+  background: var(--color-violet, #8b7bbf);
+  animation: float 5s ease-in-out infinite 1s;
+}
+.p3 {
+  bottom: 25%;
+  left: 22%;
+  background: var(--color-gold, #c9a24a);
+  animation: float 7s ease-in-out infinite 2s;
+}
+.p4 {
+  top: 38%;
+  right: 12%;
+  background: var(--color-violet, #8b7bbf);
+  width: 1.5px;
+  height: 1.5px;
+  animation: float 4.5s ease-in-out infinite 0.5s;
+}
+.p5 {
+  bottom: 35%;
+  right: 25%;
+  background: var(--color-gold, #c9a24a);
+  width: 1px;
+  height: 1px;
+  animation: float 6s ease-in-out infinite 3s;
+}
+@keyframes float {
+  0%,
+  100% {
+    opacity: 0.08;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.38;
+    transform: translateY(-14px);
+  }
+}
+
+@media (max-width: 480px) {
+  .dioramaWrap {
+    width: 92vw;
+  }
+}
+
+/* ── MOBILE VIDEO CENTERING ── */
+@media (max-width: 480px) {
+  .dioramaWrap {
+    margin-left: auto;
+    margin-right: auto;
+    width: 88vw;
+  }
+  .hero {
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

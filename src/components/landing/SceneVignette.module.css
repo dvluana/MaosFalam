@@ -1,0 +1,18 @@
+/* SceneVignette — porta fiel de .scene-vignette do home.html legado.
+   Camada fixa fullscreen com gradiente radial escuro nas bordas. */
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 13;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 70% 62% at 50% 38%,
+    transparent 18%,
+    rgba(6, 4, 10, 0.32) 46%,
+    rgba(0, 0, 0, 0.75) 72%,
+    rgba(0, 0, 0, 0.96) 90%
+  );
+  opacity: 1;
+  transition: opacity 2.6s ease 0.4s;
+}

@@ -1,0 +1,397 @@
+/* ═══════════════════════════════════════════════════════════
+   EDISON LAMP — lustre de latão + bulbo Edison + cone de luz
+   + stage-dark (véu preto que sela a cena até a lâmpada iluminar).
+
+   Camadas z-index:
+     stageDark : 15  (sela a cena)
+     cone      : 16  (acima do stageDark — passa pelo véu)
+     wrap      : 30  (fixture sempre visível)
+     halo      : 17  (glow no teto)
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── STAGE DARK ── */
+.stageDark {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  background: #000;
+  pointer-events: none;
+  /* transição é setada via JS quando a lâmpada começa a iluminar */
+}
+.stageDark.clearing {
+  opacity: 0;
+  transition: opacity 4.4s cubic-bezier(0.28, 0, 0.08, 1);
+}
+
+/* ── FIXTURE WRAPPER ── */
+.wrap {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+}
+.wrap.on {
+  animation: fixtureReveal 1.8s ease forwards;
+}
+@keyframes fixtureReveal {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ── CANOPY (disco de latão no teto) ── */
+.canopy {
+  width: 28px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    #6b4f18 0%,
+    #9a7228 35%,
+    #b8922e 55%,
+    #7a5820 80%,
+    #4a3510 100%
+  );
+  box-shadow:
+    0 1px 0 rgba(201, 162, 74, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.8),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+.canopy::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(220, 180, 80, 0.5),
+    transparent
+  );
+  border-radius: 50%;
+}
+
+/* ── CORD (fio trançado) ── */
+.cord {
+  width: 3px;
+  height: 64px;
+  background: repeating-linear-gradient(
+    180deg,
+    #3a2808 0px,
+    #6b4a18 3px,
+    #3a2808 6px
+  );
+  box-shadow:
+    1px 0 0 rgba(0, 0, 0, 0.6),
+    -1px 0 0 rgba(0, 0, 0, 0.4);
+}
+
+/* ── SOCKET (bocal de latão) ── */
+.socket {
+  width: 16px;
+  height: 20px;
+  background: linear-gradient(
+    180deg,
+    #7a5820 0%,
+    #a87c2a 20%,
+    #c49835 40%,
+    #8a6422 60%,
+    #5c4018 80%,
+    #3a2808 100%
+  );
+  border-radius: 2px 2px 1px 1px;
+  box-shadow:
+    inset -2px 0 4px rgba(0, 0, 0, 0.5),
+    inset 1px 0 3px rgba(220, 175, 70, 0.15),
+    0 1px 0 rgba(201, 162, 74, 0.3);
+  position: relative;
+}
+.socket::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    #4a3010,
+    #c49835 30%,
+    #e8c060 50%,
+    #c49835 70%,
+    #4a3010
+  );
+}
+.socket::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    #3a2808,
+    #9a7228 30%,
+    #b89035 50%,
+    #9a7228 70%,
+    #3a2808
+  );
+}
+
+/* ── SHADE (cúpula com costelas) ── */
+.shade {
+  width: 88px;
+  height: 50px;
+  position: relative;
+  background: linear-gradient(
+    175deg,
+    #2a1e08 0%,
+    #4a3410 18%,
+    #6b4e1a 32%,
+    #8a6828 45%,
+    #7a5a20 58%,
+    #5a4018 72%,
+    #3a2808 85%,
+    #1e1404 100%
+  );
+  clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+  overflow: hidden;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.7),
+    inset 0 -1px 0 rgba(201, 162, 74, 0.1);
+}
+.shade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 8px,
+      rgba(0, 0, 0, 0.18) 8px,
+      rgba(0, 0, 0, 0.18) 9px,
+      rgba(201, 162, 74, 0.06) 9px,
+      rgba(201, 162, 74, 0.06) 10px,
+      transparent 10px
+    ),
+    linear-gradient(
+      175deg,
+      transparent 20%,
+      rgba(218, 175, 65, 0.12) 55%,
+      rgba(218, 175, 65, 0.22) 80%,
+      rgba(255, 210, 90, 0.1) 100%
+    );
+}
+.shade::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(
+    180deg,
+    rgba(201, 162, 74, 0) 0%,
+    rgba(201, 162, 74, 0.5) 40%,
+    rgba(228, 192, 88, 0.9) 60%,
+    rgba(160, 125, 50, 0.7) 80%,
+    rgba(100, 75, 25, 0.5) 100%
+  );
+}
+
+/* ── BULB (lâmpada Edison) ── */
+.bulb {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 18px;
+  border-radius: 50% 50% 40% 40%;
+  background: radial-gradient(
+    ellipse at 38% 30%,
+    #fffef5 0%,
+    #fde98a 22%,
+    #f5c040 50%,
+    #c88c18 78%,
+    #7a5008 100%
+  );
+  opacity: 0;
+}
+
+.bulb.ignite {
+  animation: bulbWarmUp 3.2s ease forwards;
+}
+@keyframes bulbWarmUp {
+  0% {
+    opacity: 0;
+    box-shadow: none;
+    filter: brightness(0.2);
+  }
+  8% {
+    opacity: 0.45;
+    box-shadow:
+      0 0 4px rgba(255, 140, 20, 0.55),
+      0 0 12px rgba(220, 140, 30, 0.35);
+    filter: brightness(0.5);
+  }
+  14% {
+    opacity: 0.15;
+    box-shadow: 0 0 2px rgba(255, 100, 20, 0.25);
+    filter: brightness(0.25);
+  }
+  22% {
+    opacity: 0.85;
+    box-shadow:
+      0 0 8px rgba(255, 200, 60, 0.8),
+      0 0 22px rgba(220, 175, 55, 0.6);
+    filter: brightness(0.9);
+  }
+  30% {
+    opacity: 0.6;
+    box-shadow: 0 0 5px rgba(255, 170, 40, 0.55);
+    filter: brightness(0.7);
+  }
+  42% {
+    opacity: 1;
+    box-shadow:
+      0 0 7px rgba(255, 225, 85, 1),
+      0 0 20px rgba(218, 185, 80, 0.88),
+      0 0 55px rgba(200, 158, 48, 0.58);
+    filter: brightness(1);
+  }
+  58% {
+    opacity: 0.9;
+    filter: brightness(0.96);
+  }
+  72% {
+    opacity: 1;
+    filter: brightness(1.02);
+  }
+  100% {
+    opacity: 1;
+    box-shadow:
+      0 0 6px rgba(255, 220, 80, 1),
+      0 0 18px rgba(218, 185, 80, 0.9),
+      0 0 45px rgba(210, 165, 50, 0.68),
+      0 0 100px rgba(195, 155, 44, 0.4);
+    filter: brightness(1);
+  }
+}
+
+.bulb.steady {
+  animation: bulbFlicker 12s ease-in-out 3.2s infinite;
+  opacity: 1;
+  box-shadow:
+    0 0 6px rgba(255, 220, 80, 1),
+    0 0 18px rgba(218, 185, 80, 0.9),
+    0 0 45px rgba(210, 165, 50, 0.68),
+    0 0 100px rgba(195, 155, 44, 0.4);
+}
+@keyframes bulbFlicker {
+  0%,
+  88%,
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  90% {
+    opacity: 0.8;
+    filter: brightness(0.86);
+  }
+  91% {
+    opacity: 1;
+    filter: brightness(1.04);
+  }
+  94% {
+    opacity: 0.88;
+    filter: brightness(0.92);
+  }
+  95% {
+    opacity: 1;
+  }
+}
+
+/* ── HALO (glow quente onde o fio toca o teto) ── */
+.halo {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 12px;
+  z-index: 17;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 0%,
+    rgba(218, 185, 80, 0.28) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+}
+.halo.on {
+  animation: haloIn 2.6s ease 0.8s forwards;
+}
+@keyframes haloIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── CONE (cone de luz atmosférico) ── */
+.cone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28vh;
+  z-index: 16;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 32% 100% at 50% 0%,
+      rgba(228, 192, 75, 0.14) 0%,
+      rgba(212, 172, 62, 0.05) 50%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 70% 55% at 50% 0%,
+      rgba(201, 162, 54, 0.05) 0%,
+      transparent 100%
+    );
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    black 0%,
+    black 40%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    black 0%,
+    black 40%,
+    transparent 100%
+  );
+}
+.cone.on {
+  animation: coneIgnite 3s ease forwards;
+}
+@keyframes coneIgnite {
+  0% { opacity: 0; }
+  12% { opacity: 0.35; }
+  18% { opacity: 0.1; }
+  28% { opacity: 0.6; }
+  36% { opacity: 0.38; }
+  52% { opacity: 0.7; }
+  100% { opacity: 0.75; }
+}

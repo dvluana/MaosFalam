@@ -1,0 +1,96 @@
+.heroTitle {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(16px, 4.2vw, 22px);
+  color: var(--color-bone);
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-align: center;
+  margin-bottom: 10px;
+  min-height: 2.9em;
+  position: relative;
+  z-index: 3;
+}
+
+.heroSubtitle {
+  font-family: var(--font-raleway), sans-serif;
+  font-weight: 300;
+  font-size: clamp(8px, 2.2vw, 10px);
+  color: var(--color-bone-dim);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-style: italic;
+  line-height: 1.75;
+  text-align: center;
+  margin-bottom: 20px;
+  min-height: 2em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1.4s ease, transform 1.4s ease;
+  position: relative;
+  z-index: 3;
+}
+
+.heroSubtitle.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.typeChar {
+  display: inline;
+  opacity: 0;
+  filter: blur(5px);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.typeChar.visible {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.typeCursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 0.82em;
+  background: var(--color-gold);
+  margin-left: 2px;
+  vertical-align: middle;
+  position: relative;
+  top: -0.04em;
+  animation: cursorBlink 1.1s ease-in-out infinite;
+  transition: opacity 0.8s ease;
+}
+
+.typeCursor.done {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes cursorBlink {
+  0%, 42%  { opacity: 0.85; }
+  52%, 92% { opacity: 0; }
+  100%     { opacity: 0.85; }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 480px) {
+  .heroSubtitle {
+    font-size: 10px !important;
+    letter-spacing: 0.02em;
+  }
+  .heroTitle {
+    font-size: clamp(17px, 5vw, 22px);
+  }
+}

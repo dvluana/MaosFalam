@@ -1,0 +1,304 @@
+{
+  "id": "user-001",
+  "name": "Marina",
+  "email": "marina@test.com",
+  "credits": 3,
+  "credits_expires_at": "2026-07-08T00:00:00.000Z",
+  "readings": [
+    {
+      "id": "r-001",
+      "tier": "free",
+      "share_token": "tok-001",
+      "share_expires_at": "2026-05-08T00:00:00.000Z",
+      "created_at": "2026-04-05T10:00:00.000Z",
+      "report": {
+        "user_name": "Marina",
+        "element": {
+          "type": "fire",
+          "title": "Fogo",
+          "body": "Sua mão é quadrada. Seus dedos são curtos. Isso é Fogo. Você decide antes de pensar. Age antes de planejar. E se arrepende devagar, porque no fundo sabe que faria tudo de novo.",
+          "impact": "Quando você quer, o mundo inteiro sente. Quando desiste, o silêncio é ensurdecedor."
+        },
+        "sections": [
+          {
+            "line": "heart",
+            "symbol": "♀",
+            "planet": "Vênus",
+            "tier": "free",
+            "intro": "Sua Linha do Coração corta a palma inteira sem desvio.",
+            "body": "Quando você ama, ama com tudo. Não existe versão parcial de você num relacionamento. Você entra inteira ou não entra.",
+            "impact_phrase": "Quando você ama, é tudo. Quando sai, queima o caminho."
+          },
+          {
+            "line": "head",
+            "symbol": "☿",
+            "planet": "Mercúrio",
+            "tier": "premium",
+            "intro": "Sua Linha da Cabeça curva em direção à Lua.",
+            "body": "Criativa com estrutura.",
+            "impact_phrase": "Não é sonhadora solta. É sonhadora que executa."
+          },
+          {
+            "line": "life",
+            "symbol": "☉",
+            "planet": "Sol",
+            "tier": "premium",
+            "intro": "Sua Linha da Vida é profunda e longa.",
+            "body": "Vitalidade forte.",
+            "impact_phrase": "Você levanta. Sempre levanta."
+          },
+          {
+            "line": "fate",
+            "symbol": "♄",
+            "planet": "Saturno",
+            "tier": "premium",
+            "intro": "Sua Linha do Destino é forte e clara.",
+            "body": "Você sabe pra onde vai.",
+            "impact_phrase": "Planos mudam. Propósito permanece."
+          }
+        ],
+        "mounts": [],
+        "crosses": [],
+        "rare_signs": [],
+        "share_phrase": "Quando você quer, o mundo inteiro sente."
+      }
+    },
+    {
+      "id": "r-002",
+      "tier": "premium",
+      "share_token": "tok-002",
+      "share_expires_at": "2026-05-03T00:00:00.000Z",
+      "created_at": "2026-04-02T10:00:00.000Z",
+      "report": {
+        "user_name": "Marina",
+        "element": {
+          "type": "fire",
+          "title": "Fogo",
+          "body": "Sua mão é quadrada. Seus dedos são curtos. Isso é Fogo. Você decide antes de pensar. Age antes de planejar. Sua energia é a primeira coisa que as pessoas notam quando você entra.",
+          "impact": "Quando você quer, o mundo inteiro sente. Quando desiste, o silêncio é ensurdecedor."
+        },
+        "sections": [
+          {
+            "line": "heart",
+            "symbol": "♀",
+            "planet": "Vênus",
+            "tier": "free",
+            "intro": "Sua Linha do Coração corta a palma inteira sem desvio.",
+            "body": "Quando você ama, ama com tudo.",
+            "impact_phrase": "Quando você ama, é tudo."
+          },
+          {
+            "line": "head",
+            "symbol": "☿",
+            "planet": "Mercúrio",
+            "tier": "premium",
+            "intro": "Sua Linha da Cabeça curva em direção à Lua.",
+            "body": "Criativa com estrutura. Você imagina coisas que os outros não imaginam.",
+            "impact_phrase": "Não é sonhadora solta. É sonhadora que executa."
+          },
+          {
+            "line": "life",
+            "symbol": "☉",
+            "planet": "Sol",
+            "tier": "premium",
+            "intro": "Sua Linha da Vida é profunda e longa.",
+            "body": "Vitalidade forte. Você se recupera de coisas que derrubariam outras pessoas por meses.",
+            "impact_phrase": "Você levanta. Sempre levanta."
+          },
+          {
+            "line": "fate",
+            "symbol": "♄",
+            "planet": "Saturno",
+            "tier": "premium",
+            "intro": "Sua Linha do Destino é forte e clara.",
+            "body": "Você sabe pra onde vai.",
+            "impact_phrase": "Planos mudam. Propósito permanece."
+          }
+        ],
+        "mounts": [
+          {
+            "name": "Monte de Júpiter",
+            "content": "Seu Monte de Júpiter é pronunciado. Você quer mais. Sempre quis."
+          }
+        ],
+        "crosses": [],
+        "rare_signs": [],
+        "share_phrase": "Quando você quer, o mundo inteiro sente."
+      }
+    },
+    {
+      "id": "r-003",
+      "tier": "premium",
+      "share_token": "tok-003",
+      "share_expires_at": "2026-04-11T00:00:00.000Z",
+      "created_at": "2026-03-15T10:00:00.000Z",
+      "report": {
+        "user_name": "Marina",
+        "element": {
+          "type": "water",
+          "title": "Água",
+          "body": "Sua mão é longa. Seus dedos são longos e flexíveis. Isso é Água. Você sente o que os outros nem percebem.",
+          "impact": "Você capta tudo. E carrega tudo. E ninguém percebe o peso."
+        },
+        "sections": [
+          {
+            "line": "heart",
+            "symbol": "♀",
+            "planet": "Vênus",
+            "tier": "free",
+            "intro": "Sua Linha do Coração é longa e curvada.",
+            "body": "Você ama com profundidade.",
+            "impact_phrase": "Você ama com profundidade, não com intensidade."
+          },
+          {
+            "line": "head",
+            "symbol": "☿",
+            "planet": "Mercúrio",
+            "tier": "premium",
+            "intro": "Sua Linha da Cabeça se adapta.",
+            "body": "Sua mente se adapta à situação.",
+            "impact_phrase": "Os analíticos te acham criativa."
+          },
+          {
+            "line": "life",
+            "symbol": "☉",
+            "planet": "Sol",
+            "tier": "premium",
+            "intro": "Sua Linha da Vida faz um arco largo.",
+            "body": "Arco largo na Linha da Vida mostra generosidade de energia.",
+            "impact_phrase": "Você dá sem calcular."
+          },
+          {
+            "line": "fate",
+            "symbol": "♄",
+            "planet": "Saturno",
+            "tier": "premium",
+            "intro": "Não tem Linha do Destino na sua mão.",
+            "body": "Ausência de Linha do Destino não é ausência de destino.",
+            "impact_phrase": "Você não segue destino de ninguém."
+          }
+        ],
+        "mounts": [],
+        "crosses": [],
+        "rare_signs": [],
+        "share_phrase": "Você capta tudo. E carrega tudo."
+      }
+    },
+    {
+      "id": "r-004",
+      "tier": "free",
+      "share_token": "tok-004",
+      "share_expires_at": "2026-04-06T00:00:00.000Z",
+      "created_at": "2026-03-01T10:00:00.000Z",
+      "report": {
+        "user_name": "Marina",
+        "element": {
+          "type": "water",
+          "title": "Água",
+          "body": "Sua mão é longa. Seus dedos são longos e flexíveis. Isso é Água.",
+          "impact": "Você capta tudo. E carrega tudo."
+        },
+        "sections": [
+          {
+            "line": "heart",
+            "symbol": "♀",
+            "planet": "Vênus",
+            "tier": "free",
+            "intro": "Sua Linha do Coração é longa e curvada.",
+            "body": "Você ama com profundidade.",
+            "impact_phrase": "Você ama com profundidade."
+          },
+          {
+            "line": "head",
+            "symbol": "☿",
+            "planet": "Mercúrio",
+            "tier": "premium",
+            "intro": "Sua Linha da Cabeça se adapta.",
+            "body": "Sua mente se adapta.",
+            "impact_phrase": "Os analíticos te acham criativa."
+          },
+          {
+            "line": "life",
+            "symbol": "☉",
+            "planet": "Sol",
+            "tier": "premium",
+            "intro": "Arco largo.",
+            "body": "Generosidade de energia.",
+            "impact_phrase": "Você dá sem calcular."
+          },
+          {
+            "line": "fate",
+            "symbol": "♄",
+            "planet": "Saturno",
+            "tier": "premium",
+            "intro": "Sem Destino.",
+            "body": "Você cria o próprio caminho.",
+            "impact_phrase": "Você não segue destino de ninguém."
+          }
+        ],
+        "mounts": [],
+        "crosses": [],
+        "rare_signs": [],
+        "share_phrase": "Você capta tudo."
+      }
+    },
+    {
+      "id": "r-005",
+      "tier": "premium",
+      "share_token": "tok-005",
+      "share_expires_at": "2026-04-23T00:00:00.000Z",
+      "created_at": "2026-04-03T10:00:00.000Z",
+      "report": {
+        "user_name": "Ana",
+        "element": {
+          "type": "earth",
+          "title": "Terra",
+          "body": "Sua mão é quadrada e grande. Seus dedos são curtos e firmes. Isso é Terra. Você constrói em silêncio. Destrói em silêncio também.",
+          "impact": "Você constrói em silêncio. Destrói em silêncio também."
+        },
+        "sections": [
+          {
+            "line": "heart",
+            "symbol": "♀",
+            "planet": "Vênus",
+            "tier": "free",
+            "intro": "Sua Linha do Coração é contida.",
+            "body": "Você se protege mais do que ama.",
+            "impact_phrase": "Você se protege mais do que ama."
+          },
+          {
+            "line": "head",
+            "symbol": "☿",
+            "planet": "Mercúrio",
+            "tier": "premium",
+            "intro": "Sua Linha da Cabeça é reta.",
+            "body": "Mente afiada. Lógica domina.",
+            "impact_phrase": "Você ouve, analisa, e responde."
+          },
+          {
+            "line": "life",
+            "symbol": "☉",
+            "planet": "Sol",
+            "tier": "premium",
+            "intro": "Arco fechado.",
+            "body": "Você protege seu espaço.",
+            "impact_phrase": "Poucos entram."
+          },
+          {
+            "line": "fate",
+            "symbol": "♄",
+            "planet": "Saturno",
+            "tier": "premium",
+            "intro": "Destino firme.",
+            "body": "Direção definida.",
+            "impact_phrase": "Propósito permanece."
+          }
+        ],
+        "mounts": [],
+        "crosses": [],
+        "rare_signs": [],
+        "share_phrase": "Você constrói em silêncio."
+      }
+    }
+  ]
+}

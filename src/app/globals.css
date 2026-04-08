@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+@theme {
+  /* === Fundos === */
+  --color-black: #08050e;
+  --color-deep: #110c1a;
+  --color-surface: #171222;
+  --color-surface-up: #1e1830;
+  --color-parchment: #1c1710;
+
+  /* === Ouro === */
+  --color-gold: #c9a24a;
+  --color-gold-light: #d9b86a;
+  --color-gold-dim: #7a6832;
+
+  /* === Rosa === */
+  --color-rose: #c4647a;
+  --color-rose-light: #e3a5b0;
+
+  /* === Violeta === */
+  --color-violet: #7b6ba5;
+  --color-violet-dim: #4a3d6e;
+
+  /* === Brasas e fumaca === */
+  --color-ember: #8b5a38;
+  --color-smoke: #3d332c;
+  --color-velvet: #2a1830;
+  --color-wine: #2a1428;
+
+  /* === Osso === */
+  --color-bone: #e8dfd0;
+  --color-bone-dim: #9b9284;
+
+  /* === Fontes === */
+  --font-cinzel: var(--font-cinzel), serif;
+  --font-cormorant: var(--font-cormorant), serif;
+  --font-raleway: var(--font-raleway), sans-serif;
+  --font-jetbrains: var(--font-jetbrains), monospace;
+  --font-logo: var(--font-logo), serif;
+}
+
+html,
+body {
+  background-color: var(--color-black);
+  color: var(--color-bone);
+  font-family: var(--font-raleway);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* === Tecido cigana: aplicar via classe nas páginas que precisarem === */
+.velvet-bg {
+  background-color: #0b0716;
+  background-image:
+    radial-gradient(
+      ellipse 120% 60% at 50% -10%,
+      rgba(139, 123, 191, 0.1) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 80% 50% at 50% 110%,
+      rgba(42, 20, 40, 0.45) 0%,
+      transparent 60%
+    ),
+    repeating-linear-gradient(
+      135deg,
+      rgba(201, 162, 74, 0.018) 0 1px,
+      transparent 1px 3px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.22) 0 1px,
+      transparent 1px 3px
+    );
+  background-attachment: fixed;
+  background-size:
+    100% 100%,
+    100% 100%,
+    4px 4px,
+    4px 4px;
+}
+
+::selection {
+  background-color: rgb(201 162 74 / 0.35);
+  color: var(--color-bone);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-dim);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gold-dim) var(--color-black);
+}
+
+/* === Noise forte pros cards de leitura (papel/pergaminho) ===
+ * Usa ::before em camada negativa, dentro de stacking context isolado.
+ * Sem blend mode (overlay some em bg escuro) — opacity pura + SVG grão
+ * já em escala de cinza claro. */
+.card-noise {
+  position: relative;
+  isolation: isolate;
+}
+/* Camada 1: manchas grandes irregulares (stains escuras de pergaminho velho) */
+.card-noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.018' numOctaves='5' stitchTiles='stitch' seed='3'/><feColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.4 -0.35'/></filter><rect width='100%25' height='100%25' filter='url(%23s)'/></svg>");
+  background-size: 420px 420px;
+  background-repeat: repeat;
+}
+/* Camada 2: grão mais grosso e irregular por cima, em tom ember */
+.card-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.05;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.32 0.42' numOctaves='4' stitchTiles='stitch' seed='11'/><feColorMatrix type='matrix' values='0 0 0 0 0.3  0 0 0 0 0.22  0 0 0 0 0.12  0 0 0 1.1 -0.1'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  background-size: 320px 320px;
+  background-repeat: repeat;
+}
+
+/* Noise mais sutil pros cards selados */
+.card-noise-dim::before {
+  opacity: 0.18;
+}
+.card-noise-dim::after {
+  opacity: 0.06;
+}
+
+/* === Branded radius + corner ornaments === */
+.branded-radius {
+  border-radius: 0 6px 0 6px;
+}
+.corner-ornaments {
+  position: relative;
+}
+.corner-ornaments::before,
+.corner-ornaments::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+.corner-ornaments::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid rgba(201, 162, 74, 0.25);
+  border-left: 1px solid rgba(201, 162, 74, 0.25);
+}
+.corner-ornaments::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid rgba(201, 162, 74, 0.25);
+  border-right: 1px solid rgba(201, 162, 74, 0.25);
+}
+.corner-ornaments:hover::before,
+.corner-ornaments:hover::after {
+  width: 12px;
+  height: 12px;
+}
+
+.grain-texture {
+  position: relative;
+}
+.grain-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Input focus line */
+.input-accent-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-rose), var(--color-violet));
+  transition: width 0.4s ease;
+  pointer-events: none;
+}
+.input-field:focus ~ .input-accent-line {
+  width: 100%;
+}
