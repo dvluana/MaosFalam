@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import readingFire from "@/mocks/reading-fire.json";
+import { buildMockReading } from "@/mocks/build-reading";
 import type { Reading } from "@/types/reading";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -17,7 +17,7 @@ interface Resolved {
 }
 
 function resolveToken(token: string): Resolved {
-  const data = readingFire as Reading;
+  const data: Reading = buildMockReading("fire");
   if (token === "abc123") return { state: "valid_free", reading: data };
   if (token === "premium") return { state: "valid_premium", reading: data };
   if (token === "expired") return { state: "expired", reading: null };

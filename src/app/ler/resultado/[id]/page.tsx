@@ -1,9 +1,9 @@
 "use client";
 
-import { Suspense, use, useEffect, useState } from "react";
+import { Suspense, use, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { useMock } from "@/hooks/useMock";
-import type { Reading, HandElement } from "@/types/reading";
+import { buildMockReading } from "@/mocks/build-reading";
+import type { HandElement } from "@/types/reading";
 import ElementHero from "@/components/reading/ElementHero";
 import ReadingOverview from "@/components/reading/ReadingOverview";
 import ReadingSection from "@/components/reading/ReadingSection";
@@ -27,21 +27,7 @@ function ResultadoInner({ id }: { id: string }) {
   const search = useSearchParams();
   const elementParam = search?.get("element") ?? null;
   const element: HandElement = isElement(elementParam) ? elementParam : "fire";
-  const [mockPath, setMockPath] = useState(`reading-${element}`);
-
-  useEffect(() => {
-    setMockPath(`reading-${element}`);
-  }, [element]);
-
-  const { data, loading } = useMock<Reading>(mockPath);
-
-  if (loading || !data) {
-    return (
-      <main className="min-h-dvh bg-black flex items-center justify-center">
-        <p className="font-cormorant italic text-bone-dim">Um momento...</p>
-      </main>
-    );
-  }
+  const data = useMemo(() => buildMockReading(element), [element]);
 
   const heart = data.report.sections.find((s) => s.line === "heart");
   const otherLines = data.report.sections.filter((s) => s.line !== "heart");

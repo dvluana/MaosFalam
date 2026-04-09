@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "@/components/ui/Button";
-import mockFire from "@/mocks/reading-fire.json";
+import { buildMockReading } from "@/mocks/build-reading";
 import mockUser from "@/mocks/user.json";
 import { useAuth } from "@/hooks/useAuth";
 
-const RAW_PHRASE = mockFire.report.element.impact;
+const RAW_PHRASE = buildMockReading("fire").report.element.impact;
 
 function personalize(phrase: string, name: string | null): string {
   if (!name) return phrase;

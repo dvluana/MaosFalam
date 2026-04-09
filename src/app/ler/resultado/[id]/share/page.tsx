@@ -1,12 +1,11 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useMemo, useState } from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
-import { useMock } from "@/hooks/useMock";
-import type { Reading } from "@/types/reading";
+import { buildMockReading } from "@/mocks/build-reading";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -14,16 +13,8 @@ interface PageProps {
 
 export default function SharePage({ params }: PageProps) {
   const { id } = use(params);
-  const { data, loading } = useMock<Reading>("reading-fire");
+  const data = useMemo(() => buildMockReading("fire"), []);
   const [shared, setShared] = useState(false);
-
-  if (loading || !data) {
-    return (
-      <main className="min-h-dvh bg-black flex items-center justify-center">
-        <p className="font-cormorant italic text-bone-dim">Um momento...</p>
-      </main>
-    );
-  }
 
   const shareUrl =
     typeof window !== "undefined"
