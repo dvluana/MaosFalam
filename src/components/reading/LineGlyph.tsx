@@ -1,23 +1,14 @@
 import type { LineName } from "@/types/reading";
+import GlyphShell, { type GlyphTheme } from "./GlyphShell";
 
 interface Props {
   line: LineName;
   size?: number;
 }
 
-interface LineTheme {
-  gradId: string;
-  coreId: string;
-  stops: Array<{ offset: string; color: string }>;
-  coreStops: Array<{ offset: string; color: string }>;
-  ringColor: string;
-  shadow: string;
-}
-
-const THEMES: Record<LineName, LineTheme> = {
+const THEMES: Record<LineName, GlyphTheme> = {
   heart: {
-    gradId: "line-grad-heart",
-    coreId: "line-core-heart",
+    id: "line-heart",
     stops: [
       { offset: "0%", color: "#e9a0b4" },
       { offset: "60%", color: "#c4647a" },
@@ -31,8 +22,7 @@ const THEMES: Record<LineName, LineTheme> = {
     shadow: "drop-shadow(0 0 8px rgba(196,100,122,0.4))",
   },
   head: {
-    gradId: "line-grad-head",
-    coreId: "line-core-head",
+    id: "line-head",
     stops: [
       { offset: "0%", color: "#b6a8d8" },
       { offset: "60%", color: "#7b6ba5" },
@@ -46,8 +36,7 @@ const THEMES: Record<LineName, LineTheme> = {
     shadow: "drop-shadow(0 0 8px rgba(123,107,165,0.4))",
   },
   life: {
-    gradId: "line-grad-life",
-    coreId: "line-core-life",
+    id: "line-life",
     stops: [
       { offset: "0%", color: "#e8d49b" },
       { offset: "60%", color: "#c9a24a" },
@@ -61,8 +50,7 @@ const THEMES: Record<LineName, LineTheme> = {
     shadow: "drop-shadow(0 0 8px rgba(201,162,74,0.4))",
   },
   fate: {
-    gradId: "line-grad-fate",
-    coreId: "line-core-fate",
+    id: "line-fate",
     stops: [
       { offset: "0%", color: "#f4ecd8" },
       { offset: "60%", color: "#e8dfd0" },
@@ -78,84 +66,19 @@ const THEMES: Record<LineName, LineTheme> = {
 };
 
 /**
- * Glyph pras 4 linhas da mão. Segue mesma estrutura do MountGlyph:
- * glow central pulsante + anel tracejado girando + símbolo único por linha.
+ * Glyph pras 4 linhas da mão. Usa GlyphShell (glow + anéis) com símbolo próprio por linha.
  */
 export default function LineGlyph({ line, size = 64 }: Props) {
   const theme = THEMES[line];
-
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 80 80"
-      fill="none"
-      aria-hidden
-      style={{ filter: theme.shadow }}
-    >
-      <defs>
-        <linearGradient id={theme.gradId} x1="50%" y1="0%" x2="50%" y2="100%">
-          {theme.stops.map((s) => (
-            <stop key={s.offset} offset={s.offset} stopColor={s.color} />
-          ))}
-        </linearGradient>
-        <radialGradient id={theme.coreId} cx="50%" cy="50%" r="50%">
-          {theme.coreStops.map((s) => (
-            <stop key={s.offset} offset={s.offset} stopColor={s.color} />
-          ))}
-        </radialGradient>
-      </defs>
-
-      {/* Glow central pulsante */}
-      <circle cx="40" cy="40" r="32" fill={`url(#${theme.coreId})`}>
-        <animate
-          attributeName="opacity"
-          values="0.7;1;0.7"
-          dur="3.5s"
-          repeatCount="indefinite"
-        />
-      </circle>
-
-      {/* Anel externo tracejado girando */}
-      <circle
-        cx="40"
-        cy="40"
-        r="34"
-        stroke={theme.ringColor}
-        strokeWidth="0.5"
-        strokeDasharray="2 3"
-        fill="none"
-      >
-        <animateTransform
-          attributeName="transform"
-          type="rotate"
-          from="0 40 40"
-          to="360 40 40"
-          dur="40s"
-          repeatCount="indefinite"
-        />
-      </circle>
-      {/* Anel interno estático */}
-      <circle
-        cx="40"
-        cy="40"
-        r="28"
-        stroke={theme.ringColor}
-        strokeOpacity="0.4"
-        strokeWidth="0.4"
-        fill="none"
-      />
-
-      {pickSymbol(line, theme.gradId)}
-    </svg>
+    <GlyphShell theme={theme} size={size} innerRingOpacity={0.4}>
+      {pickSymbol(line, `url(#${theme.id}-grad)`)}
+    </GlyphShell>
   );
 }
 
-function pickSymbol(line: LineName, gradId: string) {
-  const stroke = `url(#${gradId})`;
-
+function pickSymbol(line: LineName, stroke: string) {
   if (line === "heart") {
-    // Coração SVG custom com batimento
     return (
       <g>
         <path
@@ -185,7 +108,6 @@ function pickSymbol(line: LineName, gradId: string) {
   }
 
   if (line === "head") {
-    // Espiral/vórtice girando
     return (
       <g>
         <path
@@ -217,7 +139,6 @@ function pickSymbol(line: LineName, gradId: string) {
   }
 
   if (line === "life") {
-    // Árvore: tronco + 3 galhos
     return (
       <g>
         <g>
@@ -250,7 +171,7 @@ function pickSymbol(line: LineName, gradId: string) {
     );
   }
 
-  // fate: seta vertical ascendente com ponta em losango
+  // fate
   return (
     <g>
       <g>
