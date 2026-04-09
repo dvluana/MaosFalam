@@ -1,6 +1,18 @@
 # STATUS
 
-Ultima atualizacao: 2026-04-08 (Sprint 3b: gaps de fluxo e navegação resolvidos. Build verde.)
+Ultima atualizacao: 2026-04-08 (Feature Taro: /tarot gratuito com 22 Arcanos Maiores, 4 estados, componentes isolados. Build verde 31 rotas. Segundo funil de entrada pronto.)
+
+## Feature Taro (segundo funil, 100% client-side)
+
+- `/src/app/tarot/page.tsx` com 4 estados sequenciais: intro (deck empilhado + botao Embaralhar), picking (leque de 22 em arco 90° + guia de escolha por posicao + 3 dots de progresso), revealing (3 cartas com flip sequencial 400/1400/2400ms + keywords + interpretacao especifica da posicao + frase final), CTA pos-leitura (3 botoes: "Me mostre sua mao" → `/ler/toque`, "Compartilhar", "Tirar de novo")
+- 22 cartas dos Arcanos Maiores em `/src/mocks/tarot-cards.json` com estrutura completa: id, numeral, name, slug, image, keywords (3), reading.upright, reading.reversed, reading.past, reading.present, reading.future. Todos os textos na voz da cigana (2a pessoa, sem hedging, sem cliche esoterico, nomenclatura real de tarot).
+- 22 imagens movidas de `/assets/{subfolder}/*_2x.webp` pra `/public/tarot/{slug}.webp` flat. Subpastas removidas. Slug de cada carta bate com o numeral (louco, mago, sacerdotisa, imperatriz, imperador, hierofante, amantes, carro, forca, eremita, rodafortuna, justica, enforcado, morte, temperanca, diabo, torre, estrela, lua, sol, julgamento, mundo).
+- Componentes: `TarotCard` (aspect 5:7, frente com Image fill + cantos dourados + numeral topo + faixa inferior com nome; costas com losango central geometrico + corner ornaments + pattern xadrez dourado + label MãosFalam; flip 3D rotateY preserve-3d 0.9s cubic-bezier; prop faceUp/reversed/dimmed/highlighted/hideFront), `TarotDeck` (modo stack com 6 cartas sobrepostas com rotate sutil; modo fan com arco de 90° e transform-origin embaixo), `TarotReading` (grid 3 col desktop / 1 col mobile com reveals cascateados + finalPhrase condicional baseada em all upright/reversed/mix), `TarotShareCard` (card compartilhavel 360px com 3 mini cards + frase + footer MãosFalam).
+- Randomizacao: Fisher-Yates shuffle no deck a cada intro, posicao sorteada pela ordem de escolha (1a = past, 2a = present, 3a = future), 50% de chance de cada carta sair invertida (rotate 180° na imagem + label "· Invertida ·" em rose + usa reading.reversed). Zero backend, Math.random no client.
+- Vibracao haptic de 8ms no pick pra confirmar toque no mobile.
+- Menu da landing expandido: agora tem 6 items com "Taro" entre "Mostre sua mao" e "Entrar" pra dar visibilidade pro funil gratuito.
+
+Ultima atualizacao anterior: 2026-04-08 (Sprint 3b: gaps de fluxo e navegação resolvidos. Build verde.)
 
 ## Sprint 3b — gaps de fluxo resolvidos
 

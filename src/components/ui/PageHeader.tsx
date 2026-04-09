@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import Menu from "@/components/landing/Menu";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -17,24 +19,31 @@ const GUEST_ITEMS = [
     sub: "Começar agora",
     href: "/ler/nome",
   },
-  { id: "login", num: "03", label: "Entrar", sub: "Já te conheço", href: "/login" },
+  {
+    id: "tarot",
+    num: "03",
+    label: "Tarot Online",
+    sub: "Três cartas, de graça",
+    href: "/tarot",
+  },
+  { id: "login", num: "04", label: "Entrar", sub: "Já te conheço", href: "/login" },
   {
     id: "registro",
-    num: "04",
+    num: "05",
     label: "Criar conta",
     sub: "Pra você voltar",
     href: "/registro",
   },
   {
     id: "manifesto",
-    num: "05",
+    num: "06",
     label: "Manifesto",
     sub: "No que eu acredito",
     href: "/manifesto",
   },
 ];
 
-const LOGGED_ITEMS = [
+const LOGGED_STATIC = [
   { id: "home", num: "01", label: "Início", sub: "Você está aqui", href: "/" },
   {
     id: "leituras",
@@ -51,15 +60,22 @@ const LOGGED_ITEMS = [
     href: "/ler/nome",
   },
   {
-    id: "perfil",
+    id: "tarot",
     num: "04",
+    label: "Tarot Online",
+    sub: "Três cartas pra distrair a sorte",
+    href: "/tarot",
+  },
+  {
+    id: "perfil",
+    num: "05",
     label: "Perfil",
     sub: "Quem você é pra mim",
     href: "/conta/perfil",
   },
   {
     id: "manifesto",
-    num: "05",
+    num: "06",
     label: "Manifesto",
     sub: "No que eu acredito",
     href: "/manifesto",
@@ -73,8 +89,27 @@ const LOGGED_ITEMS = [
  * páginas internas.
  */
 export default function PageHeader() {
-  const { user } = useAuth();
-  const menuItems = user ? LOGGED_ITEMS : GUEST_ITEMS;
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const menuItems = useMemo(() => {
+    if (!user) return GUEST_ITEMS;
+    return [
+      ...LOGGED_STATIC,
+      {
+        id: "sair",
+        num: "07",
+        label: "Sair",
+        sub: "Até a próxima",
+        href: "/",
+        onClick: () => {
+          logout();
+          router.push("/");
+        },
+      },
+    ];
+  }, [user, logout, router]);
+
   return (
     <header
       role="banner"
@@ -88,11 +123,14 @@ export default function PageHeader() {
         <Link
           href="/"
           aria-label="MãosFalam"
-          className="flex items-center"
+          className="flex items-center gap-2.5"
           style={{ filter: "drop-shadow(0 0 10px rgba(201,162,74,0.12))" }}
         >
+          {/* Símbolo: mão abstrata */}
           <svg
-            width="40"
+            width="26"
+            height="16"
+            className="shrink-0 block"
             viewBox="0 0 613 366"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -109,6 +147,15 @@ export default function PageHeader() {
               fill="var(--color-gold)"
             />
           </svg>
+
+          {/* Logo wordmark ao lado do símbolo */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/vetor-logo.svg"
+            alt="MãosFalam"
+            className="shrink-0 block opacity-90"
+            style={{ width: 56, height: "auto" }}
+          />
         </Link>
 
         <Menu activeId="ler" items={menuItems} />

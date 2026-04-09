@@ -22,6 +22,8 @@ interface MenuItem {
   sub: string;
   href: string;
   id: string;
+  /** Se presente, dispara em vez de navegar (ex: logout). */
+  onClick?: () => void;
 }
 
 const DEFAULT_ITEMS: MenuItem[] = [
@@ -34,22 +36,29 @@ const DEFAULT_ITEMS: MenuItem[] = [
     href: "/ler/toque",
   },
   {
-    id: "login",
+    id: "tarot",
     num: "03",
+    label: "Taro",
+    sub: "Três cartas, de graça",
+    href: "/tarot",
+  },
+  {
+    id: "login",
+    num: "04",
     label: "Entrar",
     sub: "Já te conheço",
     href: "/login",
   },
   {
     id: "registro",
-    num: "04",
+    num: "05",
     label: "Criar conta",
     sub: "Pra você voltar",
     href: "/registro",
   },
   {
     id: "manifesto",
-    num: "05",
+    num: "06",
     label: "Manifesto",
     sub: "No que eu acredito",
     href: "/manifesto",
@@ -96,6 +105,12 @@ export default function Menu({
     e: React.MouseEvent<HTMLAnchorElement>,
     item: MenuItem,
   ) {
+    if (item.onClick) {
+      e.preventDefault();
+      item.onClick();
+      window.setTimeout(close, 320);
+      return;
+    }
     if (item.href === "#") e.preventDefault();
     setActiveState(item.id);
     // Pequeno atraso pra o olho pegar o highlight antes do painel subir

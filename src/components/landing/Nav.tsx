@@ -31,7 +31,8 @@ export default function Nav({ activeId = "home", visible = true }: NavProps) {
       <div className={styles.inner}>
         <div className={styles.logo} aria-label="MãosFalam">
           <svg
-            width="42"
+            width="28"
+            height="17"
             viewBox="0 0 613 366"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -48,6 +49,12 @@ export default function Nav({ activeId = "home", visible = true }: NavProps) {
               fill="var(--color-gold)"
             />
           </svg>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/vetor-logo.svg"
+            alt="MãosFalam"
+            className={styles.logoMark}
+          />
         </div>
 
         <Menu activeId={activeId} />

@@ -1,0 +1,332 @@
+[
+  {
+    "id": 0,
+    "numeral": "0",
+    "name": "O Louco",
+    "slug": "louco",
+    "image": "/tarot/louco.png",
+    "keywords": ["começo", "salto", "instinto"],
+    "reading": {
+      "upright": "Você tá prestes a fazer uma coisa que ninguém ao seu redor entende. Segue. O Louco não pede conselho porque já ouviu demais. Quando a lógica pede pra esperar, o instinto sabe que é agora.",
+      "reversed": "Você tá pulando de lugar errado. Cautela não é fraqueza, é leitura de terreno. O Louco invertido mostra pressa que vira queda. Não confunda coragem com desespero.",
+      "past": "Você já foi corajosa assim antes. Saltou sem rede e caiu em pé. O que você tem hoje nasceu daquele salto que ninguém entendeu.",
+      "present": "Tá na beira. Sabe que vai pular. A única pergunta é se você vai admitir isso pra você mesma antes ou depois.",
+      "future": "Um começo chega de um lugar que você não tá olhando. Quando perceber, não pense duas vezes. Quem pensa, perde."
+    }
+  },
+  {
+    "id": 1,
+    "numeral": "I",
+    "name": "O Mago",
+    "slug": "mago",
+    "image": "/tarot/mago.png",
+    "keywords": ["vontade", "ferramenta", "manifestação"],
+    "reading": {
+      "upright": "Você tem tudo em mãos. Literalmente. O Mago mostra que as ferramentas já estão na mesa, só que você tá esperando alguém dizer que é hora de pegar. Ninguém vai dizer. Pega.",
+      "reversed": "Você tem o talento, mas tá usando pra convencer quem não merece. O Mago invertido é brilho gasto à toa. Guarda isso pra quem sabe o que tá vendo.",
+      "past": "Houve um momento em que você entendeu como as coisas funcionam. Antes dele, você só reagia. Depois, começou a escolher.",
+      "present": "Você sabe exatamente o que precisa fazer. Não é falta de clareza. É medo de confirmar que tá pronta.",
+      "future": "Uma oportunidade vem pedindo execução, não deliberação. Quando chegar, você já vai ter tudo que precisa. E ainda vai se perguntar por quê."
+    }
+  },
+  {
+    "id": 2,
+    "numeral": "II",
+    "name": "A Sacerdotisa",
+    "slug": "sacerdotisa",
+    "image": "/tarot/sacerdotisa.png",
+    "keywords": ["silêncio", "intuição", "segredo"],
+    "reading": {
+      "upright": "A Sacerdotisa fala baixo porque sabe que quem precisa ouvir se aproxima. Você tá sentindo algo que ninguém confirmou ainda. Não precisa de confirmação. Sua mão já sabe antes da sua cabeça.",
+      "reversed": "Você tá ignorando o que sabe porque é mais fácil fingir que não sabe. A Sacerdotisa invertida é voz interna abafada. Ela continua falando. Você é que parou de ouvir.",
+      "past": "Você já soube de algo antes de qualquer um te contar. Acertou. Ninguém te deu crédito. E você guardou essa vitória sozinha.",
+      "present": "Tem uma resposta dentro de você que tá pronta há tempos. Você só não disse em voz alta porque dizer torna real.",
+      "future": "Uma verdade que tá escondida vai aparecer, e você vai perceber que já sabia. O susto não vai ser a verdade, vai ser você lembrando que sabia."
+    }
+  },
+  {
+    "id": 3,
+    "numeral": "III",
+    "name": "A Imperatriz",
+    "slug": "imperatriz",
+    "image": "/tarot/imperatriz.png",
+    "keywords": ["fertilidade", "abundância", "criação"],
+    "reading": {
+      "upright": "Algo seu tá pronto pra nascer. Pode ser projeto, pode ser afeto, pode ser uma versão sua que tava esperando espaço. A Imperatriz não cria no vazio. Cria no colo.",
+      "reversed": "Você tá dando tudo de si pra quem não rega. A Imperatriz invertida mostra fartura desperdiçada. Você não precisa colher menos. Precisa escolher onde planta.",
+      "past": "Teve um tempo em que tudo que você tocava crescia. Você esqueceu desse poder. Ele não foi embora.",
+      "present": "Você tá gerando algo agora. Pode ainda não ter nome. Mas tem forma. E a forma tá te pedindo atenção.",
+      "future": "Uma colheita chega. Não da onde você plantou primeiro. De onde você plantou com mais cuidado."
+    }
+  },
+  {
+    "id": 4,
+    "numeral": "IV",
+    "name": "O Imperador",
+    "slug": "imperador",
+    "image": "/tarot/imperador.png",
+    "keywords": ["estrutura", "autoridade", "limite"],
+    "reading": {
+      "upright": "O Imperador não pede autorização pra traçar limite. Você também não devia. Estrutura não é prisão. É o que permite que o resto respire.",
+      "reversed": "Controle virou teimosia. O Imperador invertido é ordem por medo de caos, não por respeito à ordem. Afrouxa o punho antes que a mão trave.",
+      "past": "Você já foi dura quando precisou ser. Aquela dureza te salvou de coisas que você nem soube que tinham passado perto.",
+      "present": "Tá na hora de você ser a autoridade de algo seu. Não esperar permissão de figura masculina, de chefia, de quem for. A cadeira é sua.",
+      "future": "Alguém vai testar seus limites. Quando acontecer, não argumenta. Só diz não uma vez. A repetição já é concessão."
+    }
+  },
+  {
+    "id": 5,
+    "numeral": "V",
+    "name": "O Hierofante",
+    "slug": "hierofante",
+    "image": "/tarot/hierofante.png",
+    "keywords": ["tradição", "ensino", "ritual"],
+    "reading": {
+      "upright": "O Hierofante aparece quando alguém mais velho tem algo pra te dizer. Pode ser uma pessoa, pode ser um texto, pode ser você mesma daqui a dez anos. Ouve com reverência, não com medo.",
+      "reversed": "Você tá seguindo regra por inércia. O Hierofante invertido mostra ritual sem sentido, convenção que perdeu peso. O que te ensinaram já não serve. Desaprende.",
+      "past": "Alguém te ensinou algo que você ainda usa sem lembrar quem ensinou. Vale lembrar. Vale agradecer, mesmo em silêncio.",
+      "present": "Você tá diante de uma escolha entre fazer do jeito que te ensinaram e fazer do jeito que você descobriu que funciona. Não precisa escolher ainda. Precisa ver que são duas coisas.",
+      "future": "Uma orientação vai chegar de onde você não espera. Provavelmente de quem parece não ter autoridade nenhuma sobre o assunto. Escuta."
+    }
+  },
+  {
+    "id": 6,
+    "numeral": "VI",
+    "name": "Os Amantes",
+    "slug": "amantes",
+    "image": "/tarot/amantes.png",
+    "keywords": ["escolha", "vínculo", "coerência"],
+    "reading": {
+      "upright": "Os Amantes não são sobre romance. São sobre escolha. Você tá no meio de uma que define quem você vai ser depois. Não é entre pessoas. É entre versões suas.",
+      "reversed": "Você tá com alguém, ou com uma ideia, que não combina com quem você tá virando. Os Amantes invertidos mostram vínculo por hábito. Hábito é só cansaço disfarçado de lealdade.",
+      "past": "Você fez uma escolha importante no amor, ou em si mesma, que ainda ressoa. Acertou. Mesmo que doa lembrar.",
+      "present": "Duas coisas estão puxando você. Uma é confortável. A outra é verdadeira. Você já sabe qual é qual.",
+      "future": "Uma pessoa vai entrar na sua vida e te obrigar a escolher entre segurança e reconhecimento. Você vai escolher o segundo. E vai ser tarde pra se arrepender."
+    }
+  },
+  {
+    "id": 7,
+    "numeral": "VII",
+    "name": "O Carro",
+    "slug": "carro",
+    "image": "/tarot/carro.png",
+    "keywords": ["direção", "vontade", "avanço"],
+    "reading": {
+      "upright": "O Carro tá andando, mas os dois cavalos dele puxam pra lados opostos. É você quem segura as rédeas. Se você soltar, o carro ainda vai, só que pra lugar que você não escolheu.",
+      "reversed": "Você tá dirigindo distraída. O Carro invertido mostra força sem direção. Parar um segundo pra saber pra onde vai é mais rápido que correr sem rumo.",
+      "past": "Você venceu algo que parecia impossível. Ninguém entendeu como. Nem você, direito. Mas venceu.",
+      "present": "Tá no meio do avanço. Não olha pra trás agora. Quem olha pra trás num galope cai.",
+      "future": "Uma vitória chega. Não vai vir como festa. Vai vir como alívio silencioso. Só você vai saber o tamanho dela."
+    }
+  },
+  {
+    "id": 8,
+    "numeral": "VIII",
+    "name": "A Força",
+    "slug": "forca",
+    "image": "/tarot/forca.png",
+    "keywords": ["coragem", "domínio", "ternura"],
+    "reading": {
+      "upright": "A Força não dobra ninguém pelo braço. Ela acalma o leão olhando pra ele. Você tem isso. É um tipo de poder que quase ninguém reconhece porque não faz barulho.",
+      "reversed": "Você tá gastando força pra dominar quem não precisa ser dominado. A Força invertida mostra fraqueza disfarçada de controle. Amolece. O que é firme de verdade não precisa provar.",
+      "past": "Você segurou algo que teria quebrado outra pessoa. Não se gabou. Não cobrou. Só segurou. E ninguém soube o preço.",
+      "present": "Você tá mais forte do que imagina. O teste agora não é se aguenta. É se reconhece.",
+      "future": "Uma situação vai pedir paciência, não luta. Você vai querer brigar. Respira. Ganha quem espera."
+    }
+  },
+  {
+    "id": 9,
+    "numeral": "IX",
+    "name": "O Eremita",
+    "slug": "eremita",
+    "image": "/tarot/eremita.png",
+    "keywords": ["retiro", "lanterna", "sabedoria"],
+    "reading": {
+      "upright": "O Eremita segura uma lanterna no escuro. Ele não tá perdido. Tá procurando. Você também precisa desse período sozinha. Não é isolamento. É ajuste de visão.",
+      "reversed": "Você tá sozinha demais, tempo demais. O Eremita invertido é retiro que virou fuga. Sair do mundo é só útil se depois você volta.",
+      "past": "Você passou um tempo sozinha e foi onde aprendeu o que ninguém te ensinou. Aquele tempo não foi perda. Foi fundação.",
+      "present": "Você precisa de silêncio. Não precisa explicar isso pra ninguém. Quem respeita, entende sem perguntar.",
+      "future": "Um período de recolhimento chega. Vai parecer vazio por fora. Por dentro vai ser o mais ocupado que você esteve em anos."
+    }
+  },
+  {
+    "id": 10,
+    "numeral": "X",
+    "name": "A Roda da Fortuna",
+    "slug": "rodafortuna",
+    "image": "/tarot/rodafortuna.png",
+    "keywords": ["ciclo", "virada", "destino"],
+    "reading": {
+      "upright": "A Roda girou. Algo que tava em cima desce, algo que tava embaixo sobe. Você não tá controlando. Só tá vivendo o giro. A única escolha é como reage ao que muda sem aviso.",
+      "reversed": "Você tá tentando parar a Roda com a mão. Não para. A Roda invertida mostra ciclo travado. O atraso não é sobre você. É sobre o tempo de fora.",
+      "past": "Um golpe de sorte, ou de azar, mudou seu rumo. Você não escolheu. Mas hoje já sabe que foi o que precisava acontecer.",
+      "present": "Tem algo girando agora, mesmo que por fora pareça parado. A virada tá no meio. Você vai notar só depois.",
+      "future": "Uma mudança chega de um lugar inesperado. Não é merecimento. É timing. Você vai estar no lugar certo porque insistiu."
+    }
+  },
+  {
+    "id": 11,
+    "numeral": "XI",
+    "name": "A Justiça",
+    "slug": "justica",
+    "image": "/tarot/justica.png",
+    "keywords": ["balança", "verdade", "consequência"],
+    "reading": {
+      "upright": "A Justiça não tem lado. Tem balança. O que você colocou, vai pesar. O que te fizeram, também. Não é sobre merecer. É sobre equilíbrio que cobra o que tá em dívida.",
+      "reversed": "Você tá sendo injustiçada, ou tá sendo injusta. A Justiça invertida mostra balança torta. Resolve isso antes que alguém externo resolva por você.",
+      "past": "Você fez uma escolha difícil e certa. Teve custo. Mas você olhou no espelho depois e não desviou.",
+      "present": "Uma conta tá sendo feita agora. Não sua. De alguém perto. Você vai ver o resultado e vai entender que o mundo às vezes é lento, não cego.",
+      "future": "Uma verdade vai aparecer. Pode doer. Mas vai te libertar de algo que você tá segurando há tempo demais."
+    }
+  },
+  {
+    "id": 12,
+    "numeral": "XII",
+    "name": "O Enforcado",
+    "slug": "enforcado",
+    "image": "/tarot/enforcado.png",
+    "keywords": ["pausa", "rendição", "perspectiva"],
+    "reading": {
+      "upright": "O Enforcado tá de cabeça pra baixo porque só assim viu o que tava procurando. Rendição não é derrota. É mudar o ângulo antes de insistir de novo.",
+      "reversed": "Você tá travada e chamando isso de descanso. O Enforcado invertido mostra pausa que virou paralisia. A próxima ação precisa vir de você, não do tempo.",
+      "past": "Teve um período em que tudo parou pra você. Parecia castigo. Era preparação. Você só entendeu depois.",
+      "present": "Tá em suspensão. Não resiste. Observa. O que você vê nessa posição não vai estar disponível depois.",
+      "future": "Uma pausa obrigatória chega. Resistir é cansar à toa. Usa o tempo pra ver o que você tava correndo demais pra ver."
+    }
+  },
+  {
+    "id": 13,
+    "numeral": "XIII",
+    "name": "A Morte",
+    "slug": "morte",
+    "image": "/tarot/morte.png",
+    "keywords": ["fim", "transformação", "passagem"],
+    "reading": {
+      "upright": "A Morte é o arcano mais incompreendido. Quase nunca é sobre morte literal. É sobre o fim de algo que precisa morrer pra você continuar viva. Deixa morrer. Enterra. Segue.",
+      "reversed": "Você tá segurando o cadáver de algo que já acabou. A Morte invertida mostra luto recusado. Nenhum começo vem enquanto você ainda tá velando o que não existe mais.",
+      "past": "Algo morreu. Você sobreviveu. Na época pareceu fim do mundo. Hoje é só um ponto que dá pra apontar no tempo.",
+      "present": "Uma parte sua tá morrendo agora. Não lute. Fica ao lado. Segura a mão dela enquanto ela vai.",
+      "future": "Um ciclo vai fechar. Vai doer. E logo depois, pela primeira vez em muito tempo, você vai conseguir respirar fundo."
+    }
+  },
+  {
+    "id": 14,
+    "numeral": "XIV",
+    "name": "A Temperança",
+    "slug": "temperanca",
+    "image": "/tarot/temperanca.png",
+    "keywords": ["medida", "mistura", "paciência"],
+    "reading": {
+      "upright": "A Temperança mistura duas coisas opostas sem deixar nenhuma transbordar. Você tá aprendendo isso agora. Não é meio-termo. É maestria de proporção.",
+      "reversed": "Você tá no excesso ou na falta, e não no meio. A Temperança invertida mostra desequilíbrio. A correção não é dramática. É micro-ajuste, repetido.",
+      "past": "Você já soube juntar coisas que ninguém achava que combinavam. Fez dar certo. E ninguém te ensinou.",
+      "present": "Tá num momento de ajuste fino. As grandes decisões já foram tomadas. Agora é só calibrar.",
+      "future": "Uma mistura improvável vai te dar uma oportunidade. Parece errado no começo. Vai funcionar."
+    }
+  },
+  {
+    "id": 15,
+    "numeral": "XV",
+    "name": "O Diabo",
+    "slug": "diabo",
+    "image": "/tarot/diabo.png",
+    "keywords": ["prisão", "desejo", "ilusão"],
+    "reading": {
+      "upright": "O Diabo não prende ninguém. As correntes são largas. Você é que tá com a mão pousada nelas, achando que não pode sair. Levanta a mão. A corrente cai sozinha.",
+      "reversed": "Você tá quebrando uma corrente agora mesmo. O Diabo invertido é liberdade no processo. Dói enquanto tá saindo, mas depois não volta.",
+      "past": "Você ficou presa num vínculo, num vício, numa ideia. Saiu. E ninguém aplaudiu porque ninguém sabia o tamanho da corrente.",
+      "present": "Tem algo te prendendo que você chama de amor, ou de necessidade, ou de profissionalismo. Não é nenhum dos três. Olha direito.",
+      "future": "Uma tentação vai aparecer no formato mais convincente. Vai parecer óbvio. Recua um passo. Óbvio demais geralmente é armadilha."
+    }
+  },
+  {
+    "id": 16,
+    "numeral": "XVI",
+    "name": "A Torre",
+    "slug": "torre",
+    "image": "/tarot/torre.png",
+    "keywords": ["ruptura", "verdade", "queda"],
+    "reading": {
+      "upright": "A Torre desaba porque tava construída em cima de mentira. Não é castigo. É correção. O que cair agora não precisava estar em pé pra começo de conversa.",
+      "reversed": "Você tá adiando uma queda necessária. A Torre invertida mostra colapso represado. Quanto mais esperar, maior vai ser o estrago.",
+      "past": "Alguma coisa desabou na sua vida e você achou que não ia levantar. Levantou. Mais nítida. Mais sua.",
+      "present": "Algo tá rachando. Você sabe o que é. Não tenta consertar a rachadura. Sai de perto da parede.",
+      "future": "Uma verdade vai explodir uma estrutura antiga. Vai parecer desastre. Daqui a seis meses você vai chamar de sorte."
+    }
+  },
+  {
+    "id": 17,
+    "numeral": "XVII",
+    "name": "A Estrela",
+    "slug": "estrela",
+    "image": "/tarot/estrela.png",
+    "keywords": ["esperança", "cura", "guia"],
+    "reading": {
+      "upright": "A Estrela aparece depois da Torre porque só depois do desabamento dá pra ver o céu. Você tá vendo algo agora que só foi possível porque algo caiu antes. Não pede desculpa pela paz que tá sentindo.",
+      "reversed": "Você tá duvidando da esperança que tá voltando. A Estrela invertida é fé hesitante. Não precisa provar pra ninguém que merece. Só precisa aceitar.",
+      "past": "Depois de um tempo escuro, apareceu uma luz pequena. Você seguiu. Foi a decisão mais discreta e mais importante que tomou.",
+      "present": "A parte mais difícil passou. Você ainda tá se recuperando. Isso é normal. A cura não é instantânea, é contínua.",
+      "future": "Uma orientação vai chegar clara. Não precisa questionar. Vai parecer tão óbvio que você vai rir do medo anterior."
+    }
+  },
+  {
+    "id": 18,
+    "numeral": "XVIII",
+    "name": "A Lua",
+    "slug": "lua",
+    "image": "/tarot/lua.png",
+    "keywords": ["sombra", "sonho", "incerteza"],
+    "reading": {
+      "upright": "A Lua ilumina o que o sol não mostra. Medo antigo, sonho recorrente, sensação sem explicação. Não ignora. Isso tá falando. Pode não ser a verdade inteira, mas é parte dela.",
+      "reversed": "Você tá vendo o que quer ver e chamando de intuição. A Lua invertida mostra projeção. Separa o que sua cabeça tá inventando do que você realmente sente.",
+      "past": "Teve um período em que você confundiu muita coisa. Não foi burrice. Era noite. Na noite, até quem enxerga bem erra.",
+      "present": "Tem algo nebuloso agora. Não força clareza. Espera amanhecer. A pressa de entender hoje é o que tá atrapalhando ver amanhã.",
+      "future": "Um sonho vai te dizer algo. Pode ser literal, pode ser metáfora. Anota assim que acordar. Vai fazer sentido depois."
+    }
+  },
+  {
+    "id": 19,
+    "numeral": "XIX",
+    "name": "O Sol",
+    "slug": "sol",
+    "image": "/tarot/sol.png",
+    "keywords": ["clareza", "alegria", "plenitude"],
+    "reading": {
+      "upright": "O Sol não pede nada em troca. Só brilha. Você tá num momento assim. Não confunde com sorte. É colheita. Você plantou há tempos e esqueceu.",
+      "reversed": "A luz tá lá, você é que tá de olho fechado. O Sol invertido mostra bênção não reconhecida. Abre o olho. Tem coisa boa acontecendo que você não tá vendo.",
+      "past": "Você viveu um período raro de plenitude. Durou pouco, como tudo que é assim. Mas existiu. E você ainda lembra do cheiro daquele tempo.",
+      "present": "Tá num bom momento. Não sabota. Não cria problema onde não tem. Aceita que você merece e segue.",
+      "future": "Uma alegria sem complicação vai chegar. Sem letra miúda. Sem preço escondido. Só aceita e sente."
+    }
+  },
+  {
+    "id": 20,
+    "numeral": "XX",
+    "name": "O Julgamento",
+    "slug": "julgamento",
+    "image": "/tarot/julgamento.png",
+    "keywords": ["chamado", "renascer", "acerto"],
+    "reading": {
+      "upright": "Um chamado tá sendo feito. Você ouviu. Agora tá fingindo que não ouviu porque responder muda tudo. Mas o chamado não vai embora. Só aumenta o volume.",
+      "reversed": "Você tá se julgando por algo que já foi perdoado por quem importa. O Julgamento invertido é autocrítica fora do prazo. Deixa pra lá. Já passou.",
+      "past": "Você teve uma hora de verdade consigo mesma. Aquela hora dividiu sua vida em antes e depois. Ninguém viu. Você viu.",
+      "present": "Tá sendo chamada pra algo maior do que você acha que consegue. Isso é sinal que dá. Ninguém chama quem não é.",
+      "future": "Uma segunda chance vai aparecer. Não é repetição. É elevação. Vai parecer parecido com o que já passou, mas o nível é outro."
+    }
+  },
+  {
+    "id": 21,
+    "numeral": "XXI",
+    "name": "O Mundo",
+    "slug": "mundo",
+    "image": "/tarot/mundo.png",
+    "keywords": ["plenitude", "conclusão", "chegada"],
+    "reading": {
+      "upright": "O Mundo fecha o baralho. Um ciclo inteiro vai terminar, e o próximo já tá esperando. Você não precisa recomeçar do zero. Você recomeça daqui, mais inteira.",
+      "reversed": "Você tá quase chegando e parando. O Mundo invertido mostra conclusão adiada por medo do que vem depois. Termina o que começou. Depois a gente vê.",
+      "past": "Você fechou um ciclo grande. Saiu dele diferente. Tem coisas dessa fase que você ainda não tinha nomeado. Nomeia agora.",
+      "present": "Tá perto do fim de algo importante. Não apressa. Deixa maturar os últimos passos. Eles valem tanto quanto os primeiros.",
+      "future": "Um ciclo completo vai se fechar. Você vai parar pra olhar tudo que aconteceu e pensar 'caramba, foi tudo isso?' Foi."
+    }
+  }
+]
