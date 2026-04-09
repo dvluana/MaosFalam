@@ -37,5 +37,6 @@ export default function useCameraPipeline({
     );
     timers.push(setTimeout(onCaptured, 7500));
     return () => timers.forEach(clearTimeout);
-  }, [forced, state, setState, onCaptured]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forced]);
 }

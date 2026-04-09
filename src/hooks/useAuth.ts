@@ -53,7 +53,7 @@ export function useAuth() {
   };
 
   const login = useCallback((email: string, password: string): boolean => {
-    if (!email.includes("@") || password !== "123456") return false;
+    if (!email.includes("@") || password.length < 1) return false;
     const u: StoredUser = {
       id: genId(),
       name: email.split("@")[0] ?? "voce",

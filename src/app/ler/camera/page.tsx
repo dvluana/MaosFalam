@@ -107,8 +107,8 @@ function CameraPageInner() {
 
       {state === "method_choice" && (
         <MethodChoice
-          onPickLive={() => setState("loading_mediapipe")}
-          onPickUpload={() => setState("camera_fallback_upload")}
+          onPickLive={() => router.push("/ler/scan")}
+          onPickUpload={() => router.push("/ler/scan")}
         />
       )}
 
