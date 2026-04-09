@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import mockFire from "@/mocks/reading-fire.json";
+import mockUser from "@/mocks/user.json";
+import { useAuth } from "@/hooks/useAuth";
 
 const RAW_PHRASE = mockFire.report.element.impact;
 
@@ -16,6 +18,7 @@ function personalize(phrase: string, name: string | null): string {
 
 export default function RevelacaoPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [phrase, setPhrase] = useState(RAW_PHRASE);
   const [typed, setTyped] = useState("");
   const [complete, setComplete] = useState(false);
@@ -59,7 +62,21 @@ export default function RevelacaoPage() {
 
   const onContinue = () => {
     setFadingOut(true);
-    setTimeout(() => router.push("/ler/resultado/mock-fire-001"), 500);
+    // Decisão de destino:
+    //   - Logada COM créditos → /completo (consome 1 crédito no backend
+    //     futuramente; hoje o mock user.credits é read-only)
+    //   - Logada SEM créditos → free, com CTA de upsell pra comprar
+    //   - Visitante → free
+    //
+    // TODO (backend): ao pushar pra /completo, chamar POST /api/readings
+    // que debita 1 crédito da conta e cria o registro da leitura. Se
+    // retorno for 402 Payment Required, cai no fluxo de upsell.
+    const hasCredits = user ? mockUser.credits > 0 : false;
+    const destination =
+      user && hasCredits
+        ? "/ler/resultado/mock-fire-001/completo"
+        : "/ler/resultado/mock-fire-001";
+    setTimeout(() => router.push(destination), 500);
   };
 
   return (

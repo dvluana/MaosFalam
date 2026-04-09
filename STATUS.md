@@ -1,6 +1,22 @@
 # STATUS
 
-Ultima atualizacao: 2026-04-08 (Sprint 3: Bíblia da mão + polimento UI. Build verde, push pra main feito.)
+Ultima atualizacao: 2026-04-08 (Sprint 3b: gaps de fluxo e navegação resolvidos. Build verde.)
+
+## Sprint 3b — gaps de fluxo resolvidos
+
+Análise dos fluxos identificou 18 problemas. Os 8 críticos/importantes corrigidos:
+
+1. Upload de foto (`/ler/camera` fallback) deixou de ser dead-end — `onChange` do file input flasha captura + pusha pra `/ler/scan`
+2. Credit guard no `/ler/revelacao`: logada só vai pra `/completo` se tiver créditos (checa `mockUser.credits > 0`), senão cai no free. TODO backend: debitar crédito real via POST /api/readings
+3. Payment context preservado: `UpsellSection` salva reading id em `sessionStorage.maosfalam_pending_reading`; após `payment_success`, `/creditos` redireciona de volta pra `/ler/resultado/{id}/completo`
+4. `/ler/nome` pre-fill pra logada (useAuth() popula nome/email)
+5. Menu auth-aware no `PageHeader`: items mudam conforme estado de auth. Visitante vê Início/Mostre sua mão/Entrar/Criar conta/Manifesto. Logada vê Início/Minhas leituras/Nova leitura/Perfil/Manifesto
+6. CTA "Ler outra mão" no footer do `/completo`: limpa flag `name_fresh` e manda pra `/ler/nome`
+7. CTA do `/compartilhar/[token]` troca `/` por `/ler/nome`
+8. `GUEST_ITEMS` do PageHeader aponta "Mostre sua mão" pra `/ler/nome` (passa pelo gate de nome)
+
+Gaps menores pendentes (não bloqueantes): manifesto ainda HTML, permission checks reais, debitação real de créditos, auto-login pós reset senha, confirmação de logout, enrichment do user.json mock.
+
 
 ## Estado atual
 

@@ -12,7 +12,6 @@ interface LayoutProps {
 
 const NAV = [
   { href: "/conta/leituras", label: "Leituras" },
-  { href: "/conta/creditos", label: "Créditos" },
   { href: "/conta/perfil", label: "Perfil" },
 ] as const;
 
@@ -40,7 +39,7 @@ export default function ContaLayout({ children }: LayoutProps) {
     <div className="min-h-dvh velvet-bg">
       {/* sub-nav da área logada (abaixo do SiteHeader global) */}
       <nav className="pt-20 border-b border-[rgba(201,162,74,0.08)]">
-        <div className="max-w-lg mx-auto px-5 py-3 flex items-center gap-6 overflow-x-auto">
+        <div className="max-w-xl mx-auto px-5 py-3 flex items-center gap-6 overflow-x-auto">
           {NAV.map((n) => (
             <Link
               key={n.href}

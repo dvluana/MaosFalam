@@ -480,6 +480,20 @@ function CompletoInner({ id }: { id: string }) {
             Foi isso que suas mãos me contaram. Agora é com você.
           </p>
           <ShareButton readingId={id} />
+          <button
+            type="button"
+            onClick={() => {
+              // Limpa a flag pra forçar /ler/nome a pedir de novo
+              if (typeof window !== "undefined") {
+                sessionStorage.removeItem("maosfalam_name_fresh");
+              }
+              window.location.href = "/ler/nome";
+            }}
+            className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold hover:text-gold-light transition-colors mt-2"
+            style={{ fontWeight: 500 }}
+          >
+            Ler outra mão →
+          </button>
         </div>
       </div>
 

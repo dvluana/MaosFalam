@@ -1,10 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button, Card, Input, Separator, Toast } from "@/components/ui";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  Button,
+  Card,
+  Input,
+  Separator,
+  Toast,
+  GoogleButton,
+} from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
+import { readCheckoutIntent } from "@/lib/checkout-intent";
 
 type State =
   | "default"
@@ -18,8 +26,9 @@ interface FieldErrors {
   password?: string;
 }
 
-export default function RegistroPage() {
+function RegistroInner() {
   const router = useRouter();
+  const search = useSearchParams();
   const { register } = useAuth();
   const [state, setState] = useState<State>("default");
   const [name, setName] = useState("");
@@ -27,8 +36,19 @@ export default function RegistroPage() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  function resolveDestination(): string {
+    const returnTo = search?.get("return");
+    const intent = readCheckoutIntent();
+    if (returnTo === "/creditos" && intent) {
+      return `/creditos?pacote=${intent.pacoteId}`;
+    }
+    if (returnTo && returnTo.startsWith("/")) return returnTo;
+    if (intent) return `/creditos?pacote=${intent.pacoteId}`;
+    return "/conta/leituras";
+  }
+
   const handleGoogle = () => {
-    window.setTimeout(() => router.push("/conta/leituras"), 1500);
+    window.setTimeout(() => router.push(resolveDestination()), 1500);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -66,7 +86,7 @@ export default function RegistroPage() {
     }
     setErrors({});
     setState("registration_success");
-    window.setTimeout(() => router.push("/conta/leituras"), 1500);
+    window.setTimeout(() => router.push(resolveDestination()), 1500);
   };
 
   return (
@@ -90,14 +110,10 @@ export default function RegistroPage() {
               </p>
             </div>
 
-            <Button
-              variant="secondary"
+            <GoogleButton
               onClick={handleGoogle}
-              className="w-full"
-            >
-              <span aria-hidden>G</span>
-              Criar com Google
-            </Button>
+              label="Criar com Google"
+            />
 
             <div className="flex items-center gap-3">
               <Separator variant="gold" className="flex-1" />
@@ -145,7 +161,13 @@ export default function RegistroPage() {
             </form>
 
             <div className="text-center">
-              <Link href="/login">
+              <Link
+                href={
+                  search?.get("return")
+                    ? `/login?return=${search.get("return")}`
+                    : "/login"
+                }
+              >
                 <Button variant="ghost" size="sm">
                   Já tenho conta
                 </Button>
@@ -155,5 +177,13 @@ export default function RegistroPage() {
         </Card>
       </div>
     </main>
+  );
+}
+
+export default function RegistroPage() {
+  return (
+    <Suspense fallback={<main className="min-h-dvh velvet-bg" />}>
+      <RegistroInner />
+    </Suspense>
   );
 }

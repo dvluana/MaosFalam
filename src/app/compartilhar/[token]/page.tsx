@@ -66,7 +66,7 @@ export default async function SharePage({ params }: PageProps) {
         <p className="font-cormorant italic text-2xl text-bone leading-snug max-w-md">
           Essa leitura expirou. Mas a sua pode começar agora.
         </p>
-        <Link href="/">
+        <Link href="/ler/nome">
           <Button variant="primary">Me mostre sua mão</Button>
         </Link>
       </main>
@@ -79,7 +79,7 @@ export default async function SharePage({ params }: PageProps) {
         <p className="font-cormorant italic text-2xl text-bone leading-snug max-w-md">
           Essa leitura não existe.
         </p>
-        <Link href="/">
+        <Link href="/ler/nome">
           <Button variant="primary">Voltar pro início</Button>
         </Link>
       </main>
@@ -165,7 +165,7 @@ export default async function SharePage({ params }: PageProps) {
           <p className="font-cormorant italic text-xl text-bone-dim max-w-sm">
             E as suas mãos, o que dizem?
           </p>
-          <Link href="/">
+          <Link href="/ler/nome">
             <Button variant="primary" size="lg">
               Descubra o que suas mãos dizem
             </Button>

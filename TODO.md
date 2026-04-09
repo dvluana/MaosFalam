@@ -2,6 +2,22 @@
 
 Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa, mova pra DONE com a data. Quando identificar subtarefas, adicione aqui.
 
+## Sprint 3b DONE — gaps de fluxo e navegação
+
+- [2026-04-08] Upload handler em `/ler/camera` (dead-end fix)
+- [2026-04-08] Credit guard no `/ler/revelacao` (logada + credits > 0 → /completo)
+- [2026-04-08] Payment context: `UpsellSection` + `/creditos` redirect de volta pra reading
+- [2026-04-08] `/ler/nome` pre-fill pra logada
+- [2026-04-08] Menu auth-aware no PageHeader (GUEST_ITEMS / LOGGED_ITEMS)
+- [2026-04-08] CTA "Ler outra mão" no `/completo` footer
+- [2026-04-08] CTA `/compartilhar/[token]` → `/ler/nome` (3 ocorrências)
+- [2026-04-08] `/ler/nova` deletada, fluxo logado unificado via `/ler/nome` → `/ler/toque`
+- [2026-04-08] `BuyCreditsModal` em `/conta/leituras` (comprar inline sem sair da área logada)
+- [2026-04-08] `/conta/creditos` deletada, saldo agora vive no `CreditsBanner` dentro de `/conta/leituras`
+- [2026-04-08] `/conta/perfil` simplificado (só nome + senha, sem excluir conta)
+- [2026-04-08] Deck de tarot na `/conta/leituras` + toggle Cartas/Lista (default Lista)
+- [2026-04-08] Padronização `max-w-xl px-5` em todas páginas `/conta/*` e `conta/layout`
+
 ## AGORA (Sprint 4: Backend + integrações reais)
 
 - [ ] Migrar manifesto.html pra src/app/manifesto/page.tsx (ainda servido estatico via proxy)

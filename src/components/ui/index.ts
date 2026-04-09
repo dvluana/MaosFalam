@@ -8,3 +8,4 @@ export { default as ProgressBar } from "./ProgressBar";
 export { default as StateSwitcher } from "./StateSwitcher";
 export { default as OfflineDetector } from "./OfflineDetector";
 export { default as SiteHeader } from "./SiteHeader";
+export { default as GoogleButton } from "./GoogleButton";

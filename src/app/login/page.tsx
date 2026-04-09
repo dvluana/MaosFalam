@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button, Card, Input, Separator } from "@/components/ui";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button, Card, Input, Separator, GoogleButton } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
+import { readCheckoutIntent } from "@/lib/checkout-intent";
 
 type State =
   | "default"
@@ -13,17 +14,43 @@ type State =
   | "email_login_error"
   | "email_login_success";
 
-export default function LoginPage() {
+function LoginInner() {
   const router = useRouter();
+  const search = useSearchParams();
   const { login } = useAuth();
   const [state, setState] = useState<State>("default");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  /**
+   * Decide pra onde mandar a usuária depois do login bem-sucedido:
+   *  1. Se há ?return= na URL, respeita (ex: return=/creditos)
+   *  2. Se há intent de checkout salvo, volta pra /creditos?pacote={id}
+   *  3. Default: /conta/leituras
+   */
+  function resolveDestination(): string {
+    const returnTo = search?.get("return");
+    if (returnTo && returnTo.startsWith("/")) {
+      const intent = readCheckoutIntent();
+      if (returnTo === "/creditos" && intent) {
+        return `/creditos?pacote=${intent.pacoteId}`;
+      }
+      return returnTo;
+    }
+    const intent = readCheckoutIntent();
+    if (intent) {
+      return `/creditos?pacote=${intent.pacoteId}`;
+    }
+    return "/conta/leituras";
+  }
+
   const handleGoogle = () => {
     setState("google_oauth_loading");
+    // Mock: simula OAuth Google. Em produção, redireciona pro OAuth real
+    // e no callback chama login() e depois resolveDestination().
     window.setTimeout(() => {
-      router.push("/conta/leituras");
+      login("cigana@google.com", "123456");
+      router.push(resolveDestination());
     }, 1500);
   };
 
@@ -35,13 +62,14 @@ export default function LoginPage() {
       return;
     }
     setState("email_login_success");
-    router.push("/conta/leituras");
+    router.push(resolveDestination());
   };
 
   const loading = state === "google_oauth_loading";
+  const isCheckoutReturn = search?.get("return") === "/creditos";
 
   return (
-    <main className="min-h-dvh velvet-bg flex items-center justify-center px-6 py-12">
+    <main className="min-h-dvh velvet-bg flex items-center justify-center px-6 pt-28 pb-12">
       <div className="w-full max-w-sm">
         <Card accentColor="violet">
           <div className="flex flex-col gap-6">
@@ -49,21 +77,23 @@ export default function LoginPage() {
               <span className="font-logo text-xl text-gold tracking-wider">
                 MãosFalam
               </span>
-              <p className="font-cormorant italic text-lg text-bone leading-snug">
-                Voltou. Suas mãos não mudaram. Ou mudaram?
-              </p>
+              {isCheckoutReturn ? (
+                <p className="font-cormorant italic text-lg text-bone leading-snug">
+                  Entra pra eu guardar seus créditos. Depois você volta
+                  exatamente pra onde estava.
+                </p>
+              ) : (
+                <p className="font-cormorant italic text-lg text-bone leading-snug">
+                  Voltou. Suas mãos não mudaram. Ou mudaram?
+                </p>
+              )}
             </div>
 
-            <Button
-              variant="secondary"
-              size="default"
+            <GoogleButton
               onClick={handleGoogle}
-              disabled={loading}
-              className="w-full"
-            >
-              <span aria-hidden className="text-base">G</span>
-              {loading ? "Conectando" : "Entrar com Google"}
-            </Button>
+              loading={loading}
+              label="Entrar com Google"
+            />
 
             {state === "google_oauth_error" && (
               <p className="font-jetbrains text-[11px] text-rose text-center">
@@ -73,7 +103,9 @@ export default function LoginPage() {
 
             <div className="flex items-center gap-3">
               <Separator variant="gold" className="flex-1" />
-              <span className="font-cormorant italic text-xs text-bone-dim">ou</span>
+              <span className="font-cormorant italic text-xs text-bone-dim">
+                ou
+              </span>
               <Separator variant="gold" className="flex-1" />
             </div>
 
@@ -96,7 +128,10 @@ export default function LoginPage() {
               />
 
               {state === "email_login_error" && (
-                <p className="font-jetbrains text-[11px] text-rose">
+                <p
+                  className="font-jetbrains text-[10px] tracking-[0.5px] text-rose"
+                  style={{ fontWeight: 500 }}
+                >
                   Email ou senha incorretos.
                 </p>
               )}
@@ -107,7 +142,13 @@ export default function LoginPage() {
             </form>
 
             <div className="flex items-center justify-between pt-2">
-              <Link href="/registro">
+              <Link
+                href={
+                  search?.get("return")
+                    ? `/registro?return=${search.get("return")}`
+                    : "/registro"
+                }
+              >
                 <Button variant="ghost" size="sm">
                   Criar conta
                 </Button>
@@ -122,5 +163,13 @@ export default function LoginPage() {
         </Card>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<main className="min-h-dvh velvet-bg" />}>
+      <LoginInner />
+    </Suspense>
   );
 }

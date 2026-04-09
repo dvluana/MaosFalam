@@ -2,6 +2,69 @@
 
 import Link from "next/link";
 import Menu from "@/components/landing/Menu";
+import { useAuth } from "@/hooks/useAuth";
+
+/**
+ * Menu items conforme estado de auth. Quando logada, as opções "Entrar" e
+ * "Criar conta" viram "Minhas leituras" e "Sair".
+ */
+const GUEST_ITEMS = [
+  { id: "home", num: "01", label: "Início", sub: "Você está aqui", href: "/" },
+  {
+    id: "ler",
+    num: "02",
+    label: "Mostre sua mão",
+    sub: "Começar agora",
+    href: "/ler/nome",
+  },
+  { id: "login", num: "03", label: "Entrar", sub: "Já te conheço", href: "/login" },
+  {
+    id: "registro",
+    num: "04",
+    label: "Criar conta",
+    sub: "Pra você voltar",
+    href: "/registro",
+  },
+  {
+    id: "manifesto",
+    num: "05",
+    label: "Manifesto",
+    sub: "No que eu acredito",
+    href: "/manifesto",
+  },
+];
+
+const LOGGED_ITEMS = [
+  { id: "home", num: "01", label: "Início", sub: "Você está aqui", href: "/" },
+  {
+    id: "leituras",
+    num: "02",
+    label: "Minhas leituras",
+    sub: "O que suas mãos já disseram",
+    href: "/conta/leituras",
+  },
+  {
+    id: "nova",
+    num: "03",
+    label: "Nova leitura",
+    sub: "Mostre sua mão de novo",
+    href: "/ler/nome",
+  },
+  {
+    id: "perfil",
+    num: "04",
+    label: "Perfil",
+    sub: "Quem você é pra mim",
+    href: "/conta/perfil",
+  },
+  {
+    id: "manifesto",
+    num: "05",
+    label: "Manifesto",
+    sub: "No que eu acredito",
+    href: "/manifesto",
+  },
+];
 
 /**
  * Header usado em todas as rotas não-landing.
@@ -10,6 +73,8 @@ import Menu from "@/components/landing/Menu";
  * páginas internas.
  */
 export default function PageHeader() {
+  const { user } = useAuth();
+  const menuItems = user ? LOGGED_ITEMS : GUEST_ITEMS;
   return (
     <header
       role="banner"
@@ -46,7 +111,7 @@ export default function PageHeader() {
           </svg>
         </Link>
 
-        <Menu activeId="ler" />
+        <Menu activeId="ler" items={menuItems} />
       </div>
     </header>
   );
