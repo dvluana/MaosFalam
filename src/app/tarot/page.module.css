@@ -166,29 +166,29 @@
   pointer-events: none;
 }
 
-/* Aura externa — halo lilás difuso */
+/* Aura externa — halo roxo difuso */
 .ornAuraOuter {
-  width: 90px;
-  height: 90px;
+  width: 72px;
+  height: 72px;
   background: radial-gradient(
     circle at center,
-    rgba(175, 150, 235, 0.42) 0%,
-    rgba(155, 125, 215, 0.26) 25%,
-    rgba(130, 105, 200, 0.15) 50%,
-    transparent 75%
+    rgba(123, 107, 165, 0.28) 0%,
+    rgba(100, 84, 148, 0.16) 35%,
+    rgba(80, 65, 130, 0.08) 60%,
+    transparent 80%
   );
   filter: blur(8px);
   animation: ornAuraBreath 4.2s ease-in-out infinite;
 }
 
-/* Aura interna — lilás quase branco concentrado */
+/* Aura interna — roxo suave concentrado */
 .ornAuraInner {
-  width: 50px;
-  height: 50px;
+  width: 38px;
+  height: 38px;
   background: radial-gradient(
     circle at center,
-    rgba(220, 200, 255, 0.62) 0%,
-    rgba(180, 155, 235, 0.4) 30%,
+    rgba(155, 130, 210, 0.4) 0%,
+    rgba(123, 107, 165, 0.22) 40%,
     transparent 70%
   );
   filter: blur(3px);
@@ -208,54 +208,51 @@
   }
 }
 
-/* Losango central — lilás/roxo, rotação contínua + glow forte */
+/* Losango central — roxo, rotação contínua + glow suave */
 .ornDiamond {
   position: relative;
   z-index: 2;
-  width: 21px;
-  height: 21px;
+  width: 15px;
+  height: 15px;
   background: linear-gradient(
     135deg,
-    #f0e3ff 0%,
-    #c5a8f5 25%,
-    #9a7ed4 55%,
-    #6b4fa8 100%
+    #b89de0 0%,
+    #8b6bc5 40%,
+    #6248a0 100%
   );
   transform: rotate(45deg);
   animation: ornDiamondSpin 5s linear infinite;
   box-shadow:
-    0 0 14px rgba(220, 200, 255, 0.95),
-    0 0 26px rgba(175, 150, 235, 0.85),
-    0 0 48px rgba(155, 125, 215, 0.65),
-    0 0 85px rgba(130, 105, 200, 0.5),
-    0 0 130px rgba(110, 85, 180, 0.3),
-    inset 0 0 8px rgba(255, 255, 255, 0.6);
+    0 0 8px rgba(155, 125, 215, 0.6),
+    0 0 18px rgba(123, 107, 165, 0.4),
+    0 0 32px rgba(100, 80, 160, 0.25),
+    inset 0 0 5px rgba(200, 180, 255, 0.3);
 }
 
-/* Centro brilhante dentro do losango */
+/* Centro sutil dentro do losango */
 .ornDiamond::before {
   content: "";
   position: absolute;
   inset: 3px;
   background: linear-gradient(
     135deg,
-    rgba(250, 240, 255, 0.95),
-    rgba(215, 190, 255, 0.75)
+    rgba(210, 190, 255, 0.6),
+    rgba(160, 130, 220, 0.4)
   );
 }
 
-/* Ponto de luz branco no topo do losango */
+/* Ponto de luz suave no topo */
 .ornDiamond::after {
   content: "";
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 5px;
-  height: 5px;
-  background: #ffffff;
+  top: 2px;
+  left: 2px;
+  width: 4px;
+  height: 4px;
+  background: rgba(230, 215, 255, 0.8);
   border-radius: 50%;
   filter: blur(1px);
-  opacity: 0.95;
+  opacity: 0.75;
 }
 
 @keyframes ornDiamondSpin {
@@ -288,31 +285,29 @@
     height: 100px;
   }
   .ornAuraOuter {
-    width: 115px;
-    height: 115px;
+    width: 88px;
+    height: 88px;
     filter: blur(10px);
   }
   .ornAuraInner {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     filter: blur(4px);
   }
   .ornDiamond {
-    width: 28px;
-    height: 28px;
+    width: 19px;
+    height: 19px;
     box-shadow:
-      0 0 18px rgba(220, 200, 255, 1),
-      0 0 34px rgba(175, 150, 235, 0.9),
-      0 0 62px rgba(155, 125, 215, 0.7),
-      0 0 105px rgba(130, 105, 200, 0.55),
-      0 0 160px rgba(110, 85, 180, 0.35),
-      inset 0 0 10px rgba(255, 255, 255, 0.6);
+      0 0 10px rgba(155, 125, 215, 0.65),
+      0 0 22px rgba(123, 107, 165, 0.45),
+      0 0 40px rgba(100, 80, 160, 0.3),
+      inset 0 0 6px rgba(200, 180, 255, 0.3);
   }
   .ornDiamond::after {
-    top: 5px;
-    left: 5px;
-    width: 6px;
-    height: 6px;
+    top: 3px;
+    left: 3px;
+    width: 5px;
+    height: 5px;
   }
 }
 
@@ -788,6 +783,200 @@
   transform: translate(-50%, -18px) scale(1.06);
 }
 
+/* ═══ CARTA SELECIONADA NO DECK ═══ */
+.deckCardSelected {
+  cursor: default;
+}
+.deckCardSelected:hover {
+  filter: none;
+}
+.deckCardSelected:hover .deckCardInner {
+  /* mantém posição, não sobe no hover */
+  transform: translate(-50%, -14px) scale(1.04);
+}
+
+.deckCardInnerSelected {
+  transform: translate(-50%, -14px) scale(1.04) !important;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+/* Badge com número de ordem (1, 2, 3) */
+.pickBadge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  color: #08050e;
+  font-family: var(--font-jetbrains);
+  font-size: 9px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  letter-spacing: 0;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ═══ GUIDE TEXT ═══ */
+.pickGuide {
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  font-size: clamp(17px, 4.5vw, 21px);
+  font-weight: 300;
+  color: var(--color-bone);
+  text-align: center;
+  margin: 0 auto 20px;
+  max-width: 28ch;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  padding: 0 16px;
+}
+
+@media (min-width: 640px) {
+  .pickGuide {
+    margin-bottom: 26px;
+  }
+}
+
+/* ═══ REVEAL AREA ═══ */
+.revealArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 32px auto 0;
+  max-width: 360px;
+}
+
+/* Botão Revelar */
+.revealBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-width: 220px;
+  padding: 18px 48px;
+  border: none;
+  border-radius: 0 6px 0 6px;
+  cursor: pointer;
+  font-family: var(--font-raleway);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: all 0.4s ease;
+  overflow: visible;
+}
+
+/* Corner ornaments */
+.revealBtn::before,
+.revealBtn::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-style: solid;
+  transition: border-color 0.4s ease, width 0.3s ease, height 0.3s ease;
+}
+.revealBtn::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+.revealBtn::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+/* Desabilitado (picking ainda não terminou) */
+.revealBtnWaiting {
+  background: rgba(8, 5, 14, 0.4);
+  color: rgba(155, 146, 132, 0.35);
+  box-shadow: 0 0 0 1px rgba(201, 162, 74, 0.08);
+}
+.revealBtnWaiting::before,
+.revealBtnWaiting::after {
+  border-color: rgba(201, 162, 74, 0.12);
+}
+
+/* Habilitado (3 cartas selecionadas) */
+.revealBtnReady {
+  background: linear-gradient(160deg, #1e1838, #2a2150, #1e1838);
+  color: var(--color-bone);
+  box-shadow:
+    0 0 0 1px rgba(201, 162, 74, 0.25),
+    0 0 28px rgba(123, 107, 165, 0.2),
+    0 0 56px rgba(123, 107, 165, 0.1);
+  animation: revealBtnPulse 3s ease-in-out infinite;
+}
+.revealBtnReady::before,
+.revealBtnReady::after {
+  border-color: rgba(201, 162, 74, 0.5);
+}
+.revealBtnReady:hover {
+  transform: translateY(-2px);
+  animation-play-state: paused;
+  box-shadow:
+    0 0 0 1px rgba(218, 185, 80, 0.6),
+    0 0 36px rgba(218, 185, 80, 0.4),
+    0 0 64px rgba(139, 123, 191, 0.4);
+}
+.revealBtnReady:hover::before,
+.revealBtnReady:hover::after {
+  width: 13px;
+  height: 13px;
+  border-color: var(--color-gold);
+}
+
+@keyframes revealBtnPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(201, 162, 74, 0.22),
+      0 0 24px rgba(123, 107, 165, 0.18),
+      0 0 48px rgba(123, 107, 165, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(218, 185, 80, 0.48),
+      0 0 36px rgba(175, 155, 235, 0.32),
+      0 0 68px rgba(139, 123, 191, 0.2);
+  }
+}
+
+.revealBtnText {
+  position: relative;
+  z-index: 1;
+}
+
+.revealBtnArrow {
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+.revealBtnReady:hover .revealBtnArrow {
+  transform: translateX(4px);
+}
+
+.revealHint {
+  font-family: var(--font-jetbrains);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  color: rgba(155, 146, 132, 0.45);
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+}
+
 @media (min-width: 640px) {
   .deck {
     width: 100%;
@@ -1093,7 +1282,6 @@
   margin-top: 24px;
   width: 100%;
   max-width: 260px;
-  min-height: 260px;
   position: relative;
   padding: 26px 20px 22px;
   background: linear-gradient(
@@ -1149,7 +1337,6 @@
   .interpretation {
     margin-top: 28px;
     max-width: 240px;
-    min-height: 300px;
     padding: 28px 22px 24px;
     flex: 1;
   }
@@ -1158,7 +1345,6 @@
 @media (min-width: 900px) {
   .interpretation {
     max-width: 280px;
-    min-height: 320px;
     padding: 32px 24px 26px;
   }
 }
@@ -1408,8 +1594,6 @@
   margin: 96px auto 0;
   max-width: 560px;
   padding: 0 16px;
-  opacity: 0;
-  animation: fadeInUp 1s ease 4.2s forwards;
 }
 
 .closingSeal {
