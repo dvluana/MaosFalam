@@ -18,6 +18,63 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 - [2026-04-08] Deck de tarot na `/conta/leituras` + toggle Cartas/Lista (default Lista)
 - [2026-04-08] Padronização `max-w-xl px-5` em todas páginas `/conta/*` e `conta/layout`
 
+## Frontend pendente (Sprint 3c: polimento + edge cases)
+
+### Alta prioridade (quebra ou atrapalha o fluxo)
+
+- [ ] `/ler/camera` upload — adicionar preview do arquivo + validação de formato/tamanho + estado de processamento (hoje só push pro scan)
+- [ ] `/ler/resultado/[id]` — guard pra id inexistente via `notFound()` do Next (hoje sempre cai no mock fire)
+- [ ] `/conta/leituras/[id]` — mesma coisa, id inválido quebra silenciosamente
+- [ ] `/ler/camera` sem guard de `maosfalam_name_fresh` — URL direta entra no fluxo sem nome
+- [ ] `HeroCTA` da landing aponta pra `/ler/toque` → trocar pra `/ler/nome` (evita duplo redirect)
+- [ ] `Menu.tsx` da landing ainda tem `DEFAULT_ITEMS` hardcoded apontando pra `/ler/toque`, unificar com os items do PageHeader
+- [ ] `user.json` mock: enriquecer 1-2 leituras com `body_extras`/`cigana_quotes`/`intimacy` pra `/conta/leituras/[id]` não parecer pobre
+
+### Média prioridade (UX/visual incompleto)
+
+- [ ] Gerar canvas real do share card em `/ler/resultado/[id]/share` (hoje "Baixar imagem" é `alert`)
+- [ ] `/ler/erro` estado `api_error`: campo "notificar quando voltar" não salva em lugar nenhum
+- [ ] `/redefinir-senha/[token]` success não faz auto-login (joga pra `/login`)
+- [ ] Logout (`/conta/perfil`) sem confirmação modal
+- [ ] Feedback visual ao copiar código PIX (estado `copied` existe mas sem animação/check)
+- [ ] Sub-nav do `/conta/layout` com só 2 items fica visualmente fraco — virar breadcrumb ou sumir
+- [ ] `OfflineDetector` com design cru, revisar pra casar com resto do DS
+- [ ] `/not-found` só texto, podia ter linguagem visual do resultado
+- [ ] Loading fallbacks dos `<Suspense>` são só "Um momento..." em Cormorant — trocar por skeleton visual
+- [ ] `/manifesto` migração de HTML estático pra React + remover rewrite do proxy + deletar `public/manifesto.html`
+
+### Baixa prioridade (edge cases, limpeza, testes)
+
+- [ ] `/ler/scan` estados `scan_failed_low_confidence` / `scan_failed_api_error` só via StateSwitcher — sem condição real
+- [ ] Permission checks reais da câmera (`camera_permission_denied`, `camera_permission_denied_permanent`) — implementar `navigator.mediaDevices.getUserMedia` real
+- [ ] Error boundaries — zero implementados. Qualquer componente que quebra explode a página
+- [ ] Toast global — só existe inline em cada página, falta provider central
+- [ ] `BlurredDeck` revisar se faz sentido no /completo também (hoje só renderiza no free)
+- [ ] Console.logs e comentários de debug espalhados — varredura final
+- [ ] Decidir destino de `/src/app/preview/*` (10 playgrounds dev, deletar ou gitignore antes do deploy)
+- [ ] `cursor: none` no wrapper da landing pra esconder cursor nativo do CrystalCursor sem vazar pras outras rotas
+
+### Acessibilidade + responsivo
+
+- [ ] Auditoria de a11y (contraste, aria-labels, keyboard nav)
+- [ ] Revisar breakpoints ≥1024px (só testei em 375-768px)
+- [ ] Focus states dos botões/cards tarot tão mínimos, keyboard nav pode ficar perdido
+- [ ] Respeitar `prefers-reduced-motion` (muita animação SVG + Framer Motion)
+
+### Testes
+
+- [ ] Cobertura Vitest pra componentes críticos (hoje só tem Button.test)
+- [ ] Playwright configurado mas zero spec — E2E dos fluxos críticos:
+  - Visitor: landing → /ler/nome → toque → camera → scan → revelação → resultado free → upsell → creditos
+  - Logada: login → /conta/leituras → fazer nova leitura → revelação → /completo
+  - Share: abrir /compartilhar/[token] nos 4 estados
+
+### Performance
+
+- [ ] Análise de bundle (next build mostra tamanhos, mas não pesei componentes)
+- [ ] Profiling de animações em mobile low-end (fire atmosphere + glyphs + rings rotativos rodam simultaneamente)
+- [ ] Considerar lazy load de componentes pesados (ElementGlyph + ElementAtmosphere só precisam no resultado)
+
 ## AGORA (Sprint 4: Backend + integrações reais)
 
 - [ ] Migrar manifesto.html pra src/app/manifesto/page.tsx (ainda servido estatico via proxy)
