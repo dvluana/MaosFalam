@@ -32,16 +32,16 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ### Média prioridade (UX/visual incompleto)
 
-- [ ] Gerar canvas real do share card em `/ler/resultado/[id]/share` (hoje "Baixar imagem" é `alert`)
+- [x] 2026-04-10 — Share card canvas real (PNG via Canvas API + Web Share API com fallback)
 - [ ] `/ler/erro` estado `api_error`: campo "notificar quando voltar" não salva em lugar nenhum
 - [ ] `/redefinir-senha/[token]` success não faz auto-login (joga pra `/login`)
-- [ ] Logout (`/conta/perfil`) sem confirmação modal
-- [ ] Feedback visual ao copiar código PIX (estado `copied` existe mas sem animação/check)
+- [x] 2026-04-10 — Logout com confirmacao inline ("Tem certeza?" + Sim/Cancelar)
+- [x] 2026-04-10 — Feedback visual PIX copiado (checkmark + "Copiado" por 2s)
 - [ ] Sub-nav do `/conta/layout` com só 2 items fica visualmente fraco — virar breadcrumb ou sumir
 - [ ] `OfflineDetector` com design cru, revisar pra casar com resto do DS
 - [ ] `/not-found` só texto, podia ter linguagem visual do resultado
 - [ ] Loading fallbacks dos `<Suspense>` são só "Um momento..." em Cormorant — trocar por skeleton visual
-- [ ] `/manifesto` migração de HTML estático pra React + remover rewrite do proxy + deletar `public/manifesto.html`
+- [x] 2026-04-10 — `/manifesto` migrado pra React (server component + 3 client components). Proxy marcado pra remover.
 
 ### Baixa prioridade (edge cases, limpeza, testes)
 
