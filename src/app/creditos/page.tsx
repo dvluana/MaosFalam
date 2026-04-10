@@ -1,22 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState, type FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Button,
-  Card,
-  Input,
-  Toast,
-  StateSwitcher,
-  GoogleButton,
-} from "@/components/ui";
-import { useAuth } from "@/hooks/useAuth";
-import {
-  saveCheckoutIntent,
-  readCheckoutIntent,
-} from "@/lib/checkout-intent";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState, type FormEvent } from "react";
+
+import { Button, Card, Input, Toast, StateSwitcher, GoogleButton } from "@/components/ui";
+import { useAuth } from "@/hooks/useAuth";
+import { saveCheckoutIntent, readCheckoutIntent } from "@/lib/checkout-intent";
 
 type PageState =
   | "default"
@@ -98,8 +89,7 @@ const PACOTES: readonly Pacote[] = [
   },
 ];
 
-const PIX_CODE =
-  "00020126580014br.gov.bcb.pix0136a629534e-7693-4846-b028-2c3e7a8e5204";
+const PIX_CODE = "00020126580014br.gov.bcb.pix0136a629534e-7693-4846-b028-2c3e7a8e5204";
 
 function formatBRL(v: number): string {
   return v.toLocaleString("pt-BR", {
@@ -134,8 +124,7 @@ function CreditosInner() {
   const stateParam = params?.get("state") as PageState | null;
   const [localState, setLocalState] = useState<PageState | null>(null);
   const pageState: PageState =
-    localState ??
-    (stateParam && STATES.includes(stateParam) ? stateParam : "default");
+    localState ?? (stateParam && STATES.includes(stateParam) ? stateParam : "default");
   const setPageState = (s: PageState): void => setLocalState(s);
 
   // Deck: a carta atual é a "selecionada". Default inicia em Roda (index 2),
@@ -191,7 +180,8 @@ function CreditosInner() {
     const intent = readCheckoutIntent();
     if (!intent) return;
     const idx = PACOTES.findIndex((p) => p.id === intent.pacoteId);
-    if (idx >= 0) {
+    const frame = window.requestAnimationFrame(() => {
+      if (idx < 0) return;
       setDeckIdx(idx);
       setMethod(intent.method);
       // scroll suave pra seção de pagamento
@@ -199,7 +189,8 @@ function CreditosInner() {
         const el = document.getElementById("pagamento");
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 400);
-    }
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [user]);
 
   // Timer PIX
@@ -300,8 +291,7 @@ function CreditosInner() {
           <span
             className="h-px w-10"
             style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
+              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
             }}
           />
           <span
@@ -313,8 +303,7 @@ function CreditosInner() {
           <span
             className="h-px w-10"
             style={{
-              background:
-                "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
+              background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
             }}
           />
         </div>
@@ -324,17 +313,13 @@ function CreditosInner() {
             Escolha o que faz sentido.
           </h1>
           <p className="font-cormorant italic text-[18px] sm:text-[22px] text-bone-dim leading-[1.4] max-w-md mx-auto">
-            Uma leitura é diferente de cinco. E cinco é diferente de dez. Cada
-            pacote é um jeito de fazer isso. Você escolhe quantas mãos vão
-            passar por aqui.
+            Uma leitura é diferente de cinco. E cinco é diferente de dez. Cada pacote é um jeito de
+            fazer isso. Você escolhe quantas mãos vão passar por aqui.
           </p>
         </header>
 
         {/* Deck de tarot: 1 carta por vez com setas laterais */}
-        <section
-          className="relative mb-10"
-          aria-label="Pacotes de créditos"
-        >
+        <section className="relative mb-10" aria-label="Pacotes de créditos">
           {/* Container do deck */}
           <div className="relative flex items-center justify-center">
             {/* Seta esquerda */}
@@ -347,23 +332,16 @@ function CreditosInner() {
                 background: "rgba(14,10,24,0.9)",
                 border: "1px solid rgba(201,162,74,0.35)",
                 borderRadius: "0 4px 0 4px",
-                boxShadow:
-                  "0 10px 24px -8px rgba(0,0,0,0.8), 0 0 18px -6px rgba(201,162,74,0.25)",
+                boxShadow: "0 10px 24px -8px rgba(0,0,0,0.8), 0 0 18px -6px rgba(201,162,74,0.25)",
               }}
             >
-              <span
-                className="font-cinzel text-[22px] text-gold leading-none"
-                aria-hidden
-              >
+              <span className="font-cinzel text-[22px] text-gold leading-none" aria-hidden>
                 ‹
               </span>
             </button>
 
             {/* Carta central + peeks laterais */}
-            <div
-              className="relative mx-auto"
-              style={{ width: "min(100%, 440px)" }}
-            >
+            <div className="relative mx-auto" style={{ width: "min(100%, 440px)" }}>
               {/* Peek da carta anterior — escondida atrás à esquerda */}
               <div
                 aria-hidden
@@ -402,206 +380,205 @@ function CreditosInner() {
                     const p = PACOTES[deckIdx]!;
                     const num = String(deckIdx + 1).padStart(2, "0");
                     return (
-              <motion.button
-                type="button"
-                key={p.id}
-                custom={direction}
-                initial={{
-                  opacity: 0,
-                  x: direction * 60,
-                  rotate: direction * 4,
-                }}
-                animate={{ opacity: 1, x: 0, rotate: 0 }}
-                exit={{
-                  opacity: 0,
-                  x: -direction * 60,
-                  rotate: -direction * 4,
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 180,
-                  damping: 22,
-                }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.3}
-                onDragEnd={(_, info) => {
-                  if (info.offset.x < -60) goNext();
-                  else if (info.offset.x > 60) goPrev();
-                }}
-                onClick={scrollToPagamento}
-                className="block w-full text-left focus:outline-none cursor-pointer"
-                aria-label={`Pacote ${p.nome}`}
-              >
-                <article
-                  className="card-noise relative overflow-hidden px-6 py-8 sm:px-9 sm:py-10"
-                  style={{
-                    background: "#0e0a18",
-                    border: "1px solid rgba(201,162,74,0.45)",
-                    boxShadow:
-                      "0 30px 60px -16px rgba(0,0,0,0.9), 0 0 56px -8px rgba(201,162,74,0.25), 0 0 1px rgba(201,162,74,0.3)",
-                  }}
-                >
-                  {/* Radial glow gold — carta ativa */}
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0"
-                    style={{
-                      background:
-                        "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(201,162,74,0.12), transparent 70%)",
-                    }}
-                  />
-
-                  {/* Corner accents — 4 cantos pra dar cara de carta */}
-                  <span
-                    aria-hidden
-                    className="absolute w-[14px] h-[14px] top-2 left-2 border-t border-l"
-                    style={{ borderColor: "rgba(201,162,74,0.7)" }}
-                  />
-                  <span
-                    aria-hidden
-                    className="absolute w-[14px] h-[14px] top-2 right-2 border-t border-r"
-                    style={{ borderColor: "rgba(201,162,74,0.7)" }}
-                  />
-                  <span
-                    aria-hidden
-                    className="absolute w-[14px] h-[14px] bottom-2 left-2 border-b border-l"
-                    style={{ borderColor: "rgba(201,162,74,0.7)" }}
-                  />
-                  <span
-                    aria-hidden
-                    className="absolute w-[14px] h-[14px] bottom-2 right-2 border-b border-r"
-                    style={{ borderColor: "rgba(201,162,74,0.7)" }}
-                  />
-
-                  {/* Deco tarot: losango ornamental topo-centro */}
-                  <div
-                    aria-hidden
-                    className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2"
-                  >
-                    <span className="h-px w-6 bg-gold-dim/50" />
-                    <span
-                      className="w-1.5 h-1.5 rotate-45 bg-gold"
-                      style={{ boxShadow: "0 0 6px rgba(201,162,74,0.6)" }}
-                    />
-                    <span className="h-px w-6 bg-gold-dim/50" />
-                  </div>
-
-                  {/* Badge popular */}
-                  {p.popular && (
-                    <div className="absolute top-4 right-4">
-                      <span
-                        className="font-jetbrains text-[8.5px] tracking-[1.5px] uppercase text-gold px-3 py-1.5"
-                        style={{
-                          fontWeight: 500,
-                          background: "rgba(201,162,74,0.1)",
-                          border: "1px solid rgba(201,162,74,0.45)",
-                          borderRadius: "0 4px 0 4px",
+                      <motion.button
+                        type="button"
+                        key={p.id}
+                        custom={direction}
+                        initial={{
+                          opacity: 0,
+                          x: direction * 60,
+                          rotate: direction * 4,
                         }}
+                        animate={{ opacity: 1, x: 0, rotate: 0 }}
+                        exit={{
+                          opacity: 0,
+                          x: -direction * 60,
+                          rotate: -direction * 4,
+                        }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 180,
+                          damping: 22,
+                        }}
+                        drag="x"
+                        dragConstraints={{ left: 0, right: 0 }}
+                        dragElastic={0.3}
+                        onDragEnd={(_, info) => {
+                          if (info.offset.x < -60) goNext();
+                          else if (info.offset.x > 60) goPrev();
+                        }}
+                        onClick={scrollToPagamento}
+                        className="block w-full text-left focus:outline-none cursor-pointer"
+                        aria-label={`Pacote ${p.nome}`}
                       >
-                        mais escolhida
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="relative flex flex-col">
-                    {/* Header: número + nome */}
-                    <div className="flex items-baseline gap-3 mb-1">
-                      <span
-                        className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold-dim"
-                        style={{ fontWeight: 500 }}
-                      >
-                        Pacote {num}
-                      </span>
-                      <span className="h-px flex-1 bg-gold-dim/20" />
-                    </div>
-
-                    <h2 className="font-cinzel text-[30px] sm:text-[36px] font-medium tracking-[0.04em] text-gold leading-[0.95] mb-3">
-                      {p.nome}
-                    </h2>
-
-                    {/* Pra quem */}
-                    <span
-                      className="font-jetbrains text-[9.5px] tracking-[1.5px] uppercase text-bone-dim mb-5"
-                      style={{ fontWeight: 500 }}
-                    >
-                      {p.paraQuem}
-                    </span>
-
-                    {/* Tagline impactante */}
-                    <p
-                      className="font-cormorant italic text-[20px] sm:text-[24px] text-bone leading-[1.3] mb-4"
-                      style={{
-                        textShadow:
-                          "0 0 18px rgba(201,162,74,0.25), 0 0 32px rgba(201,162,74,0.1)",
-                      }}
-                    >
-                      {p.tagline}
-                    </p>
-
-                    {/* Story */}
-                    <p className="font-raleway text-[14px] sm:text-[15px] font-light leading-[1.8] text-bone-dim mb-7">
-                      {p.story}
-                    </p>
-
-                    {/* Divisor sutil */}
-                    <div
-                      className="h-px w-full mb-5"
-                      style={{
-                        background:
-                          "linear-gradient(90deg, transparent, rgba(201,162,74,0.2), transparent)",
-                      }}
-                    />
-
-                    {/* Footer: créditos + preço */}
-                    <div className="flex items-end justify-between gap-4">
-                      <div className="flex flex-col">
-                        <span
-                          className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim mb-1"
-                          style={{ fontWeight: 500 }}
-                        >
-                          {p.creditos}{" "}
-                          {p.creditos === 1 ? "leitura" : "leituras"}
-                        </span>
-                        <span className="font-cormorant italic text-[13px] text-bone-dim">
-                          {formatPorLeitura(p.preco, p.creditos)} cada
-                        </span>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span
-                          className="font-cinzel text-[28px] sm:text-[34px] text-gold leading-none"
+                        <article
+                          className="card-noise relative overflow-hidden px-6 py-8 sm:px-9 sm:py-10"
                           style={{
-                            textShadow:
-                              "0 0 24px rgba(201,162,74,0.5), 0 0 48px rgba(201,162,74,0.25)",
+                            background: "#0e0a18",
+                            border: "1px solid rgba(201,162,74,0.45)",
+                            boxShadow:
+                              "0 30px 60px -16px rgba(0,0,0,0.9), 0 0 56px -8px rgba(201,162,74,0.25), 0 0 1px rgba(201,162,74,0.3)",
                           }}
                         >
-                          {formatBRL(p.preco)}
-                        </span>
-                      </div>
-                    </div>
+                          {/* Radial glow gold — carta ativa */}
+                          <div
+                            aria-hidden
+                            className="pointer-events-none absolute inset-0"
+                            style={{
+                              background:
+                                "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(201,162,74,0.12), transparent 70%)",
+                            }}
+                          />
 
-                    {/* Hint de toque pra ir pro pagamento */}
-                    <div
-                      className="mt-5 pt-4 flex items-center justify-center"
-                      style={{
-                        borderTop: "1px solid rgba(201,162,74,0.2)",
-                      }}
-                    >
-                      <span
-                        className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim flex items-center gap-2"
-                        style={{ fontWeight: 500 }}
-                      >
-                        <span className="w-1 h-1 rotate-45 bg-gold-dim" />
-                        Toque pra escolher esse
-                        <span aria-hidden className="text-gold text-[12px]">
-                          ↓
-                        </span>
-                        <span className="w-1 h-1 rotate-45 bg-gold-dim" />
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              </motion.button>
+                          {/* Corner accents — 4 cantos pra dar cara de carta */}
+                          <span
+                            aria-hidden
+                            className="absolute w-[14px] h-[14px] top-2 left-2 border-t border-l"
+                            style={{ borderColor: "rgba(201,162,74,0.7)" }}
+                          />
+                          <span
+                            aria-hidden
+                            className="absolute w-[14px] h-[14px] top-2 right-2 border-t border-r"
+                            style={{ borderColor: "rgba(201,162,74,0.7)" }}
+                          />
+                          <span
+                            aria-hidden
+                            className="absolute w-[14px] h-[14px] bottom-2 left-2 border-b border-l"
+                            style={{ borderColor: "rgba(201,162,74,0.7)" }}
+                          />
+                          <span
+                            aria-hidden
+                            className="absolute w-[14px] h-[14px] bottom-2 right-2 border-b border-r"
+                            style={{ borderColor: "rgba(201,162,74,0.7)" }}
+                          />
+
+                          {/* Deco tarot: losango ornamental topo-centro */}
+                          <div
+                            aria-hidden
+                            className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2"
+                          >
+                            <span className="h-px w-6 bg-gold-dim/50" />
+                            <span
+                              className="w-1.5 h-1.5 rotate-45 bg-gold"
+                              style={{ boxShadow: "0 0 6px rgba(201,162,74,0.6)" }}
+                            />
+                            <span className="h-px w-6 bg-gold-dim/50" />
+                          </div>
+
+                          {/* Badge popular */}
+                          {p.popular && (
+                            <div className="absolute top-4 right-4">
+                              <span
+                                className="font-jetbrains text-[8.5px] tracking-[1.5px] uppercase text-gold px-3 py-1.5"
+                                style={{
+                                  fontWeight: 500,
+                                  background: "rgba(201,162,74,0.1)",
+                                  border: "1px solid rgba(201,162,74,0.45)",
+                                  borderRadius: "0 4px 0 4px",
+                                }}
+                              >
+                                mais escolhida
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="relative flex flex-col">
+                            {/* Header: número + nome */}
+                            <div className="flex items-baseline gap-3 mb-1">
+                              <span
+                                className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold-dim"
+                                style={{ fontWeight: 500 }}
+                              >
+                                Pacote {num}
+                              </span>
+                              <span className="h-px flex-1 bg-gold-dim/20" />
+                            </div>
+
+                            <h2 className="font-cinzel text-[30px] sm:text-[36px] font-medium tracking-[0.04em] text-gold leading-[0.95] mb-3">
+                              {p.nome}
+                            </h2>
+
+                            {/* Pra quem */}
+                            <span
+                              className="font-jetbrains text-[9.5px] tracking-[1.5px] uppercase text-bone-dim mb-5"
+                              style={{ fontWeight: 500 }}
+                            >
+                              {p.paraQuem}
+                            </span>
+
+                            {/* Tagline impactante */}
+                            <p
+                              className="font-cormorant italic text-[20px] sm:text-[24px] text-bone leading-[1.3] mb-4"
+                              style={{
+                                textShadow:
+                                  "0 0 18px rgba(201,162,74,0.25), 0 0 32px rgba(201,162,74,0.1)",
+                              }}
+                            >
+                              {p.tagline}
+                            </p>
+
+                            {/* Story */}
+                            <p className="font-raleway text-[14px] sm:text-[15px] font-light leading-[1.8] text-bone-dim mb-7">
+                              {p.story}
+                            </p>
+
+                            {/* Divisor sutil */}
+                            <div
+                              className="h-px w-full mb-5"
+                              style={{
+                                background:
+                                  "linear-gradient(90deg, transparent, rgba(201,162,74,0.2), transparent)",
+                              }}
+                            />
+
+                            {/* Footer: créditos + preço */}
+                            <div className="flex items-end justify-between gap-4">
+                              <div className="flex flex-col">
+                                <span
+                                  className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim mb-1"
+                                  style={{ fontWeight: 500 }}
+                                >
+                                  {p.creditos} {p.creditos === 1 ? "leitura" : "leituras"}
+                                </span>
+                                <span className="font-cormorant italic text-[13px] text-bone-dim">
+                                  {formatPorLeitura(p.preco, p.creditos)} cada
+                                </span>
+                              </div>
+                              <div className="flex flex-col items-end">
+                                <span
+                                  className="font-cinzel text-[28px] sm:text-[34px] text-gold leading-none"
+                                  style={{
+                                    textShadow:
+                                      "0 0 24px rgba(201,162,74,0.5), 0 0 48px rgba(201,162,74,0.25)",
+                                  }}
+                                >
+                                  {formatBRL(p.preco)}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Hint de toque pra ir pro pagamento */}
+                            <div
+                              className="mt-5 pt-4 flex items-center justify-center"
+                              style={{
+                                borderTop: "1px solid rgba(201,162,74,0.2)",
+                              }}
+                            >
+                              <span
+                                className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim flex items-center gap-2"
+                                style={{ fontWeight: 500 }}
+                              >
+                                <span className="w-1 h-1 rotate-45 bg-gold-dim" />
+                                Toque pra escolher esse
+                                <span aria-hidden className="text-gold text-[12px]">
+                                  ↓
+                                </span>
+                                <span className="w-1 h-1 rotate-45 bg-gold-dim" />
+                              </span>
+                            </div>
+                          </div>
+                        </article>
+                      </motion.button>
                     );
                   })()}
                 </AnimatePresence>
@@ -618,14 +595,10 @@ function CreditosInner() {
                 background: "rgba(14,10,24,0.9)",
                 border: "1px solid rgba(201,162,74,0.35)",
                 borderRadius: "0 4px 0 4px",
-                boxShadow:
-                  "0 10px 24px -8px rgba(0,0,0,0.8), 0 0 18px -6px rgba(201,162,74,0.25)",
+                boxShadow: "0 10px 24px -8px rgba(0,0,0,0.8), 0 0 18px -6px rgba(201,162,74,0.25)",
               }}
             >
-              <span
-                className="font-cinzel text-[22px] text-gold leading-none"
-                aria-hidden
-              >
+              <span className="font-cinzel text-[22px] text-gold leading-none" aria-hidden>
                 ›
               </span>
             </button>
@@ -652,14 +625,8 @@ function CreditosInner() {
                 style={{
                   width: i === deckIdx ? 24 : 8,
                   height: 4,
-                  background:
-                    i === deckIdx
-                      ? "#c9a24a"
-                      : "rgba(201,162,74,0.2)",
-                  boxShadow:
-                    i === deckIdx
-                      ? "0 0 10px rgba(201,162,74,0.6)"
-                      : "none",
+                  background: i === deckIdx ? "#c9a24a" : "rgba(201,162,74,0.2)",
+                  boxShadow: i === deckIdx ? "0 0 10px rgba(201,162,74,0.6)" : "none",
                 }}
               />
             ))}
@@ -673,8 +640,7 @@ function CreditosInner() {
             <span
               className="h-px w-10"
               style={{
-                background:
-                  "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
+                background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
               }}
             />
             <span
@@ -686,8 +652,7 @@ function CreditosInner() {
             <span
               className="h-px w-10"
               style={{
-                background:
-                  "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
+                background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
               }}
             />
           </div>
@@ -697,8 +662,7 @@ function CreditosInner() {
             style={{
               background: "#0e0a18",
               border: "1px solid rgba(201,162,74,0.18)",
-              boxShadow:
-                "0 24px 48px -16px rgba(0,0,0,0.85), 0 0 40px -12px rgba(201,162,74,0.15)",
+              boxShadow: "0 24px 48px -16px rgba(0,0,0,0.85), 0 0 40px -12px rgba(201,162,74,0.15)",
             }}
           >
             <span
@@ -727,16 +691,14 @@ function CreditosInner() {
                       {pacote.nome}
                     </span>
                     <span className="font-cormorant italic text-[14px] text-bone-dim mt-1">
-                      {pacote.creditos}{" "}
-                      {pacote.creditos === 1 ? "leitura" : "leituras"} ·{" "}
+                      {pacote.creditos} {pacote.creditos === 1 ? "leitura" : "leituras"} ·{" "}
                       {formatPorLeitura(pacote.preco, pacote.creditos)} cada
                     </span>
                   </div>
                   <span
                     className="font-cinzel text-[26px] sm:text-[30px] text-gold leading-none"
                     style={{
-                      textShadow:
-                        "0 0 20px rgba(201,162,74,0.45), 0 0 40px rgba(201,162,74,0.2)",
+                      textShadow: "0 0 20px rgba(201,162,74,0.45), 0 0 40px rgba(201,162,74,0.2)",
                     }}
                   >
                     {formatBRL(pacote.preco)}
@@ -762,8 +724,7 @@ function CreditosInner() {
                     onClick={() => setMethod("pix")}
                     className="relative px-4 py-4 text-center transition-all focus:outline-none"
                     style={{
-                      background:
-                        method === "pix" ? "rgba(201,162,74,0.08)" : "transparent",
+                      background: method === "pix" ? "rgba(201,162,74,0.08)" : "transparent",
                       border:
                         method === "pix"
                           ? "1px solid rgba(201,162,74,0.55)"
@@ -787,10 +748,7 @@ function CreditosInner() {
                     onClick={() => setMethod("card")}
                     className="relative px-4 py-4 text-center transition-all focus:outline-none"
                     style={{
-                      background:
-                        method === "card"
-                          ? "rgba(201,162,74,0.08)"
-                          : "transparent",
+                      background: method === "card" ? "rgba(201,162,74,0.08)" : "transparent",
                       border:
                         method === "card"
                           ? "1px solid rgba(201,162,74,0.55)"
@@ -844,8 +802,7 @@ function CreditosInner() {
               aria-label="QR Code Pix"
               className="mx-auto mb-5 w-48 h-48 branded-radius"
               style={{
-                background:
-                  "repeating-conic-gradient(#08050e 0 25%, #e8dfd0 0 50%)",
+                background: "repeating-conic-gradient(#08050e 0 25%, #e8dfd0 0 50%)",
                 backgroundSize: "16px 16px",
               }}
             />
@@ -857,13 +814,9 @@ function CreditosInner() {
             </p>
             <div className="flex gap-3 flex-wrap">
               <Button variant="secondary" size="sm" onClick={handleCopyPix}>
-                {copied ? "Copiado" : "Copiar código Pix"}
+                {copied ? "\u2713 Copiado" : "Copiar código Pix"}
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setPageState("processing_payment")}
-              >
+              <Button variant="ghost" size="sm" onClick={() => setPageState("processing_payment")}>
                 Já paguei
               </Button>
             </div>
@@ -956,11 +909,7 @@ function CreditosInner() {
               O cartão não passou. Tente outro ou use Pix.
             </p>
             <div className="flex gap-3 flex-wrap">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setPageState("card_selected")}
-              >
+              <Button variant="primary" size="sm" onClick={() => setPageState("card_selected")}>
                 Outro cartão
               </Button>
               <Button
@@ -1070,10 +1019,7 @@ function CreditosInner() {
                 disabled={loginLoading}
                 className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center text-bone-dim hover:text-gold transition-colors focus:outline-none disabled:opacity-30"
               >
-                <span
-                  className="font-cinzel text-[22px] leading-none"
-                  aria-hidden
-                >
+                <span className="font-cinzel text-[22px] leading-none" aria-hidden>
                   ×
                 </span>
               </button>
@@ -1109,15 +1055,11 @@ function CreditosInner() {
 
                 {/* Cigana voice */}
                 <p className="font-cormorant italic text-[17px] sm:text-[19px] text-bone-dim leading-[1.35] mb-8 max-w-[300px]">
-                  Pra eu guardar seus créditos e te chamar pelo nome quando
-                  você voltar.
+                  Pra eu guardar seus créditos e te chamar pelo nome quando você voltar.
                 </p>
 
                 {/* Botão Google (componente unificado) */}
-                <GoogleButton
-                  onClick={handleGoogleLogin}
-                  loading={loginLoading}
-                />
+                <GoogleButton onClick={handleGoogleLogin} loading={loginLoading} />
 
                 {/* Hint rodapé */}
                 <p className="font-cormorant italic text-[13px] text-bone-dim mt-6 max-w-[280px]">
@@ -1129,18 +1071,14 @@ function CreditosInner() {
                   <span
                     className="h-px flex-1"
                     style={{
-                      background:
-                        "linear-gradient(90deg, transparent, rgba(201,162,74,0.3))",
+                      background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.3))",
                     }}
                   />
-                  <span className="font-cormorant italic text-[12px] text-bone-dim">
-                    ou
-                  </span>
+                  <span className="font-cormorant italic text-[12px] text-bone-dim">ou</span>
                   <span
                     className="h-px flex-1"
                     style={{
-                      background:
-                        "linear-gradient(270deg, transparent, rgba(201,162,74,0.3))",
+                      background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.3))",
                     }}
                   />
                 </div>

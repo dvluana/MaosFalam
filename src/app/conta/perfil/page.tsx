@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
-import Card from "@/components/ui/Card";
+import { Suspense, useState } from "react";
+
 import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Separator from "@/components/ui/Separator";
+import { useAuth } from "@/hooks/useAuth";
 
 /**
  * Perfil do usuário logado. Fluxo simplificado:
@@ -37,6 +38,7 @@ function PerfilContent() {
   const [confirmPwd, setConfirmPwd] = useState("");
   const [pwdError, setPwdError] = useState<string | undefined>();
   const [pwdSuccess, setPwdSuccess] = useState(false);
+  const [confirmingLogout, setConfirmingLogout] = useState(false);
 
   if (!user) return null;
 
@@ -84,8 +86,7 @@ function PerfilContent() {
           <span
             className="h-px w-8"
             style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(201,162,74,0.5))",
+              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.5))",
             }}
           />
           <span
@@ -137,14 +138,8 @@ function PerfilContent() {
                 Nome
               </p>
               <div className="flex items-center justify-between gap-3">
-                <p className="font-cinzel text-[18px] text-bone">
-                  {user.name}
-                </p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setMode("editing_name")}
-                >
+                <p className="font-cinzel text-[18px] text-bone">{user.name}</p>
+                <Button variant="ghost" size="sm" onClick={() => setMode("editing_name")}>
                   Trocar
                 </Button>
               </div>
@@ -157,9 +152,7 @@ function PerfilContent() {
               >
                 Email
               </p>
-              <p className="font-raleway text-[14px] text-bone-dim">
-                {user.email}
-              </p>
+              <p className="font-raleway text-[14px] text-bone-dim">{user.email}</p>
             </div>
           </div>
         )}
@@ -240,11 +233,7 @@ function PerfilContent() {
                 O segredo que te abre a porta.
               </p>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setMode("changing_password")}
-            >
+            <Button variant="ghost" size="sm" onClick={() => setMode("changing_password")}>
               Trocar
             </Button>
           </div>
@@ -254,9 +243,23 @@ function PerfilContent() {
       <Separator variant="gold" />
 
       <div className="flex flex-col items-center gap-3">
-        <Button variant="secondary" onClick={handleLogout}>
-          Sair
-        </Button>
+        {confirmingLogout ? (
+          <div className="flex flex-col items-center gap-3">
+            <p className="font-cormorant italic text-[15px] text-bone text-center">Tem certeza?</p>
+            <div className="flex gap-3">
+              <Button variant="secondary" size="sm" onClick={handleLogout}>
+                Sim, sair
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => setConfirmingLogout(false)}>
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button variant="secondary" onClick={() => setConfirmingLogout(true)}>
+            Sair
+          </Button>
+        )}
         <p className="font-cormorant italic text-[13px] text-bone-dim text-center">
           Eu vou tá aqui quando você voltar.
         </p>
