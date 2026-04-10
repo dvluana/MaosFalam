@@ -4,7 +4,10 @@ import { NextResponse, type NextRequest } from "next/server";
  * Rewrites para HTMLs estáticos legados em /public.
  *
  * `/`          → renderizado por src/app/page.tsx (HomeLanding nativo).
- * `/manifesto` → ainda servido por public/manifesto.html (migração pendente).
+ * `/manifesto` → MIGRADO para src/app/manifesto/page.tsx.
+ *                O rewrite abaixo pode ser removido. A rota App Router tem
+ *                prioridade, mas manter o rewrite causa conflito.
+ *                TODO: remover este rewrite e deletar public/manifesto.html.
  */
 export function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === "/manifesto") {
