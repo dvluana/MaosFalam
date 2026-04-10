@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import styles from "./HeroTitle.module.css";
 
 /**
@@ -63,9 +64,11 @@ export default function HeroTitle({
   const [subtitleShown, setSubtitleShown] = useState(false);
 
   const timeoutsRef = useRef<number[]>([]);
+  const rafIdsRef = useRef<number[]>([]);
 
   useEffect(() => {
     const timeouts = timeoutsRef.current;
+    const rafIds = rafIdsRef.current;
 
     function schedule(fn: () => void, ms: number) {
       const id = window.setTimeout(fn, ms);
@@ -99,8 +102,8 @@ export default function HeroTitle({
           chars: [...prev.chars, { ch, visible: false }],
         }));
         // two RAFs to let CSS transition trigger (mirrors original)
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
+        const outerRaf = requestAnimationFrame(() => {
+          const innerRaf = requestAnimationFrame(() => {
             setLine((prev) => {
               const chars = prev.chars.slice();
               const idx = chars.length - 1;
@@ -108,7 +111,9 @@ export default function HeroTitle({
               return { ...prev, chars };
             });
           });
+          rafIds.push(innerRaf);
         });
+        rafIds.push(outerRaf);
         schedule(next, charDelay(ch));
       }
       next();
@@ -133,6 +138,8 @@ export default function HeroTitle({
     return () => {
       for (const id of timeouts) window.clearTimeout(id);
       timeouts.length = 0;
+      for (const id of rafIds) cancelAnimationFrame(id);
+      rafIds.length = 0;
     };
   }, [
     title,
@@ -149,10 +156,7 @@ export default function HeroTitle({
 
   return (
     <>
-      <p
-        className={styles.heroTitle}
-        aria-label={fullTitle}
-      >
+      <p className={styles.heroTitle} aria-label={fullTitle}>
         <span aria-hidden="true">
           {line1.chars.map((c, i) => (
             <span
@@ -171,9 +175,7 @@ export default function HeroTitle({
               {c.ch}
             </span>
           ))}
-          <span
-            className={`${styles.typeCursor} ${cursorDone ? styles.done : ""}`}
-          />
+          <span className={`${styles.typeCursor} ${cursorDone ? styles.done : ""}`} />
         </span>
       </p>
       <p

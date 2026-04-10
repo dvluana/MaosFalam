@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import Button from "@/components/ui/Button";
+import { useAuth } from "@/hooks/useAuth";
 import { buildMockReading } from "@/mocks/build-reading";
 import mockUser from "@/mocks/user.json";
-import { useAuth } from "@/hooks/useAuth";
 
 const RAW_PHRASE = buildMockReading("fire").report.element.impact;
 
@@ -27,9 +28,11 @@ export default function RevelacaoPage() {
   const [fadingOut, setFadingOut] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const name = sessionStorage.getItem("maosfalam_name");
-    setPhrase(personalize(RAW_PHRASE, name));
+    const frame = window.requestAnimationFrame(() => {
+      const name = sessionStorage.getItem("maosfalam_name");
+      setPhrase(personalize(RAW_PHRASE, name));
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   // Atraso pra iniciar a digitação só depois da carta virar
@@ -40,8 +43,6 @@ export default function RevelacaoPage() {
 
   useEffect(() => {
     if (!flipped) return;
-    setTyped("");
-    setComplete(false);
     let i = 0;
     const interval = setInterval(() => {
       i += 1;
@@ -73,9 +74,7 @@ export default function RevelacaoPage() {
     // retorno for 402 Payment Required, cai no fluxo de upsell.
     const hasCredits = user ? mockUser.credits > 0 : false;
     const destination =
-      user && hasCredits
-        ? "/ler/resultado/mock-fire-001/completo"
-        : "/ler/resultado/mock-fire-001";
+      user && hasCredits ? "/ler/resultado/mock-fire-001/completo" : "/ler/resultado/mock-fire-001";
     setTimeout(() => router.push(destination), 500);
   };
 
@@ -139,14 +138,13 @@ export default function RevelacaoPage() {
       <motion.div
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.6 }}
         className="relative flex items-center gap-3"
       >
         <span
           className="h-px w-10"
           style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
+            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
           }}
         />
         <span
@@ -158,8 +156,7 @@ export default function RevelacaoPage() {
         <span
           className="h-px w-10"
           style={{
-            background:
-              "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
+            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
           }}
         />
       </motion.div>
@@ -186,8 +183,7 @@ export default function RevelacaoPage() {
           className="card-noise relative overflow-hidden"
           style={{
             aspectRatio: "5 / 7",
-            background:
-              "linear-gradient(165deg, #0e0a18 0%, #110c1a 50%, #08050e 100%)",
+            background: "linear-gradient(165deg, #0e0a18 0%, #110c1a 50%, #08050e 100%)",
             border: "1px solid rgba(201,162,74,0.55)",
             boxShadow:
               "0 40px 80px -20px rgba(0,0,0,0.95), 0 0 80px -8px rgba(201,162,74,0.35), 0 0 1px rgba(201,162,74,0.6), inset 0 0 60px rgba(201,162,74,0.05)",
@@ -253,8 +249,7 @@ export default function RevelacaoPage() {
             <span
               className="h-px w-10"
               style={{
-                background:
-                  "linear-gradient(90deg, transparent, rgba(201,162,74,0.7))",
+                background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.7))",
               }}
             />
             <span
@@ -264,8 +259,7 @@ export default function RevelacaoPage() {
             <span
               className="h-px w-10"
               style={{
-                background:
-                  "linear-gradient(270deg, transparent, rgba(201,162,74,0.7))",
+                background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.7))",
               }}
             />
           </div>
@@ -278,8 +272,7 @@ export default function RevelacaoPage() {
             <span
               className="h-px w-10"
               style={{
-                background:
-                  "linear-gradient(90deg, transparent, rgba(201,162,74,0.7))",
+                background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.7))",
               }}
             />
             <span
@@ -289,8 +282,7 @@ export default function RevelacaoPage() {
             <span
               className="h-px w-10"
               style={{
-                background:
-                  "linear-gradient(270deg, transparent, rgba(201,162,74,0.7))",
+                background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.7))",
               }}
             />
           </div>
@@ -310,14 +302,11 @@ export default function RevelacaoPage() {
               className="font-cormorant italic text-center text-bone leading-[1.35]"
               style={{
                 fontSize: "clamp(21px, 5.5vw, 28px)",
-                textShadow:
-                  "0 0 24px rgba(201,162,74,0.35), 0 0 50px rgba(201,162,74,0.15)",
+                textShadow: "0 0 24px rgba(201,162,74,0.35), 0 0 50px rgba(201,162,74,0.15)",
               }}
             >
               {typed}
-              {flipped && !complete && (
-                <span className="opacity-70 text-gold ml-0.5">|</span>
-              )}
+              {flipped && !complete && <span className="opacity-70 text-gold ml-0.5">|</span>}
             </p>
           </div>
 
@@ -383,7 +372,7 @@ export default function RevelacaoPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.9 }}
+              transition={{ duration: 0.5 }}
             >
               <Button variant="primary" onClick={onContinue}>
                 Continuar

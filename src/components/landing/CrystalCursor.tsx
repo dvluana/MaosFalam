@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+
 import styles from "./CrystalCursor.module.css";
 
 /**
@@ -24,10 +25,7 @@ interface CrystalCursorProps {
 
 const CLICKABLES = 'button, a, [role="button"], input, select, label';
 
-export default function CrystalCursor({
-  smoothing = 0.12,
-  disabled = false,
-}: CrystalCursorProps) {
+export default function CrystalCursor({ smoothing = 0.12, disabled = false }: CrystalCursorProps) {
   const cursorRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -63,11 +61,17 @@ export default function CrystalCursor({
     }
 
     function onMouseLeave() {
-      if (cursor) cursor.style.opacity = "0";
+      if (cursor) {
+        cursor.style.transition = "opacity 0.2s ease";
+        cursor.style.opacity = "0";
+      }
     }
 
     function onMouseEnter() {
-      if (cursor) cursor.style.opacity = "1";
+      if (cursor) {
+        cursor.style.transition = "opacity 0.2s ease";
+        cursor.style.opacity = "1";
+      }
     }
 
     function onTouchStart() {
@@ -110,13 +114,7 @@ export default function CrystalCursor({
     <>
       <svg className={styles.svgDefs} aria-hidden="true">
         <defs>
-          <filter
-            id="crystalDistort"
-            x="-20%"
-            y="-20%"
-            width="140%"
-            height="140%"
-          >
+          <filter id="crystalDistort" x="-20%" y="-20%" width="140%" height="140%">
             <feTurbulence
               type="fractalNoise"
               baseFrequency="0.65"

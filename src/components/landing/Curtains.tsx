@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import styles from "./Curtains.module.css";
 
 /**
@@ -35,6 +36,8 @@ class VelvetCurtain {
   opening = false;
   anticipating = false;
   alive = true;
+  private isMobile = false;
+  private frameCount = 0;
 
   private W = 0;
   private H = 0;
@@ -50,6 +53,7 @@ class VelvetCurtain {
     this.side = side;
 
     const isMob = window.innerWidth <= 480;
+    this.isMobile = isMob;
     this.FOLDS = isMob ? 5 : 9;
     this.ROWS = isMob ? 42 : 52;
 
@@ -75,7 +79,7 @@ class VelvetCurtain {
     // ef: proximidade da borda livre (0 = parede ancorada, 1 = centro livre)
     const ef = this.side === "left" ? c / total : 1 - c / total;
     // anticipation shimmer — borda livre balança mais
-    const ant = Math.sin(t * 13 + c * 1.05) * this.antP * 7 * ef;
+    const ant = Math.sin(t * 6 + c * 1.05) * this.antP * 7 * ef;
     // three-frequency sway — morre conforme a cortina abre
     const sa = (1.6 + ef * 2.6) * (1 - this.openP);
     const sway =
@@ -117,12 +121,7 @@ class VelvetCurtain {
       }
       ctx.closePath();
 
-      const g = ctx.createLinearGradient(
-        this._cx(c, 0.5, t),
-        0,
-        this._cx(c + 1, 0.5, t),
-        0,
-      );
+      const g = ctx.createLinearGradient(this._cx(c, 0.5, t), 0, this._cx(c + 1, 0.5, t), 0);
       if (isPeak) {
         g.addColorStop(0, "rgba(3,2,5,1)");
         g.addColorStop(0.3, "rgba(12,8,16,1)");
@@ -150,8 +149,7 @@ class VelvetCurtain {
     // Barra de bainha dourada no rodapé
     ctx.globalAlpha = 0.6;
     for (let x = 0; x < W; x += 9) {
-      ctx.fillStyle =
-        x % 18 === 0 ? "rgba(160,122,44,0.85)" : "rgba(90,68,22,0.7)";
+      ctx.fillStyle = x % 18 === 0 ? "rgba(160,122,44,0.85)" : "rgba(90,68,22,0.7)";
       ctx.fillRect(x, H - 20, 1.4, 20);
     }
     ctx.globalAlpha = 1;
@@ -159,6 +157,12 @@ class VelvetCurtain {
 
   private _loop = (ts: number) => {
     if (!this.alive) return;
+    this.frameCount += 1;
+    // Skip every other frame on mobile to reduce GPU load
+    if (this.isMobile && this.frameCount % 2 !== 0) {
+      this.rafId = requestAnimationFrame(this._loop);
+      return;
+    }
     this.t = ts * 0.001;
     if (this.anticipating && this.antP < 1) {
       this.antP = Math.min(1, this.antP + 0.045);

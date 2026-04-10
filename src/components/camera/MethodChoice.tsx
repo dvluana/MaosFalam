@@ -1,25 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
-import MethodCard from "./MethodCard";
+
+import type { ReactNode } from "react";
 
 interface Props {
   onPickLive: () => void;
   onPickUpload: () => void;
 }
 
+/* ── Illustrations ── */
+
 function MysticEyeIllustration() {
   return (
     <svg
-      width="110"
-      height="110"
+      width="72"
+      height="72"
       viewBox="0 0 120 120"
       fill="none"
       aria-hidden
-      className="transition-transform duration-500 group-hover:scale-105"
+      className="shrink-0 transition-transform duration-500 group-hover:scale-110"
       style={{
         filter:
-          "drop-shadow(0 0 14px rgba(201,162,74,0.35)) drop-shadow(0 0 32px rgba(201,162,74,0.12))",
+          "drop-shadow(0 0 10px rgba(201,162,74,0.3)) drop-shadow(0 0 24px rgba(201,162,74,0.1))",
       }}
     >
       <defs>
@@ -88,15 +91,15 @@ function MysticEyeIllustration() {
 function PortraitIllustration() {
   return (
     <svg
-      width="110"
-      height="110"
+      width="72"
+      height="72"
       viewBox="0 0 120 120"
       fill="none"
       aria-hidden
-      className="transition-transform duration-500 group-hover:scale-105"
+      className="shrink-0 transition-transform duration-500 group-hover:scale-110"
       style={{
         filter:
-          "drop-shadow(0 0 14px rgba(139,123,191,0.35)) drop-shadow(0 0 32px rgba(201,162,74,0.12))",
+          "drop-shadow(0 0 10px rgba(139,123,191,0.3)) drop-shadow(0 0 24px rgba(201,162,74,0.1))",
       }}
     >
       <defs>
@@ -211,31 +214,159 @@ function PortraitIllustration() {
   );
 }
 
+/* ── Stacked Method Card ── */
+
+interface MethodCardProps {
+  onClick: () => void;
+  glowColor: string;
+  accentColor: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  illustration: ReactNode;
+  delay: number;
+}
+
+function MethodCard({
+  onClick,
+  glowColor,
+  accentColor,
+  eyebrow,
+  title,
+  description,
+  illustration,
+  delay,
+}: MethodCardProps) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay }}
+      className="group relative w-full overflow-hidden card-noise text-left transition-[border-color,box-shadow] duration-300 focus:outline-none"
+      style={{
+        background: "linear-gradient(165deg, #0e0a18 0%, #110c1a 50%, #08050e 100%)",
+        border: "1px solid rgba(201,162,74,0.12)",
+        borderRadius: "0 6px 0 6px",
+        boxShadow: `0 12px 32px -8px rgba(0,0,0,0.7), 0 0 24px -8px ${glowColor}`,
+      }}
+      whileHover={{
+        borderColor: "rgba(201,162,74,0.3)",
+        boxShadow: `0 16px 40px -8px rgba(0,0,0,0.8), 0 0 32px -4px ${glowColor}`,
+      }}
+    >
+      {/* Accent line top */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[1.5px]"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
+          opacity: 0.5,
+        }}
+      />
+
+      {/* Glow atmosphere */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{
+          background: `radial-gradient(ellipse 60% 80% at 15% 50%, ${glowColor}, transparent 70%)`,
+        }}
+      />
+
+      {/* Corner ornaments */}
+      <span
+        aria-hidden
+        className="absolute top-[3px] left-[3px] w-2 h-2 border-t border-l border-gold/25 transition-all duration-300 group-hover:w-3 group-hover:h-3"
+      />
+      <span
+        aria-hidden
+        className="absolute bottom-[3px] right-[3px] w-2 h-2 border-b border-r border-gold/25 transition-all duration-300 group-hover:w-3 group-hover:h-3"
+      />
+
+      {/* Inner border */}
+      <div
+        aria-hidden
+        className="absolute inset-[5px] pointer-events-none"
+        style={{ border: "1px solid rgba(201,162,74,0.04)" }}
+      />
+
+      {/* Content row */}
+      <div className="relative flex items-center gap-5 px-5 py-5 sm:px-6 sm:py-6">
+        {/* Illustration */}
+        <div
+          className="relative shrink-0 flex items-center justify-center"
+          style={{ width: 80, height: 80 }}
+        >
+          {illustration}
+        </div>
+
+        {/* Text */}
+        <div className="flex flex-col gap-1.5 min-w-0">
+          <span
+            className="font-jetbrains text-[8px] tracking-[2px] uppercase"
+            style={{ fontWeight: 500, color: accentColor }}
+          >
+            {eyebrow}
+          </span>
+          <h3 className="font-cinzel text-[16px] sm:text-[18px] font-medium tracking-[0.03em] text-bone leading-tight">
+            {title}
+          </h3>
+          <p className="font-cormorant italic text-[14px] sm:text-[15px] text-bone-dim leading-[1.4]">
+            {description}
+          </p>
+        </div>
+
+        {/* Arrow indicator */}
+        <div className="shrink-0 ml-auto pl-2">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden
+            className="text-gold-dim group-hover:text-gold transition-colors duration-300 group-hover:translate-x-0.5 transition-transform"
+          >
+            <path
+              d="M6 3l5 5-5 5"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+    </motion.button>
+  );
+}
+
+/* ── Main Component ── */
+
 function MethodChoice({ onPickLive, onPickUpload }: Props) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, delay: 0.1 }}
-      className="relative grid grid-cols-1 sm:grid-cols-2 gap-5 w-full max-w-xl"
-    >
+    <div className="relative flex flex-col gap-4 w-full max-w-md">
       <MethodCard
         onClick={onPickLive}
-        glowColor="rgba(201,162,74,0.22)"
+        glowColor="rgba(201,162,74,0.15)"
+        accentColor="#c9a24a"
         eyebrow="ao vivo"
-        title="Abrir a mão agora"
-        description="Deixa eu ver na sua frente. Abro a câmera, você estende a palma."
+        title="Abrir a mao agora"
+        description="Abro a camera, voce estende a palma."
         illustration={<MysticEyeIllustration />}
+        delay={0.1}
       />
       <MethodCard
         onClick={onPickUpload}
-        glowColor="rgba(139,123,191,0.22)"
+        glowColor="rgba(139,123,191,0.15)"
+        accentColor="#7b6ba5"
         eyebrow="retrato"
-        title="Te entregar a foto"
-        description="Já tem um retrato da sua palma. Me manda ele que eu leio do mesmo jeito."
+        title="Me mandar a foto"
+        description="Ja tem um retrato da palma. Me manda."
         illustration={<PortraitIllustration />}
+        delay={0.25}
       />
-    </motion.div>
+    </div>
   );
 }
 

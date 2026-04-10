@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const HOLD_DURATION = 2400; // ms até completar o carregamento
 
 export default function TouchPage() {
   const router = useRouter();
   const checkedRef = useRef(false);
-  const [phase, setPhase] = useState<"idle" | "charging" | "ready" | "gone">(
-    "idle",
-  );
+  const [phase, setPhase] = useState<"idle" | "charging" | "ready" | "gone">("idle");
   const [progress, setProgress] = useState(0); // 0..1
   const rafRef = useRef<number | null>(null);
   const startRef = useRef<number | null>(null);
@@ -47,8 +45,6 @@ export default function TouchPage() {
         }
         setTimeout(() => {
           setPhase("gone");
-          // consome a flag apenas quando confirma a transição
-          sessionStorage.removeItem("maosfalam_name_fresh");
           setTimeout(() => router.push("/ler/camera"), 700);
         }, 500);
         return;
@@ -105,14 +101,13 @@ export default function TouchPage() {
       <motion.div
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: phase === "gone" ? 0 : 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.6 }}
         className="relative flex items-center gap-3"
       >
         <span
           className="h-px w-10"
           style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
+            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
           }}
         />
         <span
@@ -124,8 +119,7 @@ export default function TouchPage() {
         <span
           className="h-px w-10"
           style={{
-            background:
-              "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
+            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
           }}
         />
       </motion.div>

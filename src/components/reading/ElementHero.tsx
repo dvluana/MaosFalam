@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import ElementGlyph from "./ElementGlyph";
+
+import useStoredName from "@/hooks/useStoredName";
+import type { HandElement, ReadingReport } from "@/types/reading";
+
 import ElementAtmosphere from "./ElementAtmosphere";
-import type { ReadingReport, HandElement } from "@/types/reading";
-import { readStoredName } from "@/lib/personalize";
+import ElementGlyph from "./ElementGlyph";
 
 const elementLabel: Record<HandElement, string> = {
   fire: "Fogo",
@@ -25,14 +26,10 @@ const glowColor: Record<HandElement, string> = {
 // A cigana abrindo. Fala fluida, sem cortar no meio. O elemento é a
 // punchline — a última palavra da frase dela, não um rótulo no meio.
 const ciganaOpening: Record<HandElement, (name: string) => string> = {
-  fire: (n) =>
-    `Suas mãos queimam, ${n}. Eu sei antes de olhar que seu elemento é`,
-  water: (n) =>
-    `Suas mãos são profundas, ${n}. Eu sei antes de tocar que seu elemento é`,
-  earth: (n) =>
-    `Suas mãos são firmes, ${n}. Eu sei antes de segurar que seu elemento é`,
-  air: (n) =>
-    `Sua mente não desliga, ${n}. Eu sei antes de ouvir que seu elemento é`,
+  fire: (n) => `Suas mãos queimam, ${n}. Eu sei antes de olhar que seu elemento é`,
+  water: (n) => `Suas mãos são profundas, ${n}. Eu sei antes de tocar que seu elemento é`,
+  earth: (n) => `Suas mãos são firmes, ${n}. Eu sei antes de segurar que seu elemento é`,
+  air: (n) => `Sua mente não desliga, ${n}. Eu sei antes de ouvir que seu elemento é`,
 };
 
 // Cor do nome do elemento (destaque final da frase)
@@ -49,12 +46,7 @@ interface Props {
 }
 
 export default function ElementHero({ element, fallbackName }: Props) {
-  const [name, setName] = useState<string>(fallbackName);
-
-  useEffect(() => {
-    const stored = readStoredName();
-    if (stored) setName(stored);
-  }, []);
+  const name = useStoredName(fallbackName) ?? fallbackName;
 
   return (
     <section className="relative overflow-hidden pt-28 pb-20 px-6">
@@ -72,16 +64,14 @@ export default function ElementHero({ element, fallbackName }: Props) {
         aria-hidden
         className="absolute top-10 bottom-10 left-6 w-px"
         style={{
-          background:
-            "linear-gradient(180deg, transparent, rgba(201,162,74,0.22), transparent)",
+          background: "linear-gradient(180deg, transparent, rgba(201,162,74,0.22), transparent)",
         }}
       />
       <div
         aria-hidden
         className="absolute top-10 bottom-10 right-6 w-px"
         style={{
-          background:
-            "linear-gradient(180deg, transparent, rgba(201,162,74,0.22), transparent)",
+          background: "linear-gradient(180deg, transparent, rgba(201,162,74,0.22), transparent)",
         }}
       />
 
@@ -101,8 +91,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
           <span
             className="h-px w-10"
             style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
+              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
             }}
           />
           <span className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold-dim whitespace-nowrap">
@@ -111,8 +100,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
           <span
             className="h-px w-10"
             style={{
-              background:
-                "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
+              background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
             }}
           />
         </motion.div>
@@ -131,7 +119,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
             className="absolute inset-[-38px] rounded-full"
             style={{ border: "1px solid rgba(201,162,74,0.08)" }}
             animate={{ rotate: -360 }}
-            transition={{ duration: 140, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
           />
           <motion.div
             initial={{ scale: 0.85, opacity: 0 }}
@@ -202,8 +190,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
           <span
             className="h-px w-16"
             style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(201,162,74,0.6))",
+              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.6))",
             }}
           />
           <span
@@ -213,8 +200,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
           <span
             className="h-px w-16"
             style={{
-              background:
-                "linear-gradient(270deg, transparent, rgba(201,162,74,0.6))",
+              background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.6))",
             }}
           />
         </motion.div>

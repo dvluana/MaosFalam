@@ -1,16 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+
 import ProgressBar from "@/components/ui/ProgressBar";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 
-type ScanState =
-  | "scanning"
-  | "scan_slow"
-  | "scan_failed_low_confidence"
-  | "scan_failed_api_error";
+type ScanState = "scanning" | "scan_slow" | "scan_failed_low_confidence" | "scan_failed_api_error";
 
 const STATES: readonly ScanState[] = [
   "scanning",
@@ -93,14 +90,13 @@ function ScanInner() {
       <motion.div
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.6 }}
         className="relative flex items-center gap-3"
       >
         <span
           className="h-px w-10"
           style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
+            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
           }}
         />
         <span
@@ -112,8 +108,7 @@ function ScanInner() {
         <span
           className="h-px w-10"
           style={{
-            background:
-              "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
+            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
           }}
         />
       </motion.div>

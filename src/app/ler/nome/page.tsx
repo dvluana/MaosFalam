@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import { Button, Input } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -35,10 +36,12 @@ export default function NomePage() {
   // Pre-fill com dados da conta quando logada (a logada pode estar lendo
   // pra si mesma ou pra outra pessoa — ela troca se quiser)
   useEffect(() => {
-    if (user) {
-      setName(user.name);
-      setEmail(user.email);
-    }
+    if (!user) return;
+    const frame = window.requestAnimationFrame(() => {
+      setName((current) => current || user.name);
+      setEmail((current) => current || user.email);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [user]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -77,14 +80,13 @@ export default function NomePage() {
       <motion.div
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.6 }}
         className="relative flex items-center gap-3"
       >
         <span
           className="h-px w-10"
           style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
+            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
           }}
         />
         <span
@@ -96,16 +98,12 @@ export default function NomePage() {
         <span
           className="h-px w-10"
           style={{
-            background:
-              "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
+            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
           }}
         />
       </motion.div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="relative w-full max-w-sm flex flex-col gap-8"
-      >
+      <form onSubmit={handleSubmit} className="relative w-full max-w-sm flex flex-col gap-8">
         <div className="flex flex-col gap-3 text-center">
           <p className="font-cormorant italic text-[28px] sm:text-[32px] text-bone leading-[1.25]">
             Me diz duas coisas antes.
@@ -140,17 +138,11 @@ export default function NomePage() {
 
           {/* Hint sutil sobre privacidade */}
           <p className="font-cormorant italic text-[13px] text-bone-dim text-center leading-[1.4]">
-            Eu só uso pra te mandar a leitura e te chamar de volta. Nada
-            mais.
+            Eu só uso pra te mandar a leitura e te chamar de volta. Nada mais.
           </p>
         </div>
 
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          disabled={!canSubmit}
-        >
+        <Button type="submit" variant="primary" size="lg" disabled={!canSubmit}>
           Continuar
         </Button>
       </form>

@@ -53,26 +53,10 @@ body {
 .velvet-bg {
   background-color: #0b0716;
   background-image:
-    radial-gradient(
-      ellipse 120% 60% at 50% -10%,
-      rgba(139, 123, 191, 0.1) 0%,
-      transparent 65%
-    ),
-    radial-gradient(
-      ellipse 80% 50% at 50% 110%,
-      rgba(42, 20, 40, 0.45) 0%,
-      transparent 60%
-    ),
-    repeating-linear-gradient(
-      135deg,
-      rgba(201, 162, 74, 0.018) 0 1px,
-      transparent 1px 3px
-    ),
-    repeating-linear-gradient(
-      45deg,
-      rgba(0, 0, 0, 0.22) 0 1px,
-      transparent 1px 3px
-    );
+    radial-gradient(ellipse 120% 60% at 50% -10%, rgba(139, 123, 191, 0.1) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(42, 20, 40, 0.45) 0%, transparent 60%),
+    repeating-linear-gradient(135deg, rgba(201, 162, 74, 0.018) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px);
   background-attachment: fixed;
   background-size:
     100% 100%,
@@ -208,4 +192,16 @@ html {
 }
 .input-field:focus ~ .input-accent-line {
   width: 100%;
+}
+
+/* Accessibility: respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

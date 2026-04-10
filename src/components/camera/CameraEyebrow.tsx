@@ -11,14 +11,13 @@ function CameraEyebrow({ label }: Props) {
     <motion.div
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
+      transition={{ duration: 0.6 }}
       className="relative flex items-center gap-3"
     >
       <span
         className="h-px w-10"
         style={{
-          background:
-            "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
+          background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
         }}
       />
       <span
@@ -30,8 +29,7 @@ function CameraEyebrow({ label }: Props) {
       <span
         className="h-px w-10"
         style={{
-          background:
-            "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
+          background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
         }}
       />
     </motion.div>

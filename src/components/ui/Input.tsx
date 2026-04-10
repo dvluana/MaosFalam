@@ -7,12 +7,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export default function Input({
-  label,
-  error,
-  className = "",
-  ...rest
-}: InputProps) {
+export default function Input({ label, error, className = "", ...rest }: InputProps) {
   return (
     <div className="w-full">
       <label
@@ -24,7 +19,7 @@ export default function Input({
       <div className="relative">
         <input
           {...rest}
-          className={`w-full bg-transparent border-0 border-b text-bone font-raleway text-[15px] py-3 outline-none transition-colors placeholder:font-raleway placeholder:font-light placeholder:text-bone-dim/50 placeholder:text-[14px] placeholder:tracking-normal focus:border-gold ${className}`}
+          className={`w-full bg-transparent border-0 border-b text-bone font-raleway text-[15px] py-3 outline-none transition-colors duration-300 placeholder:font-raleway placeholder:font-light placeholder:text-bone-dim/50 placeholder:text-[14px] placeholder:tracking-normal focus:border-gold ${className}`}
           style={{
             borderBottomColor: "rgba(201,162,74,0.22)",
           }}

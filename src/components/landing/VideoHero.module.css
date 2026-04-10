@@ -34,7 +34,7 @@
   height: min(520px, 90vw);
   pointer-events: none;
   z-index: 1;
-  animation: mandalaSpin 180s linear infinite;
+  animation: mandalaSpin 60s linear infinite;
   opacity: 0.65;
 }
 @keyframes mandalaSpin {
@@ -105,12 +105,7 @@
   transform: translateX(-50%);
   width: 55%;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(201, 162, 74, 0.22),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 74, 0.22), transparent);
   pointer-events: none;
   z-index: 4;
 }
@@ -121,20 +116,14 @@
   left: 18%;
   width: 64%;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(139, 123, 191, 0.14),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(139, 123, 191, 0.14), transparent);
 }
 .dioramaImg {
   width: 100%;
   display: block;
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.95))
-    drop-shadow(0 0 30px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 30px rgba(0, 0, 0, 0.6));
 }
 
 /* ── HERO CONTENT ── */

@@ -10,18 +10,12 @@ const fillMap = {
   violet: "bg-violet text-violet",
 } as const;
 
-export default function ProgressBar({
-  value,
-  color = "gold",
-  className = "",
-}: ProgressBarProps) {
+export default function ProgressBar({ value, color = "gold", className = "" }: ProgressBarProps) {
   const clamped = Math.max(0, Math.min(100, value));
   return (
-    <div
-      className={`relative h-[2px] bg-[rgba(123,107,165,0.08)] rounded-[1px] ${className}`}
-    >
+    <div className={`relative h-[2px] bg-[rgba(123,107,165,0.08)] rounded-[1px] ${className}`}>
       <div
-        className={`h-full rounded-[1px] transition-[width] duration-500 ease-out relative ${fillMap[color]}`}
+        className={`h-full rounded-[1px] transition-[width] duration-300 ease-out relative ${fillMap[color]}`}
         style={{ width: `${clamped}%` }}
       >
         <span
