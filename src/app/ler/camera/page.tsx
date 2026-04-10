@@ -1,29 +1,31 @@
 "use client";
 
-import { Suspense, useCallback, useState, type ChangeEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import CameraEyebrow from "@/components/camera/CameraEyebrow";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useState, type ChangeEvent } from "react";
+
 import CameraErrorState from "@/components/camera/CameraErrorState";
+import CameraEyebrow from "@/components/camera/CameraEyebrow";
 import CameraFeedback from "@/components/camera/CameraFeedback";
 import CameraViewport from "@/components/camera/CameraViewport";
 import CaptureFlash from "@/components/camera/CaptureFlash";
 import MethodChoice from "@/components/camera/MethodChoice";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
-import {
-  CAM_EYEBROW,
-  CAM_FEEDBACK,
-  CAM_STATES,
-  isErrorState,
-  type CamState,
-} from "@/types/camera";
+import { CAM_EYEBROW, CAM_FEEDBACK, CAM_STATES, isErrorState, type CamState } from "@/types/camera";
 
 function CameraPageInner() {
   const router = useRouter();
   const search = useSearchParams();
   const forced = search?.get("state") as CamState | null;
   const [state, setState] = useState<CamState>(forced ?? "method_choice");
+
+  // Guard: sem nome no sessionStorage, volta pro /ler/nome
+  useEffect(() => {
+    if (!sessionStorage.getItem("maosfalam_name_fresh")) {
+      router.replace("/ler/nome");
+    }
+  }, [router]);
 
   if (forced && forced !== state) {
     setState(forced);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+
 import styles from "./Menu.module.css";
 
 /**
@@ -33,7 +34,7 @@ const DEFAULT_ITEMS: MenuItem[] = [
     num: "02",
     label: "Mostre sua mão",
     sub: "Começar agora",
-    href: "/ler/toque",
+    href: "/ler/nome",
   },
   {
     id: "tarot",
@@ -72,10 +73,7 @@ interface MenuProps {
   items?: MenuItem[];
 }
 
-export default function Menu({
-  activeId = "home",
-  items = DEFAULT_ITEMS,
-}: MenuProps) {
+export default function Menu({ activeId = "home", items = DEFAULT_ITEMS }: MenuProps) {
   const [open, setOpen] = useState(false);
   const [activeState, setActiveState] = useState(activeId);
 
@@ -101,10 +99,7 @@ export default function Menu({
     }
   }, [open]);
 
-  function handleItemClick(
-    e: React.MouseEvent<HTMLAnchorElement>,
-    item: MenuItem,
-  ) {
+  function handleItemClick(e: React.MouseEvent<HTMLAnchorElement>, item: MenuItem) {
     if (item.onClick) {
       e.preventDefault();
       item.onClick();
@@ -140,12 +135,7 @@ export default function Menu({
         className={`${styles.overlay} ${open ? styles.open : ""}`}
       >
         <div className={styles.panel}>
-          <button
-            type="button"
-            aria-label="Fechar menu"
-            onClick={close}
-            className={styles.close}
-          >
+          <button type="button" aria-label="Fechar menu" onClick={close} className={styles.close}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <line
                 x1="2"
@@ -219,9 +209,7 @@ export default function Menu({
               <div className={styles.orn}>
                 <div className={styles.ornDot} />
               </div>
-              <p className={styles.tagline}>
-                Me mostre sua mão e eu te conto quem você é
-              </p>
+              <p className={styles.tagline}>Me mostre sua mão e eu te conto quem você é</p>
               <p className={styles.version}>© 2025 · MãosFalam</p>
             </div>
           </div>

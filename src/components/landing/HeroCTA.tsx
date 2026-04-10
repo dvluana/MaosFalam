@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 import styles from "./HeroCTA.module.css";
 
 /**
@@ -21,7 +22,7 @@ interface HeroCTAProps {
 }
 
 export default function HeroCTA({
-  href = "/ler/toque",
+  href = "/ler/nome",
   label = "Mostre sua mão",
   delay = 9000,
 }: HeroCTAProps) {
@@ -33,10 +34,7 @@ export default function HeroCTA({
   }, [delay]);
 
   return (
-    <Link
-      href={href}
-      className={`${styles.cta} ${visible ? styles.visible : ""}`}
-    >
+    <Link href={href} className={`${styles.cta} ${visible ? styles.visible : ""}`}>
       {label}
     </Link>
   );

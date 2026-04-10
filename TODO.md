@@ -23,11 +23,11 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 ### Alta prioridade (quebra ou atrapalha o fluxo)
 
 - [ ] `/ler/camera` upload — adicionar preview do arquivo + validação de formato/tamanho + estado de processamento (hoje só push pro scan)
-- [ ] `/ler/resultado/[id]` — guard pra id inexistente via `notFound()` do Next (hoje sempre cai no mock fire)
-- [ ] `/conta/leituras/[id]` — mesma coisa, id inválido quebra silenciosamente
-- [ ] `/ler/camera` sem guard de `maosfalam_name_fresh` — URL direta entra no fluxo sem nome
-- [ ] `HeroCTA` da landing aponta pra `/ler/toque` → trocar pra `/ler/nome` (evita duplo redirect)
-- [ ] `Menu.tsx` da landing ainda tem `DEFAULT_ITEMS` hardcoded apontando pra `/ler/toque`, unificar com os items do PageHeader
+- [x] 2026-04-10 — `/ler/resultado/[id]` guard pra id inexistente (tela InvalidReading com CTA)
+- [x] 2026-04-10 — `/conta/leituras/[id]` guard pra id inválido (já tinha notFound())
+- [x] 2026-04-10 — `/ler/camera` guard de `maosfalam_name_fresh` (redirect pra /ler/nome)
+- [x] 2026-04-10 — `HeroCTA` corrigido pra `/ler/nome`
+- [x] 2026-04-10 — `Menu.tsx` DEFAULT_ITEMS corrigido pra `/ler/nome`
 - [ ] `user.json` mock: enriquecer 1-2 leituras com `body_extras`/`cigana_quotes`/`intimacy` pra `/conta/leituras/[id]` não parecer pobre
 
 ### Média prioridade (UX/visual incompleto)
@@ -51,7 +51,7 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 - [ ] Toast global — só existe inline em cada página, falta provider central
 - [ ] `BlurredDeck` revisar se faz sentido no /completo também (hoje só renderiza no free)
 - [ ] Console.logs e comentários de debug espalhados — varredura final
-- [ ] Decidir destino de `/src/app/preview/*` (10 playgrounds dev, deletar ou gitignore antes do deploy)
+- [x] 2026-04-10 — `/src/app/preview/*` isolado com `src/app/preview/layout.tsx` e bloqueado em production via `notFound()`
 - [ ] `cursor: none` no wrapper da landing pra esconder cursor nativo do CrystalCursor sem vazar pras outras rotas
 
 ### Acessibilidade + responsivo
@@ -92,7 +92,7 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ## BACKLOG
 
-- [ ] Decidir destino da pasta /src/app/preview/* (deletar ou gitignore antes do deploy)
+- [x] 2026-04-10 — previews mantidos como playground dev-only e removidos da superficie de producao
 - [ ] Adicionar `cursor: none` no wrapper da landing pra esconder cursor nativo do CrystalCursor
 - [ ] Polish + Launch
 - [ ] Revisar copy final de todas as telas com o banco real de blocks
@@ -101,7 +101,7 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ## DONE
 
-- [x] 2026-04-08 — Feature Taro gratuita: /tarot page com 4 estados (intro → picking → revealing → cta), 22 Arcanos Maiores em tarot-cards.json na voz da cigana (upright/reversed/past/present/future por carta), componentes TarotCard (flip 3D 5:7 + frente com imagem + costas dourada com losango), TarotDeck (stack + fan arco 90°), TarotReading (reveals sequenciais 400/1400/2400ms), TarotShareCard (card compartilhavel 360px). 22 imagens movidas de assets/{subfolder}/*_2x.webp pra public/tarot/{slug}.webp flat, subpastas deletadas. 50% chance de carta invertida. Item "Taro" adicionado ao Menu entre "Mostre sua mao" e "Entrar" (agora 6 items). Build verde, /tarot como rota estatica prerenderizada.
+- [x] 2026-04-08 — Feature Taro gratuita: /tarot page com 4 estados (intro → picking → revealing → cta), 22 Arcanos Maiores em tarot-cards.json na voz da cigana (upright/reversed/past/present/future por carta), componentes TarotCard (flip 3D 5:7 + frente com imagem + costas dourada com losango), TarotDeck (stack + fan arco 90°), TarotReading (reveals sequenciais 400/1400/2400ms), TarotShareCard (card compartilhavel 360px). 22 imagens movidas de assets/{subfolder}/\*\_2x.webp pra public/tarot/{slug}.webp flat, subpastas deletadas. 50% chance de carta invertida. Item "Taro" adicionado ao Menu entre "Mostre sua mao" e "Entrar" (agora 6 items). Build verde, /tarot como rota estatica prerenderizada.
 - [x] 2026-04-08 — Sprint 0: Setup Next.js 16 + Tailwind v4 + tipos + mocks + useMock + ESLint no-console + Vitest config + build verde
 - [x] 2026-04-08 — Sprint 1 (landing): 13 componentes React migrados (LunarClock, Menu, Nav, HeroTitle, VideoHero, CrystalCursor, SceneVignette, Smoke, Constellation, Grain, Curtains, EdisonLamp, LogoReveal) + HomeLanding maestro
 - [x] 2026-04-08 — /src/app/page.tsx renderizando HomeLanding nativo, public/home.html deletado, proxy reduzido a /manifesto

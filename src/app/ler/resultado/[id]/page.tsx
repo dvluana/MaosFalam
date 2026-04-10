@@ -1,17 +1,21 @@
 "use client";
 
-import { Suspense, use, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { buildMockReading } from "@/mocks/build-reading";
-import type { HandElement } from "@/types/reading";
+import { Suspense, use, useMemo } from "react";
+
+import BlurredDeck from "@/components/reading/BlurredDeck";
 import ElementHero from "@/components/reading/ElementHero";
 import ReadingOverview from "@/components/reading/ReadingOverview";
 import ReadingSection from "@/components/reading/ReadingSection";
-import BlurredDeck from "@/components/reading/BlurredDeck";
-import UpsellSection from "@/components/reading/UpsellSection";
-import ShareButton from "@/components/reading/ShareButton";
-import Separator from "@/components/ui/Separator";
 import ResultStateSwitcher from "@/components/reading/ResultStateSwitcher";
+import ShareButton from "@/components/reading/ShareButton";
+import UpsellSection from "@/components/reading/UpsellSection";
+import Separator from "@/components/ui/Separator";
+import { buildMockReading } from "@/mocks/build-reading";
+import type { HandElement } from "@/types/reading";
+
+/** IDs de mock validos enquanto nao tem backend */
+const VALID_MOCK_IDS = new Set(["fire", "water", "earth", "air", "mock", "demo"]);
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -21,6 +25,24 @@ const VALID_ELEMENTS: HandElement[] = ["fire", "water", "earth", "air"];
 
 function isElement(v: string | null): v is HandElement {
   return v !== null && (VALID_ELEMENTS as string[]).includes(v);
+}
+
+function InvalidReading() {
+  return (
+    <main className="min-h-dvh bg-black flex items-center justify-center px-6">
+      <div className="text-center max-w-sm">
+        <p className="font-cormorant italic text-[22px] text-bone leading-snug mb-6">
+          Essa leitura nao existe. Mas a sua pode comecar agora.
+        </p>
+        <a
+          href="/ler/nome"
+          className="font-body text-[10px] uppercase tracking-[0.06em] text-bone border border-gold/10 rounded-[0_6px_0_6px] px-10 py-4 inline-block hover:bg-violet/5 transition-colors"
+        >
+          Comecar leitura
+        </a>
+      </div>
+    </main>
+  );
 }
 
 function ResultadoInner({ id }: { id: string }) {
@@ -34,17 +56,11 @@ function ResultadoInner({ id }: { id: string }) {
 
   return (
     <main className="min-h-dvh bg-black pb-24">
-      <ElementHero
-        element={data.report.element}
-        fallbackName={data.report.user_name}
-      />
+      <ElementHero element={data.report.element} fallbackName={data.report.user_name} />
 
       <div className="px-4 max-w-xl mx-auto flex flex-col gap-10">
         {/* Visão geral da mão */}
-        <ReadingOverview
-          element={data.report.element}
-          fallbackName={data.report.user_name}
-        />
+        <ReadingOverview element={data.report.element} fallbackName={data.report.user_name} />
 
         <Separator variant="gold" />
 
@@ -57,8 +73,8 @@ function ResultadoInner({ id }: { id: string }) {
             Tem mais. Muito mais.
           </h2>
           <p className="font-cormorant italic text-lg sm:text-xl text-bone-dim leading-snug max-w-md">
-            Você leu o coração. Faltam três linhas, oito montes, e os sinais
-            que quase ninguém tem. Eu vi todos na sua mão.
+            Você leu o coração. Faltam três linhas, oito montes, e os sinais que quase ninguém tem.
+            Eu vi todos na sua mão.
           </p>
         </div>
 
@@ -86,6 +102,16 @@ function ResultadoInner({ id }: { id: string }) {
 
 export default function ResultadoPage({ params }: PageProps) {
   const { id } = use(params);
+
+  // Guard: IDs invalidos sem sessao ativa
+  if (
+    typeof window !== "undefined" &&
+    !VALID_MOCK_IDS.has(id) &&
+    !sessionStorage.getItem("maosfalam_name_fresh")
+  ) {
+    return <InvalidReading />;
+  }
+
   return (
     <Suspense fallback={<main className="min-h-dvh bg-black" />}>
       <ResultadoInner id={id} />
