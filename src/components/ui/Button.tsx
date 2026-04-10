@@ -18,7 +18,7 @@ const sizeMap: Record<Size, string> = {
 };
 
 const base =
-  "font-raleway uppercase tracking-[0.06em] inline-flex items-center justify-center gap-2 transition-[box-shadow,color] duration-300 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] branded-radius corner-ornaments disabled:opacity-20 disabled:pointer-events-none cursor-pointer active:scale-[0.97] active:transition-transform active:duration-150";
+  "font-raleway uppercase tracking-[0.06em] inline-flex items-center justify-center gap-2 transition-[box-shadow,color] duration-300 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] branded-radius corner-ornaments disabled:opacity-20 disabled:pointer-events-none cursor-pointer active:scale-[0.97] active:transition-transform active:duration-150 focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none";
 
 const variantClass: Record<Variant, string> = {
   primary:
@@ -41,7 +41,7 @@ export default function Button({
     return (
       <button
         {...rest}
-        className={`w-11 h-11 flex items-center justify-center bg-transparent text-bone border border-[rgba(201,162,74,0.08)] branded-radius corner-ornaments transition-[box-shadow,color] duration-300 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[rgba(123,107,165,0.06)] active:scale-[0.97] active:transition-transform active:duration-150 ${className}`}
+        className={`w-11 h-11 flex items-center justify-center bg-transparent text-bone border border-[rgba(201,162,74,0.08)] branded-radius corner-ornaments transition-[box-shadow,color] duration-300 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[rgba(123,107,165,0.06)] active:scale-[0.97] active:transition-transform active:duration-150 focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none ${className}`}
       >
         {children}
       </button>

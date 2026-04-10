@@ -56,10 +56,11 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ### Acessibilidade + responsivo
 
-- [ ] Auditoria de a11y (contraste, aria-labels, keyboard nav)
+- [x] 2026-04-10 — Focus states visíveis (focus-visible:ring) em Button (all variants), BlurredDeck, TarotCard (CSS module)
+- [x] 2026-04-10 — Aria labels: ShareButton, BlurredDeck, ProgressBar (role=progressbar + aria-valuenow/min/max), TarotCard (já tinha)
+- [x] 2026-04-10 — Respeitar `prefers-reduced-motion` (globals.css + TarotCard.module.css)
+- [ ] Auditoria de a11y restante (contraste, breakpoints ≥1024px)
 - [ ] Revisar breakpoints ≥1024px (só testei em 375-768px)
-- [ ] Focus states dos botões/cards tarot tão mínimos, keyboard nav pode ficar perdido
-- [ ] Respeitar `prefers-reduced-motion` (muita animação SVG + Framer Motion)
 
 ### Testes
 
@@ -101,6 +102,8 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ## DONE
 
+- [x] 2026-04-10 — Creditos nao expiram mais — remover expires_at dos mocks e telas (front part only: removido UI de expiracao de creditos do CreditsBanner e variantes expiring_soon/expired dos reading cards)
+- [x] 2026-04-10 — Links publicos nao expiram — remover share_expires_at (front part only: removido logica de expiracao de share links dos reading cards, adicionado comment no /compartilhar/[token] que "expired" state e so pra dev preview)
 - [x] 2026-04-08 — Feature Taro gratuita: /tarot page com 4 estados (intro → picking → revealing → cta), 22 Arcanos Maiores em tarot-cards.json na voz da cigana (upright/reversed/past/present/future por carta), componentes TarotCard (flip 3D 5:7 + frente com imagem + costas dourada com losango), TarotDeck (stack + fan arco 90°), TarotReading (reveals sequenciais 400/1400/2400ms), TarotShareCard (card compartilhavel 360px). 22 imagens movidas de assets/{subfolder}/\*\_2x.webp pra public/tarot/{slug}.webp flat, subpastas deletadas. 50% chance de carta invertida. Item "Taro" adicionado ao Menu entre "Mostre sua mao" e "Entrar" (agora 6 items). Build verde, /tarot como rota estatica prerenderizada.
 - [x] 2026-04-08 — Sprint 0: Setup Next.js 16 + Tailwind v4 + tipos + mocks + useMock + ESLint no-console + Vitest config + build verde
 - [x] 2026-04-08 — Sprint 1 (landing): 13 componentes React migrados (LunarClock, Menu, Nav, HeroTitle, VideoHero, CrystalCursor, SceneVignette, Smoke, Constellation, Grain, Curtains, EdisonLamp, LogoReveal) + HomeLanding maestro

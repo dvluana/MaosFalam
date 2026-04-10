@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import BlurredCard from "./BlurredCard";
+import { useState } from "react";
+
 import type { LineName } from "@/types/reading";
+
+import BlurredCard from "./BlurredCard";
 
 interface DeckCard {
   line: LineName;
@@ -53,7 +55,7 @@ export default function BlurredDeck({ cards }: Props) {
               onFocus={() => setHovered(true)}
               onBlur={() => setHovered(false)}
               aria-label="Revelar as três linhas seladas"
-              className="relative block w-full text-left focus:outline-none group"
+              className="relative block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:rounded-sm group"
               style={{ minHeight: 420 }}
             >
               {cards.map((card, i) => {

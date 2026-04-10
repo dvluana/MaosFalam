@@ -19,7 +19,7 @@ export default function Input({ label, error, className = "", ...rest }: InputPr
       <div className="relative">
         <input
           {...rest}
-          className={`w-full bg-transparent border-0 border-b text-bone font-raleway text-[15px] py-3 outline-none transition-colors duration-300 placeholder:font-raleway placeholder:font-light placeholder:text-bone-dim/50 placeholder:text-[14px] placeholder:tracking-normal focus:border-gold ${className}`}
+          className={`w-full bg-transparent border-0 border-b text-bone font-raleway text-[15px] py-3 outline-none transition-colors duration-300 placeholder:font-raleway placeholder:font-light placeholder:text-bone-dim/50 placeholder:text-[14px] placeholder:tracking-normal focus:border-gold focus-visible:border-gold ${className}`}
           style={{
             borderBottomColor: "rgba(201,162,74,0.22)",
           }}
