@@ -22,13 +22,13 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ### Alta prioridade (quebra ou atrapalha o fluxo)
 
-- [ ] `/ler/camera` upload — adicionar preview do arquivo + validação de formato/tamanho + estado de processamento (hoje só push pro scan)
+- [x] 2026-04-10 — `/ler/camera` upload com UploadPreview (preview, validacao formato/tamanho, confirmacao)
 - [x] 2026-04-10 — `/ler/resultado/[id]` guard pra id inexistente (tela InvalidReading com CTA)
 - [x] 2026-04-10 — `/conta/leituras/[id]` guard pra id inválido (já tinha notFound())
 - [x] 2026-04-10 — `/ler/camera` guard de `maosfalam_name_fresh` (redirect pra /ler/nome)
 - [x] 2026-04-10 — `HeroCTA` corrigido pra `/ler/nome`
 - [x] 2026-04-10 — `Menu.tsx` DEFAULT_ITEMS corrigido pra `/ler/nome`
-- [ ] `user.json` mock: enriquecer 1-2 leituras com `body_extras`/`cigana_quotes`/`intimacy` pra `/conta/leituras/[id]` não parecer pobre
+- [x] 2026-04-10 — `user.json` mock enriquecido: r-001 e r-002 com tagline, body_extras, cigana_quotes, technical, intimacy
 
 ### Média prioridade (UX/visual incompleto)
 

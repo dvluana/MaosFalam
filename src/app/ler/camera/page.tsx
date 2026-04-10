@@ -10,6 +10,7 @@ import CameraFeedback from "@/components/camera/CameraFeedback";
 import CameraViewport from "@/components/camera/CameraViewport";
 import CaptureFlash from "@/components/camera/CaptureFlash";
 import MethodChoice from "@/components/camera/MethodChoice";
+import UploadPreview from "@/components/camera/UploadPreview";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
 import { CAM_EYEBROW, CAM_FEEDBACK, CAM_STATES, isErrorState, type CamState } from "@/types/camera";
@@ -19,6 +20,7 @@ function CameraPageInner() {
   const search = useSearchParams();
   const forced = search?.get("state") as CamState | null;
   const [state, setState] = useState<CamState>(forced ?? "method_choice");
+  const [showUpload, setShowUpload] = useState(false);
 
   // Guard: sem nome no sessionStorage, volta pro /ler/nome
   useEffect(() => {
@@ -107,10 +109,23 @@ function CameraPageInner() {
         )}
       </AnimatePresence>
 
-      {state === "method_choice" && (
+      {state === "method_choice" && !showUpload && (
         <MethodChoice
           onPickLive={() => router.push("/ler/scan")}
-          onPickUpload={() => router.push("/ler/scan")}
+          onPickUpload={() => setShowUpload(true)}
+        />
+      )}
+
+      {showUpload && (
+        <UploadPreview
+          onConfirm={() => {
+            setState("camera_capturing");
+            if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+              navigator.vibrate?.(120);
+            }
+            window.setTimeout(() => router.push("/ler/scan"), 600);
+          }}
+          onCancel={() => setShowUpload(false)}
         />
       )}
 

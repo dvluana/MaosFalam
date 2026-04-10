@@ -25,17 +25,35 @@
             "symbol": "♀",
             "planet": "Vênus",
             "tier": "free",
+            "tagline": "Como voce ama",
             "intro": "Sua Linha do Coração corta a palma inteira sem desvio.",
             "body": "Quando você ama, ama com tudo. Não existe versão parcial de você num relacionamento. Você entra inteira ou não entra.",
-            "impact_phrase": "Quando você ama, é tudo. Quando sai, queima o caminho."
+            "body_extras": [
+              "Quando termina, termina em silencio. Sem cena. Sem volta.",
+              "Voce nao perdoa facil. Mas quando perdoa, e de verdade."
+            ],
+            "cigana_quotes": [
+              "Seu coracao nao tem volume medio. So mudo ou ensurdecedor.",
+              "Voce ama como quem pula de penhasco. Sem olhar pra baixo."
+            ],
+            "impact_phrase": "Quando você ama, é tudo. Quando sai, queima o caminho.",
+            "technical": {
+              "comprimento": "Longa. Atravessa a palma inteira.",
+              "curvatura": "Reta. Sem desvio.",
+              "profundidade": "Profunda. Marca forte.",
+              "termino": "Entre indicador e medio."
+            }
           },
           {
             "line": "head",
             "symbol": "☿",
             "planet": "Mercúrio",
             "tier": "premium",
+            "tagline": "Como voce pensa",
             "intro": "Sua Linha da Cabeça curva em direção à Lua.",
             "body": "Criativa com estrutura.",
+            "body_extras": ["Voce resolve problemas que os outros nem percebem que existem."],
+            "cigana_quotes": ["Sua mente nao descansa. Nem quando voce dorme."],
             "impact_phrase": "Não é sonhadora solta. É sonhadora que executa."
           },
           {
@@ -43,8 +61,13 @@
             "symbol": "☉",
             "planet": "Sol",
             "tier": "premium",
+            "tagline": "Como voce vive",
             "intro": "Sua Linha da Vida é profunda e longa.",
             "body": "Vitalidade forte.",
+            "body_extras": ["Voce aguenta mais do que deveria. E isso te orgulha e te cansa."],
+            "cigana_quotes": [
+              "Voce levanta. Sempre levanta. As pessoas se impressionam. Voce so ta cansada."
+            ],
             "impact_phrase": "Você levanta. Sempre levanta."
           },
           {
@@ -52,6 +75,7 @@
             "symbol": "♄",
             "planet": "Saturno",
             "tier": "premium",
+            "tagline": "Pra onde voce vai",
             "intro": "Sua Linha do Destino é forte e clara.",
             "body": "Você sabe pra onde vai.",
             "impact_phrase": "Planos mudam. Propósito permanece."
@@ -83,36 +107,75 @@
             "symbol": "♀",
             "planet": "Vênus",
             "tier": "free",
+            "tagline": "Como voce ama",
             "intro": "Sua Linha do Coração corta a palma inteira sem desvio.",
             "body": "Quando você ama, ama com tudo.",
-            "impact_phrase": "Quando você ama, é tudo."
+            "body_extras": [
+              "Voce nao faz amor pela metade. Entra inteira ou nao entra.",
+              "Cada toque fica. Cada ausencia fica mais."
+            ],
+            "cigana_quotes": ["Tem alguem que voce cortou da sua vida. Foi cedo demais."],
+            "impact_phrase": "Quando você ama, é tudo.",
+            "technical": {
+              "comprimento": "Longa. Atravessa a palma inteira.",
+              "curvatura": "Reta. Sem desvio.",
+              "profundidade": "Profunda.",
+              "termino": "Entre indicador e medio."
+            }
           },
           {
             "line": "head",
             "symbol": "☿",
             "planet": "Mercúrio",
             "tier": "premium",
+            "tagline": "Como voce pensa",
             "intro": "Sua Linha da Cabeça curva em direção à Lua.",
             "body": "Criativa com estrutura. Você imagina coisas que os outros não imaginam.",
-            "impact_phrase": "Não é sonhadora solta. É sonhadora que executa."
+            "body_extras": [
+              "Voce conecta coisas que ninguem conecta. E depois nao entende por que os outros nao veem."
+            ],
+            "cigana_quotes": ["Sua cabeca decide rapido. Seu coracao demora pra aceitar."],
+            "impact_phrase": "Não é sonhadora solta. É sonhadora que executa.",
+            "technical": {
+              "comprimento": "Longa. Passa do monte de Saturno.",
+              "curvatura": "Levemente curvada em direcao a Lua.",
+              "profundidade": "Normal."
+            }
           },
           {
             "line": "life",
             "symbol": "☉",
             "planet": "Sol",
             "tier": "premium",
+            "tagline": "Como voce vive",
             "intro": "Sua Linha da Vida é profunda e longa.",
             "body": "Vitalidade forte. Você se recupera de coisas que derrubariam outras pessoas por meses.",
-            "impact_phrase": "Você levanta. Sempre levanta."
+            "body_extras": [
+              "Arco largo mostra generosidade de energia. Voce da mais do que recebe."
+            ],
+            "cigana_quotes": ["Voce ja recomecou mais vezes do que a maioria teria coragem."],
+            "impact_phrase": "Você levanta. Sempre levanta.",
+            "technical": {
+              "comprimento": "Longa. Chega perto do pulso.",
+              "arco": "Largo. Generosidade de espaco.",
+              "profundidade": "Profunda."
+            }
           },
           {
             "line": "fate",
             "symbol": "♄",
             "planet": "Saturno",
             "tier": "premium",
+            "tagline": "Pra onde voce vai",
             "intro": "Sua Linha do Destino é forte e clara.",
             "body": "Você sabe pra onde vai.",
-            "impact_phrase": "Planos mudam. Propósito permanece."
+            "body_extras": ["Comeca no pulso e sobe reta. Voce soube cedo o que queria."],
+            "impact_phrase": "Planos mudam. Propósito permanece.",
+            "technical": {
+              "inicio": "Pulso.",
+              "profundidade": "Profunda.",
+              "multipla": "Nao."
+            }
           }
         ],
         "mounts": [
@@ -123,6 +186,10 @@
         ],
         "crosses": [],
         "rare_signs": [],
+        "intimacy": {
+          "title": "Na cama",
+          "body": "Fogo na intimidade e intensidade sem filtro. Voce nao finge. Nao diminui. Nao faz pela metade. Quem esta com voce sente. Quem nao aguenta, sai."
+        },
         "share_phrase": "Quando você quer, o mundo inteiro sente."
       }
     },
