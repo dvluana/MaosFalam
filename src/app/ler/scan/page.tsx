@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
+import PageLoading from "@/components/ui/PageLoading";
 import ProgressBar from "@/components/ui/ProgressBar";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 
@@ -130,7 +131,7 @@ function ScanInner() {
 
       {/* Progress bar com ticks */}
       <div className="relative w-full max-w-xs flex flex-col gap-3">
-        <ProgressBar value={progress} color="gold" />
+        <ProgressBar value={progress} color="gold" label="Progresso da leitura" />
         <div className="flex items-baseline justify-between">
           <span
             className="font-jetbrains text-[9.5px] tracking-[1.8px] uppercase text-gold-dim"
@@ -154,7 +155,7 @@ function ScanInner() {
 
 export default function ScanPage() {
   return (
-    <Suspense fallback={<main className="min-h-dvh bg-black" />}>
+    <Suspense fallback={<PageLoading />}>
       <ScanInner />
     </Suspense>
   );

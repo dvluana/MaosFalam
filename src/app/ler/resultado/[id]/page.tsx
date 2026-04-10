@@ -10,6 +10,7 @@ import ReadingSection from "@/components/reading/ReadingSection";
 import ResultStateSwitcher from "@/components/reading/ResultStateSwitcher";
 import ShareButton from "@/components/reading/ShareButton";
 import UpsellSection from "@/components/reading/UpsellSection";
+import PageLoading from "@/components/ui/PageLoading";
 import Separator from "@/components/ui/Separator";
 import { buildMockReading } from "@/mocks/build-reading";
 import type { HandElement } from "@/types/reading";
@@ -113,7 +114,7 @@ export default function ResultadoPage({ params }: PageProps) {
   }
 
   return (
-    <Suspense fallback={<main className="min-h-dvh bg-black" />}>
+    <Suspense fallback={<PageLoading />}>
       <ResultadoInner id={id} />
     </Suspense>
   );

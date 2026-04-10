@@ -1,24 +1,26 @@
 "use client";
 
-import { Suspense, use, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { buildMockReading } from "@/mocks/build-reading";
-import type { HandElement, LineName } from "@/types/reading";
+import { useSearchParams } from "next/navigation";
+import { Suspense, use, useMemo } from "react";
+
+import CompatibilityGrid from "@/components/reading/CompatibilityGrid";
+import CrossingGlyph from "@/components/reading/CrossingGlyph";
 import ElementHero from "@/components/reading/ElementHero";
+import HandSummary from "@/components/reading/HandSummary";
+import MeasurementBar from "@/components/reading/MeasurementBar";
+import MountGlyph from "@/components/reading/MountGlyph";
+import RareSignGlyph from "@/components/reading/RareSignGlyph";
 import ReadingOverview from "@/components/reading/ReadingOverview";
 import ReadingSection from "@/components/reading/ReadingSection";
-import SectionDivider from "@/components/reading/SectionDivider";
-import CompatibilityGrid from "@/components/reading/CompatibilityGrid";
-import TechnicalStrip from "@/components/reading/TechnicalStrip";
-import MountGlyph from "@/components/reading/MountGlyph";
-import MeasurementBar from "@/components/reading/MeasurementBar";
-import HandSummary from "@/components/reading/HandSummary";
-import RareSignGlyph from "@/components/reading/RareSignGlyph";
-import CrossingGlyph from "@/components/reading/CrossingGlyph";
-import ShareButton from "@/components/reading/ShareButton";
-import Separator from "@/components/ui/Separator";
 import ResultStateSwitcher from "@/components/reading/ResultStateSwitcher";
+import SectionDivider from "@/components/reading/SectionDivider";
+import ShareButton from "@/components/reading/ShareButton";
+import TechnicalStrip from "@/components/reading/TechnicalStrip";
+import PageLoading from "@/components/ui/PageLoading";
+import Separator from "@/components/ui/Separator";
+import { buildMockReading } from "@/mocks/build-reading";
+import type { HandElement, LineName } from "@/types/reading";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -69,20 +71,13 @@ function CompletoInner({ id }: { id: string }) {
       {/* Retrato da mão */}
       {stats && (
         <div className="px-4 max-w-xl mx-auto -mt-4 mb-2">
-          <HandSummary
-            element={element}
-            elementName={report.element.title}
-            stats={stats}
-          />
+          <HandSummary element={element} elementName={report.element.title} stats={stats} />
         </div>
       )}
 
       <div className="px-4 max-w-xl mx-auto flex flex-col gap-6">
         {/* Visão geral */}
-        <ReadingOverview
-          element={report.element}
-          fallbackName={report.user_name}
-        />
+        <ReadingOverview element={report.element} fallbackName={report.user_name} />
 
         {/* 4 linhas, cada uma com SectionDivider */}
         <div className="flex flex-col gap-10">
@@ -144,8 +139,7 @@ function CompletoInner({ id }: { id: string }) {
                 <p
                   className="font-cormorant italic text-[20px] sm:text-[23px] text-bone leading-[1.4] mb-6"
                   style={{
-                    textShadow:
-                      "0 0 20px rgba(196,100,122,0.35), 0 0 40px rgba(196,100,122,0.15)",
+                    textShadow: "0 0 20px rgba(196,100,122,0.35), 0 0 40px rgba(196,100,122,0.15)",
                   }}
                 >
                   {intimacy.quote}
@@ -190,11 +184,7 @@ function CompletoInner({ id }: { id: string }) {
         {/* Compatibilidade */}
         {compatibility.length > 0 && (
           <div className="mt-6">
-            <SectionDivider
-              number="06"
-              label="Com quem você casa"
-              accent="gold"
-            />
+            <SectionDivider number="06" label="Com quem você casa" accent="gold" />
             <CompatibilityGrid entries={compatibility} element={element} />
           </div>
         )}
@@ -268,11 +258,7 @@ function CompletoInner({ id }: { id: string }) {
                             </span>
                           )}
                         </div>
-                        <MeasurementBar
-                          value={strength / 100}
-                          delay={i * 0.06}
-                          accent="gold"
-                        />
+                        <MeasurementBar value={strength / 100} delay={i * 0.06} accent="gold" />
                       </div>
                     )}
 
@@ -310,21 +296,13 @@ function CompletoInner({ id }: { id: string }) {
         {/* Cruzamentos */}
         {report.crosses.length > 0 && (
           <>
-            <SectionDivider
-              number="08"
-              label="Onde as linhas se encontram"
-              accent="rose"
-            />
+            <SectionDivider number="08" label="Onde as linhas se encontram" accent="rose" />
             <div className="flex flex-col gap-8">
               {report.crosses.map((c, i) => {
                 // Primeira sentença vira lead/subtítulo técnico
                 const periodIdx = c.content.indexOf(". ");
-                const lead =
-                  periodIdx > -1 ? c.content.slice(0, periodIdx + 1) : "";
-                const rest =
-                  periodIdx > -1
-                    ? c.content.slice(periodIdx + 2)
-                    : c.content;
+                const lead = periodIdx > -1 ? c.content.slice(0, periodIdx + 1) : "";
+                const rest = periodIdx > -1 ? c.content.slice(periodIdx + 2) : c.content;
                 const num = String(i + 1).padStart(2, "0");
                 return (
                   <motion.article
@@ -405,11 +383,7 @@ function CompletoInner({ id }: { id: string }) {
         {/* Sinais Raros */}
         {report.rare_signs.length > 0 && (
           <>
-            <SectionDivider
-              number="09"
-              label="O que quase ninguém tem"
-              accent="gold"
-            />
+            <SectionDivider number="09" label="O que quase ninguém tem" accent="gold" />
             <div className="flex flex-col gap-8">
               {report.rare_signs.map((r, i) => (
                 <motion.article
@@ -491,7 +465,7 @@ function CompletoInner({ id }: { id: string }) {
 export default function CompletoPage({ params }: PageProps) {
   const { id } = use(params);
   return (
-    <Suspense fallback={<main className="min-h-dvh bg-black" />}>
+    <Suspense fallback={<PageLoading />}>
       <CompletoInner id={id} />
     </Suspense>
   );

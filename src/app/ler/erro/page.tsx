@@ -1,10 +1,12 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import PageLoading from "@/components/ui/PageLoading";
 
 type ErrorType = "low_confidence" | "api_error" | "too_many_attempts";
 
@@ -48,18 +50,12 @@ function ErrorInner() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <Button
-                variant="ghost"
-                onClick={() => setSubmitted(true)}
-                disabled={!email}
-              >
+              <Button variant="ghost" onClick={() => setSubmitted(true)} disabled={!email}>
                 Me avisa
               </Button>
             </>
           ) : (
-            <p className="font-cormorant italic text-bone-dim">
-              Eu te chamo. Prometo.
-            </p>
+            <p className="font-cormorant italic text-bone-dim">Eu te chamo. Prometo.</p>
           )}
         </div>
       </main>
@@ -118,7 +114,7 @@ function ErrorInner() {
 
 export default function ErroPage() {
   return (
-    <Suspense fallback={<main className="min-h-dvh bg-black" />}>
+    <Suspense fallback={<PageLoading />}>
       <ErrorInner />
     </Suspense>
   );

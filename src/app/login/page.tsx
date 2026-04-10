@@ -1,9 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button, Card, Input, Separator, GoogleButton } from "@/components/ui";
+import { Suspense, useState } from "react";
+
+import { Button, Card, Input, Separator, GoogleButton, PageLoading } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 import { readCheckoutIntent } from "@/lib/checkout-intent";
 
@@ -74,13 +75,10 @@ function LoginInner() {
         <Card accentColor="violet">
           <div className="flex flex-col gap-6">
             <div className="text-center flex flex-col gap-2">
-              <span className="font-logo text-xl text-gold tracking-wider">
-                MãosFalam
-              </span>
+              <span className="font-logo text-xl text-gold tracking-wider">MãosFalam</span>
               {isCheckoutReturn ? (
                 <p className="font-cormorant italic text-lg text-bone leading-snug">
-                  Entra pra eu guardar seus créditos. Depois você volta
-                  exatamente pra onde estava.
+                  Entra pra eu guardar seus créditos. Depois você volta exatamente pra onde estava.
                 </p>
               ) : (
                 <p className="font-cormorant italic text-lg text-bone leading-snug">
@@ -89,11 +87,7 @@ function LoginInner() {
               )}
             </div>
 
-            <GoogleButton
-              onClick={handleGoogle}
-              loading={loading}
-              label="Entrar com Google"
-            />
+            <GoogleButton onClick={handleGoogle} loading={loading} label="Entrar com Google" />
 
             {state === "google_oauth_error" && (
               <p className="font-jetbrains text-[11px] text-rose text-center">
@@ -103,9 +97,7 @@ function LoginInner() {
 
             <div className="flex items-center gap-3">
               <Separator variant="gold" className="flex-1" />
-              <span className="font-cormorant italic text-xs text-bone-dim">
-                ou
-              </span>
+              <span className="font-cormorant italic text-xs text-bone-dim">ou</span>
               <Separator variant="gold" className="flex-1" />
             </div>
 
@@ -144,9 +136,7 @@ function LoginInner() {
             <div className="flex items-center justify-between pt-2">
               <Link
                 href={
-                  search?.get("return")
-                    ? `/registro?return=${search.get("return")}`
-                    : "/registro"
+                  search?.get("return") ? `/registro?return=${search.get("return")}` : "/registro"
                 }
               >
                 <Button variant="ghost" size="sm">
@@ -168,7 +158,7 @@ function LoginInner() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<main className="min-h-dvh velvet-bg" />}>
+    <Suspense fallback={<PageLoading />}>
       <LoginInner />
     </Suspense>
   );

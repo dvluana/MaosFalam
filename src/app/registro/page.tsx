@@ -1,16 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Button,
-  Card,
-  Input,
-  Separator,
-  Toast,
-  GoogleButton,
-} from "@/components/ui";
+import { Suspense, useState } from "react";
+
+import { Button, Card, Input, Separator, Toast, GoogleButton, PageLoading } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 import { readCheckoutIntent } from "@/lib/checkout-intent";
 
@@ -102,18 +96,13 @@ function RegistroInner() {
         <Card accentColor="rose">
           <div className="flex flex-col gap-6">
             <div className="text-center flex flex-col gap-2">
-              <span className="font-logo text-xl text-gold tracking-wider">
-                MãosFalam
-              </span>
+              <span className="font-logo text-xl text-gold tracking-wider">MãosFalam</span>
               <p className="font-cormorant italic text-lg text-bone leading-snug">
                 Você chegou. Eu já estava te esperando.
               </p>
             </div>
 
-            <GoogleButton
-              onClick={handleGoogle}
-              label="Criar com Google"
-            />
+            <GoogleButton onClick={handleGoogle} label="Criar com Google" />
 
             <div className="flex items-center gap-3">
               <Separator variant="gold" className="flex-1" />
@@ -162,11 +151,7 @@ function RegistroInner() {
 
             <div className="text-center">
               <Link
-                href={
-                  search?.get("return")
-                    ? `/login?return=${search.get("return")}`
-                    : "/login"
-                }
+                href={search?.get("return") ? `/login?return=${search.get("return")}` : "/login"}
               >
                 <Button variant="ghost" size="sm">
                   Já tenho conta
@@ -182,7 +167,7 @@ function RegistroInner() {
 
 export default function RegistroPage() {
   return (
-    <Suspense fallback={<main className="min-h-dvh velvet-bg" />}>
+    <Suspense fallback={<PageLoading />}>
       <RegistroInner />
     </Suspense>
   );

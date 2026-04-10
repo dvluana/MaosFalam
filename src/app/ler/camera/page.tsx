@@ -11,6 +11,7 @@ import CameraViewport from "@/components/camera/CameraViewport";
 import CaptureFlash from "@/components/camera/CaptureFlash";
 import MethodChoice from "@/components/camera/MethodChoice";
 import UploadPreview from "@/components/camera/UploadPreview";
+import PageLoading from "@/components/ui/PageLoading";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
 import { CAM_EYEBROW, CAM_FEEDBACK, CAM_STATES, isErrorState, type CamState } from "@/types/camera";
@@ -152,7 +153,7 @@ function CameraPageInner() {
 
 export default function CameraPage() {
   return (
-    <Suspense fallback={<main className="min-h-dvh bg-black" />}>
+    <Suspense fallback={<PageLoading />}>
       <CameraPageInner />
     </Suspense>
   );

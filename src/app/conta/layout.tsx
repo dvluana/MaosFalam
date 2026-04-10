@@ -1,25 +1,24 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
-
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, type ReactNode } from "react";
+
 import { useAuth } from "@/hooks/useAuth";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-const NAV = [
-  { href: "/conta/leituras", label: "Leituras" },
-  { href: "/conta/perfil", label: "Perfil" },
-] as const;
+const BREADCRUMBS: Record<string, string> = {
+  "/conta/leituras": "Leituras",
+  "/conta/perfil": "Perfil",
+};
 
 export default function ContaLayout({ children }: LayoutProps) {
   const { user, hydrated } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (hydrated && user === null) {
@@ -35,26 +34,34 @@ export default function ContaLayout({ children }: LayoutProps) {
     );
   }
 
+  const currentLabel = Object.entries(BREADCRUMBS).find(([href]) =>
+    pathname?.startsWith(href),
+  )?.[1];
+
   return (
     <div className="min-h-dvh velvet-bg">
-      {/* sub-nav da área logada (abaixo do SiteHeader global) */}
-      <nav className="pt-20 border-b border-[rgba(201,162,74,0.08)]">
-        <div className="max-w-xl mx-auto px-5 py-3 flex items-center gap-6 overflow-x-auto">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className={`font-cinzel text-[11px] tracking-[0.08em] uppercase transition-colors whitespace-nowrap ${
-                pathname?.startsWith(n.href)
-                  ? "text-gold"
-                  : "text-bone-dim hover:text-bone"
-              }`}
-            >
-              {n.label}
-            </Link>
-          ))}
+      {/* breadcrumb minimalista abaixo do SiteHeader global */}
+      <div className="pt-20">
+        <div className="max-w-xl mx-auto px-5 py-4 flex items-center gap-2">
+          <Link
+            href="/conta/leituras"
+            className="font-mono text-[8px] uppercase tracking-[1.5px] text-bone-dim hover:text-gold transition-colors"
+          >
+            Conta
+          </Link>
+          {currentLabel && (
+            <>
+              <span className="w-1 h-1 bg-gold rotate-45 opacity-40" />
+              <span className="font-mono text-[8px] uppercase tracking-[1.5px] text-gold">
+                {currentLabel}
+              </span>
+            </>
+          )}
         </div>
-      </nav>
+        <div className="max-w-xl mx-auto px-5">
+          <div className="h-px bg-gradient-to-r from-transparent via-[rgba(201,162,74,0.08)] to-transparent" />
+        </div>
+      </div>
       <main>{children}</main>
     </div>
   );

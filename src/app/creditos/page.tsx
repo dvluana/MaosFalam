@@ -5,7 +5,15 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState, type FormEvent } from "react";
 
-import { Button, Card, Input, Toast, StateSwitcher, GoogleButton } from "@/components/ui";
+import {
+  Button,
+  Card,
+  Input,
+  Toast,
+  StateSwitcher,
+  GoogleButton,
+  PageLoading,
+} from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 import { saveCheckoutIntent, readCheckoutIntent } from "@/lib/checkout-intent";
 
@@ -110,7 +118,7 @@ function formatTimer(seconds: number): string {
 
 export default function CreditosPage() {
   return (
-    <Suspense fallback={<main className="min-h-screen velvet-bg" />}>
+    <Suspense fallback={<PageLoading />}>
       <CreditosInner />
     </Suspense>
   );

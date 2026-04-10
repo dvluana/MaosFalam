@@ -1,9 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Button, Card, Input, StateSwitcher } from "@/components/ui";
+import { Suspense, useState } from "react";
+
+import { Button, Card, Input, StateSwitcher, PageLoading } from "@/components/ui";
 
 type State = "default" | "sent" | "error";
 const STATES = ["default", "sent", "error"] as const;
@@ -31,9 +32,7 @@ function Inner() {
         <Card accentColor="violet">
           <div className="flex flex-col gap-6">
             <div className="text-center flex flex-col gap-2">
-              <span className="font-logo text-xl text-gold tracking-wider">
-                MãosFalam
-              </span>
+              <span className="font-logo text-xl text-gold tracking-wider">MãosFalam</span>
               <p className="font-cormorant italic text-lg text-bone leading-snug">
                 Perdeu a chave. Acontece.
               </p>
@@ -83,7 +82,7 @@ function Inner() {
 
 export default function EsqueciSenhaPage() {
   return (
-    <Suspense fallback={<main className="min-h-dvh velvet-bg" />}>
+    <Suspense fallback={<PageLoading />}>
       <Inner />
     </Suspense>
   );

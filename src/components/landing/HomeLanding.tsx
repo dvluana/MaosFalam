@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import Constellation from "./Constellation";
-import Curtains from "./Curtains";
 import CrystalCursor from "./CrystalCursor";
+import Curtains from "./Curtains";
 import EdisonLamp from "./EdisonLamp";
 import Grain from "./Grain";
 import HeroCTA from "./HeroCTA";
@@ -48,7 +49,7 @@ export default function HomeLanding() {
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-black overflow-hidden">
+    <main className="relative min-h-screen bg-black overflow-hidden cursor-none">
       {/* Camada 1: ruído cinematográfico (z baixo) */}
       <Grain />
 
