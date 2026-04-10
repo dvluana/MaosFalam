@@ -1,13 +1,16 @@
-import type { Metadata } from "next";
 import {
   Cinzel,
-  Cormorant_Garamond,
-  Raleway,
-  JetBrains_Mono,
   Cinzel_Decorative,
+  Cormorant_Garamond,
+  JetBrains_Mono,
+  Raleway,
 } from "next/font/google";
+
+import { OfflineDetector, SiteHeader, ToastProvider } from "@/components/ui";
+
+import type { Metadata } from "next";
+
 import "./globals.css";
-import { OfflineDetector, SiteHeader } from "@/components/ui";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -50,9 +53,7 @@ export const metadata: Metadata = {
   description: "Suas mãos já sabem. Você ainda não.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
       <body
@@ -63,14 +64,21 @@ export default function RootLayout({
           className="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-[0.025] mix-blend-overlay"
         >
           <filter id="grain">
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.9"
+              numOctaves="2"
+              stitchTiles="stitch"
+            />
             <feColorMatrix type="saturate" values="0" />
           </filter>
           <rect width="100%" height="100%" filter="url(#grain)" />
         </svg>
-        <OfflineDetector />
-        <SiteHeader />
-        {children}
+        <ToastProvider>
+          <OfflineDetector />
+          <SiteHeader />
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );
