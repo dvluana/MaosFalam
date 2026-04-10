@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { buildMockReading } from "@/mocks/build-reading";
-import type { Reading } from "@/types/reading";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
-import Separator from "@/components/ui/Separator";
+
+import BlurredCard from "@/components/reading/BlurredCard";
 import ElementSection from "@/components/reading/ElementSection";
 import ReadingSection from "@/components/reading/ReadingSection";
-import BlurredCard from "@/components/reading/BlurredCard";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import Separator from "@/components/ui/Separator";
+import { buildMockReading } from "@/mocks/build-reading";
+import type { Reading } from "@/types/reading";
+
+import type { Metadata } from "next";
 
 type ShareState = "valid_free" | "valid_premium" | "expired" | "not_found";
 
@@ -16,6 +18,9 @@ interface Resolved {
   reading: Reading | null;
 }
 
+// NOTE: Share links no longer expire in production. The "expired" state is kept
+// here only for the mock switcher / dev preview. In production, resolveToken
+// will never return "expired".
 function resolveToken(token: string): Resolved {
   const data: Reading = buildMockReading("fire");
   if (token === "abc123") return { state: "valid_free", reading: data };
@@ -28,9 +33,7 @@ interface PageProps {
   params: Promise<{ token: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { token } = await params;
   const { state, reading } = resolveToken(token);
   if (!reading || state === "expired" || state === "not_found") {
@@ -97,9 +100,7 @@ export default async function SharePage({ params }: PageProps) {
           <p className="font-jetbrains text-[9px] text-bone-dim uppercase tracking-widest">
             leitura de {report.user_name}
           </p>
-          <h1 className="font-cinzel text-[26px] text-bone">
-            As mãos dela falaram
-          </h1>
+          <h1 className="font-cinzel text-[26px] text-bone">As mãos dela falaram</h1>
           <div className="flex gap-2 justify-center mt-1">
             <Badge variant="gold">{elementLabel[report.element.type]}</Badge>
           </div>

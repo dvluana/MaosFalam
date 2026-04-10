@@ -1,15 +1,16 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { useMock } from "@/hooks/useMock";
-import type { Reading, User, HandElement } from "@/types/reading";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
+
+import BuyCreditsModal from "@/components/account/BuyCreditsModal";
+import ElementGlyph from "@/components/reading/ElementGlyph";
 import Button from "@/components/ui/Button";
 import StateSwitcher from "@/components/ui/StateSwitcher";
-import ElementGlyph from "@/components/reading/ElementGlyph";
-import BuyCreditsModal from "@/components/account/BuyCreditsModal";
+import { useMock } from "@/hooks/useMock";
+import type { Reading, User, HandElement } from "@/types/reading";
 
 const STATES = ["has_readings", "empty", "loading"] as const;
 type State = (typeof STATES)[number];
@@ -62,35 +63,18 @@ function formatDate(iso: string): string {
   }
 }
 
-function daysUntil(iso: string): number {
-  try {
-    const diff = new Date(iso).getTime() - Date.now();
-    return Math.ceil(diff / (1000 * 60 * 60 * 24));
-  } catch {
-    return 0;
-  }
-}
-
 function getVariant(
   reading: Reading,
   currentUserName: string,
-): "active_free" | "active_premium" | "expiring_soon" | "expired" | "for_other" {
-  const days = daysUntil(reading.share_expires_at);
-  if (days < 0) return "expired";
+): "active_free" | "active_premium" | "for_other" {
   if (reading.report.user_name !== currentUserName) return "for_other";
-  if (days <= 5) return "expiring_soon";
   if (reading.tier === "premium") return "active_premium";
   return "active_free";
 }
 
-const BADGE_META: Record<
-  ReturnType<typeof getVariant>,
-  { label: string; color: string }
-> = {
+const BADGE_META: Record<ReturnType<typeof getVariant>, { label: string; color: string }> = {
   active_free: { label: "Free", color: "rgba(201,162,74,0.8)" },
   active_premium: { label: "Completa", color: "rgba(139,123,191,0.8)" },
-  expiring_soon: { label: "Expira em breve", color: "rgba(196,100,122,0.9)" },
-  expired: { label: "Expirada", color: "rgba(155,146,132,0.6)" },
   for_other: { label: "Pra outra pessoa", color: "rgba(201,162,74,0.8)" },
 };
 
@@ -110,7 +94,6 @@ function TarotReadingCard({
   const variant = getVariant(reading, currentUserName);
   const badge = BADGE_META[variant];
   const element = reading.report.element.type;
-  const isExpired = variant === "expired";
 
   return (
     <Link href={`/conta/leituras/${reading.id}`} className="block">
@@ -123,11 +106,9 @@ function TarotReadingCard({
         className="card-noise relative overflow-hidden group cursor-pointer"
         style={{
           aspectRatio: "5 / 7",
-          background:
-            "linear-gradient(165deg, #0e0a18 0%, #110c1a 55%, #08050e 100%)",
+          background: "linear-gradient(165deg, #0e0a18 0%, #110c1a 55%, #08050e 100%)",
           border: "1px solid rgba(201,162,74,0.25)",
-          boxShadow: `0 20px 40px -16px rgba(0,0,0,0.9), 0 0 30px -8px ${isExpired ? "rgba(0,0,0,0.5)" : ELEMENT_GLOW[element]}`,
-          opacity: isExpired ? 0.6 : 1,
+          boxShadow: `0 20px 40px -16px rgba(0,0,0,0.9), 0 0 30px -8px ${ELEMENT_GLOW[element]}`,
         }}
       >
         {/* Radial glow na cor do elemento */}
@@ -193,10 +174,7 @@ function TarotReadingCard({
 
           {/* Glyph central */}
           <div className="flex-1 flex items-center justify-center w-full">
-            <div
-              className="transition-transform duration-500 group-hover:scale-105"
-              style={{ filter: isExpired ? "grayscale(0.6)" : "none" }}
-            >
+            <div className="transition-transform duration-500 group-hover:scale-105">
               <ElementGlyph type={element} size={64} />
             </div>
           </div>
@@ -250,7 +228,6 @@ function ListReadingItem({
   const variant = getVariant(reading, currentUserName);
   const badge = BADGE_META[variant];
   const element = reading.report.element.type;
-  const isExpired = variant === "expired";
 
   return (
     <Link href={`/conta/leituras/${reading.id}`} className="block">
@@ -265,7 +242,6 @@ function ListReadingItem({
           background: "#0e0a18",
           border: "1px solid rgba(201,162,74,0.15)",
           boxShadow: "0 10px 24px -12px rgba(0,0,0,0.8)",
-          opacity: isExpired ? 0.6 : 1,
         }}
       >
         <span
@@ -279,10 +255,7 @@ function ListReadingItem({
           style={{ borderColor: "rgba(201,162,74,0.4)" }}
         />
 
-        <div
-          className="shrink-0"
-          style={{ filter: isExpired ? "grayscale(0.6)" : "none" }}
-        >
+        <div className="shrink-0">
           <ElementGlyph type={element} size={48} />
         </div>
 
@@ -327,16 +300,7 @@ function ListReadingItem({
 /**
  * Bloco de saldo de créditos no topo da página.
  */
-function CreditsBanner({
-  user,
-  onBuyMore,
-}: {
-  user: User;
-  onBuyMore: () => void;
-}) {
-  const expiringDays = user.credits_expires_at
-    ? daysUntil(user.credits_expires_at)
-    : null;
+function CreditsBanner({ user, onBuyMore }: { user: User; onBuyMore: () => void }) {
   const lowCredits = user.credits <= 1;
 
   return (
@@ -348,8 +312,7 @@ function CreditsBanner({
       style={{
         background: "#0e0a18",
         border: "1px solid rgba(201,162,74,0.22)",
-        boxShadow:
-          "0 20px 40px -16px rgba(0,0,0,0.85), 0 0 32px -12px rgba(201,162,74,0.18)",
+        boxShadow: "0 20px 40px -16px rgba(0,0,0,0.85), 0 0 32px -12px rgba(201,162,74,0.18)",
       }}
     >
       <span
@@ -375,8 +338,7 @@ function CreditsBanner({
             <span
               className="font-cinzel text-[38px] sm:text-[44px] text-gold leading-none"
               style={{
-                textShadow:
-                  "0 0 24px rgba(201,162,74,0.45), 0 0 48px rgba(201,162,74,0.2)",
+                textShadow: "0 0 24px rgba(201,162,74,0.45), 0 0 48px rgba(201,162,74,0.2)",
               }}
             >
               {user.credits}
@@ -385,11 +347,9 @@ function CreditsBanner({
               {user.credits === 1 ? "leitura" : "leituras"}
             </span>
           </div>
-          {expiringDays !== null && expiringDays > 0 && (
+          {lowCredits && user.credits > 0 && (
             <span className="font-cormorant italic text-[12px] text-bone-dim mt-1">
-              {lowCredits
-                ? "Sobrou pouco. Usa com sabedoria."
-                : `Expira em ${expiringDays} dias`}
+              Sobrou pouco. Usa com sabedoria.
             </span>
           )}
         </div>
@@ -427,8 +387,7 @@ function LeiturasContent() {
           <span
             className="h-px w-8"
             style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(201,162,74,0.5))",
+              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.5))",
             }}
           />
           <span
@@ -449,20 +408,13 @@ function LeiturasContent() {
         <CreditsBanner user={data} onBuyMore={() => setBuyModalOpen(true)} />
       )}
 
-      <BuyCreditsModal
-        open={buyModalOpen}
-        onClose={() => setBuyModalOpen(false)}
-      />
+      <BuyCreditsModal open={buyModalOpen} onClose={() => setBuyModalOpen(false)} />
 
       {/* CTA nova leitura — posicionado logo após o banner de créditos
           pra ficar acessível sem precisar rolar até o fim da lista */}
       {currentState === "has_readings" && (
         <div className="flex justify-center mb-8">
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => router.push("/ler/nome")}
-          >
+          <Button variant="primary" size="lg" onClick={() => router.push("/ler/nome")}>
             Fazer nova leitura
           </Button>
         </div>
@@ -475,8 +427,7 @@ function LeiturasContent() {
             className="font-jetbrains text-[9px] tracking-[1.8px] uppercase text-gold-dim"
             style={{ fontWeight: 500 }}
           >
-            {data.readings.length}{" "}
-            {data.readings.length === 1 ? "leitura" : "leituras"}
+            {data.readings.length} {data.readings.length === 1 ? "leitura" : "leituras"}
           </span>
           <div className="flex items-center gap-1">
             <button
@@ -485,10 +436,7 @@ function LeiturasContent() {
               aria-label="Ver como cartas"
               className="px-3 py-2 transition-all focus:outline-none"
               style={{
-                background:
-                  view === "cards"
-                    ? "rgba(201,162,74,0.12)"
-                    : "transparent",
+                background: view === "cards" ? "rgba(201,162,74,0.12)" : "transparent",
                 border:
                   view === "cards"
                     ? "1px solid rgba(201,162,74,0.45)"
@@ -511,8 +459,7 @@ function LeiturasContent() {
               aria-label="Ver como lista"
               className="px-3 py-2 transition-all focus:outline-none"
               style={{
-                background:
-                  view === "list" ? "rgba(201,162,74,0.12)" : "transparent",
+                background: view === "list" ? "rgba(201,162,74,0.12)" : "transparent",
                 border:
                   view === "list"
                     ? "1px solid rgba(201,162,74,0.45)"
@@ -551,27 +498,16 @@ function LeiturasContent() {
           {view === "cards" ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
               {data.readings.map((r, i) => (
-                <TarotReadingCard
-                  key={r.id}
-                  reading={r}
-                  currentUserName={data.name}
-                  index={i}
-                />
+                <TarotReadingCard key={r.id} reading={r} currentUserName={data.name} index={i} />
               ))}
             </div>
           ) : (
             <div className="flex flex-col gap-3">
               {data.readings.map((r, i) => (
-                <ListReadingItem
-                  key={r.id}
-                  reading={r}
-                  currentUserName={data.name}
-                  index={i}
-                />
+                <ListReadingItem key={r.id} reading={r} currentUserName={data.name} index={i} />
               ))}
             </div>
           )}
-
         </>
       )}
 
