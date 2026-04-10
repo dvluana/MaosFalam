@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { ReadingSection as Section, LineName } from "@/types/reading";
+
 import LineGlyph from "./LineGlyph";
 import TechnicalStrip from "./TechnicalStrip";
 
@@ -24,41 +24,33 @@ const lineMeta: Record<
     num: "Linha 01",
     name: "Do Coração",
     accentGlow: "rgba(196,100,122,0.09)",
-    quoteShadow:
-      "0 0 20px rgba(196,100,122,0.35), 0 0 40px rgba(196,100,122,0.15)",
+    quoteShadow: "0 0 20px rgba(196,100,122,0.35), 0 0 40px rgba(196,100,122,0.15)",
     borderColor: "rgba(196,100,122,0.5)",
-    gradientBg:
-      "linear-gradient(90deg, rgba(196,100,122,0.08), transparent 80%)",
+    gradientBg: "linear-gradient(90deg, rgba(196,100,122,0.08), transparent 80%)",
   },
   head: {
     num: "Linha 02",
     name: "Da Cabeça",
     accentGlow: "rgba(139,123,191,0.09)",
-    quoteShadow:
-      "0 0 20px rgba(139,123,191,0.4), 0 0 40px rgba(139,123,191,0.18)",
+    quoteShadow: "0 0 20px rgba(139,123,191,0.4), 0 0 40px rgba(139,123,191,0.18)",
     borderColor: "rgba(139,123,191,0.55)",
-    gradientBg:
-      "linear-gradient(90deg, rgba(139,123,191,0.08), transparent 80%)",
+    gradientBg: "linear-gradient(90deg, rgba(139,123,191,0.08), transparent 80%)",
   },
   life: {
     num: "Linha 03",
     name: "Da Vida",
     accentGlow: "rgba(201,162,74,0.08)",
-    quoteShadow:
-      "0 0 20px rgba(201,162,74,0.35), 0 0 40px rgba(201,162,74,0.15)",
+    quoteShadow: "0 0 20px rgba(201,162,74,0.35), 0 0 40px rgba(201,162,74,0.15)",
     borderColor: "rgba(201,162,74,0.5)",
-    gradientBg:
-      "linear-gradient(90deg, rgba(201,162,74,0.08), transparent 80%)",
+    gradientBg: "linear-gradient(90deg, rgba(201,162,74,0.08), transparent 80%)",
   },
   fate: {
     num: "Linha 04",
     name: "Do Destino",
     accentGlow: "rgba(232,223,208,0.06)",
-    quoteShadow:
-      "0 0 20px rgba(232,223,208,0.3), 0 0 40px rgba(232,223,208,0.12)",
+    quoteShadow: "0 0 20px rgba(232,223,208,0.3), 0 0 40px rgba(232,223,208,0.12)",
     borderColor: "rgba(232,223,208,0.45)",
-    gradientBg:
-      "linear-gradient(90deg, rgba(232,223,208,0.07), transparent 80%)",
+    gradientBg: "linear-gradient(90deg, rgba(232,223,208,0.07), transparent 80%)",
   },
 };
 
@@ -68,9 +60,7 @@ const lineMeta: Record<
  * do body principal).
  */
 function buildFlow(body: string, extras: string[], quotes: string[]) {
-  const blocks: Array<
-    { kind: "p"; text: string } | { kind: "q"; text: string }
-  > = [];
+  const blocks: Array<{ kind: "p"; text: string } | { kind: "q"; text: string }> = [];
   blocks.push({ kind: "p", text: body });
   const merged = [...extras];
   for (let i = 0; i < merged.length; i += 1) {
@@ -88,12 +78,6 @@ function buildFlow(body: string, extras: string[], quotes: string[]) {
 
 export default function ReadingSection({ section }: Props) {
   const meta = lineMeta[section.line];
-  const [, setName] = useState<string | null>(null);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setName(sessionStorage.getItem("maosfalam_name"));
-  }, []);
-
   const extras = section.body_extras ?? [];
   const quotes = section.cigana_quotes ?? [];
   const technical = section.technical ?? [];
@@ -102,12 +86,9 @@ export default function ReadingSection({ section }: Props) {
 
   return (
     <article
-      className="card-noise relative overflow-hidden px-7 py-10 sm:px-9 sm:py-12 transition-colors duration-300 group"
+      className="card-noise relative overflow-hidden px-7 py-10 sm:px-9 sm:py-12 transition-colors duration-300 group bg-deep border border-gold/8"
       style={{
-        background: "#0e0a18",
-        border: "1px solid rgba(201,162,74,0.08)",
-        boxShadow:
-          "0 24px 48px -16px rgba(0,0,0,0.85), 0 8px 20px -8px rgba(0,0,0,0.6)",
+        boxShadow: "0 24px 48px -16px rgba(0,0,0,0.85), 0 8px 20px -8px rgba(0,0,0,0.6)",
       }}
     >
       {/* Radial glow accent */}
@@ -122,13 +103,11 @@ export default function ReadingSection({ section }: Props) {
       {/* Corner accents */}
       <span
         aria-hidden
-        className="absolute w-[10px] h-[10px] top-2 left-2 border-t border-l"
-        style={{ borderColor: "rgba(201,162,74,0.2)" }}
+        className="absolute w-[10px] h-[10px] top-2 left-2 border-t border-l border-gold/20"
       />
       <span
         aria-hidden
-        className="absolute w-[10px] h-[10px] bottom-2 right-2 border-b border-r"
-        style={{ borderColor: "rgba(201,162,74,0.2)" }}
+        className="absolute w-[10px] h-[10px] bottom-2 right-2 border-b border-r border-gold/20"
       />
 
       {/* Hover border lift */}
@@ -145,18 +124,15 @@ export default function ReadingSection({ section }: Props) {
             <LineGlyph line={section.line} size={64} />
           </div>
           <div className="flex flex-col min-w-0 pt-1">
-            <span className="font-jetbrains text-[9.5px] tracking-[1.8px] uppercase text-gold-dim">
-              {meta.num}{" "}
-              <span className="opacity-40 mx-1">·</span>{" "}
-              {section.symbol} {section.planet}
+            <span className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold-dim">
+              {meta.num} <span className="opacity-40 mx-1">·</span> {section.symbol}{" "}
+              {section.planet}
             </span>
-            <h3 className="font-cinzel text-[17px] sm:text-[19px] font-medium tracking-[0.05em] text-gold mt-2">
+            <h3 className="font-cinzel text-[18px] sm:text-[19px] font-medium tracking-[0.05em] text-gold mt-2">
               {meta.name}
             </h3>
             {tagline && (
-              <span className="font-cormorant italic text-sm text-bone-dim mt-1">
-                {tagline}
-              </span>
+              <span className="font-cormorant italic text-sm text-bone-dim mt-1">{tagline}</span>
             )}
           </div>
         </div>
@@ -172,7 +148,7 @@ export default function ReadingSection({ section }: Props) {
             block.kind === "p" ? (
               <p
                 key={`p-${i}`}
-                className="font-raleway text-[13.5px] sm:text-[14px] font-light leading-[1.88] text-bone-dim"
+                className="font-raleway text-[13px] sm:text-[14px] font-light leading-[1.88] text-bone-dim"
               >
                 {block.text}
               </p>
@@ -197,10 +173,7 @@ export default function ReadingSection({ section }: Props) {
         </div>
 
         {/* Impact final */}
-        <div
-          className="pt-6 mb-4 border-t"
-          style={{ borderColor: "rgba(201,162,74,0.12)" }}
-        >
+        <div className="pt-6 mb-4 border-t border-gold/12">
           <p
             className="font-cormorant italic text-[21px] sm:text-[24px] leading-[1.35] text-bone"
             style={{ textShadow: meta.quoteShadow }}

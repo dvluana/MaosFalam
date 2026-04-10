@@ -34,7 +34,7 @@ export default function HeroCTA({
   }, [delay]);
 
   return (
-    <Link href={href} className={`${styles.cta} ${visible ? styles.visible : ""}`}>
+    <Link href={href} className={`${styles.cta} corner-ornaments ${visible ? styles.visible : ""}`}>
       {label}
     </Link>
   );

@@ -47,6 +47,8 @@ export default function Button({
       </button>
     );
   }
+  // DS: gradient uses violet-adjacent colors (surface-up vicinity).
+  // Kept as inline style — Tailwind can't express multi-stop linear gradients.
   const primaryStyle =
     variant === "primary"
       ? {

@@ -11,7 +11,7 @@ export default function Input({ label, error, className = "", ...rest }: InputPr
   return (
     <div className="w-full">
       <label
-        className="block font-jetbrains text-[9.5px] tracking-[1.8px] uppercase text-gold mb-2"
+        className="block font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold mb-2"
         style={{ fontWeight: 500 }}
       >
         {label}
@@ -28,7 +28,7 @@ export default function Input({ label, error, className = "", ...rest }: InputPr
       </div>
       {error && (
         <p
-          className="font-jetbrains text-[10px] tracking-[0.5px] text-rose mt-2"
+          className="font-jetbrains text-[11px] tracking-[0.5px] text-rose mt-2"
           style={{ fontWeight: 500 }}
         >
           {error}

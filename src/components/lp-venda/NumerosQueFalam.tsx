@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 export default function NumerosQueFalam() {
   return (
@@ -99,8 +99,7 @@ function StatCard({ stat, index }: { stat: Stat; index: number }) {
       transition={{ duration: 0.7, delay: index * 0.08 }}
       className="relative overflow-hidden branded-radius corner-ornaments"
       style={{
-        background:
-          "linear-gradient(160deg, rgba(23,18,34,0.95) 0%, rgba(17,12,26,0.98) 100%)",
+        background: "linear-gradient(160deg, rgba(23,18,34,0.95) 0%, rgba(17,12,26,0.98) 100%)",
       }}
     >
       <div
@@ -120,7 +119,9 @@ function StatCard({ stat, index }: { stat: Stat; index: number }) {
               </span>
             ) : null}
 
-            <span className={`font-cinzel text-[30px] leading-none tracking-[-0.01em] ${stat.accent}`}>
+            <span
+              className={`font-cinzel text-[30px] leading-none tracking-[-0.01em] ${stat.accent}`}
+            >
               {value.toLocaleString("pt-BR")}
             </span>
 
@@ -132,9 +133,7 @@ function StatCard({ stat, index }: { stat: Stat; index: number }) {
           </div>
         </div>
 
-        <p className="mt-3 font-raleway text-[11px] leading-[1.45] text-bone-dim">
-          {stat.sub}
-        </p>
+        <p className="mt-3 font-raleway text-[11px] leading-[1.45] text-bone-dim">{stat.sub}</p>
       </div>
     </motion.div>
   );

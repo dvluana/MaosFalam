@@ -18,9 +18,9 @@
  * dentro do modal, sem navegação nenhuma.
  */
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface Pacote {
   id: string;
@@ -136,11 +136,8 @@ export default function BuyCreditsModal({ open, onClose }: Props) {
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="card-noise relative overflow-hidden w-full max-w-md max-h-[90dvh] overflow-y-auto"
+            className="card-noise relative overflow-hidden w-full max-w-md max-h-[90dvh] overflow-y-auto bg-deep border border-gold/35 px-6 pt-9 pb-7"
             style={{
-              background: "#0e0a18",
-              border: "1px solid rgba(201,162,74,0.35)",
-              padding: "36px 24px 28px",
               boxShadow:
                 "0 40px 80px -20px rgba(0,0,0,0.95), 0 0 80px -8px rgba(201,162,74,0.22), 0 0 1px rgba(201,162,74,0.5)",
             }}
@@ -205,7 +202,7 @@ export default function BuyCreditsModal({ open, onClose }: Props) {
 
               {/* Eyebrow + título */}
               <span
-                className="font-jetbrains text-[9.5px] tracking-[1.8px] uppercase text-gold mb-2 text-center"
+                className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold mb-2 text-center"
                 style={{ fontWeight: 500 }}
               >
                 Escolha um pacote
@@ -224,34 +221,23 @@ export default function BuyCreditsModal({ open, onClose }: Props) {
                     key={p.id}
                     type="button"
                     onClick={() => handlePick(p.id)}
-                    className="group relative text-left transition-all focus:outline-none"
-                    style={{
-                      background: "rgba(14,10,24,0.7)",
-                      border: "1px solid rgba(201,162,74,0.18)",
-                      padding: "16px 18px",
-                    }}
+                    className="group relative text-left transition-all focus:outline-none bg-deep/70 border border-gold/18 p-4 pl-[18px]"
                   >
                     {/* Corner accents do pacote */}
                     <span
                       aria-hidden
-                      className="absolute w-[7px] h-[7px] top-1 left-1 border-t border-l group-hover:border-[rgba(201,162,74,0.8)] transition-colors"
-                      style={{ borderColor: "rgba(201,162,74,0.4)" }}
+                      className="absolute w-[7px] h-[7px] top-1 left-1 border-t border-l border-gold/40 group-hover:border-gold/80 transition-colors"
                     />
                     <span
                       aria-hidden
-                      className="absolute w-[7px] h-[7px] bottom-1 right-1 border-b border-r group-hover:border-[rgba(201,162,74,0.8)] transition-colors"
-                      style={{ borderColor: "rgba(201,162,74,0.4)" }}
+                      className="absolute w-[7px] h-[7px] bottom-1 right-1 border-b border-r border-gold/40 group-hover:border-gold/80 transition-colors"
                     />
 
                     {/* Badge popular */}
                     {p.popular && (
                       <span
-                        className="absolute top-2 right-2 font-jetbrains text-[7px] tracking-[1.2px] uppercase px-1.5 py-0.5 text-gold"
-                        style={{
-                          fontWeight: 500,
-                          background: "rgba(201,162,74,0.12)",
-                          border: "1px solid rgba(201,162,74,0.45)",
-                        }}
+                        className="absolute top-2 right-2 font-jetbrains text-[7px] tracking-[1.2px] uppercase px-1.5 py-0.5 text-gold bg-gold/12 border border-gold/45"
+                        style={{ fontWeight: 500 }}
                       >
                         popular
                       </span>
@@ -267,8 +253,7 @@ export default function BuyCreditsModal({ open, onClose }: Props) {
                             className="font-jetbrains text-[8px] tracking-[1.2px] uppercase text-gold-dim"
                             style={{ fontWeight: 500 }}
                           >
-                            {p.creditos}{" "}
-                            {p.creditos === 1 ? "leitura" : "leituras"}
+                            {p.creditos} {p.creditos === 1 ? "leitura" : "leituras"}
                           </span>
                         </div>
                         <p className="font-cormorant italic text-[14px] text-bone-dim leading-[1.35] mt-1.5">
