@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: ReadingContext + Creditos** - Refatorar fluxo /ler/nome e gate de creditos (completed 2026-04-11)
 - [x] **Phase 3: MediaPipe Real** - Substituir mock por Hand Landmarker real com auto-captura (completed 2026-04-11)
 - [x] **Phase 4: Clerk Cleanup + Error Handling** - Delegar auth flows ao Clerk e diferenciar erros (completed 2026-04-11)
-- [ ] **Phase 5: Docs Sync** - Alinhar architecture.md e CLAUDE.md com o codigo real
+- [x] **Phase 5: Docs Sync** - Alinhar architecture.md e CLAUDE.md com o codigo real (completed 2026-04-11)
 
 ## Phase Details
 
@@ -123,7 +123,7 @@ Plans:
 
 Plans:
 
-- [ ] 05-01-PLAN.md — Atualizar architecture.md e CLAUDE.md com decisoes v1.1
+- [x] 05-01-PLAN.md — Atualizar architecture.md e CLAUDE.md com decisoes v1.1
 
 ## Progress
 
@@ -136,4 +136,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. ReadingContext + Creditos      | v1.1      | 2/2            | Complete    | 2026-04-11 |
 | 3. MediaPipe Real                 | v1.1      | 2/2            | Complete    | 2026-04-11 |
 | 4. Clerk Cleanup + Error Handling | v1.1      | 2/2            | Complete    | 2026-04-11 |
-| 5. Docs Sync                      | v1.1      | 0/1            | Not started | -          |
+| 5. Docs Sync                      | v1.1      | 1/1 | Complete   | 2026-04-11 |

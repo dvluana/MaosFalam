@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Alinhamento Arquitetural
-status: Ready to plan
-stopped_at: Completed 04-clerk-cleanup-error-handling-02-PLAN.md
-last_updated: "2026-04-11T16:13:33.217Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 05-docs-sync-01-PLAN.md
+last_updated: "2026-04-11T16:23:19.761Z"
 progress:
   total_phases: 5
-  completed_phases: 4
-  total_plans: 8
-  completed_plans: 8
+  completed_phases: 5
+  total_plans: 9
+  completed_plans: 9
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-11)
 
 **Core value:** Foto da palma entra, leitura personalizada sai. Backend conecta GPT-4o ao motor de leitura e persiste resultados.
-**Current focus:** Phase 04 — clerk-cleanup-error-handling
+**Current focus:** Phase 05 — docs-sync
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
+Phase: 05 (docs-sync) — EXECUTING
+Plan: 1 of 1
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ _Updated after each plan completion_
 | Phase 03-mediapipe-real P02 | 3min | 2 tasks | 3 files |
 | Phase 04-clerk-cleanup-error-handling P01 | 1min | 2 tasks | 3 files |
 | Phase 04-clerk-cleanup-error-handling P02 | 65s | 2 tasks | 2 files |
+| Phase 05-docs-sync P01 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase 04-clerk-cleanup-error-handling]: Clerk handles password recovery via SignIn hash routing — custom forgot/reset-password forms removed
 - [Phase 04-clerk-cleanup-error-handling]: Logout in perfil retained via useAuth().logout() + router.push, not delegated to Clerk
 - [Phase 04-clerk-cleanup-error-handling]: serverError state separado de notFound em /ler/resultado para diferenciar 404 de 5xx
+- [Phase 05-docs-sync]: architecture.md is source of truth for backend — must match prisma/schema.prisma and src/ exactly
+- [Phase 05-docs-sync]: proxy.ts (not middleware.ts) is Clerk auth middleware — documented in both architecture.md and CLAUDE.md
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T16:12:48.684Z
-Stopped at: Completed 04-clerk-cleanup-error-handling-02-PLAN.md
+Last session: 2026-04-11T16:23:19.759Z
+Stopped at: Completed 05-docs-sync-01-PLAN.md
 Resume file: None
