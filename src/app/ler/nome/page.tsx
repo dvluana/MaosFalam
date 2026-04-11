@@ -268,111 +268,165 @@ export default function NomePage() {
 
       {/* ── VISITOR FLOW ── */}
       {isVisitor && (
-        <form
-          onSubmit={handleVisitorSubmit}
-          className="relative w-full max-w-sm flex flex-col gap-8"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="relative w-full max-w-sm"
+          style={{
+            background: "#110C1A",
+            borderRadius: "0 6px 0 6px",
+          }}
         >
-          <div className="flex flex-col gap-3 text-center">
-            <p className="font-cormorant italic text-[28px] sm:text-[32px] text-bone leading-[1.25]">
-              Me diz duas coisas antes.
-            </p>
-            <p className="font-cormorant italic text-[19px] text-bone-dim leading-[1.35]">
-              Como eu te chamo, e onde eu te encontro depois.
-            </p>
-          </div>
+          {/* Gold accent line */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[2px]"
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55), transparent)",
+            }}
+          />
+          {/* Corner ornaments */}
+          <span
+            className="absolute top-[-1px] left-[-1px] w-3 h-3 pointer-events-none"
+            style={{
+              borderTop: "1px solid rgba(201,162,74,0.25)",
+              borderLeft: "1px solid rgba(201,162,74,0.25)",
+            }}
+          />
+          <span
+            className="absolute bottom-[-1px] right-[-1px] w-3 h-3 pointer-events-none"
+            style={{
+              borderBottom: "1px solid rgba(201,162,74,0.25)",
+              borderRight: "1px solid rgba(201,162,74,0.25)",
+            }}
+          />
 
-          <div className="flex flex-col gap-6">
-            <Input
-              label="Seu nome"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="O primeiro que vier"
-              autoFocus
-            />
-
-            <Input
-              label="Melhor email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (emailError) setEmailError(undefined);
-              }}
-              placeholder="voce@exemplo.com"
-              error={emailError}
-              inputMode="email"
-              autoComplete="email"
-            />
-
-            {/* Ela / Ele toggle */}
-            <div className="flex flex-col gap-2">
-              <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                Essa leitura é pra
-              </span>
-              <div className="flex gap-3">
-                <ToggleButton
-                  selected={gender === "female"}
-                  onClick={() => setGender("female")}
-                  ariaLabel="Leitura para ela (feminino)"
-                >
-                  Ela
-                </ToggleButton>
-                <ToggleButton
-                  selected={gender === "male"}
-                  onClick={() => setGender("male")}
-                  ariaLabel="Leitura para ele (masculino)"
-                >
-                  Ele
-                </ToggleButton>
-              </div>
-            </div>
-
-            {/* Dominant hand toggle */}
-            <div className="flex flex-col gap-2">
-              <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                Qual mão você usa mais?
-              </span>
-              <div className="flex gap-3">
-                <ToggleButton
-                  selected={dominantHand === "right"}
-                  onClick={() => setDominantHand("right")}
-                  ariaLabel="Mão destra (direita)"
-                >
-                  Destra
-                </ToggleButton>
-                <ToggleButton
-                  selected={dominantHand === "left"}
-                  onClick={() => setDominantHand("left")}
-                  ariaLabel="Mão canhota (esquerda)"
-                >
-                  Canhota
-                </ToggleButton>
-              </div>
-            </div>
-
-            {/* LGPD opt-in */}
-            <label className="flex items-start gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={emailOptIn}
-                onChange={(e) => setEmailOptIn(e.target.checked)}
-                className="mt-1 accent-gold w-4 h-4 shrink-0"
-              />
-              <span className="font-cormorant italic text-[13px] text-bone-dim leading-[1.4]">
-                Aceito receber novidades e leituras por email.
-              </span>
-            </label>
-          </div>
-
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            disabled={!visitorCanSubmit || submitting}
+          <form
+            onSubmit={handleVisitorSubmit}
+            className="m-[5px] p-6 flex flex-col gap-6"
+            style={{ border: "1px solid rgba(201,162,74,0.04)" }}
           >
-            Continuar
-          </Button>
-        </form>
+            <div className="flex flex-col gap-2 text-center">
+              <p className="font-cormorant italic text-[24px] sm:text-[28px] text-bone leading-[1.25]">
+                Me diz duas coisas antes.
+              </p>
+              <p className="font-cormorant italic text-[16px] text-bone-dim leading-[1.35]">
+                Como eu te chamo, e onde eu te encontro depois.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-5">
+              <Input
+                label="Seu nome"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="O primeiro que vier"
+                autoFocus
+              />
+
+              <Input
+                label="Melhor email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError(undefined);
+                }}
+                placeholder="voce@exemplo.com"
+                error={emailError}
+                inputMode="email"
+                autoComplete="email"
+              />
+
+              {/* Ela / Ele + Destra / Canhota — side by side */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <span className="font-cormorant italic text-[13px] text-bone-dim tracking-[0.02em]">
+                    Essa leitura é pra
+                  </span>
+                  <div className="flex gap-2">
+                    <ToggleButton
+                      selected={gender === "female"}
+                      onClick={() => setGender("female")}
+                      ariaLabel="Leitura para ela (feminino)"
+                    >
+                      Ela
+                    </ToggleButton>
+                    <ToggleButton
+                      selected={gender === "male"}
+                      onClick={() => setGender("male")}
+                      ariaLabel="Leitura para ele (masculino)"
+                    >
+                      Ele
+                    </ToggleButton>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <span className="font-cormorant italic text-[13px] text-bone-dim tracking-[0.02em]">
+                    Mão que usa mais
+                  </span>
+                  <div className="flex gap-2">
+                    <ToggleButton
+                      selected={dominantHand === "right"}
+                      onClick={() => setDominantHand("right")}
+                      ariaLabel="Mão destra (direita)"
+                    >
+                      Destra
+                    </ToggleButton>
+                    <ToggleButton
+                      selected={dominantHand === "left"}
+                      onClick={() => setDominantHand("left")}
+                      ariaLabel="Mão canhota (esquerda)"
+                    >
+                      Canhota
+                    </ToggleButton>
+                  </div>
+                </div>
+              </div>
+
+              {/* LGPD opt-in */}
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={emailOptIn}
+                  onChange={(e) => setEmailOptIn(e.target.checked)}
+                  className="mt-1 accent-gold w-4 h-4 shrink-0"
+                />
+                <span className="font-cormorant italic text-[13px] text-bone-dim leading-[1.4]">
+                  Aceito receber novidades e leituras por email.
+                </span>
+              </label>
+            </div>
+
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              disabled={!visitorCanSubmit || submitting}
+            >
+              {submitting ? "Aguarde..." : "Continuar"}
+            </Button>
+
+            {/* Separator */}
+            <div className="flex items-center gap-3">
+              <span className="flex-1 h-px" style={{ background: "rgba(201,162,74,0.08)" }} />
+              <span className="font-jetbrains text-[8px] tracking-[1.5px] uppercase text-bone-dim">
+                ou
+              </span>
+              <span className="flex-1 h-px" style={{ background: "rgba(201,162,74,0.08)" }} />
+            </div>
+
+            {/* Login link */}
+            <button
+              type="button"
+              onClick={() => router.push("/login")}
+              className="w-full text-center font-cormorant italic text-[14px] text-gold hover:text-gold-light transition-colors"
+            >
+              Já tenho conta. Entrar.
+            </button>
+          </form>
+        </motion.div>
       )}
 
       {/* ── LOGGED-IN FLOW ── */}

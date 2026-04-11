@@ -20,7 +20,7 @@
 }
 .stageDark.clearing {
   opacity: 0;
-  transition: opacity 4.4s cubic-bezier(0.28, 0, 0.08, 1);
+  transition: opacity 3s cubic-bezier(0.16, 0, 0.08, 1);
 }
 
 /* ── FIXTURE WRAPPER ── */

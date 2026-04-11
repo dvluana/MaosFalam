@@ -10,21 +10,18 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export default function Input({ label, error, className = "", ...rest }: InputProps) {
   return (
     <div className="w-full">
-      <label
-        className="block font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold mb-2"
-        style={{ fontWeight: 500 }}
-      >
+      <label className="block font-cormorant italic text-[14px] tracking-[0.02em] text-bone-dim mb-2">
         {label}
       </label>
       <div className="relative">
         <input
           {...rest}
-          className={`w-full bg-transparent border-0 border-b text-bone font-raleway text-[15px] py-3 outline-none transition-colors duration-300 placeholder:font-raleway placeholder:font-light placeholder:text-bone-dim/50 placeholder:text-[14px] placeholder:tracking-normal focus:border-gold focus-visible:border-gold ${className}`}
+          className={`w-full bg-[#171222] text-bone font-raleway text-[15px] py-3 px-4 outline-none transition-all duration-300 placeholder:font-cormorant placeholder:italic placeholder:text-bone-dim/40 placeholder:text-[14px] focus:ring-1 focus:ring-gold/30 ${className}`}
           style={{
-            borderBottomColor: "rgba(201,162,74,0.22)",
+            border: "1px solid rgba(123,107,165,0.18)",
+            borderRadius: "0 6px 0 6px",
           }}
         />
-        <span className="input-accent-line" />
       </div>
       {error && (
         <p
