@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Fluxo de Mao Dominante
 status: Ready to execute
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-04-11T19:39:52.777Z"
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-04-11T19:40:45.197Z"
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 13
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-11)
 ## Current Position
 
 Phase: 05 (pipeline-refactor) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ _Updated after each plan completion_
 | Phase 04 P01 | 5m | 2 tasks | 5 files |
 | Phase 04 P02 | 4m | 2 tasks | 3 files |
 | Phase 05 P02 | 2m | 2 tasks | 5 files |
+| Phase 05-pipeline-refactor P01 | 3m | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,9 @@ _Updated after each plan completion_
 - [Phase 04]: aria-pressed semantically correct for toggle buttons
 - [Phase 05]: elementHint injected as text in user message (not system prompt) to keep OpenAI caching intact
 - [Phase 05]: element_hint optional in Zod schema with no default — purely forwarded if client provides it
+- [Phase 05-pipeline-refactor]: photo-store uses module-level singleton — survives Next.js App Router soft navigation, type-safe, no browser storage API needed
+- [Phase 05-pipeline-refactor]: photo-store uses module-level singleton — survives Next.js App Router soft navigation, type-safe, no browser storage API needed
+- [Phase 05-pipeline-refactor]: captureFrame quality param defaults to 0.82 (from 0.92), reducing live-camera JPEG payload ~40%
 
 ### Pending Todos
 
@@ -100,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T19:39:52.775Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-04-11T19:40:45.195Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None
