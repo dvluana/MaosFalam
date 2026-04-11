@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Alinhamento Arquitetural
-status: Ready to plan
-stopped_at: Completed 02-readingcontext-creditos-02-PLAN.md
-last_updated: "2026-04-11T15:45:35.327Z"
+status: Ready to execute
+stopped_at: Completed 03-mediapipe-real-01-PLAN.md
+last_updated: "2026-04-11T16:01:23.867Z"
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 6
+  completed_plans: 5
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-11)
 
 **Core value:** Foto da palma entra, leitura personalizada sai. Backend conecta GPT-4o ao motor de leitura e persiste resultados.
-**Current focus:** Phase 02 — readingcontext-creditos
+**Current focus:** Phase 03 — mediapipe-real
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (mediapipe-real) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -45,6 +45,7 @@ _Updated after each plan completion_
 | Phase 01-auditoria P02 | 12min | 2 tasks | 6 files |
 | Phase 02-readingcontext-creditos P01 | 94s | 2 tasks | 3 files |
 | Phase 02-readingcontext-creditos P02 | 163s | 3 tasks | 2 files |
+| Phase 03-mediapipe-real P01 | 8min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,7 @@ Recent decisions affecting current work:
 - [Phase 02-readingcontext-creditos]: useCredits returns immediate zero state for visitors so reading_count===0 always means free reading
 - [Phase 02-readingcontext-creditos]: CreditGate is pure presentation — parent page holds confirming state and calls requestNewReading
 - [Phase 02-readingcontext-creditos]: Visitor lead registration is fire-and-forget; failure never blocks the reading funnel (CTX-09)
+- [Phase 03-mediapipe-real]: Front camera (mirrored): MediaPipe Left/Right maps directly to user's hand; back camera: labels flipped. Stability measured by timestamps not frame count. captureFrame un-mirrors front camera image for GPT-4o. camera_wrong_hand is not an error state — inline-recoverable.
 
 ### Pending Todos
 
@@ -81,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T15:44:39.040Z
-Stopped at: Completed 02-readingcontext-creditos-02-PLAN.md
+Last session: 2026-04-11T16:01:23.865Z
+Stopped at: Completed 03-mediapipe-real-01-PLAN.md
 Resume file: None

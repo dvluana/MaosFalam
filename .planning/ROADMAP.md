@@ -125,6 +125,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | --------------------------------- | --------- | -------------- | ----------- | --------- |
 | 1. Auditoria                      | v1.1      | 2/2            | Complete    | -         |
 | 2. ReadingContext + Creditos      | v1.1      | 2/2 | Complete   | 2026-04-11 |
-| 3. MediaPipe Real                 | v1.1      | 0/?            | Not started | -         |
+| 3. MediaPipe Real                 | v1.1      | 1/2 | In Progress|  |
 | 4. Clerk Cleanup + Error Handling | v1.1      | 0/?            | Not started | -         |
 | 5. Docs Sync                      | v1.1      | 0/?            | Not started | -         |
