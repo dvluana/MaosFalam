@@ -124,6 +124,8 @@
   position: relative;
   z-index: 2;
   filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 30px rgba(0, 0, 0, 0.6));
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 45%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 45%, black 40%, transparent 100%);
 }
 
 /* ── HERO CONTENT ── */

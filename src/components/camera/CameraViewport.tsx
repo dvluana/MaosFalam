@@ -86,6 +86,29 @@ function CameraViewport({
           }}
         />
 
+        {/* Loading state — visible while MediaPipe model downloads */}
+        {state === "loading_mediapipe" && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
+            <motion.div
+              className="w-8 h-8 rounded-full"
+              style={{
+                border: "2px solid rgba(201,162,74,0.15)",
+                borderTopColor: "rgba(201,162,74,0.7)",
+              }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.p
+              className="font-cormorant italic text-[15px] text-bone-dim text-center px-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              Preciso ver melhor...
+            </motion.p>
+          </div>
+        )}
+
         {/* Hidden canvas used only for frame capture */}
         <canvas ref={canvasRef} aria-hidden className="hidden" />
 

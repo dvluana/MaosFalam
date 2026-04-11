@@ -79,6 +79,28 @@
   border-color: rgba(201, 162, 74, 0.45);
 }
 
+/* Mobile: CTA fixed na bottom — sempre visível */
+@media (max-width: 768px) {
+  .cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    margin: 0;
+    border-radius: 0;
+    padding: 20px 24px;
+    background: linear-gradient(160deg, #1a1538, #2a2150, #1a1538);
+    box-shadow:
+      0 -4px 24px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(201, 162, 74, 0.15);
+  }
+  .cta::before,
+  .cta::after {
+    display: none;
+  }
+}
+
 @keyframes btnCrystal {
   0%,
   100% {

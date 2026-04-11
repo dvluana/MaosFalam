@@ -80,8 +80,39 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorBackground: "#110C1A",
+          colorText: "#E8DFD0",
+          colorPrimary: "#C9A24A",
+          colorInputBackground: "#171222",
+          colorInputText: "#E8DFD0",
+          borderRadius: "0px 6px 0px 6px",
+        },
+        elements: {
+          card: { backgroundColor: "#110C1A", border: "1px solid rgba(201,162,74,0.1)" },
+          headerTitle: { color: "#E8DFD0" },
+          headerSubtitle: { color: "#9b9284" },
+          socialButtonsBlockButton: {
+            backgroundColor: "#171222",
+            border: "1px solid rgba(201,162,74,0.15)",
+            color: "#E8DFD0",
+          },
+          formFieldInput: {
+            backgroundColor: "#171222",
+            borderColor: "rgba(123,107,165,0.2)",
+            color: "#E8DFD0",
+          },
+          footerActionLink: { color: "#C9A24A" },
+          internal: { fontFamily: "var(--font-raleway)" },
+        },
+      }}
+    >
       <html lang="pt-BR">
+        <head>
+          <meta name="theme-color" content="#08050E" />
+        </head>
         <body
           className={`${cinzel.variable} ${cormorant.variable} ${raleway.variable} ${jetbrains.variable} ${cinzelDecorative.variable} font-raleway antialiased`}
         >
