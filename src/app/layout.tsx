@@ -7,11 +7,15 @@ import {
   Raleway,
 } from "next/font/google";
 
+import ComingSoon from "@/components/ComingSoon";
 import { OfflineDetector, SiteHeader, ToastProvider } from "@/components/ui";
 
 import type { Metadata } from "next";
 
 import "./globals.css";
+
+const ENV_LABEL = process.env.NEXT_PUBLIC_ENV_LABEL;
+const COMING_SOON = process.env.NEXT_PUBLIC_COMING_SOON === "true";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -49,13 +53,16 @@ const cinzelDecorative = Cinzel_Decorative({
   display: "swap",
 });
 
+const siteTitle = ENV_LABEL ? `${ENV_LABEL} · MãosFalam` : "MãosFalam";
+const faviconPath = ENV_LABEL ? "/icons/favicon-staging.svg" : "/favicon.ico";
+
 export const metadata: Metadata = {
-  title: "MãosFalam",
+  title: siteTitle,
   description: "Suas mãos já sabem. Você ainda não.",
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "32x32" },
+      { url: faviconPath, sizes: "32x32", type: ENV_LABEL ? "image/svg+xml" : "image/x-icon" },
       { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
       { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
     ],
@@ -64,7 +71,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "MãosFalam",
+    title: siteTitle,
   },
   other: {
     "mobile-web-app-capable": "yes",
@@ -95,8 +102,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </svg>
           <ToastProvider>
             <OfflineDetector />
-            <SiteHeader />
-            {children}
+            {COMING_SOON ? (
+              <ComingSoon />
+            ) : (
+              <>
+                <SiteHeader />
+                {children}
+              </>
+            )}
           </ToastProvider>
         </body>
       </html>

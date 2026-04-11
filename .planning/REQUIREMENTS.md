@@ -48,14 +48,14 @@ Requirements for milestone v1.1: Alinhamento Arquitetural.
 
 ### MediaPipe
 
-- [ ] **MP-01**: @mediapipe/tasks-vision instalado e Hand Landmarker configurado
-- [ ] **MP-02**: useCameraPipeline real: getUserMedia + Hand Landmarker + loop de frames
-- [ ] **MP-03**: Validacao de landmarks: mao aberta, centralizada, estavel por 1.5s
-- [ ] **MP-04**: Auto-captura do canvas como base64 JPEG quando validacao passa
-- [ ] **MP-05**: Handedness: perguntar destra/canhota antes da camera
-- [ ] **MP-06**: Instrucao na camera e validacao da mao correta (feedback da cigana se mao errada)
-- [ ] **MP-07**: Espelhamento de camera frontal tratado corretamente
-- [ ] **MP-08**: dominant_hand salvo no HandAttributes e enviado no ReadingContext
+- [x] **MP-01**: @mediapipe/tasks-vision instalado e Hand Landmarker configurado
+- [x] **MP-02**: useCameraPipeline real: getUserMedia + Hand Landmarker + loop de frames
+- [x] **MP-03**: Validacao de landmarks: mao aberta, centralizada, estavel por 1.5s
+- [x] **MP-04**: Auto-captura do canvas como base64 JPEG quando validacao passa
+- [x] **MP-05**: Handedness: perguntar destra/canhota antes da camera
+- [x] **MP-06**: Instrucao na camera e validacao da mao correta (feedback da cigana se mao errada)
+- [x] **MP-07**: Espelhamento de camera frontal tratado corretamente
+- [x] **MP-08**: dominant_hand salvo no HandAttributes e enviado no ReadingContext
 
 ### Clerk Cleanup
 
@@ -132,14 +132,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CTX-07      | Phase 2 | Complete |
 | CTX-08      | Phase 2 | Complete |
 | CTX-09      | Phase 2 | Complete |
-| MP-01       | Phase 3 | Pending  |
-| MP-02       | Phase 3 | Pending  |
-| MP-03       | Phase 3 | Pending  |
-| MP-04       | Phase 3 | Pending  |
-| MP-05       | Phase 3 | Pending  |
-| MP-06       | Phase 3 | Pending  |
-| MP-07       | Phase 3 | Pending  |
-| MP-08       | Phase 3 | Pending  |
+| MP-01       | Phase 3 | Complete |
+| MP-02       | Phase 3 | Complete |
+| MP-03       | Phase 3 | Complete |
+| MP-04       | Phase 3 | Complete |
+| MP-05       | Phase 3 | Complete |
+| MP-06       | Phase 3 | Complete |
+| MP-07       | Phase 3 | Complete |
+| MP-08       | Phase 3 | Complete |
 | CLK-01      | Phase 4 | Pending  |
 | CLK-02      | Phase 4 | Pending  |
 | CLK-03      | Phase 4 | Pending  |

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Alinhamento Arquitetural
-status: Ready to execute
-stopped_at: Completed 03-mediapipe-real-01-PLAN.md
-last_updated: "2026-04-11T16:01:23.867Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 03-mediapipe-real-02-PLAN.md
+last_updated: "2026-04-11T16:05:01.395Z"
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -46,6 +46,7 @@ _Updated after each plan completion_
 | Phase 02-readingcontext-creditos P01 | 94s | 2 tasks | 3 files |
 | Phase 02-readingcontext-creditos P02 | 163s | 3 tasks | 2 files |
 | Phase 03-mediapipe-real P01 | 8min | 2 tasks | 4 files |
+| Phase 03-mediapipe-real P02 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Recent decisions affecting current work:
 - [Phase 02-readingcontext-creditos]: CreditGate is pure presentation — parent page holds confirming state and calls requestNewReading
 - [Phase 02-readingcontext-creditos]: Visitor lead registration is fire-and-forget; failure never blocks the reading funnel (CTX-09)
 - [Phase 03-mediapipe-real]: Front camera (mirrored): MediaPipe Left/Right maps directly to user's hand; back camera: labels flipped. Stability measured by timestamps not frame count. captureFrame un-mirrors front camera image for GPT-4o. camera_wrong_hand is not an error state — inline-recoverable.
+- [Phase 03-mediapipe-real]: Video element lives inside CameraViewport (not hidden in page) so overlays render correctly on top of live feed
+- [Phase 03-mediapipe-real]: onMirroredChange callback in useCameraPipeline Params communicates facingMode from hook to camera page state
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T16:01:23.865Z
-Stopped at: Completed 03-mediapipe-real-01-PLAN.md
+Last session: 2026-04-11T16:05:01.393Z
+Stopped at: Completed 03-mediapipe-real-02-PLAN.md
 Resume file: None

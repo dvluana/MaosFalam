@@ -114,6 +114,15 @@ Cinzel Decorative: LOGO ONLY. Cormorant Garamond italic: voz da cigana. Cinzel: 
 - Env vars configuradas por environment (production vs preview) na Vercel.
 - PWA configurado (manifest.json, icons, apple-touch-icon).
 
+### Env vars de controle por environment
+
+| Env var | Production | Preview | Efeito |
+|---------|-----------|---------|--------|
+| `NEXT_PUBLIC_COMING_SOON` | `true` | — | Mostra pagina "em breve" em vez do app |
+| `NEXT_PUBLIC_ENV_LABEL` | — | `Testes` | Prefixo no titulo da aba + favicon laranja |
+
+**Pra desativar "em breve":** remover `NEXT_PUBLIC_COMING_SOON` no Vercel Dashboard (Settings > Environment Variables) ou via CLI: `vercel env rm NEXT_PUBLIC_COMING_SOON production -y`. Redeploy automatico apos push ou `vercel deploy --prod`.
+
 ## Behavior
 
 - Seja direto. Faca o trabalho. Sem explicacoes longas.
