@@ -80,11 +80,45 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     await analyzeHand("base64photodata", "right");
 
     const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    const userContent = body.messages[1].content as Array<{ type: string; text?: string }>;
+    // Last item is image_url; all items before it are text
+    const last = userContent[userContent.length - 1];
+    expect(last.type).toBe("image_url");
+    for (const item of userContent.slice(0, -1)) {
+      expect(item.type).toBe("text");
+    }
+    // First text item contains "mao" (dominanceContext)
+    expect(userContent[0].text).toContain("mao");
+  });
+
+  it("injects elementHint text when provided", async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify(makeValidGptResponse()), { status: 200 }));
+
+    const { analyzeHand } = await import("../openai");
+    await analyzeHand("base64photodata", "right", "fire");
+
+    const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    const userContent = body.messages[1].content as Array<{ type: string; text?: string }>;
+    // Should have 4 items: dominanceContext, elementHint, "Analise esta palma.", image_url
+    expect(userContent).toHaveLength(4);
+    expect(userContent[1].text).toContain("fire");
+    expect(userContent[1].text).toContain("Pre-analise");
+    expect(userContent[3].type).toBe("image_url");
+  });
+
+  it("omits elementHint text when not provided", async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify(makeValidGptResponse()), { status: 200 }));
+
+    const { analyzeHand } = await import("../openai");
+    await analyzeHand("base64photodata", "right");
+
+    const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
     const userContent = body.messages[1].content as Array<{ type: string }>;
-    // [0] dominanceContext text, [1] "Analise esta palma." text, [2] image_url
-    expect(userContent[0].type).toBe("text");
-    expect(userContent[1].type).toBe("text");
-    expect(userContent[2].type).toBe("image_url");
+    expect(userContent).toHaveLength(3);
   });
 
   it("AI-02: returns valid HandAttributes on valid GPT-4o response", async () => {
