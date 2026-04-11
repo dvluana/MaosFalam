@@ -59,10 +59,10 @@ Requirements for milestone v1.1: Alinhamento Arquitetural.
 
 ### Clerk Cleanup
 
-- [ ] **CLK-01**: /esqueci-senha redireciona pra fluxo Clerk (nao implementacao custom)
-- [ ] **CLK-02**: /redefinir-senha/[token] redireciona pra fluxo Clerk
-- [ ] **CLK-03**: /conta/perfil edit nome usa Clerk UserProfile
-- [ ] **CLK-04**: /conta/perfil trocar senha usa Clerk UserProfile
+- [x] **CLK-01**: /esqueci-senha redireciona pra fluxo Clerk (nao implementacao custom)
+- [x] **CLK-02**: /redefinir-senha/[token] redireciona pra fluxo Clerk
+- [x] **CLK-03**: /conta/perfil edit nome usa Clerk UserProfile
+- [x] **CLK-04**: /conta/perfil trocar senha usa Clerk UserProfile
 
 ### Docs + Error Handling
 
@@ -140,10 +140,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MP-06       | Phase 3 | Complete |
 | MP-07       | Phase 3 | Complete |
 | MP-08       | Phase 3 | Complete |
-| CLK-01      | Phase 4 | Pending  |
-| CLK-02      | Phase 4 | Pending  |
-| CLK-03      | Phase 4 | Pending  |
-| CLK-04      | Phase 4 | Pending  |
+| CLK-01      | Phase 4 | Complete |
+| CLK-02      | Phase 4 | Complete |
+| CLK-03      | Phase 4 | Complete |
+| CLK-04      | Phase 4 | Complete |
 | DOCS-03     | Phase 4 | Pending  |
 | DOCS-04     | Phase 4 | Pending  |
 | DOCS-01     | Phase 5 | Pending  |

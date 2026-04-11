@@ -32,7 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 1: Auditoria** - Remover artefatos obsoletos e alinhar nomenclatura com decisoes v1.0
 - [x] **Phase 2: ReadingContext + Creditos** - Refatorar fluxo /ler/nome e gate de creditos (completed 2026-04-11)
 - [x] **Phase 3: MediaPipe Real** - Substituir mock por Hand Landmarker real com auto-captura (completed 2026-04-11)
-- [ ] **Phase 4: Clerk Cleanup + Error Handling** - Delegar auth flows ao Clerk e diferenciar erros
+- [x] **Phase 4: Clerk Cleanup + Error Handling** - Delegar auth flows ao Clerk e diferenciar erros (completed 2026-04-11)
 - [ ] **Phase 5: Docs Sync** - Alinhar architecture.md e CLAUDE.md com o codigo real
 
 ## Phase Details
@@ -107,8 +107,8 @@ Plans:
 
 Plans:
 
-- [ ] 04-01-PLAN.md — Clerk auth delegation: redirect /esqueci-senha e /redefinir-senha; UserProfile em /conta/perfil
-- [ ] 04-02-PLAN.md — Error handling: toast em /conta/leituras; 404 vs 500 em /ler/resultado/[id]
+- [x] 04-01-PLAN.md — Clerk auth delegation: redirect /esqueci-senha e /redefinir-senha; UserProfile em /conta/perfil
+- [x] 04-02-PLAN.md — Error handling: toast em /conta/leituras; 404 vs 500 em /ler/resultado/[id]
 
 ### Phase 5: Docs Sync
 
@@ -131,5 +131,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Auditoria                      | v1.1      | 2/2            | Complete    | -          |
 | 2. ReadingContext + Creditos      | v1.1      | 2/2            | Complete    | 2026-04-11 |
 | 3. MediaPipe Real                 | v1.1      | 2/2            | Complete    | 2026-04-11 |
-| 4. Clerk Cleanup + Error Handling | v1.1      | 0/2            | Not started | -          |
+| 4. Clerk Cleanup + Error Handling | v1.1      | 2/2 | Complete   | 2026-04-11 |
 | 5. Docs Sync                      | v1.1      | 0/?            | Not started | -          |
