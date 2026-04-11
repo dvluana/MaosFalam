@@ -29,13 +29,13 @@ All 9 plans completed. See `.planning/archive/v1.1/` for history.
 **Goal:** Substituir sessionStorage por module-level singleton pra transferir foto entre paginas, corrigir race condition no scan onde a navegacao acontece antes da API resolver, e enviar pre-hint de elemento (calculado dos landmarks MediaPipe) pro GPT-4o
 **Requirements**: PIPE-01, PIPE-02, PIPE-03, PIPE-04
 **Depends on:** Phase 4
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 
 - [x] 05-01-PLAN.md — Foundation: photo-store module + computeElementHint + captureFrame quality 0.82
 - [x] 05-02-PLAN.md — Server-side: analyzeHand elementHint param + capture route schema + reading-client
-- [ ] 05-03-PLAN.md — Wiring: camera/scan pages use photo-store, scan race condition fix (3-effect gate)
+- [x] 05-03-PLAN.md — Wiring: camera/scan pages use photo-store, scan race condition fix (3-effect gate)
 
 ---
 
