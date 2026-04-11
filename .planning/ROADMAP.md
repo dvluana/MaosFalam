@@ -119,7 +119,11 @@ Plans:
 
 1. architecture.md nao menciona share_token, expires_at de creditos, NextAuth, R2, ou Claude Vision; reflete fluxo unico com is_self flag e decisoes v1.1
 2. CLAUDE.md lista Clerk (sem NextAuth), GPT-4o (sem Claude Vision), sem mencao a R2, e a estrutura de pastas bate com o projeto real
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 05-01-PLAN.md — Atualizar architecture.md e CLAUDE.md com decisoes v1.1
 
 ## Progress
 
@@ -131,5 +135,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Auditoria                      | v1.1      | 2/2            | Complete    | -          |
 | 2. ReadingContext + Creditos      | v1.1      | 2/2            | Complete    | 2026-04-11 |
 | 3. MediaPipe Real                 | v1.1      | 2/2            | Complete    | 2026-04-11 |
-| 4. Clerk Cleanup + Error Handling | v1.1      | 2/2 | Complete   | 2026-04-11 |
-| 5. Docs Sync                      | v1.1      | 0/?            | Not started | -          |
+| 4. Clerk Cleanup + Error Handling | v1.1      | 2/2            | Complete    | 2026-04-11 |
+| 5. Docs Sync                      | v1.1      | 0/1            | Not started | -          |
