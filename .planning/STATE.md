@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Alinhamento Arquitetural
-status: Ready to execute
-stopped_at: Completed 02-readingcontext-creditos-01-PLAN.md
-last_updated: "2026-04-11T15:40:16.787Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 02-readingcontext-creditos-02-PLAN.md
+last_updated: "2026-04-11T15:44:39.042Z"
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -44,6 +44,7 @@ _Updated after each plan completion_
 | Phase 01-auditoria P01 | 2 | 2 tasks | 10 files |
 | Phase 01-auditoria P02 | 12min | 2 tasks | 6 files |
 | Phase 02-readingcontext-creditos P01 | 94s | 2 tasks | 3 files |
+| Phase 02-readingcontext-creditos P02 | 163s | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ Recent decisions affecting current work:
 - [Phase 01-auditoria]: getVariant uses real target_name from backend for for_other detection
 - [Phase 02-readingcontext-creditos]: ReadingContext credit_used flag tracks credit consumption for UI feedback downstream
 - [Phase 02-readingcontext-creditos]: useCredits returns immediate zero state for visitors so reading_count===0 always means free reading
+- [Phase 02-readingcontext-creditos]: CreditGate is pure presentation — parent page holds confirming state and calls requestNewReading
+- [Phase 02-readingcontext-creditos]: Visitor lead registration is fire-and-forget; failure never blocks the reading funnel (CTX-09)
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T15:40:16.784Z
-Stopped at: Completed 02-readingcontext-creditos-01-PLAN.md
+Last session: 2026-04-11T15:44:39.040Z
+Stopped at: Completed 02-readingcontext-creditos-02-PLAN.md
 Resume file: None
