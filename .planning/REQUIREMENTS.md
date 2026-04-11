@@ -68,8 +68,8 @@ Requirements for milestone v1.1: Alinhamento Arquitetural.
 
 - [ ] **DOCS-01**: architecture.md alinhado com codigo real (decisoes v1.1 refletidas)
 - [ ] **DOCS-02**: CLAUDE.md atualizado (Clerk, sem R2, GPT-4o, estrutura atual)
-- [ ] **DOCS-03**: /conta/leituras mostra toast de erro quando API falha
-- [ ] **DOCS-04**: Resultado diferencia 404 (leitura nao existe) de 500 (erro de servidor)
+- [x] **DOCS-03**: /conta/leituras mostra toast de erro quando API falha
+- [x] **DOCS-04**: Resultado diferencia 404 (leitura nao existe) de 500 (erro de servidor)
 
 ## v2 Requirements
 
@@ -144,8 +144,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLK-02      | Phase 4 | Complete |
 | CLK-03      | Phase 4 | Complete |
 | CLK-04      | Phase 4 | Complete |
-| DOCS-03     | Phase 4 | Pending  |
-| DOCS-04     | Phase 4 | Pending  |
+| DOCS-03     | Phase 4 | Complete |
+| DOCS-04     | Phase 4 | Complete |
 | DOCS-01     | Phase 5 | Pending  |
 | DOCS-02     | Phase 5 | Pending  |
 

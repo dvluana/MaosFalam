@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Alinhamento Arquitetural
 status: Phase complete — ready for verification
-stopped_at: Completed 04-clerk-cleanup-error-handling-01-PLAN.md
-last_updated: "2026-04-11T16:12:38.257Z"
+stopped_at: Completed 04-clerk-cleanup-error-handling-02-PLAN.md
+last_updated: "2026-04-11T16:12:48.686Z"
 progress:
   total_phases: 5
   completed_phases: 4
@@ -48,6 +48,7 @@ _Updated after each plan completion_
 | Phase 03-mediapipe-real P01 | 8min | 2 tasks | 4 files |
 | Phase 03-mediapipe-real P02 | 3min | 2 tasks | 3 files |
 | Phase 04-clerk-cleanup-error-handling P01 | 1min | 2 tasks | 3 files |
+| Phase 04-clerk-cleanup-error-handling P02 | 65s | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,7 @@ Recent decisions affecting current work:
 - [Phase 03-mediapipe-real]: onMirroredChange callback in useCameraPipeline Params communicates facingMode from hook to camera page state
 - [Phase 04-clerk-cleanup-error-handling]: Clerk handles password recovery via SignIn hash routing — custom forgot/reset-password forms removed
 - [Phase 04-clerk-cleanup-error-handling]: Logout in perfil retained via useAuth().logout() + router.push, not delegated to Clerk
+- [Phase 04-clerk-cleanup-error-handling]: serverError state separado de notFound em /ler/resultado para diferenciar 404 de 5xx
 
 ### Pending Todos
 
@@ -89,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T16:12:35.135Z
-Stopped at: Completed 04-clerk-cleanup-error-handling-01-PLAN.md
+Last session: 2026-04-11T16:12:48.684Z
+Stopped at: Completed 04-clerk-cleanup-error-handling-02-PLAN.md
 Resume file: None
