@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 import { logger } from "./logger";
 
 const BASE_URL = "https://api.abacatepay.com/v1";
@@ -74,9 +76,6 @@ export function validateWebhookSignature(
   body: string,
   signature: string,
 ): boolean {
-  // AbacatePay webhook validation
-  // Uses HMAC SHA256 of body with webhook secret
-  const crypto = require("crypto") as typeof import("crypto");
   const secret = process.env.ABACATEPAY_WEBHOOK_SECRET;
   if (!secret) {
     logger.warn("ABACATEPAY_WEBHOOK_SECRET not set, rejecting webhook");

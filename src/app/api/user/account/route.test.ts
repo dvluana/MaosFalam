@@ -1,4 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { auth } from "@clerk/nextjs/server";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { prisma } from "@/server/lib/prisma";
+
+import { DELETE } from "./route";
 
 vi.mock("@/server/lib/logger", () => ({
   logger: { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() },
@@ -18,11 +23,6 @@ vi.mock("@clerk/nextjs/server", () => ({
 
 // SEC-03: rate limit for credits/purchase (5/hour by userId) is deferred to v2
 // When implemented, test pattern: rateLimit(`user:${userId}`, 5) returns false → 429
-
-import { auth } from "@clerk/nextjs/server";
-import { prisma } from "@/server/lib/prisma";
-
-import { DELETE } from "./route";
 
 function makeDeleteRequest(body: unknown) {
   return new Request("http://localhost/api/user/account", {

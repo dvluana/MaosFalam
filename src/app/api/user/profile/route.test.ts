@@ -1,4 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { currentUser } from "@clerk/nextjs/server";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { logger } from "@/server/lib/logger";
+import { prisma } from "@/server/lib/prisma";
+
+import { GET, PUT } from "./route";
 
 vi.mock("@/server/lib/logger", () => ({
   logger: { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() },
@@ -17,12 +23,6 @@ vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
   currentUser: vi.fn(),
 }));
-
-import { currentUser } from "@clerk/nextjs/server";
-import { logger } from "@/server/lib/logger";
-import { prisma } from "@/server/lib/prisma";
-
-import { GET, PUT } from "./route";
 
 const mockClerkUser = {
   id: "user_test_123",
