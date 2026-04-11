@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Fluxo de Mao Dominante
-status: Milestone complete
-stopped_at: Completed 04-outra-pessoa-a11y-02-PLAN.md
-last_updated: "2026-04-11T17:33:50.590Z"
+status: Ready to execute
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-04-11T19:39:52.777Z"
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 13
+  completed_plans: 11
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-11)
 
 **Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** Phase 04 — outra-pessoa-a11y
+**Current focus:** Phase 05 — pipeline-refactor
 
 ## Current Position
 
-Phase: 04
-Plan: Not started
+Phase: 05 (pipeline-refactor) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ _Updated after each plan completion_
 | Phase 03 P02 | 8m | 2 tasks | 5 files |
 | Phase 04 P01 | 5m | 2 tasks | 5 files |
 | Phase 04 P02 | 4m | 2 tasks | 3 files |
+| Phase 05 P02 | 2m | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,8 @@ _Updated after each plan completion_
 - [Phase 04]: isSelf=true as default preserves original behavior with zero regression
 - [Phase 04]: pronoun dela/dele computed from targetGender for camera wrong-hand feedback
 - [Phase 04]: aria-pressed semantically correct for toggle buttons
+- [Phase 05]: elementHint injected as text in user message (not system prompt) to keep OpenAI caching intact
+- [Phase 05]: element_hint optional in Zod schema with no default — purely forwarded if client provides it
 
 ### Pending Todos
 
@@ -97,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T17:33:05.032Z
-Stopped at: Completed 04-outra-pessoa-a11y-02-PLAN.md
+Last session: 2026-04-11T19:39:52.775Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
