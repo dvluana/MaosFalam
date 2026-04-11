@@ -41,7 +41,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Camera UI** - Instrucoes visuais, badge de mao esperada, feedback de mao errada, outline SVG, camera traseira default (completed 2026-04-11)
 - [x] **Phase 2: Upload Pipeline** - Tela de escolha de metodo, instrucoes de upload, validacao de arquivo, confirmacao com preview (completed 2026-04-11)
-- [ ] **Phase 3: Edge Cases + Prompt** - HEIC, EXIF, compressao, orientacao, retry logic, deteccao de screenshot, prompt GPT-4o atualizado
+- [x] **Phase 3: Edge Cases + Prompt** - HEIC, EXIF, compressao, orientacao, retry logic, deteccao de screenshot, prompt GPT-4o atualizado (completed 2026-04-11)
 - [ ] **Phase 4: Outra Pessoa + A11y** - Camera e upload adaptados ao contexto de outra pessoa, aria-labels, aria-live, role=img
 
 ## Phase Details
@@ -106,7 +106,7 @@ Plans:
 Plans:
 
 - [x] 03-01-PLAN.md — normalizeImage(): HEIC conversion + EXIF correction + compression; wire into useUploadValidation
-- [ ] 03-02-PLAN.md — Landscape warning + retry-suggest logic + screenshot detection
+- [x] 03-02-PLAN.md — Landscape warning + retry-suggest logic + screenshot detection
 - [x] 03-03-PLAN.md — GPT-4o prompt: dominant_hand context + ignore accessories
 
 ### Phase 4: Outra Pessoa + A11y
@@ -134,5 +134,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | ---------------------- | --------- | -------------- | ----------- | ---------- |
 | 1. Camera UI           | v1.2      | 2/2            | Complete    | 2026-04-11 |
 | 2. Upload Pipeline     | v1.2      | 3/3            | Complete    | 2026-04-11 |
-| 3. Edge Cases + Prompt | v1.2      | 2/3 | In Progress|  |
+| 3. Edge Cases + Prompt | v1.2      | 3/3 | Complete   | 2026-04-11 |
 | 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -          |

@@ -34,9 +34,9 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 - [x] **EDGE-01**: HEIC conversion via heic2any antes de qualquer processamento
 - [x] **EDGE-02**: EXIF rotation corrigida antes de processar no canvas
 - [x] **EDGE-03**: Compressao client-side (max 1280px, JPEG 0.85) antes de enviar
-- [ ] **EDGE-04**: Orientacao landscape detectada com aviso "Vira o celular pra vertical"
-- [ ] **EDGE-05**: Retry logic: apos 3 falhas, sugerir trocar metodo (camera <> upload)
-- [ ] **EDGE-06**: Deteccao de screenshot (dimensoes atipicas) com aviso da cigana
+- [x] **EDGE-04**: Orientacao landscape detectada com aviso "Vira o celular pra vertical"
+- [x] **EDGE-05**: Retry logic: apos 3 falhas, sugerir trocar metodo (camera <> upload)
+- [x] **EDGE-06**: Deteccao de screenshot (dimensoes atipicas) com aviso da cigana
 
 ### GPT-4o Prompt
 
@@ -94,9 +94,9 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 | EDGE-01     | Phase 3 | Complete |
 | EDGE-02     | Phase 3 | Complete |
 | EDGE-03     | Phase 3 | Complete |
-| EDGE-04     | Phase 3 | Pending |
-| EDGE-05     | Phase 3 | Pending |
-| EDGE-06     | Phase 3 | Pending |
+| EDGE-04     | Phase 3 | Complete |
+| EDGE-05     | Phase 3 | Complete |
+| EDGE-06     | Phase 3 | Complete |
 | PROMPT-01   | Phase 3 | Complete |
 | PROMPT-02   | Phase 3 | Complete |
 | OTHER-01    | Phase 4 | Pending |

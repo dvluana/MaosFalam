@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Fluxo de Mao Dominante
-status: Ready to execute
-stopped_at: Completed 03-edge-cases-prompt-01-PLAN.md
-last_updated: "2026-04-11T17:23:10.169Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 03-edge-cases-prompt-02-PLAN.md
+last_updated: "2026-04-11T17:24:12.963Z"
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -48,6 +48,7 @@ _Updated after each plan completion_
 | Phase 02-upload-pipeline P03 | 2m | 2 tasks | 2 files |
 | Phase 03 P03 | 5 | 2 tasks | 4 files |
 | Phase 03 P01 | 3m | 2 tasks | 4 files |
+| Phase 03 P02 | 8m | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ _Updated after each plan completion_
 - [Phase 03]: dominant_hand defaults to right via Zod .default() for backward compatibility
 - [Phase 03]: heic2any for HEIC conversion — ships own .d.ts, no @types package needed
 - [Phase 03]: normalizeImage runs before URL.createObjectURL — ensures preview and all checks use normalized bytes
+- [Phase 03]: ScreenOrientation.lock cast to intersection type for TS compatibility (experimental API)
+- [Phase 03]: Screenshot detection uses SCREENSHOT_WIDTHS Set + aspect ratio > 1.8, no new ValidationCheck
+- [Phase 03]: Method switch suggestion is inline text (not toast), appears when failureCount >= 3
 
 ### Pending Todos
 
@@ -84,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T17:23:10.167Z
-Stopped at: Completed 03-edge-cases-prompt-01-PLAN.md
+Last session: 2026-04-11T17:24:12.961Z
+Stopped at: Completed 03-edge-cases-prompt-02-PLAN.md
 Resume file: None
