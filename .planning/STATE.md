@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Phase complete — ready for verification
-stopped_at: Completed 05-protected-api/05-03-PLAN.md
-last_updated: "2026-04-11T02:34:12.113Z"
+stopped_at: Completed 05-protected-api/05-02-PLAN.md
+last_updated: "2026-04-11T02:34:22.056Z"
 progress:
   total_phases: 6
   completed_phases: 5
@@ -57,6 +57,7 @@ _Updated after each plan completion_
 | Phase 04-public-api P02 | 6 | 1 tasks | 3 files |
 | Phase 05-protected-api P01 | 7 | 2 tasks | 7 files |
 | Phase 05-protected-api P03 | 4 | 2 tasks | 2 files |
+| Phase 05-protected-api P02 | 2 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,8 @@ Recent decisions affecting current work:
 - [Phase 05-protected-api]: import order lint errors in credits/purchase and webhook were auto-fixed (Rule 3) — abacatepay imports must precede auth/logger alphabetically
 - [Phase 05-protected-api]: profile route mocks currentUser() (getClerkUser), account route mocks auth() (getClerkUserId) — different auth helpers require different mock targets
 - [Phase 05-protected-api]: SEC-03 rate limit for credits/purchase deferred to v2 — documented as comment in account test file
+- [Phase 05-protected-api]: Mock @/server/lib/auth (getClerkUserId) directly — routes use auth layer, not Clerk directly
+- [Phase 05-protected-api]: prisma.$transaction mock calls callback with prisma as tx — mirrors real behavior without Neon connection
 
 ### Pending Todos
 
@@ -108,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T02:34:08.420Z
-Stopped at: Completed 05-protected-api/05-03-PLAN.md
+Last session: 2026-04-11T02:34:22.052Z
+Stopped at: Completed 05-protected-api/05-02-PLAN.md
 Resume file: None
