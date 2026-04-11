@@ -59,14 +59,14 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 - [x] **INFRA-01**: Logger Pino configurado com pino-pretty em dev
 - [x] **INFRA-02**: .env.example com todas as vars necessarias
 - [x] **INFRA-03**: ESLint no-console: error ativo e funcionando
-- [ ] **INFRA-04**: npm run build passa sem erro
-- [ ] **INFRA-05**: npm run type-check passa sem erro
+- [x] **INFRA-04**: npm run build passa sem erro
+- [x] **INFRA-05**: npm run type-check passa sem erro
 
 ### Adapters
 
 - [x] **ADAPT-01**: src/lib/reading-client.ts com funcoes pra chamar API de leitura (captureReading, getReading, registerLead)
-- [ ] **ADAPT-02**: src/lib/payment-client.ts com funcoes pra chamar API de creditos (purchaseCredits, getCredits)
-- [ ] **ADAPT-03**: src/lib/user-client.ts com funcoes pra chamar API de usuario (getUserProfile, updateProfile, getUserReadings, deleteAccount)
+- [x] **ADAPT-02**: src/lib/payment-client.ts com funcoes pra chamar API de creditos (purchaseCredits, getCredits)
+- [x] **ADAPT-03**: src/lib/user-client.ts com funcoes pra chamar API de usuario (getUserProfile, updateProfile, getUserReadings, deleteAccount)
 - [x] **ADAPT-04**: Nenhum import de @/server/\* em arquivos client
 
 ## v2 Requirements
@@ -140,11 +140,11 @@ Adiados para milestone futura.
 | INFRA-01    | Phase 1 | Complete |
 | INFRA-02    | Phase 1 | Complete |
 | INFRA-03    | Phase 1 | Complete |
-| INFRA-04    | Phase 6 | Pending  |
-| INFRA-05    | Phase 6 | Pending  |
+| INFRA-04    | Phase 6 | Complete |
+| INFRA-05    | Phase 6 | Complete |
 | ADAPT-01    | Phase 6 | Complete |
-| ADAPT-02    | Phase 6 | Pending  |
-| ADAPT-03    | Phase 6 | Pending  |
+| ADAPT-02    | Phase 6 | Complete |
+| ADAPT-03    | Phase 6 | Complete |
 | ADAPT-04    | Phase 6 | Complete |
 
 **Coverage:**

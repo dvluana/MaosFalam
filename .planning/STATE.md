@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 06-client-adapters/06-01-PLAN.md
-last_updated: "2026-04-11T02:43:11.057Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 06-client-adapters/06-02-PLAN.md
+last_updated: "2026-04-11T02:47:00.125Z"
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -59,6 +59,7 @@ _Updated after each plan completion_
 | Phase 05-protected-api P03 | 4 | 2 tasks | 2 files |
 | Phase 05-protected-api P02 | 2 | 2 tasks | 3 files |
 | Phase 06-client-adapters P01 | 282 | 2 tasks | 6 files |
+| Phase 06-client-adapters P02 | 8 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,8 @@ Recent decisions affecting current work:
 - [Phase 05-protected-api]: Mock @/server/lib/auth (getClerkUserId) directly — routes use auth layer, not Clerk directly
 - [Phase 05-protected-api]: prisma.$transaction mock calls callback with prisma as tx — mirrors real behavior without Neon connection
 - [Phase 06-client-adapters]: getReading uses reading.id as share_token fallback; share_expires_at hardcoded 2099-12-31; revelacao phrase read from sessionStorage.maosfalam_impact_phrase
+- [Phase 06-client-adapters]: CreditsBanner receives credits:number prop directly — no User object needed since credits always show 0
+- [Phase 06-client-adapters]: conta/leituras/[id] notFound() called after loading=false and reading=null — guards against stale IDs
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T02:43:11.053Z
-Stopped at: Completed 06-client-adapters/06-01-PLAN.md
+Last session: 2026-04-11T02:47:00.121Z
+Stopped at: Completed 06-client-adapters/06-02-PLAN.md
 Resume file: None

@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: AI Pipeline** - GPT-4o wrapper, selectBlocks hardening, reading persistence
 - [x] **Phase 4: Public API** - Lead capture, reading capture, reading GET, rate limiting, security headers (completed 2026-04-11)
 - [x] **Phase 5: Protected API** - Credit debit, reading history, profile CRUD, account deletion (completed 2026-04-11)
-- [ ] **Phase 6: Client Adapters** - Frontend mock-to-API transition, end-to-end integration
+- [x] **Phase 6: Client Adapters** - Frontend mock-to-API transition, end-to-end integration (completed 2026-04-11)
 
 ## Phase Details
 
@@ -138,7 +138,7 @@ Plans:
 Plans:
 
 - [x] 06-01-PLAN.md — Rewrite reading-client.ts + remove @/server/\* imports from 5 app pages
-- [ ] 06-02-PLAN.md — Replace useMock in conta pages + full build/type-check gate
+- [x] 06-02-PLAN.md — Replace useMock in conta pages + full build/type-check gate
 
 ## Progress
 
@@ -152,4 +152,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. AI Pipeline     | 2/3            | In Progress |            |
 | 4. Public API      | 2/2            | Complete    | 2026-04-11 |
 | 5. Protected API   | 3/3            | Complete    | 2026-04-11 |
-| 6. Client Adapters | 1/2            | In Progress |            |
+| 6. Client Adapters | 2/2            | Complete    | 2026-04-11 |
