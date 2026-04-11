@@ -10,6 +10,7 @@ import CameraFeedback from "@/components/camera/CameraFeedback";
 import CameraViewport from "@/components/camera/CameraViewport";
 import CaptureFlash from "@/components/camera/CaptureFlash";
 import HandInstructionOverlay from "@/components/camera/HandInstructionOverlay";
+import LandscapeWarning from "@/components/camera/LandscapeWarning";
 import MethodChoice from "@/components/camera/MethodChoice";
 import UploadConfirmScreen from "@/components/camera/UploadConfirmScreen";
 import UploadInstructionScreen from "@/components/camera/UploadInstructionScreen";
@@ -18,6 +19,7 @@ import WrongHandFeedback from "@/components/camera/WrongHandFeedback";
 import PageLoading from "@/components/ui/PageLoading";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
+import { useLandscapeGuard } from "@/hooks/useLandscapeGuard";
 import { useUploadValidation } from "@/hooks/useUploadValidation";
 import { loadReadingContext } from "@/lib/reading-context";
 import {
@@ -42,6 +44,8 @@ function CameraPageInner() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
+
+  const isLandscape = useLandscapeGuard();
 
   // Load reading context for dominant hand
   const readingContext = loadReadingContext();
@@ -178,6 +182,8 @@ function CameraPageInner() {
 
   return (
     <main className="relative min-h-dvh bg-black flex flex-col items-center justify-center px-6 pt-28 pb-16 gap-10 overflow-hidden">
+      <LandscapeWarning visible={isLandscape} />
+
       <CaptureFlash active={state === "camera_capturing"} />
 
       <div
