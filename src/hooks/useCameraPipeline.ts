@@ -10,9 +10,8 @@ interface Params {
 }
 
 /**
- * Simulação do pipeline da câmera. Enquanto o backend de visão não existe,
- * a transição entre estados é baseada em timers. TODO: substituir por
- * MediaPipe real + detecção de landmarks quando integrar com o backend.
+ * Simulação do pipeline da câmera. Transição entre estados baseada em timers.
+ * Phase 3 (MP-02): substituir por MediaPipe Hand Landmarker real com detecção de landmarks.
  */
 export default function useCameraPipeline({ state, forced, setState, onCaptured }: Params): void {
   useEffect(() => {

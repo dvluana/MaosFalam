@@ -9,9 +9,7 @@ import Separator from "@/components/ui/Separator";
  * Ao clicar "Desbloquear tudo", salva o reading id atual em sessionStorage
  * pra que depois do pagamento a /creditos consiga mandar a usuária de volta
  * exatamente pra essa leitura em modo /completo (sem perder contexto).
- *
- * TODO (backend): o id da leitura atual devia vir do contexto da URL/rota
- * em vez de sessionStorage. Por enquanto lemos do pathname.
+ * O id é extraído do pathname: /ler/resultado/{id}.
  */
 export default function UpsellSection() {
   const router = useRouter();

@@ -8,24 +8,7 @@ import { Button, Input } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 import { registerLead } from "@/lib/reading-client";
 
-/**
- * TODO (backend):
- * O campo `email` abaixo é coletado antes da leitura pra capturar o lead
- * e, quando o backend existir, servir como VALIDADOR de conta:
- *
- *   1. Ao clicar em "Continuar", chamar GET /api/auth/check-email?email=...
- *   2. Se a API retornar { exists: true }, interromper o fluxo e
- *      redirecionar a usuária pra /login?email={email}&return=/ler/toque
- *      com um toast explicando: "Eu já te conheço. Faz login primeiro."
- *   3. Se { exists: false }, continuar o fluxo normal (salva no
- *      sessionStorage + seta maosfalam_name_fresh + push pra /ler/toque).
- *   4. No final do funil, na hora de salvar a leitura no backend, o email
- *      é usado pra criar conta automaticamente ou vincular à existente
- *      (se a pessoa fez Google OAuth antes).
- *
- * Hoje (mock) o email é só salvo no sessionStorage pra exibir no resultado
- * e pra eventual lead capture; não há validação real.
- */
+// Future: verificar se email já tem conta via API antes de prosseguir (redirect pra login se sim).
 
 export default function NomePage() {
   const router = useRouter();

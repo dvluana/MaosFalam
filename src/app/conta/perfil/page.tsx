@@ -19,10 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
  * NÃO tem: excluir conta (removido a pedido — essa operação fica fora do
  * MVP, futuramente irá pra uma tela dedicada de settings avançadas).
  *
- * TODO (backend):
- *   - Editar nome: PATCH /api/user { name }
- *   - Trocar senha: POST /api/auth/change-password { current, next }
- *     retornando erro específico se senha atual incorreta
+ * Phase 4 (CLK-03, CLK-04): delegar edição de nome e troca de senha ao Clerk UserProfile.
  */
 
 type Mode = "view" | "editing_name" | "changing_password";
