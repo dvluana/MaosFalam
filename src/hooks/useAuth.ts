@@ -33,19 +33,19 @@ export function useAuth() {
     if (!isLoaded || !isSignedIn || claimAttempted.current) return;
     if (typeof window === "undefined") return;
 
-    const alreadyClaimed = localStorage.getItem(CLAIMED_KEY);
-    if (alreadyClaimed) return;
-
     claimAttempted.current = true;
 
-    // Fire-and-forget: failure must not block the user
-    void fetch("/api/user/claim-readings", { method: "POST" })
-      .then((res) => {
-        if (res.ok) {
-          localStorage.setItem(CLAIMED_KEY, "1");
-        }
-      })
-      .catch(() => undefined);
+    // Claim anonymous readings (fire-and-forget)
+    const alreadyClaimed = localStorage.getItem(CLAIMED_KEY);
+    if (!alreadyClaimed) {
+      void fetch("/api/user/claim-readings", { method: "POST" })
+        .then((res) => {
+          if (res.ok) {
+            localStorage.setItem(CLAIMED_KEY, "1");
+          }
+        })
+        .catch(() => undefined);
+    }
 
     // Staging only: seed 100 test credits on first login
     if (process.env.NEXT_PUBLIC_ENV_LABEL === "Testes") {

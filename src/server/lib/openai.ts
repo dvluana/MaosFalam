@@ -334,6 +334,7 @@ export async function analyzeHand(
         },
       ],
       max_tokens: 1500,
+      temperature: 0,
       response_format: {
         type: "json_schema",
         json_schema: {
