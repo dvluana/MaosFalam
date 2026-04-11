@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { registerLead, requestNewReading } from "@/lib/reading-client";
 import { saveReadingContext } from "@/lib/reading-context";
+import { generateUUID } from "@/lib/uuid";
 import type { ReadingContext } from "@/types/reading-context";
 
 // ============================================================
@@ -113,7 +114,7 @@ export default function NomePage() {
       sessionStorage.setItem("maosfalam_target_gender", gender);
     }
 
-    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
     sessionStorage.setItem("maosfalam_session_id", sessionId);
 
     // Fire-and-forget lead registration — failure must not block reading funnel (CTX-09)
@@ -151,7 +152,7 @@ export default function NomePage() {
 
     // First reading is always free (CTX-06)
     if (reading_count === 0) {
-      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
       sessionStorage.setItem("maosfalam_session_id", sessionId);
       const ctx: ReadingContext = {
         target_name: trimmedName,
@@ -189,7 +190,7 @@ export default function NomePage() {
         is_self: isSelf,
       });
 
-      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
       sessionStorage.setItem("maosfalam_session_id", sessionId);
 
       const ctx: ReadingContext = {

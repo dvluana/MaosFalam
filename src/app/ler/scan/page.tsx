@@ -8,6 +8,7 @@ import PageLoading from "@/components/ui/PageLoading";
 import ProgressBar from "@/components/ui/ProgressBar";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import { captureReading } from "@/lib/reading-client";
+import { generateUUID } from "@/lib/uuid";
 import type { ReportJSON } from "@/types/report";
 
 type ScanState = "scanning" | "scan_slow" | "scan_failed_low_confidence" | "scan_failed_api_error";
@@ -52,7 +53,7 @@ function ScanInner() {
     didCapture.current = true;
 
     const photo = sessionStorage.getItem("maosfalam_photo") ?? "";
-    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
     const leadId = sessionStorage.getItem("maosfalam_lead_id") ?? undefined;
     const targetName = sessionStorage.getItem("maosfalam_name") ?? "você";
     const targetGender =
