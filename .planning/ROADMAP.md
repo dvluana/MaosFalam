@@ -78,7 +78,7 @@ Plans:
 
 - [x] 03-01-PLAN.md — Fix openai.ts: switch to json_schema Structured Outputs, pin model, add Zod validation
 - [x] 03-02-PLAN.md — Harden selectBlocks: add \_fallback blocks to all four line maps, update buildLineSection
-- [ ] 03-03-PLAN.md — Write unit tests for analyzeHand (AI-01 to AI-04) and selectBlocks fallback
+- [x] 03-03-PLAN.md — Write unit tests for analyzeHand (AI-01 to AI-04) and selectBlocks fallback
 
 ### Phase 4: Public API
 
