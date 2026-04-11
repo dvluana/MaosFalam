@@ -19,6 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Public API** - Lead capture, reading capture, reading GET, rate limiting, security headers (completed 2026-04-11)
 - [x] **Phase 5: Protected API** - Credit debit, reading history, profile CRUD, account deletion (completed 2026-04-11)
 - [x] **Phase 6: Client Adapters** - Frontend mock-to-API transition, end-to-end integration (completed 2026-04-11)
+- [ ] **Phase 7: Frontend-Backend Wiring** - Connect reading funnel pages to real APIs, migrate useAuth to Clerk, delete unused deleteAccount feature
 
 ## Phase Details
 
@@ -140,27 +141,40 @@ Plans:
 - [x] 06-01-PLAN.md — Rewrite reading-client.ts + remove @/server/\* imports from 5 app pages
 - [x] 06-02-PLAN.md — Replace useMock in conta pages + full build/type-check gate
 
-## Progress
-
-**Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
-
-| Phase              | Plans Complete | Status      | Completed  |
-| ------------------ | -------------- | ----------- | ---------- |
-| 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
-| 2. Auth            | 2/2            | Complete    | 2026-04-11 |
-| 3. AI Pipeline     | 2/3            | In Progress |            |
-| 4. Public API      | 2/2            | Complete    | 2026-04-11 |
-| 5. Protected API   | 3/3            | Complete    | 2026-04-11 |
-| 6. Client Adapters | 2/2            | Complete    | 2026-04-11 |
-
 ### Phase 7: Frontend-Backend Wiring
 
-**Goal:** [To be planned]
-**Requirements**: TBD
-**Depends on:** Phase 6
-**Plans:** 0 plans
+**Goal**: The reading funnel (nome → camera → scan → revelacao → resultado) connects to real backend APIs with no mock data in the critical path
+**Depends on**: Phase 6
+**Requirements**: WIRE-01, WIRE-02, WIRE-03, WIRE-04, WIRE-05, WIRE-06
+**Success Criteria** (what must be TRUE):
+
+1. Submitting the nome form calls POST /api/lead/register and persists lead_id to sessionStorage
+2. Camera capture saves photo base64 to sessionStorage before navigating to scan
+3. Scan page calls POST /api/reading/capture and writes reading_id + impact_phrase to sessionStorage
+4. Revelacao navigates to `/ler/resultado/{real_uuid}` (no "demo" fallback)
+5. useAuth.ts is backed by Clerk's useUser() — zero localStorage mock references
+6. deleteAccount route, test, and client export are deleted
+7. `npm run build` passes
+
+**Plans**: 3 plans
 
 Plans:
 
-- [ ] TBD (run /gsd:plan-phase 7 to break down)
+- [ ] 07-01-PLAN.md — Delete deleteAccount (route + test + user-client export) + migrate useAuth to Clerk
+- [ ] 07-02-PLAN.md — Wire nome → registerLead + wire camera → save photo to sessionStorage
+- [ ] 07-03-PLAN.md — Wire scan → captureReading + fix revelacao destination + build gate
+
+## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+
+| Phase                      | Plans Complete | Status      | Completed  |
+| -------------------------- | -------------- | ----------- | ---------- |
+| 1. Foundation              | 2/2            | Complete    | 2026-04-11 |
+| 2. Auth                    | 2/2            | Complete    | 2026-04-11 |
+| 3. AI Pipeline             | 2/3            | In Progress |            |
+| 4. Public API              | 2/2            | Complete    | 2026-04-11 |
+| 5. Protected API           | 3/3            | Complete    | 2026-04-11 |
+| 6. Client Adapters         | 2/2            | Complete    | 2026-04-11 |
+| 7. Frontend-Backend Wiring | 0/3            | Not started |            |
