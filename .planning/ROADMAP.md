@@ -52,7 +52,13 @@ Plans:
 2. Requests to `/api/reading/capture`, `/api/reading/[id]`, and `/api/lead/register` succeed without a session token
 3. `getClerkUserId()` returns a valid user ID inside a protected route handler
 4. `ClerkProvider` is active in the root layout and the sign-in flow works end-to-end
-   **Plans**: TBD
+
+**Plans**: 2 plans
+
+Plans:
+
+- [ ] 02-01-PLAN.md — Migrate clerkMiddleware from middleware.ts to proxy.ts, delete middleware.ts
+- [ ] 02-02-PLAN.md — Verify and test auth helpers (getClerkUser, getClerkUserId), confirm ClerkProvider in layout
 
 ### Phase 3: AI Pipeline
 
@@ -116,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase              | Plans Complete | Status      | Completed  |
 | ------------------ | -------------- | ----------- | ---------- |
 | 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
-| 2. Auth            | 0/TBD          | Not started | -          |
+| 2. Auth            | 0/2            | Not started | -          |
 | 3. AI Pipeline     | 0/TBD          | Not started | -          |
 | 4. Public API      | 0/TBD          | Not started | -          |
 | 5. Protected API   | 0/TBD          | Not started | -          |
