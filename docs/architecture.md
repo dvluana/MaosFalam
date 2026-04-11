@@ -1,26 +1,26 @@
 # MÃOSFALAM — Arquitetura
 
-> **STATUS: v1.1 implementado.** Pagamentos (AbacatePay) e email (Resend) adiados para v2.
+> **STATUS: v1.2 implementado.** Pipeline refatorado (photo-store, race condition fix, element pre-hint). Pagamentos (AbacatePay) e email (Resend) adiados para v2.
 
 ---
 
 ## 1. Stack
 
-| Camada           | Ferramenta                                                   |
-| ---------------- | ------------------------------------------------------------ |
-| Frontend         | Next.js 16 + TypeScript strict + Tailwind v4 + Framer Motion |
-| Auth             | Clerk v7 (Google OAuth + email/senha) — `src/proxy.ts`      |
-| Banco            | Neon (Postgres serverless) + Prisma 7 (config em `prisma.config.ts`) |
-| IA visão         | GPT-4o (OpenAI API)                                          |
-| Pagamento        | AbacatePay (PIX + cartão) — stub em v1.1, implementar em v2 |
-| Email            | Resend — não implementado em v1.1, adiado para v2            |
-| Motor de leitura | Blocos em TypeScript estático (~168 blocos, ~461 textos)     |
-| Detecção client  | MediaPipe Hand Landmarker (`@mediapipe/tasks-vision`)        |
-| Logging          | Pino                                                         |
-| Testes           | Vitest + Playwright                                          |
-| CI/CD            | GitHub Actions                                               |
+| Camada           | Ferramenta                                                                    |
+| ---------------- | ----------------------------------------------------------------------------- |
+| Frontend         | Next.js 16 + TypeScript strict + Tailwind v4 + Framer Motion                  |
+| Auth             | Clerk v7 (Google OAuth + email/senha) — `src/proxy.ts`                        |
+| Banco            | Neon (Postgres serverless) + Prisma 7 (config em `prisma.config.ts`)          |
+| IA visão         | GPT-4o (OpenAI API)                                                           |
+| Pagamento        | AbacatePay (PIX + cartão) — stub em v1.1, implementar em v2                   |
+| Email            | Resend — não implementado em v1.1, adiado para v2                             |
+| Motor de leitura | Blocos em TypeScript estático (~168 blocos, ~461 textos)                      |
+| Detecção client  | MediaPipe Hand Landmarker (`@mediapipe/tasks-vision`)                         |
+| Logging          | Pino                                                                          |
+| Testes           | Vitest + Playwright                                                           |
+| CI/CD            | GitHub Actions                                                                |
 | Deploy           | Vercel — staging.maosfalam.com (branch develop) + maosfalam.com (branch main) |
-| Neon branches    | `main` (prod) + `develop` (dev)                              |
+| Neon branches    | `main` (prod) + `develop` (dev)                                               |
 
 ---
 
@@ -68,7 +68,8 @@ src/
     user-client.ts
     checkout-intent.ts
     reading-context.ts              # helpers sessionStorage ReadingContext
-    mediapipe.ts                    # wrapper inicialização Hand Landmarker
+    photo-store.ts                  # singleton module-level pra foto + element hint
+    mediapipe.ts                    # Hand Landmarker: load, validate, draw, capture, element hint
 
   data/                             # dados estáticos
     blocks/
@@ -123,18 +124,21 @@ interface ReadingContext {
 ```
 
 **Visitante (não logada):**
+
 - Coleta: nome alvo + gênero (ela/ele) + mão dominante (destra/canhota) + opt-in email LGPD
 - Cigana: "Me diz seu nome. Eu preciso dele pra ler."
 - Registra lead via POST /api/lead/register (fire-and-forget, falha não bloqueia)
 - Não existe rota separada para "ler outra pessoa" — `is_self = true` pra visitante
 
 **Logada:**
+
 - Mostra toggle "Pra mim" / "Pra outra pessoa"
 - "Pra mim" → preenche nome/gênero da conta Clerk automaticamente, `is_self = true`
 - "Pra outra pessoa" → campo de nome livre, `is_self = false`
 - Coleta mão dominante em ambos os casos
 
 **CreditGate (logada, segunda leitura ou mais):**
+
 - Se saldo > 0: modal de confirmação "Usar 1 crédito pra leitura de {{nome}}?"
 - Débito ocorre no server via POST /api/reading/new antes de ir para câmera
 - Se saldo = 0: redirect /creditos antes da câmera
@@ -327,7 +331,10 @@ Performance: <1ms. Zero I/O.
 
 MediaPipe Hand Landmarker (`@mediapipe/tasks-vision`) é uma lib do Google que roda no browser (client-side, zero server). Detecta a mão em tempo real via câmera e retorna 21 pontos (landmarks) com coordenadas x, y, z. Roda a ~30fps em celular médio.
 
-Wrapper de inicialização: `src/lib/mediapipe.ts` — carrega o modelo WASM e expõe o Hand Landmarker.
+Módulos:
+
+- `src/lib/mediapipe.ts` — carrega modelo WASM, valida landmarks, detecta handedness, computa element hint, desenha skeleton, captura frame
+- `src/lib/photo-store.ts` — singleton module-level pra foto + element hint (substitui sessionStorage)
 
 Importante: MediaPipe NÃO lê linhas da palma. Ele detecta articulações dos dedos e posição da mão. Quem lê as linhas é o GPT-4o depois, a partir da foto.
 
@@ -338,15 +345,38 @@ A mão dominante (`dominant_hand: "right" | "left"`) é perguntada em `/ler/nome
 ### Fluxo da câmera
 
 ```
-getUserMedia (câmera frontal ou traseira)
-  → CameraViewport (video element dentro do componente — não escondido)
+getUserMedia (câmera traseira por default, botão pra trocar)
+  → CameraViewport (video + canvas de landmarks em tempo real)
   → Hand Landmarker processa cada frame via requestAnimationFrame
-  → Valida condições em tempo real (landmarks)
-  → Quando tudo OK por 1.5s contínuo (medido por timestamp, não frame count) → auto-captura
-  → captureFrame() extrai foto do canvas como base64 JPEG
-  → Câmera frontal (espelhada): captureFrame() des-espelha a imagem antes de enviar
-  → Enviada pro server (POST /api/reading/capture)
+  → DrawingUtils desenha esqueleto de 21 pontos dourados sobre a mão
+  → Valida: mão correta, palma aberta, centralizada, estável 1.5s
+  → Auto-captura: captureFrame() → base64 JPEG (quality 0.82)
+  → computeElementHint(landmarks) → calcula elemento via ratio palm/fingers
+  → Foto salva em photo-store (module-level, NÃO sessionStorage)
+  → Navega pra /ler/scan
 ```
+
+### Pipeline foto → resultado
+
+```
+/ler/camera:
+  captureFrame() → setPhoto(base64) + setElementHint(hint)
+  router.push("/ler/scan")
+
+/ler/scan:
+  getPhoto() + getElementHint() → clearPhotoStore()
+  POST /api/reading/capture { photo_base64, element_hint, ... }
+  Animação 8s + API call em paralelo
+  Gate: navega SOMENTE quando AMBOS completam (sem race condition)
+  → /ler/revelacao
+
+/ler/revelacao:
+  Lê reading_id + impact_phrase do sessionStorage
+  Typewriter da frase de impacto
+  → /ler/resultado/[id]
+```
+
+**Foto nunca toca sessionStorage.** O `photo-store` (`src/lib/photo-store.ts`) é um singleton module-level que sobrevive soft navigation mas é garbage-collected no refresh. A foto é consumida e descartada pelo scan page imediatamente após o POST.
 
 ### 21 landmarks do MediaPipe
 
@@ -362,14 +392,14 @@ MCP = base do dedo. TIP = ponta. Os landmarks na BASE de cada dedo (MCP: 5, 9, 1
 
 ### O que o MediaPipe valida (antes de capturar)
 
-| Validação     | Como detecta                                            | Feedback da cigana                                |
-| ------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| Mão presente  | Pelo menos 1 hand detected                              | "Preciso ver sua mão. Posiciona no centro."       |
-| Mão correta   | handedness label bate com dominant_hand do ReadingContext | "Essa é a outra mão. Mostre a [destra/canhota]." |
-| Palma aberta  | Distância entre THUMB_TIP e PINKY_TIP > threshold       | "Abre mais os dedos. Preciso ver as linhas."      |
-| Mão estável   | Variação dos landmarks < threshold por 1.5s (timestamp) | "Segura... quase..."                              |
-| Centralizada  | WRIST e MIDDLE_MCP dentro da zona central do frame      | "Centraliza a mão no quadro."                     |
-| Iluminação ok | Brightness média do frame > threshold (canvas analysis) | "Preciso de mais luz. Suas linhas estão tímidas." |
+| Validação     | Como detecta                                              | Feedback da cigana                                |
+| ------------- | --------------------------------------------------------- | ------------------------------------------------- |
+| Mão presente  | Pelo menos 1 hand detected                                | "Preciso ver sua mão. Posiciona no centro."       |
+| Mão correta   | handedness label bate com dominant_hand do ReadingContext | "Essa é a outra mão. Mostre a [destra/canhota]."  |
+| Palma aberta  | Distância entre THUMB_TIP e PINKY_TIP > threshold         | "Abre mais os dedos. Preciso ver as linhas."      |
+| Mão estável   | Variação dos landmarks < threshold por 1.5s (timestamp)   | "Segura... quase..."                              |
+| Centralizada  | WRIST e MIDDLE_MCP dentro da zona central do frame        | "Centraliza a mão no quadro."                     |
+| Iluminação ok | Brightness média do frame > threshold (canvas analysis)   | "Preciso de mais luz. Suas linhas estão tímidas." |
 
 ### O que o MediaPipe NÃO faz
 
@@ -409,7 +439,7 @@ const fingerRatio = fingerLength / palmHeight;
 
 O prompt do GPT-4o pede um campo `confidence` no JSON de retorno:
 
-- >= 0.7: leitura completa
+- > = 0.7: leitura completa
 - 0.3–0.7: leitura parcial (sinais raros podem faltar)
 - < 0.3: rejeita. "Suas linhas estão tímidas hoje. Tente com mais luz."
 
@@ -516,18 +546,18 @@ Só pra leads com `email_opt_in = true`.
 
 ## 11. API Routes
 
-| Método | Rota                    | Auth       |
-| ------ | ----------------------- | ---------- |
-| POST   | /api/lead/register      | Não        |
-| POST   | /api/reading/capture    | Não        |
-| GET    | /api/reading/[id]       | Não        |
-| POST   | /api/reading/new        | Sim        |
-| POST   | /api/credits/purchase   | Sim (stub) |
-| GET    | /api/user/credits       | Sim        |
-| GET    | /api/user/readings      | Sim        |
-| GET    | /api/user/profile       | Sim        |
-| PUT    | /api/user/profile       | Sim        |
-| DELETE | /api/user/account       | Sim        |
+| Método | Rota                    | Auth              |
+| ------ | ----------------------- | ----------------- |
+| POST   | /api/lead/register      | Não               |
+| POST   | /api/reading/capture    | Não               |
+| GET    | /api/reading/[id]       | Não               |
+| POST   | /api/reading/new        | Sim               |
+| POST   | /api/credits/purchase   | Sim (stub)        |
+| GET    | /api/user/credits       | Sim               |
+| GET    | /api/user/readings      | Sim               |
+| GET    | /api/user/profile       | Sim               |
+| PUT    | /api/user/profile       | Sim               |
+| DELETE | /api/user/account       | Sim               |
 | POST   | /api/webhook/abacatepay | Assinatura (stub) |
 
 ---
@@ -661,9 +691,11 @@ npm run dev                   # http://localhost:3000
 ```
 
 **Neon branches:**
+
 - `main`: produção (vinculada à branch git main)
 - `develop`: desenvolvimento (vinculada à branch git develop, usar como padrão em .env.local)
 
 **Vercel:**
+
 - `staging.maosfalam.com` → branch develop
 - `maosfalam.com` → branch main
