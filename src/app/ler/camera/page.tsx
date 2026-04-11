@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import CameraErrorState from "@/components/camera/CameraErrorState";
 import CameraEyebrow from "@/components/camera/CameraEyebrow";
@@ -23,13 +23,7 @@ import { useFailureCounter } from "@/hooks/useFailureCounter";
 import { useLandscapeGuard } from "@/hooks/useLandscapeGuard";
 import { useUploadValidation } from "@/hooks/useUploadValidation";
 import { loadReadingContext } from "@/lib/reading-context";
-import {
-  CAM_EYEBROW,
-  CAM_FEEDBACK,
-  CAM_STATES,
-  isErrorState,
-  type CamState,
-} from "@/types/camera";
+import { CAM_EYEBROW, CAM_FEEDBACK, CAM_STATES, isErrorState, type CamState } from "@/types/camera";
 
 function CameraPageInner() {
   const router = useRouter();
@@ -50,8 +44,12 @@ function CameraPageInner() {
 
   const { suggestMethodSwitch, recordFailure, resetFailures } = useFailureCounter();
 
-  // Load reading context for dominant hand
-  const readingContext = loadReadingContext();
+  // Load reading context via useSyncExternalStore (hydration-safe, no setState in effect)
+  const readingContext = useSyncExternalStore(
+    () => () => {},
+    () => loadReadingContext(),
+    () => null,
+  );
   const dominantHand = readingContext?.dominant_hand ?? "right";
   const targetName = readingContext?.target_name ?? "";
   const isSelf = readingContext?.is_self ?? true;
@@ -191,10 +189,8 @@ function CameraPageInner() {
   );
 
   const errorState = isErrorState(state);
-  const showViewport =
-    !errorState && state !== "method_choice" && state !== "hand_instruction";
-  const showTitle =
-    !errorState && state !== "method_choice" && state !== "hand_instruction";
+  const showViewport = !errorState && state !== "method_choice" && state !== "hand_instruction";
+  const showTitle = !errorState && state !== "method_choice" && state !== "hand_instruction";
 
   // Method switch suggestion message depends on which flow the user is in
   const methodSwitchText = showUpload
