@@ -645,12 +645,7 @@ Mensagens SEMPRE na voz da cigana:
 /* Gold gradient: entre secoes */
 .separator-gold {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(201, 162, 74, 0.12),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 74, 0.12), transparent);
 }
 /* Ornamental: entre secoes grandes */
 .separator-ornamental {
@@ -682,12 +677,7 @@ Mensagens SEMPRE na voz da cigana:
 /* Rose gradient: tensao, negacao */
 .separator-rose {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(196, 100, 122, 0.15),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(196, 100, 122, 0.15), transparent);
 }
 ```
 

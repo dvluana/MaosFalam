@@ -25,12 +25,12 @@ Gatilho: ver leitura da amiga nos stories e querer a dela.
 
 Primeira leitura (Coracao) sempre gratis. Leitura completa requer credito.
 
-| Pacote | Creditos | Preco | Preco/leitura |
-|--------|----------|-------|---------------|
-| Avulsa | 1 | R$14,90 | R$14,90 |
-| Dupla | 2 | R$24,90 | R$12,45 |
-| Roda (popular) | 5 | R$49,90 | R$9,98 |
-| Tsara | 10 | R$79,90 | R$7,99 |
+| Pacote         | Creditos | Preco   | Preco/leitura |
+| -------------- | -------- | ------- | ------------- |
+| Avulsa         | 1        | R$14,90 | R$14,90       |
+| Dupla          | 2        | R$24,90 | R$12,45       |
+| Roda (popular) | 5        | R$49,90 | R$9,98        |
+| Tsara          | 10       | R$79,90 | R$7,99        |
 
 Creditos expiram em 90 dias. Pagamento: AbacatePay (PIX + cartao).
 
@@ -56,12 +56,12 @@ Cards generalistas por elemento pro Instagram (antes do lancamento).
 
 ## Metricas de sucesso (30 dias)
 
-| Metrica | Meta MVP | Meta boa | Meta otima |
-|---------|----------|----------|------------|
-| Leituras free | 500 | 2.000 | 10.000 |
-| Conversao free>pago | 5% | 10% | 15% |
-| Share rate | 20% | 35% | 50% |
-| Receita bruta | R$1.500 | R$10.000 | R$50.000 |
+| Metrica             | Meta MVP | Meta boa | Meta otima |
+| ------------------- | -------- | -------- | ---------- |
+| Leituras free       | 500      | 2.000    | 10.000     |
+| Conversao free>pago | 5%       | 10%      | 15%        |
+| Share rate          | 20%      | 35%      | 50%        |
+| Receita bruta       | R$1.500  | R$10.000 | R$50.000   |
 
 ## MVP vs V2
 

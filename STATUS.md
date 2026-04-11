@@ -1,6 +1,6 @@
 # STATUS
 
-Ultima atualizacao: 2026-04-08 (Feature Taro: /tarot gratuito com 22 Arcanos Maiores, 4 estados, componentes isolados. Build verde 31 rotas. Segundo funil de entrada pronto.)
+Ultima atualizacao: 2026-04-10 (limpeza estrutural do repo: lint endurecido, previews isolados em producao, assets/default scaffolding removidos, codebase com menos arquivos mortos e README alinhado ao projeto real.)
 
 ## Feature Taro (segundo funil, 100% client-side)
 
@@ -29,7 +29,6 @@ Análise dos fluxos identificou 18 problemas. Os 8 críticos/importantes corrigi
 
 Gaps menores pendentes (não bloqueantes): manifesto ainda HTML, permission checks reais, debitação real de créditos, auto-login pós reset senha, confirmação de logout, enrichment do user.json mock.
 
-
 ## Estado atual
 
 Sprint: 3 (refinamento + bíblia da mão) — fechado
@@ -38,6 +37,7 @@ Branch: main (sincronizada com origin)
 ## Sprint 3 — resumo
 
 ### Hero do resultado + bíblia da mão
+
 - ElementHero reescrito: fala fluída cigana com nome do elemento como clímax ("Suas mãos queimam, Luana. Eu sei antes de olhar que seu elemento é → FOGO"), sem aspas no impact, sem "Luana." prefixado
 - ElementGlyph com efeitos por elemento (brasas fire, ondas water, poeira earth, vento air)
 - ElementAtmosphere animada atrás do h1, com mask radial pra fade nas bordas (fogo suavizado depois de iterações)
@@ -46,6 +46,7 @@ Branch: main (sincronizada com origin)
 - /completo como bíblia: HandSummary (retrato + métricas em barras de medição) + SectionDivider numerado entre linhas + seção intimacy "Na cama" + CompatibilityGrid com CompatibilityGlyph por par (Faísca/Vapor/Fundação/etc) + Montes com MountGlyph + barra de força + quote + CrossingGlyph nos cruzamentos + RareSignGlyph nos sinais raros
 
 ### 4 mocks com paridade completa
+
 - fire/Marina: Mercúrio dominante, 18% rarity, Coração reto longo
 - water/Camila: Lua dominante, 22% rarity, Coração curvado
 - earth/Beatriz: Saturno dominante, 31% rarity, Coração medido reto
@@ -53,9 +54,11 @@ Branch: main (sincronizada com origin)
 - Cada um ~247 linhas: stats + 4 sections com tagline/body_extras/cigana_quotes/technical + 6 mounts detalhados + crosses + rare_signs + compatibility + intimacy
 
 ### Componentes novos
+
 LineGlyph, MountGlyph, RareSignGlyph, CompatibilityGlyph, CrossingGlyph, SectionDivider, TechnicalStrip (painel de medição com parse CAPS→sentence case), MeasurementBar (ticks + fill + agulha rotada), CompatibilityGrid, HandSummary, ReadingOverview, ElementAtmosphere, BlurredDeck (baralho empilhado com hover fan + click expand), ResultStateSwitcher (dev-only: trocar elemento + tier no canto)
 
 ### Funil de leitura reescrito
+
 - /ler/toque: sumiu a HandTouch. Virou **esfera branca pressure-hold** (180px radial gradient, anel SVG de progresso, 2.4s press-and-hold, vibração haptic, scale 1→1.35→1.6→fade out)
 - /ler/camera: sumiu HandOverlay. Moldura 3:4 vazia com corner accents animados + crosshair + scan line em loop
 - /ler/revelacao: virou **carta de tarot com flip 3D** (rotateY -180→0 com perspective 1200px + preserve-3d). Aspect 5:7, moldura dupla ornamental, numeral romano "I · A Verdade", shine sweep diagonal após flip, borda pulsante após digitação, partículas de luz subindo. Typewriter só inicia depois do flip. Botão Continuar fora do card.
@@ -63,11 +66,13 @@ LineGlyph, MountGlyph, RareSignGlyph, CompatibilityGlyph, CrossingGlyph, Section
 - Funil inteiro com linguagem visual unificada: eyebrow JetBrains gold + linhas laterais + radial atmosphere sutil
 
 ### Créditos
+
 - Storytelling humanizado por pacote: Avulsa (pra você sozinha), Dupla (pra você e quem te importa), Roda (pra fechar o círculo), Tsara (pra quando é festa)
 - Pacotes viraram **deck de tarot navegável**: 1 carta por vez, setas laterais, swipe Framer Motion drag, dots retangulares, peeks laterais. Click → scrollIntoView('#pagamento')
 - Modal requires_login redesenhado: backdrop fullscreen com backdrop-blur, card estilo tarot, botão único Google (SVG oficial 4 cores) com loading, formulário email/senha removido (vai pro checkout)
 
 ### Polimento UI
+
 - Noise sutil nos cards: classe `.card-noise` com 2 camadas SVG feTurbulence (manchas multiply + grão ember screen) via ::before/::after em z-index -1 com isolation isolate
 - Sweep de fontes: JetBrains labels 7-8px → 9.5-10px com tracking reduzido (1.5-1.8px) + cor gold brilhante (era gold-dim)
 - Impact phrases e cigana quotes mudadas de text-violet/text-rose (baixo contraste) pra text-bone com text-shadow colorido (carrega identidade via halo)
@@ -77,6 +82,7 @@ LineGlyph, MountGlyph, RareSignGlyph, CompatibilityGlyph, CrossingGlyph, Section
 - Tipografia unificada: Cinzel nomes/headings, Cormorant italic cigana voice, Raleway body/UI, JetBrains mono labels/data
 
 ### Git
+
 - Commit 93562e1 "feat: scaffold completo do webapp MaosFalam" pushed pra origin/main
 - 147 arquivos (scaffold inteiro do Next.js + componentes + docs + mocks)
 - Working tree limpo, branch sincronizada
@@ -96,6 +102,17 @@ LineGlyph, MountGlyph, RareSignGlyph, CompatibilityGlyph, CrossingGlyph, Section
 - [x] public/home.html deletado
 - [x] Integracao home <-> fluxo de leitura: HeroCTA "Mostre sua mao" leva pra /ler/toque
 - [x] Menu expandido com Login + Criar conta + Manifesto + Mostre sua mao
+
+## FASE 4 concluida: componentes adaptados ao ReportJSON v2
+
+- `src/types/reading.ts` re-exporta de `report.ts` (backward compat shim)
+- Componentes adaptados: ReadingSection, ReadingOverview, ElementHero, HandSummary, BlurredCard, BlurredDeck, CompatibilityGrid, ElementSection, LineGlyph
+- Componentes novos: TransitionLine, VenusSection
+- Paginas adaptadas: completo, free resultado, compartilhar, revelacao, conta/leituras, conta/leituras/[id], share
+- `build-reading.ts` deletado (obsoleto, substituido por selectBlocks)
+- `user.json` regenerado com ReportJSON v2 via selectBlocks
+- `proxy.ts` removido (conflito Next 16 middleware+proxy)
+- Build + type-check green
 
 ## Em andamento
 

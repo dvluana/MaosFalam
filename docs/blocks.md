@@ -12,13 +12,13 @@ Este doc descreve **como os blocos são estruturados e selecionados**. Os textos
 
 ```ts
 interface ReadingBlock {
-  axis: 'element' | 'heart' | 'head' | 'life' | 'fate' | 'mount' | 'rare' | 'cross'
-  variation: string          // ex: 'heart_long_straight'
-  block_type: 'intro' | 'body' | 'impact' | 'cross'
-  tier: 'free' | 'premium'
-  content: string            // texto principal
-  content_alt?: string       // variação 1
-  content_alt2?: string      // variação 2
+  axis: "element" | "heart" | "head" | "life" | "fate" | "mount" | "rare" | "cross";
+  variation: string; // ex: 'heart_long_straight'
+  block_type: "intro" | "body" | "impact" | "cross";
+  tier: "free" | "premium";
+  content: string; // texto principal
+  content_alt?: string; // variação 1
+  content_alt2?: string; // variação 2
 }
 ```
 
@@ -26,12 +26,12 @@ Mapeia 1:1 pra tabela `reading_blocks` do `docs/architecture.md` (menos `id`, `s
 
 ### Papel de cada `block_type`
 
-| Tipo | Fonte | Onde aparece |
-|------|-------|--------------|
-| `intro` | Cormorant Garamond italic | Abertura da seção (voz da cigana) |
-| `body` | Raleway | Parágrafo de leitura principal |
-| `impact` | Cormorant Garamond italic | Frase sozinha na tela, share card |
-| `cross` | Raleway | Cruzamentos e modificadores (bloco único, sem intro/body/impact) |
+| Tipo     | Fonte                     | Onde aparece                                                     |
+| -------- | ------------------------- | ---------------------------------------------------------------- |
+| `intro`  | Cormorant Garamond italic | Abertura da seção (voz da cigana)                                |
+| `body`   | Raleway                   | Parágrafo de leitura principal                                   |
+| `impact` | Cormorant Garamond italic | Frase sozinha na tela, share card                                |
+| `cross`  | Raleway                   | Cruzamentos e modificadores (bloco único, sem intro/body/impact) |
 
 ### Tier
 
@@ -50,6 +50,7 @@ O motor de leitura recebe o JSON de atributos da IA de visão (schema em `docs/p
 `fire | water | earth | air` → `variation` = mesmo valor.
 
 **heart** — combina `length` + `curve` + `depth`:
+
 - `long` + `straight` → `heart_long_straight`
 - `long` + `slightly_curved` → `heart_long_curved`
 - `long` + `deeply_curved` → `heart_long_deep_curved`
@@ -60,6 +61,7 @@ O motor de leitura recebe o JSON de atributos da IA de visão (schema em `docs/p
 - `depth = faint` (qualquer) → `heart_faint`
 
 **heart modifiers** (`block_type='cross'`, extras além do principal):
+
 - `forks = end_fork` → `heart_end_fork`
 - `islands > 0` → `heart_island`
 - `breaks > 0` → `heart_break`
@@ -68,6 +70,7 @@ O motor de leitura recebe o JSON de atributos da IA de visão (schema em `docs/p
 - `depth = deep` → `heart_deep`
 
 **head** — mesma lógica de length/curve/depth:
+
 - `long` + `straight` → `head_long_straight`
 - `long` + `slightly_curved` → `head_long_curved`
 - `long` + `deeply_curved_to_luna` → `head_long_deep_curved`
@@ -78,6 +81,7 @@ O motor de leitura recebe o JSON de atributos da IA de visão (schema em `docs/p
 - `depth = faint` → `head_faint`
 
 **life** — length/depth/arc:
+
 - `long` + `deep` → `life_long_deep`
 - `long` + `faint` → `life_long_faint`
 - `short` + `deep` → `life_short_deep`
@@ -88,6 +92,7 @@ O motor de leitura recebe o JSON de atributos da IA de visão (schema em `docs/p
 - `breaks > 0` e `break_offset = true` → `life_broken_restart`
 
 **fate** — presença + start_point:
+
 - `present = false` → `fate_absent`
 - `present = true` + `depth = deep` → `fate_present_deep`
 - `present = true` + `depth = faint` → `fate_present_faint`
@@ -196,6 +201,7 @@ Cada bloco tem até 3 variações (`content`, `content_alt`, `content_alt2`). O 
 ## Regras de escrita
 
 Todo texto segue `docs/brand-voice.md`:
+
 - Segunda pessoa. `{{name}}` quando fizer sentido.
 - Zero travessões (em dash). Ponto ou vírgula.
 - Zero emojis, zero "energias/vibrações/universo".
@@ -210,10 +216,10 @@ Todo texto segue `docs/brand-voice.md`:
 
 ```ts
 // prisma/seed.ts
-import blocks from '../src/mocks/reading-blocks.json'
-import type { ReadingBlock } from '../src/types/reading-block'
+import blocks from "../src/mocks/reading-blocks.json";
+import type { ReadingBlock } from "../src/types/reading-block";
 
 await prisma.readingBlock.createMany({
   data: (blocks as ReadingBlock[]).map((b, i) => ({ ...b, sort_order: i })),
-})
+});
 ```

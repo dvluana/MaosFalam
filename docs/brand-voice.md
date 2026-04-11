@@ -9,15 +9,15 @@ Se doi, doi com elegancia.
 
 ## 7 Principios
 
-| # | Principio | Diz | Nunca diz |
-|---|-----------|-----|-----------|
-| 1 | Revela, nunca explica | "Suas maos ja sabem. Voce ainda nao." | "Nossa IA analisa sua palma com 95%." |
-| 2 | Sabe coisas que nao deveria | "Tem alguem que voce cortou da sua vida. Foi cedo demais." | "Sua linha sugere possiveis rupturas." |
-| 3 | Cada frase doi um pouquinho | "Sua cabeca decide rapido. Seu coracao demora pra aceitar." | "Voce e uma pessoa amorosa." |
-| 4 | Nomenclatura real | "Bifurcacao no Monte da Lua" | "A linha do meio" |
-| 5 | Zero cliche esoterico | Soa como quem sabe demais e fala pouco | "Energias do universo" |
-| 6 | Conteudo viral disfarçado | A frase funciona num stories card sozinha | Resultado generico |
-| 7 | Sempre sobre voce | "Voce carrega mais do que mostra." | "Pessoas com essa linha tendem a..." |
+| #   | Principio                   | Diz                                                         | Nunca diz                              |
+| --- | --------------------------- | ----------------------------------------------------------- | -------------------------------------- |
+| 1   | Revela, nunca explica       | "Suas maos ja sabem. Voce ainda nao."                       | "Nossa IA analisa sua palma com 95%."  |
+| 2   | Sabe coisas que nao deveria | "Tem alguem que voce cortou da sua vida. Foi cedo demais."  | "Sua linha sugere possiveis rupturas." |
+| 3   | Cada frase doi um pouquinho | "Sua cabeca decide rapido. Seu coracao demora pra aceitar." | "Voce e uma pessoa amorosa."           |
+| 4   | Nomenclatura real           | "Bifurcacao no Monte da Lua"                                | "A linha do meio"                      |
+| 5   | Zero cliche esoterico       | Soa como quem sabe demais e fala pouco                      | "Energias do universo"                 |
+| 6   | Conteudo viral disfarçado   | A frase funciona num stories card sozinha                   | Resultado generico                     |
+| 7   | Sempre sobre voce           | "Voce carrega mais do que mostra."                          | "Pessoas com essa linha tendem a..."   |
 
 ## Palavras PROIBIDAS
 
@@ -63,16 +63,16 @@ Se doi, doi com elegancia.
 
 ## A marca E vs NUNCA E
 
-| E | Nunca e |
-|---|---------|
-| Escura, quente, intima | Bola de cristal, neon, cores vibrantes |
-| Ouro velho sobre veludo preto | Ilustracao de mulher cigana |
-| Voz de cigana: direta, sem filtro | Emoji de estrela, lua ou cristal |
-| Nomenclatura real de quiromancia | Estetica de app de horoscopo pastel |
-| Conteudo que doi um pouquinho | "Energias cosmicas" ou new age |
-| Artefato antigo no feed moderno | Conteudo generico tipo BuzzFeed |
-| Moderna com alma de 5 mil anos | Interface clara, branca, clean, wellness |
-| Resultado que a pessoa posta nos stories | Gamificacao com pontos, badges, streaks |
+| E                                        | Nunca e                                  |
+| ---------------------------------------- | ---------------------------------------- |
+| Escura, quente, intima                   | Bola de cristal, neon, cores vibrantes   |
+| Ouro velho sobre veludo preto            | Ilustracao de mulher cigana              |
+| Voz de cigana: direta, sem filtro        | Emoji de estrela, lua ou cristal         |
+| Nomenclatura real de quiromancia         | Estetica de app de horoscopo pastel      |
+| Conteudo que doi um pouquinho            | "Energias cosmicas" ou new age           |
+| Artefato antigo no feed moderno          | Conteudo generico tipo BuzzFeed          |
+| Moderna com alma de 5 mil anos           | Interface clara, branca, clean, wellness |
+| Resultado que a pessoa posta nos stories | Gamificacao com pontos, badges, streaks  |
 
 ## Checklist de Validacao (todo conteudo)
 

@@ -10,12 +10,12 @@ description: |
 
 ## Hand type classification
 
-| Element | Palm | Fingers | Detection |
-|---------|------|---------|-----------|
-| Fire | Square (width ~ length) | Short (< 75% palm length) | WRIST>MCP distance vs MCP>TIP distance |
-| Water | Rectangular long | Long and thin | Palm visibly longer than wide, thin fingers |
-| Earth | Square and large | Short and thick | Robust palm, proportionally short fingers |
-| Air | Square | Long, visible knuckles | Long fingers with visible joints |
+| Element | Palm                    | Fingers                   | Detection                                   |
+| ------- | ----------------------- | ------------------------- | ------------------------------------------- |
+| Fire    | Square (width ~ length) | Short (< 75% palm length) | WRIST>MCP distance vs MCP>TIP distance      |
+| Water   | Rectangular long        | Long and thin             | Palm visibly longer than wide, thin fingers |
+| Earth   | Square and large        | Short and thick           | Robust palm, proportionally short fingers   |
+| Air     | Square                  | Long, visible knuckles    | Long fingers with visible joints            |
 
 ## Lines (origin, trajectory, end)
 
@@ -26,16 +26,16 @@ description: |
 
 ## Mounts and their landmarks
 
-| Mount | Planet | Location | MediaPipe landmark |
-|-------|--------|----------|-------------------|
-| Jupiter | Jupiter | Base of index | INDEX_FINGER_MCP (5) |
-| Saturn | Saturn | Base of middle | MIDDLE_FINGER_MCP (9) |
-| Apollo | Sun | Base of ring | RING_FINGER_MCP (13) |
-| Mercury | Mercury | Base of pinky | PINKY_MCP (17) |
-| Venus | Venus | Thumb base (fleshy area) | THUMB_CMC (1) to WRIST (0) |
-| Luna | Moon | Opposite side to thumb | Between WRIST (0) and PINKY_MCP (17), ulnar edge |
-| Mars+ | Mars | Between Jupiter and Venus | Between THUMB_CMC and INDEX_FINGER_MCP |
-| Mars- | Mars | Between Mercury and Luna | Lateral below PINKY_MCP |
+| Mount   | Planet  | Location                  | MediaPipe landmark                               |
+| ------- | ------- | ------------------------- | ------------------------------------------------ |
+| Jupiter | Jupiter | Base of index             | INDEX_FINGER_MCP (5)                             |
+| Saturn  | Saturn  | Base of middle            | MIDDLE_FINGER_MCP (9)                            |
+| Apollo  | Sun     | Base of ring              | RING_FINGER_MCP (13)                             |
+| Mercury | Mercury | Base of pinky             | PINKY_MCP (17)                                   |
+| Venus   | Venus   | Thumb base (fleshy area)  | THUMB_CMC (1) to WRIST (0)                       |
+| Luna    | Moon    | Opposite side to thumb    | Between WRIST (0) and PINKY_MCP (17), ulnar edge |
+| Mars+   | Mars    | Between Jupiter and Venus | Between THUMB_CMC and INDEX_FINGER_MCP           |
+| Mars-   | Mars    | Between Mercury and Luna  | Lateral below PINKY_MCP                          |
 
 ## Rare signs
 
