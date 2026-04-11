@@ -53,6 +53,9 @@ function CameraPageInner() {
   // Load reading context for dominant hand
   const readingContext = loadReadingContext();
   const dominantHand = readingContext?.dominant_hand ?? "right";
+  const targetName = readingContext?.target_name ?? "";
+  const isSelf = readingContext?.is_self ?? true;
+  const targetGender = readingContext?.target_gender ?? "female";
 
   const {
     result: uploadResult,
@@ -217,6 +220,8 @@ function CameraPageInner() {
       {state === "hand_instruction" && (
         <HandInstructionOverlay
           dominantHand={dominantHand}
+          targetName={targetName}
+          isSelf={isSelf}
           onReady={() => setState("loading_mediapipe")}
         />
       )}
@@ -279,6 +284,8 @@ function CameraPageInner() {
           {uploadStep === "instruction" && (
             <UploadInstructionScreen
               dominantHand={dominantHand}
+              targetName={targetName}
+              isSelf={isSelf}
               onContinue={() => uploadInputRef.current?.click()}
               onBack={handleUploadBack}
             />
@@ -289,6 +296,7 @@ function CameraPageInner() {
           {uploadStep === "confirm" && (
             <UploadConfirmScreen
               result={uploadResult}
+              targetName={isSelf ? undefined : targetName}
               onConfirm={handleUploadConfirm}
               onRetry={handleUploadRetry}
               onBack={handleUploadBack}
@@ -304,6 +312,7 @@ function CameraPageInner() {
           canvasRef={canvasRef}
           mirrored={mirrored}
           dominantHand={dominantHand}
+          targetName={targetName}
           onSwitchCamera={handleSwitchCamera}
         />
       )}
@@ -329,7 +338,12 @@ function CameraPageInner() {
       )}
 
       {/* Wrong hand feedback toast — non-blocking, 3s auto-hide */}
-      <WrongHandFeedback expectedHand={dominantHand} visible={state === "camera_wrong_hand"} />
+      <WrongHandFeedback
+        expectedHand={dominantHand}
+        visible={state === "camera_wrong_hand"}
+        isSelf={isSelf}
+        targetGender={targetGender}
+      />
 
       <StateSwitcher states={CAM_STATES} current={state} />
     </main>
