@@ -24,15 +24,15 @@ Requirements for milestone v1.1: Alinhamento Arquitetural.
 
 - [x] **AUDIT-01**: share_token e share_expires_at removidos de types, mocks, componentes, reading-client
 - [x] **AUDIT-02**: expires_at removido de credit_packs (types, queries, API, componentes)
-- [ ] **AUDIT-03**: Referencias NextAuth removidas (useSession, getServerSession, next-auth)
-- [ ] **AUDIT-04**: Referencias R2/Cloudflare removidas (photo_key, photoKey)
-- [ ] **AUDIT-05**: "Claude Vision" substituido por "GPT-4o" em todo o codigo
-- [ ] **AUDIT-06**: "Planeta dominante" substituido por "Monte dominante"
-- [ ] **AUDIT-07**: Ordem das secoes do resultado segue v2 (Prologo > Coracao > Paywall > Cabeca > Vida > Venus > Montes > Destino > Cruzamentos > Compatibilidade > Raros > Epilogo)
+- [x] **AUDIT-03**: Referencias NextAuth removidas (useSession, getServerSession, next-auth)
+- [x] **AUDIT-04**: Referencias R2/Cloudflare removidas (photo_key, photoKey)
+- [x] **AUDIT-05**: "Claude Vision" substituido por "GPT-4o" em todo o codigo
+- [x] **AUDIT-06**: "Planeta dominante" substituido por "Monte dominante"
+- [x] **AUDIT-07**: Ordem das secoes do resultado segue v2 (Prologo > Coracao > Paywall > Cabeca > Vida > Venus > Montes > Destino > Cruzamentos > Compatibilidade > Raros > Epilogo)
 - [x] **AUDIT-08**: VALID_MOCK_IDS removido do resultado page
 - [x] **AUDIT-09**: fallbackName="Marina" removido (usa nome do sessionStorage/API)
-- [ ] **AUDIT-10**: Dead stubs login()/register() removidos do useAuth
-- [ ] **AUDIT-11**: TODOs obsoletos limpos
+- [x] **AUDIT-10**: Dead stubs login()/register() removidos do useAuth
+- [x] **AUDIT-11**: TODOs obsoletos limpos
 
 ### ReadingContext + Credits
 
@@ -110,44 +110,44 @@ Adiados para milestone futura.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase   | Status  |
-| ----------- | ------- | ------- |
+| Requirement | Phase   | Status   |
+| ----------- | ------- | -------- |
 | AUDIT-01    | Phase 1 | Complete |
 | AUDIT-02    | Phase 1 | Complete |
-| AUDIT-03    | Phase 1 | Pending |
-| AUDIT-04    | Phase 1 | Pending |
-| AUDIT-05    | Phase 1 | Pending |
-| AUDIT-06    | Phase 1 | Pending |
-| AUDIT-07    | Phase 1 | Pending |
+| AUDIT-03    | Phase 1 | Complete |
+| AUDIT-04    | Phase 1 | Complete |
+| AUDIT-05    | Phase 1 | Complete |
+| AUDIT-06    | Phase 1 | Complete |
+| AUDIT-07    | Phase 1 | Complete |
 | AUDIT-08    | Phase 1 | Complete |
 | AUDIT-09    | Phase 1 | Complete |
-| AUDIT-10    | Phase 1 | Pending |
-| AUDIT-11    | Phase 1 | Pending |
-| CTX-01      | Phase 2 | Pending |
-| CTX-02      | Phase 2 | Pending |
-| CTX-03      | Phase 2 | Pending |
-| CTX-04      | Phase 2 | Pending |
-| CTX-05      | Phase 2 | Pending |
-| CTX-06      | Phase 2 | Pending |
-| CTX-07      | Phase 2 | Pending |
-| CTX-08      | Phase 2 | Pending |
-| CTX-09      | Phase 2 | Pending |
-| MP-01       | Phase 3 | Pending |
-| MP-02       | Phase 3 | Pending |
-| MP-03       | Phase 3 | Pending |
-| MP-04       | Phase 3 | Pending |
-| MP-05       | Phase 3 | Pending |
-| MP-06       | Phase 3 | Pending |
-| MP-07       | Phase 3 | Pending |
-| MP-08       | Phase 3 | Pending |
-| CLK-01      | Phase 4 | Pending |
-| CLK-02      | Phase 4 | Pending |
-| CLK-03      | Phase 4 | Pending |
-| CLK-04      | Phase 4 | Pending |
-| DOCS-03     | Phase 4 | Pending |
-| DOCS-04     | Phase 4 | Pending |
-| DOCS-01     | Phase 5 | Pending |
-| DOCS-02     | Phase 5 | Pending |
+| AUDIT-10    | Phase 1 | Complete |
+| AUDIT-11    | Phase 1 | Complete |
+| CTX-01      | Phase 2 | Pending  |
+| CTX-02      | Phase 2 | Pending  |
+| CTX-03      | Phase 2 | Pending  |
+| CTX-04      | Phase 2 | Pending  |
+| CTX-05      | Phase 2 | Pending  |
+| CTX-06      | Phase 2 | Pending  |
+| CTX-07      | Phase 2 | Pending  |
+| CTX-08      | Phase 2 | Pending  |
+| CTX-09      | Phase 2 | Pending  |
+| MP-01       | Phase 3 | Pending  |
+| MP-02       | Phase 3 | Pending  |
+| MP-03       | Phase 3 | Pending  |
+| MP-04       | Phase 3 | Pending  |
+| MP-05       | Phase 3 | Pending  |
+| MP-06       | Phase 3 | Pending  |
+| MP-07       | Phase 3 | Pending  |
+| MP-08       | Phase 3 | Pending  |
+| CLK-01      | Phase 4 | Pending  |
+| CLK-02      | Phase 4 | Pending  |
+| CLK-03      | Phase 4 | Pending  |
+| CLK-04      | Phase 4 | Pending  |
+| DOCS-03     | Phase 4 | Pending  |
+| DOCS-04     | Phase 4 | Pending  |
+| DOCS-01     | Phase 5 | Pending  |
+| DOCS-02     | Phase 5 | Pending  |
 
 **Coverage:**
 
