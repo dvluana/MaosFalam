@@ -22,15 +22,15 @@ Requirements for milestone v1.1: Alinhamento Arquitetural.
 
 ### Audit + Cleanup
 
-- [ ] **AUDIT-01**: share_token e share_expires_at removidos de types, mocks, componentes, reading-client
-- [ ] **AUDIT-02**: expires_at removido de credit_packs (types, queries, API, componentes)
+- [x] **AUDIT-01**: share_token e share_expires_at removidos de types, mocks, componentes, reading-client
+- [x] **AUDIT-02**: expires_at removido de credit_packs (types, queries, API, componentes)
 - [ ] **AUDIT-03**: Referencias NextAuth removidas (useSession, getServerSession, next-auth)
 - [ ] **AUDIT-04**: Referencias R2/Cloudflare removidas (photo_key, photoKey)
 - [ ] **AUDIT-05**: "Claude Vision" substituido por "GPT-4o" em todo o codigo
 - [ ] **AUDIT-06**: "Planeta dominante" substituido por "Monte dominante"
 - [ ] **AUDIT-07**: Ordem das secoes do resultado segue v2 (Prologo > Coracao > Paywall > Cabeca > Vida > Venus > Montes > Destino > Cruzamentos > Compatibilidade > Raros > Epilogo)
-- [ ] **AUDIT-08**: VALID_MOCK_IDS removido do resultado page
-- [ ] **AUDIT-09**: fallbackName="Marina" removido (usa nome do sessionStorage/API)
+- [x] **AUDIT-08**: VALID_MOCK_IDS removido do resultado page
+- [x] **AUDIT-09**: fallbackName="Marina" removido (usa nome do sessionStorage/API)
 - [ ] **AUDIT-10**: Dead stubs login()/register() removidos do useAuth
 - [ ] **AUDIT-11**: TODOs obsoletos limpos
 
@@ -112,15 +112,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase   | Status  |
 | ----------- | ------- | ------- |
-| AUDIT-01    | Phase 1 | Pending |
-| AUDIT-02    | Phase 1 | Pending |
+| AUDIT-01    | Phase 1 | Complete |
+| AUDIT-02    | Phase 1 | Complete |
 | AUDIT-03    | Phase 1 | Pending |
 | AUDIT-04    | Phase 1 | Pending |
 | AUDIT-05    | Phase 1 | Pending |
 | AUDIT-06    | Phase 1 | Pending |
 | AUDIT-07    | Phase 1 | Pending |
-| AUDIT-08    | Phase 1 | Pending |
-| AUDIT-09    | Phase 1 | Pending |
+| AUDIT-08    | Phase 1 | Complete |
+| AUDIT-09    | Phase 1 | Complete |
 | AUDIT-10    | Phase 1 | Pending |
 | AUDIT-11    | Phase 1 | Pending |
 | CTX-01      | Phase 2 | Pending |

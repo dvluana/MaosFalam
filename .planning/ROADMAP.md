@@ -53,8 +53,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 
-- [ ] 01-01-PLAN.md — Remover share_token, VALID_MOCK_IDS, fallbackName="Marina" de types e paginas
-- [ ] 01-02-PLAN.md — Corrigir ordem de secoes, verificar items ja limpos, limpar TODOs obsoletos
+- [x] 01-01-PLAN.md — Remover share_token, VALID_MOCK_IDS, fallbackName="Marina" de types e paginas
+- [x] 01-02-PLAN.md — Corrigir ordem de secoes, verificar items ja limpos, limpar TODOs obsoletos
 
 ### Phase 2: ReadingContext + Creditos
 
