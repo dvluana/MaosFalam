@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -22,6 +23,7 @@ const schema = z.object({
   is_self: z.boolean(),
   dominant_hand: z.enum(["right", "left"]).default("right"),
   element_hint: z.enum(["fire", "water", "earth", "air"]).optional(),
+  credit_used: z.boolean().default(false),
 });
 
 export async function POST(req: NextRequest) {
@@ -59,7 +61,11 @@ export async function POST(req: NextRequest) {
     // 3. Select blocks
     const report = selectBlocks(attributes, data.target_name, data.target_gender);
 
-    // 4. Save reading
+    // 4. Determine tier: if user is authenticated and already debited a credit, create as premium
+    const { userId: clerkUserId } = await auth();
+    const tier = clerkUserId && data.credit_used ? "premium" : "free";
+
+    // 5. Save reading
     const reading = await prisma.reading.create({
       data: {
         leadId: data.lead_id,
@@ -69,7 +75,8 @@ export async function POST(req: NextRequest) {
         isSelf: data.is_self,
         attributes: JSON.parse(JSON.stringify(attributes)),
         report: JSON.parse(JSON.stringify(report)),
-        tier: "free",
+        tier,
+        clerkUserId: clerkUserId ?? undefined,
         confidence: attributes.confidence,
       },
     });
@@ -83,7 +90,7 @@ export async function POST(req: NextRequest) {
       "Reading created",
     );
 
-    // 5. Send email to lead (non-blocking)
+    // 6. Send email to lead (non-blocking)
     if (data.lead_id) {
       const lead = await prisma.lead.findUnique({
         where: { id: data.lead_id },
