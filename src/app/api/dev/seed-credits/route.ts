@@ -23,12 +23,13 @@ export async function POST() {
   try {
     const clerkUserId = await getClerkUserId();
 
-    // Idempotent: check if user already has any credit packs (even depleted ones count as "seeded")
-    const existing = await prisma.creditPack.findFirst({
+    // Idempotent: only skip if user has credits remaining
+    const balance = await prisma.creditPack.aggregate({
       where: { clerkUserId },
+      _sum: { remaining: true },
     });
 
-    if (existing) {
+    if ((balance._sum.remaining ?? 0) > 0) {
       return NextResponse.json({ ok: true, already_seeded: true });
     }
 
