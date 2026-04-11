@@ -7,6 +7,8 @@ import Button from "@/components/ui/Button";
 
 interface UploadInstructionScreenProps {
   dominantHand: "right" | "left";
+  targetName?: string;
+  isSelf?: boolean;
   onContinue: () => void;
   onBack: () => void;
 }
@@ -76,13 +78,16 @@ const TIPS = [
 
 export default function UploadInstructionScreen({
   dominantHand,
+  targetName,
+  isSelf = true,
   onContinue,
   onBack,
 }: UploadInstructionScreenProps) {
+  const handSide = dominantHand === "right" ? "direita" : "esquerda";
   const handPhrase =
-    dominantHand === "right"
-      ? "Fotografe sua mao direita. Palma aberta, virada pra cima."
-      : "Fotografe sua mao esquerda. Palma aberta, virada pra cima.";
+    !isSelf && targetName
+      ? `Fotografe a mao ${handSide} do ${targetName}. Palma aberta, virada pra cima.`
+      : `Fotografe sua mao ${handSide}. Palma aberta, virada pra cima.`;
 
   return (
     <motion.div

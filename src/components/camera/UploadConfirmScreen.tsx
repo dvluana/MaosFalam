@@ -70,6 +70,7 @@ const ABBREVIATED_LABELS: Record<ValidationCheck["id"], string> = {
 
 interface UploadConfirmScreenProps {
   result: ValidationResult;
+  targetName?: string;
   onConfirm: () => void;
   onRetry: () => void;
   onBack: () => void;
@@ -81,6 +82,7 @@ interface UploadConfirmScreenProps {
 
 export default function UploadConfirmScreen({
   result,
+  targetName,
   onConfirm,
   onRetry,
   onBack,
@@ -134,7 +136,7 @@ export default function UploadConfirmScreen({
               className="font-cormorant italic text-[16px] text-gold text-center"
               style={{ letterSpacing: "0.02em" }}
             >
-              Tudo certo. Essa mao fala.
+              {targetName ? `Tudo certo. A mao do ${targetName} fala.` : "Tudo certo. Essa mao fala."}
             </p>
             <Button variant="primary" onClick={onConfirm} className="w-full">
               Enviar pra leitura
@@ -152,7 +154,9 @@ export default function UploadConfirmScreen({
               className="font-cormorant italic text-[16px] text-bone text-center"
               style={{ letterSpacing: "0.02em" }}
             >
-              A mao esta aqui. A foto podia ser melhor.
+              {targetName
+                ? `A mao do ${targetName} esta aqui. A foto podia ser melhor.`
+                : "A mao esta aqui. A foto podia ser melhor."}
             </p>
             <p className="font-jetbrains text-[9px] text-bone-dim tracking-[1px] uppercase">
               PODE AFETAR A LEITURA
