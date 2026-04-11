@@ -7,11 +7,11 @@ import ScrollProgress from "./ScrollProgress";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Manifesto - MaosFalam",
-  description: "A historia das suas maos. 5 mil anos de quiromancia. Agora na palma da sua mao.",
+  title: "Manifesto - MãosFalam",
+  description: "A história das suas mãos. 5 mil anos de quiromancia. Agora na palma da sua mão.",
   openGraph: {
-    title: "A historia das suas maos",
-    description: "5 mil anos de quiromancia. Agora na palma da sua mao.",
+    title: "A história das suas mãos",
+    description: "5 mil anos de quiromancia. Agora na palma da sua mão.",
   },
 };
 

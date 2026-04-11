@@ -37,7 +37,15 @@ const HAND_IN_FRAME_STATES: ReadonlySet<CamState> = new Set([
   "camera_stable",
 ]);
 
-function CameraViewport({ state, videoRef, canvasRef, mirrored, dominantHand, targetName, onSwitchCamera }: Props) {
+function CameraViewport({
+  state,
+  videoRef,
+  canvasRef,
+  mirrored,
+  dominantHand,
+  targetName,
+  onSwitchCamera,
+}: Props) {
   const frameActive = isFrameActive(state);
   const showCrosshair = !HAND_IN_FRAME_STATES.has(state);
   const showBadge = state !== "loading_mediapipe" && state !== "camera_capturing";
@@ -111,7 +119,7 @@ function CameraViewport({ state, videoRef, canvasRef, mirrored, dominantHand, ta
 
         {showHandOutline && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <HandOutlineSVG dominantHand={dominantHand} size={140} className="opacity-[0.12]" />
+            <HandOutlineSVG dominantHand={dominantHand} size={140} className="opacity-[0.45]" />
           </div>
         )}
 

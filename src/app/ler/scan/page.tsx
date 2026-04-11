@@ -8,6 +8,7 @@ import PageLoading from "@/components/ui/PageLoading";
 import ProgressBar from "@/components/ui/ProgressBar";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import { captureReading } from "@/lib/reading-client";
+import { loadReadingContext } from "@/lib/reading-context";
 import { generateUUID } from "@/lib/uuid";
 import type { ReportJSON } from "@/types/report";
 
@@ -53,11 +54,18 @@ function ScanInner() {
     didCapture.current = true;
 
     const photo = sessionStorage.getItem("maosfalam_photo") ?? "";
-    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
     const leadId = sessionStorage.getItem("maosfalam_lead_id") ?? undefined;
-    const targetName = sessionStorage.getItem("maosfalam_name") ?? "você";
+
+    const ctx = loadReadingContext();
+    const sessionId =
+      ctx?.session_id ?? sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
+    const targetName = ctx?.target_name ?? sessionStorage.getItem("maosfalam_name") ?? "você";
     const targetGender =
-      (sessionStorage.getItem("maosfalam_target_gender") as "female" | "male") ?? "female";
+      ctx?.target_gender ??
+      (sessionStorage.getItem("maosfalam_target_gender") as "female" | "male") ??
+      "female";
+    const isSelf = ctx?.is_self ?? true;
+    const dominantHand = ctx?.dominant_hand ?? "right";
 
     captureReading({
       photo_base64: photo,
@@ -65,7 +73,8 @@ function ScanInner() {
       lead_id: leadId,
       target_name: targetName,
       target_gender: targetGender,
-      is_self: true,
+      is_self: isSelf,
+      dominant_hand: dominantHand,
     })
       .then(({ reading_id, report }) => {
         sessionStorage.setItem("maosfalam_reading_id", reading_id);

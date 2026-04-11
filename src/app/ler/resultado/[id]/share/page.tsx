@@ -180,13 +180,17 @@ function renderShareCard(phrase: string, elementTitle: string): HTMLCanvasElemen
   ctx.fillStyle = COLORS.gold;
   ctx.textAlign = "center";
   ctx.letterSpacing = "4px";
-  ctx.fillText("MaosFalam", CARD_W / 2, CARD_H - 140);
+  ctx.fillText("M\u00e3osFalam", CARD_W / 2, CARD_H - 140);
   ctx.letterSpacing = "0px";
 
   // Tagline
   ctx.font = '22px "Georgia", serif';
   ctx.fillStyle = COLORS.boneDim;
-  ctx.fillText("Me mostre sua mao e eu te conto quem voce e", CARD_W / 2, CARD_H - 90);
+  ctx.fillText(
+    "Me mostre sua m\u00e3o e eu te conto quem voc\u00ea \u00e9",
+    CARD_W / 2,
+    CARD_H - 90,
+  );
 
   return canvas;
 }
