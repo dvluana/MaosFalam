@@ -16,6 +16,7 @@ interface Props {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   mirrored: boolean;
   dominantHand: "right" | "left";
+  targetName?: string;
   onSwitchCamera?: () => void;
 }
 
@@ -36,7 +37,7 @@ const HAND_IN_FRAME_STATES: ReadonlySet<CamState> = new Set([
   "camera_stable",
 ]);
 
-function CameraViewport({ state, videoRef, canvasRef, mirrored, dominantHand, onSwitchCamera }: Props) {
+function CameraViewport({ state, videoRef, canvasRef, mirrored, dominantHand, targetName, onSwitchCamera }: Props) {
   const frameActive = isFrameActive(state);
   const showCrosshair = !HAND_IN_FRAME_STATES.has(state);
   const showBadge = state !== "loading_mediapipe" && state !== "camera_capturing";
@@ -83,7 +84,7 @@ function CameraViewport({ state, videoRef, canvasRef, mirrored, dominantHand, on
         {/* HandExpectedBadge — top-left inside viewport */}
         {showBadge && (
           <div className="absolute top-3 left-3 z-10">
-            <HandExpectedBadge dominantHand={dominantHand} />
+            <HandExpectedBadge dominantHand={dominantHand} targetName={targetName} />
           </div>
         )}
 

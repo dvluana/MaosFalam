@@ -9,16 +9,21 @@ import HandOutlineSVG from "./HandOutlineSVG";
 interface HandInstructionOverlayProps {
   dominantHand: "right" | "left";
   onReady: () => void;
+  targetName?: string;
+  isSelf?: boolean;
 }
 
 export default function HandInstructionOverlay({
   dominantHand,
   onReady,
+  targetName,
+  isSelf = true,
 }: HandInstructionOverlayProps) {
+  const handSide = dominantHand === "right" ? "direita" : "esquerda";
   const phrase =
-    dominantHand === "right"
-      ? "Me mostra a mao direita. Palma aberta, virada pra mim."
-      : "Me mostra a mao esquerda. Palma aberta, virada pra mim.";
+    isSelf || !targetName
+      ? `Me mostra a mao ${handSide}. Palma aberta, virada pra mim.`
+      : `Me mostra a mao ${handSide} do ${targetName}. Palma aberta, virada pra mim.`;
 
   return (
     <motion.div

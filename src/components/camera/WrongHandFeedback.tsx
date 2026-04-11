@@ -6,13 +6,20 @@ import { useEffect, useRef, useState } from "react";
 interface WrongHandFeedbackProps {
   expectedHand: "right" | "left";
   visible: boolean;
+  isSelf?: boolean;
+  targetGender?: "female" | "male";
 }
 
 /**
  * Non-blocking toast shown when the wrong hand is detected.
  * Auto-hides after 3s. Driven by AnimatePresence + internal counter.
  */
-export default function WrongHandFeedback({ expectedHand, visible }: WrongHandFeedbackProps) {
+export default function WrongHandFeedback({
+  expectedHand,
+  visible,
+  isSelf = true,
+  targetGender = "female",
+}: WrongHandFeedbackProps) {
   // showCount increments each time visible transitions to true.
   // This lets us key AnimatePresence entries so repeated wrong-hand detections
   // re-trigger the animation without calling setState in an effect.
@@ -43,7 +50,10 @@ export default function WrongHandFeedback({ expectedHand, visible }: WrongHandFe
   }, [showCount]);
 
   const handLabel = expectedHand === "right" ? "direita" : "esquerda";
-  const text = `Essa e a outra mao. Me mostra a ${handLabel}.`;
+  const pronoun = targetGender === "male" ? "dele" : "dela";
+  const text = isSelf
+    ? `Essa e a outra mao. Me mostra a ${handLabel}.`
+    : `Essa e a mao errada ${pronoun}. Me mostra a ${handLabel} ${pronoun}.`;
 
   return (
     <div aria-live="assertive" className="pointer-events-none">

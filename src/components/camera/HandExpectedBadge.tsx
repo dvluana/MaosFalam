@@ -5,12 +5,14 @@ import { useState } from "react";
 
 interface HandExpectedBadgeProps {
   dominantHand: "right" | "left";
+  targetName?: string;
 }
 
-export default function HandExpectedBadge({ dominantHand }: HandExpectedBadgeProps) {
+export default function HandExpectedBadge({ dominantHand, targetName }: HandExpectedBadgeProps) {
   const [dismissed, setDismissed] = useState(false);
 
-  const label = dominantHand === "right" ? "MAO DIREITA" : "MAO ESQUERDA";
+  const handPart = dominantHand === "right" ? "MAO DIREITA" : "MAO ESQUERDA";
+  const label = targetName ? `${handPart} . ${targetName.toUpperCase()}` : handPart;
 
   return (
     <div aria-live="polite">
