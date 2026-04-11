@@ -105,7 +105,7 @@ Plans:
 
 Plans:
 
-- [ ] 03-01-PLAN.md — normalizeImage(): HEIC conversion + EXIF correction + compression; wire into useUploadValidation
+- [x] 03-01-PLAN.md — normalizeImage(): HEIC conversion + EXIF correction + compression; wire into useUploadValidation
 - [ ] 03-02-PLAN.md — Landscape warning + retry-suggest logic + screenshot detection
 - [x] 03-03-PLAN.md — GPT-4o prompt: dominant_hand context + ignore accessories
 
@@ -134,5 +134,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | ---------------------- | --------- | -------------- | ----------- | ---------- |
 | 1. Camera UI           | v1.2      | 2/2            | Complete    | 2026-04-11 |
 | 2. Upload Pipeline     | v1.2      | 3/3            | Complete    | 2026-04-11 |
-| 3. Edge Cases + Prompt | v1.2      | 0/3            | Not started | -          |
+| 3. Edge Cases + Prompt | v1.2      | 2/3 | In Progress|  |
 | 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -          |

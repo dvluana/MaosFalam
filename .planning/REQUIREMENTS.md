@@ -31,9 +31,9 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 
 ### Edge Cases
 
-- [ ] **EDGE-01**: HEIC conversion via heic2any antes de qualquer processamento
-- [ ] **EDGE-02**: EXIF rotation corrigida antes de processar no canvas
-- [ ] **EDGE-03**: Compressao client-side (max 1280px, JPEG 0.85) antes de enviar
+- [x] **EDGE-01**: HEIC conversion via heic2any antes de qualquer processamento
+- [x] **EDGE-02**: EXIF rotation corrigida antes de processar no canvas
+- [x] **EDGE-03**: Compressao client-side (max 1280px, JPEG 0.85) antes de enviar
 - [ ] **EDGE-04**: Orientacao landscape detectada com aviso "Vira o celular pra vertical"
 - [ ] **EDGE-05**: Retry logic: apos 3 falhas, sugerir trocar metodo (camera <> upload)
 - [ ] **EDGE-06**: Deteccao de screenshot (dimensoes atipicas) com aviso da cigana
@@ -91,9 +91,9 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 | UPL-04      | Phase 2 | Complete |
 | UPL-05      | Phase 2 | Complete |
 | UPL-06      | Phase 2 | Complete |
-| EDGE-01     | Phase 3 | Pending |
-| EDGE-02     | Phase 3 | Pending |
-| EDGE-03     | Phase 3 | Pending |
+| EDGE-01     | Phase 3 | Complete |
+| EDGE-02     | Phase 3 | Complete |
+| EDGE-03     | Phase 3 | Complete |
 | EDGE-04     | Phase 3 | Pending |
 | EDGE-05     | Phase 3 | Pending |
 | EDGE-06     | Phase 3 | Pending |
