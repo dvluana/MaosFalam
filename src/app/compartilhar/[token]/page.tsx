@@ -11,10 +11,11 @@ import type { Reading, ReportJSON, Tier } from "@/types/report";
 import type { Metadata } from "next";
 
 type ShareState = "valid_free" | "valid_premium" | "expired" | "not_found";
+type ShareReading = Reading & { target_name: string };
 
 interface Resolved {
   state: ShareState;
-  reading: Reading | null;
+  reading: ShareReading | null;
 }
 
 const ELEMENT_LABEL: Record<string, string> = {
@@ -30,16 +31,23 @@ async function resolveReading(token: string): Promise<Resolved> {
   if (res.status === 410) return { state: "expired", reading: null };
   if (!res.ok) return { state: "not_found", reading: null };
   const data = (await res.json()) as {
-    reading: { id: string; tier: string; report: ReportJSON; created_at: string };
+    reading: {
+      id: string;
+      target_name: string;
+      tier: string;
+      report: ReportJSON;
+      created_at: string;
+    };
   };
   const r = data.reading;
-  const reading: Reading = {
+  const reading: ShareReading = {
     id: r.id,
     tier: r.tier as Tier,
     share_token: r.id,
     share_expires_at: "2099-12-31T00:00:00.000Z",
     report: r.report as ReportJSON,
     created_at: r.created_at,
+    target_name: r.target_name,
   };
   const state: ShareState = r.tier === "premium" ? "valid_premium" : "valid_free";
   return { state, reading };
@@ -66,10 +74,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
   return {
-    title: "Leitura de Marina",
+    title: `Leitura de ${reading.target_name}`,
     description: reading.report.impact_phrase,
     openGraph: {
-      title: "Leitura de Marina",
+      title: `Leitura de ${reading.target_name}`,
       description: reading.report.impact_phrase,
     },
   };
@@ -113,9 +121,9 @@ export default async function SharePage({ params }: PageProps) {
       <div className="px-4 pt-10 max-w-xl mx-auto flex flex-col gap-8">
         <header className="text-center flex flex-col items-center gap-3">
           <p className="font-jetbrains text-[9px] text-bone-dim uppercase tracking-widest">
-            leitura de Marina
+            leitura de {reading.target_name}
           </p>
-          <h1 className="font-cinzel text-[26px] text-bone">As mãos dela falaram</h1>
+          <h1 className="font-cinzel text-[26px] text-bone">As maos falaram</h1>
           <div className="flex gap-2 justify-center mt-1">
             <Badge variant="gold">{ELEMENT_LABEL[report.element.key]}</Badge>
           </div>

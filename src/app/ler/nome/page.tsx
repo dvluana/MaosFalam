@@ -32,6 +32,8 @@ export default function NomePage() {
   const { user } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [gender, setGender] = useState<"female" | "male">("female");
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
   const [submitting, setSubmitting] = useState(false);
 
@@ -60,19 +62,18 @@ export default function NomePage() {
       sessionStorage.setItem("maosfalam_name", trimmedName);
       sessionStorage.setItem("maosfalam_email", trimmedEmail);
       sessionStorage.setItem("maosfalam_name_fresh", "1");
-      sessionStorage.setItem("maosfalam_target_gender", "female");
+      sessionStorage.setItem("maosfalam_target_gender", gender);
     }
     setSubmitting(true);
     try {
-      const sessionId =
-        sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
       sessionStorage.setItem("maosfalam_session_id", sessionId);
       const { lead_id } = await registerLead({
         name: trimmedName,
         email: trimmedEmail,
-        gender: "female",
+        gender,
         session_id: sessionId,
-        email_opt_in: false,
+        email_opt_in: emailOptIn,
       });
       sessionStorage.setItem("maosfalam_lead_id", lead_id);
     } catch {
@@ -156,10 +157,65 @@ export default function NomePage() {
             autoComplete="email"
           />
 
-          {/* Hint sutil sobre privacidade */}
-          <p className="font-cormorant italic text-[13px] text-bone-dim text-center leading-[1.4]">
-            Eu só uso pra te mandar a leitura e te chamar de volta. Nada mais.
-          </p>
+          {/* Ela / Ele toggle */}
+          <div className="flex flex-col gap-2">
+            <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
+              Essa leitura e pra
+            </span>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setGender("female")}
+                className="flex-1 py-3 font-raleway text-[10px] uppercase tracking-[0.06em] transition-all duration-300"
+                style={{
+                  background:
+                    gender === "female"
+                      ? "linear-gradient(160deg, #1e1838, #2a2150, #1e1838)"
+                      : "transparent",
+                  color: gender === "female" ? "#E8DFD0" : "#9b9284",
+                  border:
+                    gender === "female"
+                      ? "1px solid rgba(201,162,74,0.2)"
+                      : "1px solid rgba(201,162,74,0.08)",
+                  borderRadius: "0 6px 0 6px",
+                }}
+              >
+                Ela
+              </button>
+              <button
+                type="button"
+                onClick={() => setGender("male")}
+                className="flex-1 py-3 font-raleway text-[10px] uppercase tracking-[0.06em] transition-all duration-300"
+                style={{
+                  background:
+                    gender === "male"
+                      ? "linear-gradient(160deg, #1e1838, #2a2150, #1e1838)"
+                      : "transparent",
+                  color: gender === "male" ? "#E8DFD0" : "#9b9284",
+                  border:
+                    gender === "male"
+                      ? "1px solid rgba(201,162,74,0.2)"
+                      : "1px solid rgba(201,162,74,0.08)",
+                  borderRadius: "0 6px 0 6px",
+                }}
+              >
+                Ele
+              </button>
+            </div>
+          </div>
+
+          {/* LGPD opt-in */}
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={emailOptIn}
+              onChange={(e) => setEmailOptIn(e.target.checked)}
+              className="mt-1 accent-gold w-4 h-4 shrink-0"
+            />
+            <span className="font-cormorant italic text-[13px] text-bone-dim leading-[1.4]">
+              Aceito receber novidades e leituras por email.
+            </span>
+          </label>
         </div>
 
         <Button type="submit" variant="primary" size="lg" disabled={!canSubmit || submitting}>

@@ -11,7 +11,9 @@ import Button from "@/components/ui/Button";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import { getCredits } from "@/lib/payment-client";
 import { getUserProfile, getUserReadings } from "@/lib/user-client";
-import type { Reading, HandElement, ReportJSON, Tier } from "@/types/report";
+import type { Reading as BaseReading, HandElement, ReportJSON, Tier } from "@/types/report";
+
+type Reading = BaseReading & { target_name?: string };
 
 const STATES = ["has_readings", "empty", "loading"] as const;
 type State = (typeof STATES)[number];
@@ -186,9 +188,9 @@ function TarotReadingCard({
           <div className="flex flex-col items-center gap-1 w-full">
             <h3
               className="font-cinzel text-[13px] sm:text-[14px] font-medium tracking-[0.04em] text-bone leading-none line-clamp-1 max-w-full"
-              title={"Marina"}
+              title={reading.target_name ?? "Leitura"}
             >
-              {"Marina"}
+              {reading.target_name ?? "Leitura"}
             </h3>
             <span className="font-cormorant italic text-[12px] text-bone-dim">
               {ELEMENT_LABEL[element]}
@@ -265,7 +267,7 @@ function ListReadingItem({
         <div className="flex-1 min-w-0 flex flex-col gap-1">
           <div className="flex items-baseline gap-2">
             <h3 className="font-cinzel text-[15px] sm:text-[16px] font-medium tracking-[0.04em] text-bone leading-none truncate">
-              {"Marina"}
+              {reading.target_name ?? "Leitura"}
             </h3>
             <span className="font-cormorant italic text-[13px] text-bone-dim">
               · {ELEMENT_LABEL[element]}
@@ -386,6 +388,7 @@ function LeiturasContent() {
           share_expires_at: "2099-12-31T00:00:00.000Z",
           report: r.report as ReportJSON,
           created_at: r.created_at,
+          target_name: r.target_name,
         }));
         setReadings(mapped);
         setLoading(false);
