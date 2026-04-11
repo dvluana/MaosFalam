@@ -107,7 +107,7 @@ Plans:
 
 - [ ] 03-01-PLAN.md — normalizeImage(): HEIC conversion + EXIF correction + compression; wire into useUploadValidation
 - [ ] 03-02-PLAN.md — Landscape warning + retry-suggest logic + screenshot detection
-- [ ] 03-03-PLAN.md — GPT-4o prompt: dominant_hand context + ignore accessories
+- [x] 03-03-PLAN.md — GPT-4o prompt: dominant_hand context + ignore accessories
 
 ### Phase 4: Outra Pessoa + A11y
 

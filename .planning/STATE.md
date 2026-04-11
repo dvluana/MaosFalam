@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Fluxo de Mao Dominante
-status: Ready to plan
-stopped_at: Completed 02-upload-pipeline-03-PLAN.md
-last_updated: "2026-04-11T17:13:54.763Z"
+status: Ready to execute
+stopped_at: Completed 03-edge-cases-prompt-03-PLAN.md
+last_updated: "2026-04-11T17:22:17.810Z"
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 8
+  completed_plans: 6
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-11)
 
 **Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** Phase 02 — upload-pipeline
+**Current focus:** Phase 03 — edge-cases-prompt
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (edge-cases-prompt) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ _Updated after each plan completion_
 | Phase 02-upload-pipeline P01 | 1 | 1 tasks | 1 files |
 | Phase 02-upload-pipeline P02 | 3m | 2 tasks | 3 files |
 | Phase 02-upload-pipeline P03 | 2m | 2 tasks | 2 files |
+| Phase 03 P03 | 5 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ _Updated after each plan completion_
 - [Phase 02-upload-pipeline]: MediaPipe failure gracefully skips checks 3-4-5 with canProceed=true so upload can still proceed
 - [Phase 02-upload-pipeline]: uploadStep local type defined inside CameraPageInner to keep co-located with state
 - [Phase 02-upload-pipeline]: handleUploadSelectedFromError kept for CameraErrorState direct-to-scan bypass (error recovery skips instruction screen)
+- [Phase 03]: dominanceContext injected in user message (not system prompt) to keep OpenAI caching intact
+- [Phase 03]: dominant_hand defaults to right via Zod .default() for backward compatibility
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T17:13:18.825Z
-Stopped at: Completed 02-upload-pipeline-03-PLAN.md
+Last session: 2026-04-11T17:22:17.808Z
+Stopped at: Completed 03-edge-cases-prompt-03-PLAN.md
 Resume file: None

@@ -40,8 +40,8 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 
 ### GPT-4o Prompt
 
-- [ ] **PROMPT-01**: Prompt do GPT-4o inclui contexto de qual mao dominante esta sendo analisada
-- [ ] **PROMPT-02**: Prompt instrui a ignorar tatuagens, henna, nail art, aneis, pulseiras
+- [x] **PROMPT-01**: Prompt do GPT-4o inclui contexto de qual mao dominante esta sendo analisada
+- [x] **PROMPT-02**: Prompt instrui a ignorar tatuagens, henna, nail art, aneis, pulseiras
 
 ### Outra Pessoa
 
@@ -97,8 +97,8 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 | EDGE-04     | Phase 3 | Pending |
 | EDGE-05     | Phase 3 | Pending |
 | EDGE-06     | Phase 3 | Pending |
-| PROMPT-01   | Phase 3 | Pending |
-| PROMPT-02   | Phase 3 | Pending |
+| PROMPT-01   | Phase 3 | Complete |
+| PROMPT-02   | Phase 3 | Complete |
 | OTHER-01    | Phase 4 | Pending |
 | OTHER-02    | Phase 4 | Pending |
 | OTHER-03    | Phase 4 | Pending |
