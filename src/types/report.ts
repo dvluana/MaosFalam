@@ -93,8 +93,7 @@ export interface ReportRareSign {
 export interface Reading {
   id: string;
   tier: Tier;
-  share_token: string;
-  share_expires_at: string;
+  target_name?: string;
   report: ReportJSON;
   created_at: string;
 }

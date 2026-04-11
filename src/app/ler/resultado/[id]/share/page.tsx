@@ -224,8 +224,8 @@ export default function SharePage({ params }: PageProps) {
   const shareUrl =
     data !== null
       ? typeof window !== "undefined"
-        ? `${window.location.origin}/compartilhar/${data.share_token}`
-        : `/compartilhar/${data.share_token}`
+        ? `${window.location.origin}/compartilhar/${data.id}`
+        : `/compartilhar/${data.id}`
       : "";
 
   const impactPhrase = data?.report.impact_phrase ?? "";

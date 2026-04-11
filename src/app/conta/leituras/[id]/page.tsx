@@ -22,11 +22,11 @@ interface PageProps {
 const STATES = ["free_saved", "premium_saved", "share_options"] as const;
 type State = (typeof STATES)[number];
 
-function ShareOptions({ token }: { token: string }) {
+function ShareOptions({ readingId }: { readingId: string }) {
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/compartilhar/${token}`
-      : `/compartilhar/${token}`;
+      ? `${window.location.origin}/compartilhar/${readingId}`
+      : `/compartilhar/${readingId}`;
   const waMessage = encodeURIComponent(`Olha o que suas mãos disseram: ${shareUrl}`);
   const copy = async () => {
     try {
@@ -143,7 +143,7 @@ function LeituraContent({ id }: { id: string }) {
       <Separator variant="gold" />
 
       {showShare || forcedTier === "share_options" ? (
-        <ShareOptions token={reading.share_token} />
+        <ShareOptions readingId={reading.id} />
       ) : (
         <div className="flex justify-center">
           <Button variant="secondary" onClick={() => setShowShare(true)}>

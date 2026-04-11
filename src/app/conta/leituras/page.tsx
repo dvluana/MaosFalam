@@ -68,11 +68,9 @@ function formatDate(iso: string): string {
 
 function getVariant(
   reading: Reading,
-  _currentUserName: string,
+  currentUserName: string,
 ): "active_free" | "active_premium" | "for_other" {
-  // v2: user_name is no longer on the report. For mock, assume self-reading.
-  // TODO: when backend exists, compare with reading.target_name from DB.
-  void _currentUserName;
+  if (reading.target_name && reading.target_name !== currentUserName) return "for_other";
   if (reading.tier === "premium") return "active_premium";
   return "active_free";
 }
@@ -384,8 +382,6 @@ function LeiturasContent() {
         const mapped: Reading[] = data.readings.map((r) => ({
           id: r.id,
           tier: r.tier as Tier,
-          share_token: r.id,
-          share_expires_at: "2099-12-31T00:00:00.000Z",
           report: r.report as ReportJSON,
           created_at: r.created_at,
           target_name: r.target_name,

@@ -43,8 +43,6 @@ async function resolveReading(token: string): Promise<Resolved> {
   const reading: ShareReading = {
     id: r.id,
     tier: r.tier as Tier,
-    share_token: r.id,
-    share_expires_at: "2099-12-31T00:00:00.000Z",
     report: r.report as ReportJSON,
     created_at: r.created_at,
     target_name: r.target_name,

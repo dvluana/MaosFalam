@@ -84,8 +84,7 @@ export async function getReading(id: string): Promise<Reading | null> {
   return {
     id: r.id,
     tier: r.tier as Reading["tier"],
-    share_token: r.id,
-    share_expires_at: "2099-12-31T00:00:00.000Z",
+    target_name: r.target_name,
     report: r.report,
     created_at: r.created_at,
   };
