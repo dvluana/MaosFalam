@@ -11,8 +11,12 @@ export function useLandscapeGuard(): boolean {
   const [isLandscape, setIsLandscape] = useState(false);
 
   useEffect(() => {
+    function isMobile() {
+      return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    }
+
     function check() {
-      setIsLandscape(window.innerWidth > window.innerHeight);
+      setIsLandscape(isMobile() && window.innerWidth > window.innerHeight);
     }
 
     check();
