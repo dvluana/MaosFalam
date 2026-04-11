@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -27,6 +28,14 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const data = schema.parse(body);
+
+    // Check if this email already has a Clerk account
+    const clerk = await clerkClient();
+    const existingUsers = await clerk.users.getUserList({ emailAddress: [data.email] });
+    if (existingUsers.totalCount > 0) {
+      logger.info({ route: "/api/lead/register" }, "Lead email has existing Clerk account");
+      return NextResponse.json({ existing_account: true, lead_id: null }, { status: 200 });
+    }
 
     const lead = await prisma.lead.create({
       data: {
