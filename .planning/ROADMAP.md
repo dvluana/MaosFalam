@@ -40,7 +40,7 @@ All 9 plans completed. See `.planning/archive/v1.1/` for history.
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Camera UI** - Instrucoes visuais, badge de mao esperada, feedback de mao errada, outline SVG, camera traseira default (completed 2026-04-11)
-- [ ] **Phase 2: Upload Pipeline** - Tela de escolha de metodo, instrucoes de upload, validacao de arquivo, confirmacao com preview
+- [x] **Phase 2: Upload Pipeline** - Tela de escolha de metodo, instrucoes de upload, validacao de arquivo, confirmacao com preview (completed 2026-04-11)
 - [ ] **Phase 3: Edge Cases + Prompt** - HEIC, EXIF, compressao, orientacao, retry logic, deteccao de screenshot, prompt GPT-4o atualizado
 - [ ] **Phase 4: Outra Pessoa + A11y** - Camera e upload adaptados ao contexto de outra pessoa, aria-labels, aria-live, role=img
 
@@ -86,7 +86,7 @@ Plans:
 
 - [x] 02-01-PLAN.md — UploadInstructionScreen: instrucao de qual mao + dicas de qualidade + outline SVG
 - [x] 02-02-PLAN.md — useUploadValidation hook + UploadValidationScreen + UploadConfirmScreen
-- [ ] 02-03-PLAN.md — Wiring: fluxo multi-step na camera page, substituir UploadPreview
+- [x] 02-03-PLAN.md — Wiring: fluxo multi-step na camera page, substituir UploadPreview
 
 ### Phase 3: Edge Cases + Prompt
 
@@ -127,6 +127,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase                  | Milestone | Plans Complete | Status      | Completed  |
 | ---------------------- | --------- | -------------- | ----------- | ---------- |
 | 1. Camera UI           | v1.2      | 2/2            | Complete    | 2026-04-11 |
-| 2. Upload Pipeline     | v1.2      | 2/3 | In Progress|  |
+| 2. Upload Pipeline     | v1.2      | 3/3 | Complete   | 2026-04-11 |
 | 3. Edge Cases + Prompt | v1.2      | 0/?            | Not started | -          |
 | 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -          |

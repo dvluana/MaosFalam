@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Fluxo de Mao Dominante
-status: Ready to execute
-stopped_at: Completed 02-upload-pipeline-02-PLAN.md
-last_updated: "2026-04-11T17:10:23.937Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 02-upload-pipeline-03-PLAN.md
+last_updated: "2026-04-11T17:13:18.828Z"
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -45,6 +45,7 @@ _Updated after each plan completion_
 | Phase 01-camera-ui P02 | 6m | 3 tasks | 6 files |
 | Phase 02-upload-pipeline P01 | 1 | 1 tasks | 1 files |
 | Phase 02-upload-pipeline P02 | 3m | 2 tasks | 3 files |
+| Phase 02-upload-pipeline P03 | 2m | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,8 @@ _Updated after each plan completion_
 - [Phase 02-upload-pipeline]: UploadInstructionScreen is pure presentation — no internal state, all via props
 - [Phase 02-upload-pipeline]: MediaPipe in IMAGE runningMode inside validate() — not reusing loadHandLandmarker() which uses VIDEO mode
 - [Phase 02-upload-pipeline]: MediaPipe failure gracefully skips checks 3-4-5 with canProceed=true so upload can still proceed
+- [Phase 02-upload-pipeline]: uploadStep local type defined inside CameraPageInner to keep co-located with state
+- [Phase 02-upload-pipeline]: handleUploadSelectedFromError kept for CameraErrorState direct-to-scan bypass (error recovery skips instruction screen)
 
 ### Pending Todos
 
@@ -75,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T17:10:23.934Z
-Stopped at: Completed 02-upload-pipeline-02-PLAN.md
+Last session: 2026-04-11T17:13:18.825Z
+Stopped at: Completed 02-upload-pipeline-03-PLAN.md
 Resume file: None
