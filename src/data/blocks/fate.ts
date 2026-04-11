@@ -1,7 +1,7 @@
 import type { LineBlocks } from "@/types/blocks";
 import type { FateVariation } from "@/types/hand-attributes";
 
-export const FATE_BLOCKS: Record<FateVariation, LineBlocks> = {
+export const FATE_BLOCKS: Record<FateVariation | "_fallback", LineBlocks> = {
   present_deep: {
     opening: {
       content: "Linha do Destino forte e clara. Direção que não vacila.",
@@ -119,6 +119,24 @@ export const FATE_BLOCKS: Record<FateVariation, LineBlocks> = {
         "Você não segue caminho. Abre caminho. E quem abre caminho não tem mapa. Tem coragem.",
       alt: "Hoje a ausência te dá uma vantagem: flexibilidade total. Muda quando quer. Pra onde quer. Sem sentir que tá traindo algum plano.",
       alt2: "Destino ausente é tela em branco. Assustador pra quem precisa de roteiro. Libertador pra quem sabe pintar.",
+    },
+  },
+  _fallback: {
+    opening: {
+      content: "Sua Linha do Destino tem um traçado que não segue os padrões mais comuns.",
+      alt: "O que vi aqui em relação ao destino não tem nome simples.",
+      alt2: "Essa linha de destino guarda uma história particular.",
+    },
+    body_past: {
+      content:
+        "Seu caminho nunca foi o mais óbvio. As escolhas que te trouxeram até aqui foram suas, mesmo quando pareceram impostas.",
+      alt: "O destino que você construiu tem marcas de decisões difíceis. Você fez o que tinha que fazer. Mesmo quando custou.",
+      alt2: "Você chegou onde está por um caminho que poucas pessoas entenderiam se você explicasse.",
+    },
+    body_present: {
+      content: "O que tá sendo construído agora tem a sua marca. Não é acidente. É acumulação.",
+      alt: "Seu destino continua em movimento. O que você tá construindo hoje vai aparecer nas mãos de amanhã.",
+      alt2: "A direção que você tá tomando não é aleatória. Tem padrão. Você sente, mesmo que não veja ainda.",
     },
   },
 } as const;

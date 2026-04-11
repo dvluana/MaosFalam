@@ -1,7 +1,7 @@
 import type { LineBlocks, TextBlock } from "@/types/blocks";
 import type { HeartVariation, HeartModifier } from "@/types/hand-attributes";
 
-export const HEART_BLOCKS: Record<HeartVariation, LineBlocks> = {
+export const HEART_BLOCKS: Record<HeartVariation | "_fallback", LineBlocks> = {
   long_straight: {
     opening: {
       content: "Sua Linha do Coração corta a palma inteira sem desvio. Sem curva. Sem hesitação.",
@@ -155,6 +155,24 @@ export const HEART_BLOCKS: Record<HeartVariation, LineBlocks> = {
         "Linha tênue não é coração fraco. É coração blindado. A blindagem não nasceu com você. Foi construída. Cada vez que confiou e não deveria. Cada vez que abriu e se machucou. A linha ficou mais fina porque você decidiu sentir com mais cuidado.",
       alt: "Hoje seu amor tem filtro. Não o que esconde. O que seleciona. Passa pouca gente. Mas quem passa encontra algo que não esperava. Porque por trás da linha fina tem um oceano que você não mostra pra ninguém.",
       alt2: "Você construiu um sistema de proteção eficiente. Funciona. Ninguém entra sem convite. O problema é que às vezes você esquece de convidar. E a solidão que vem disso não é por falta de gente. É por excesso de filtro.",
+    },
+  },
+  _fallback: {
+    opening: {
+      content: "Sua Linha do Coração tem marcas que exigem mais tempo pra ler.",
+      alt: "Essa linha conta algo que não se resume em palavras simples.",
+      alt2: "Linhas assim guardam histórias que a maioria nunca vai entender.",
+    },
+    body_past: {
+      content:
+        "Como você ama sempre foi mais complexo do que parece. Você sabe disso. Quem te conhece de verdade, também.",
+      alt: "Seu coração aprendeu com cada experiência. Não da forma que ensinam. Da forma que dói e fica.",
+      alt2: "Você carrega afeto de um jeito que poucos conseguem nomear. Não é falta de clareza. É profundidade.",
+    },
+    body_present: {
+      content: "O que tá escrito aqui não se explica em categorias. Você ultrapassa categorias.",
+      alt: "Sua linha te coloca fora de qualquer padrão que eu já li. Isso não é problema. É dado.",
+      alt2: "Não tem variação que caiba o que vi aqui. Suas mãos sempre foram difíceis de encaixar.",
     },
   },
 } as const;

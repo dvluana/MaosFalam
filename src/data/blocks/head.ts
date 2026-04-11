@@ -1,7 +1,7 @@
 import type { LineBlocks, TextBlock } from "@/types/blocks";
 import type { HeadVariation, HeadModifier } from "@/types/hand-attributes";
 
-export const HEAD_BLOCKS: Record<HeadVariation, LineBlocks> = {
+export const HEAD_BLOCKS: Record<HeadVariation | "_fallback", LineBlocks> = {
   long_straight: {
     opening: {
       content: "Sua Linha da Cabeça é longa e reta. Pensamento direto. Sem desvios.",
@@ -153,6 +153,25 @@ export const HEAD_BLOCKS: Record<HeadVariation, LineBlocks> = {
         "Linha tênue é mente que escolhe suas batalhas. Não gasta energia mental com o que não importa. Reserva pra quando precisa de verdade. Aí surpreende todo mundo.",
       alt: "Hoje sua discrição é estratégica. Você não mostra o jogo. Não por manipulação. Por economia. Pra quê gastar pensamento em voz alta se o silêncio resolve melhor?",
       alt2: "Mente discreta em mundo barulhento. Enquanto os outros disputam quem fala mais alto, você observa. Quando o silêncio pesa e alguém precisa falar algo que faça sentido, olham pra você.",
+    },
+  },
+  _fallback: {
+    opening: {
+      content: "Sua Linha da Cabeça tem um traçado que sai do comum.",
+      alt: "Essa linha pensa de um jeito que não se encaixa nos padrões habituais.",
+      alt2: "O que vi aqui exige mais do que categorias padrão conseguem capturar.",
+    },
+    body_past: {
+      content:
+        "Sua mente sempre funcionou de um jeito próprio. Você sabe disso. Às vezes foi vantagem. Às vezes te isolou.",
+      alt: "Pensar diferente tem custo. Você pagou. E ainda paga. Mas não trocaria por uma mente mais simples.",
+      alt2: "Sua cabeça não segue o mesmo caminho que a maioria. Nunca seguiu. E isso moldou quem você é.",
+    },
+    body_present: {
+      content:
+        "Sua linha mostra uma mente que não para dentro dos limites. Isso cansa. E é o que te diferencia.",
+      alt: "Você pensa além do que as pessoas ao redor conseguem acompanhar. Às vezes parece solidão. É só velocidade.",
+      alt2: "Mente assim produz insights que os outros chegam depois. Você já sabe. Espera eles chegarem.",
     },
   },
 } as const;

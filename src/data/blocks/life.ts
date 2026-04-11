@@ -1,7 +1,7 @@
 import type { LineBlocks } from "@/types/blocks";
 import type { LifeVariation } from "@/types/hand-attributes";
 
-export const LIFE_BLOCKS: Record<LifeVariation, LineBlocks> = {
+export const LIFE_BLOCKS: Record<LifeVariation | "_fallback", LineBlocks> = {
   long_deep: {
     opening: {
       content: "Profunda e longa. Resiliência que assusta quem te subestima.",
@@ -159,6 +159,25 @@ export const LIFE_BLOCKS: Record<LifeVariation, LineBlocks> = {
         "Correntes não são sentença. São sinal. Seu corpo fala uma linguagem que você provavelmente ignora por costume. Dor que vira costumeira. Cansaço que vira normal. Nada disso é normal.",
       alt: "Hoje as correntes te pedem uma coisa: escuta. O corpo sabe antes da mente. Sempre soube.",
       alt2: "Você forçou mais do que devia. Por mais tempo do que devia. Seu corpo tá te cobrando a conta. Não com punição. Com informação.",
+    },
+  },
+  _fallback: {
+    opening: {
+      content: "Sua Linha da Vida tem características que fogem dos padrões convencionais.",
+      alt: "O que vi aqui não se encaixa numa única definição de vitalidade.",
+      alt2: "Essa linha guarda mais do que a maioria das que eu já li.",
+    },
+    body_past: {
+      content:
+        "Você passou por coisas que mudaram sua relação com energia e resistência. Não saiu {{igual}}. Saiu diferente. Mais forte em alguns lugares. Mais cuidadosa em outros.",
+      alt: "Sua história com o próprio corpo e sua vitalidade é mais complexa do que parece de fora. Você sabe cada capítulo.",
+      alt2: "Atravessou fases que testaram sua resistência de formas que não se repetem. Cada uma deixou algo.",
+    },
+    body_present: {
+      content:
+        "O que sua linha da vida mostra hoje é alguém que aprendeu a gerenciar energia de um jeito que só faz sentido pra você.",
+      alt: "Você não desperdiça mais como antes. Escolhe onde investe. Isso é experiência, não frieza.",
+      alt2: "Sua relação com a própria vitalidade amadureceu. O que parecia limitação virou filtro.",
     },
   },
 } as const;
