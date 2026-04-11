@@ -1,0 +1,6 @@
+const lintStagedConfig = {
+  "*.{js,jsx,ts,tsx,mjs,cjs}": ["eslint --fix --max-warnings=0", "prettier --write"],
+  "*.{json,md,css,scss,html,yml,yaml}": ["prettier --write"],
+};
+
+export default lintStagedConfig;

@@ -1,0 +1,9 @@
+.next
+coverage
+node_modules
+package-lock.json
+public/**/*.png
+public/**/*.jpeg
+public/**/*.jpg
+public/**/*.mp4
+public/**/*.ico
