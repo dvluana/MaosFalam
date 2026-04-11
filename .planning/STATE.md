@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 05-protected-api/05-01-PLAN.md
-last_updated: "2026-04-11T02:31:49.131Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 05-protected-api/05-03-PLAN.md
+last_updated: "2026-04-11T02:34:12.113Z"
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 12
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-10)
 ## Current Position
 
 Phase: 05 (protected-api) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ _Updated after each plan completion_
 | Phase 04-public-api P01 | 10 | 3 tasks | 3 files |
 | Phase 04-public-api P02 | 6 | 1 tasks | 3 files |
 | Phase 05-protected-api P01 | 7 | 2 tasks | 7 files |
+| Phase 05-protected-api P03 | 4 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,8 @@ Recent decisions affecting current work:
 - [Phase 04-public-api]: Zod v4 uuid() rejects non-standard UUIDs (version digit must be 1-8) — use crypto.randomUUID() for test fixtures
 - [Phase 05-protected-api]: credits/purchase was already fully implemented with AbacatePay — no 501 stub needed; import order fixed instead
 - [Phase 05-protected-api]: import order lint errors in credits/purchase and webhook were auto-fixed (Rule 3) — abacatepay imports must precede auth/logger alphabetically
+- [Phase 05-protected-api]: profile route mocks currentUser() (getClerkUser), account route mocks auth() (getClerkUserId) — different auth helpers require different mock targets
+- [Phase 05-protected-api]: SEC-03 rate limit for credits/purchase deferred to v2 — documented as comment in account test file
 
 ### Pending Todos
 
@@ -105,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T02:31:49.128Z
-Stopped at: Completed 05-protected-api/05-01-PLAN.md
+Last session: 2026-04-11T02:34:08.420Z
+Stopped at: Completed 05-protected-api/05-03-PLAN.md
 Resume file: None

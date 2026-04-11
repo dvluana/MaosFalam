@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Auth** - Clerk middleware, route protection, and server-side auth helpers (completed 2026-04-11)
 - [ ] **Phase 3: AI Pipeline** - GPT-4o wrapper, selectBlocks hardening, reading persistence
 - [x] **Phase 4: Public API** - Lead capture, reading capture, reading GET, rate limiting, security headers (completed 2026-04-11)
-- [ ] **Phase 5: Protected API** - Credit debit, reading history, profile CRUD, account deletion
+- [x] **Phase 5: Protected API** - Credit debit, reading history, profile CRUD, account deletion (completed 2026-04-11)
 - [ ] **Phase 6: Client Adapters** - Frontend mock-to-API transition, end-to-end integration
 
 ## Phase Details
@@ -118,8 +118,8 @@ Plans:
 Plans:
 
 - [x] 05-01-PLAN.md — Audit and fix all 5 protected routes (Zod v4 compliance, PII-safe logs, SEC-03 stub)
-- [ ] 05-02-PLAN.md — Tests for reading/new (API-05), user/credits (API-06), user/readings (API-07)
-- [ ] 05-03-PLAN.md — Tests for user/profile (API-08, API-09) and user/account (API-10)
+- [x] 05-02-PLAN.md — Tests for reading/new (API-05), user/credits (API-06), user/readings (API-07)
+- [x] 05-03-PLAN.md — Tests for user/profile (API-08, API-09) and user/account (API-10)
 
 ### Phase 6: Client Adapters
 
@@ -145,5 +145,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Auth            | 2/2            | Complete    | 2026-04-11 |
 | 3. AI Pipeline     | 2/3            | In Progress |            |
 | 4. Public API      | 2/2            | Complete    | 2026-04-11 |
-| 5. Protected API   | 1/3            | In Progress |            |
+| 5. Protected API   | 3/3 | Complete   | 2026-04-11 |
 | 6. Client Adapters | 0/TBD          | Not started | -          |
