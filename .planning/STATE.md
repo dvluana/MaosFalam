@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 04-public-api/04-01-PLAN.md
-last_updated: "2026-04-11T02:16:00.682Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 04-public-api/04-02-PLAN.md
+last_updated: "2026-04-11T02:23:30.592Z"
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -54,6 +54,7 @@ _Updated after each plan completion_
 | Phase 03-ai-pipeline P01 | 2 | 1 tasks | 2 files |
 | Phase 03-ai-pipeline P03 | 10 | 2 tasks | 1 files |
 | Phase 04-public-api P01 | 10 | 3 tasks | 3 files |
+| Phase 04-public-api P02 | 6 | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,8 @@ Recent decisions affecting current work:
 - [Phase 04-public-api]: lead/register returns 201 (not 200) — REST semantics for resource creation
 - [Phase 04-public-api]: Body size guard in capture uses JSON.stringify(body).length — Content-Length header can be absent/spoofed in App Router
 - [Phase 04-public-api]: UUID validation in reading/[id] returns 404 not 400 — avoids leaking route existence to scanners
+- [Phase 04-public-api]: vi.resetAllMocks() clears factory mock return values — re-apply mocks in beforeEach explicitly
+- [Phase 04-public-api]: Zod v4 uuid() rejects non-standard UUIDs (version digit must be 1-8) — use crypto.randomUUID() for test fixtures
 
 ### Pending Todos
 
@@ -99,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T02:16:00.679Z
-Stopped at: Completed 04-public-api/04-01-PLAN.md
+Last session: 2026-04-11T02:23:30.588Z
+Stopped at: Completed 04-public-api/04-02-PLAN.md
 Resume file: None
