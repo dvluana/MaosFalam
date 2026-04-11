@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { Button, Input } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
+import { registerLead } from "@/lib/reading-client";
 
 /**
  * TODO (backend):
@@ -32,6 +33,7 @@ export default function NomePage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
+  const [submitting, setSubmitting] = useState(false);
 
   // Pre-fill com dados da conta quando logada (a logada pode estar lendo
   // pra si mesma ou pra outra pessoa — ela troca se quiser)
@@ -44,7 +46,7 @@ export default function NomePage() {
     return () => window.cancelAnimationFrame(frame);
   }, [user]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
@@ -58,7 +60,25 @@ export default function NomePage() {
       sessionStorage.setItem("maosfalam_name", trimmedName);
       sessionStorage.setItem("maosfalam_email", trimmedEmail);
       sessionStorage.setItem("maosfalam_name_fresh", "1");
+      sessionStorage.setItem("maosfalam_target_gender", "female");
     }
+    setSubmitting(true);
+    try {
+      const sessionId =
+        sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+      sessionStorage.setItem("maosfalam_session_id", sessionId);
+      const { lead_id } = await registerLead({
+        name: trimmedName,
+        email: trimmedEmail,
+        gender: "female",
+        session_id: sessionId,
+        email_opt_in: false,
+      });
+      sessionStorage.setItem("maosfalam_lead_id", lead_id);
+    } catch {
+      // Lead registration failure must not block the reading funnel
+    }
+    setSubmitting(false);
     router.push("/ler/toque");
   };
 
@@ -142,7 +162,7 @@ export default function NomePage() {
           </p>
         </div>
 
-        <Button type="submit" variant="primary" size="lg" disabled={!canSubmit}>
+        <Button type="submit" variant="primary" size="lg" disabled={!canSubmit || submitting}>
           Continuar
         </Button>
       </form>
