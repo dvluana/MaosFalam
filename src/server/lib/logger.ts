@@ -1,7 +1,11 @@
 import pino from "pino";
 
+const VALID_LEVELS = ["fatal", "error", "warn", "info", "debug", "trace"] as const;
+const envLevel = process.env.LOG_LEVEL as (typeof VALID_LEVELS)[number] | undefined;
+const level = envLevel && VALID_LEVELS.includes(envLevel) ? envLevel : "info";
+
 export const logger = pino({
-  level: process.env.LOG_LEVEL || "info",
+  level,
   redact: {
     paths: ["name", "email", "cpf", "phone", "*.name", "*.email", "*.cpf", "*.phone"],
     censor: "[REDACTED]",
