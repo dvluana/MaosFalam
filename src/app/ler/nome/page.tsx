@@ -4,70 +4,227 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Button, Input } from "@/components/ui";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import CreditGate from "@/components/reading/CreditGate";
 import { useAuth } from "@/hooks/useAuth";
-import { registerLead } from "@/lib/reading-client";
+import { useCredits } from "@/hooks/useCredits";
+import { registerLead, requestNewReading } from "@/lib/reading-client";
+import { saveReadingContext } from "@/lib/reading-context";
+import type { ReadingContext } from "@/types/reading-context";
 
-// Future: verificar se email já tem conta via API antes de prosseguir (redirect pra login se sim).
+// ============================================================
+// Toggle button helper — keeps DS styling DRY
+// ============================================================
+
+interface ToggleButtonProps {
+  selected: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+function ToggleButton({ selected, onClick, children }: ToggleButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex-1 py-3 font-raleway text-[10px] uppercase tracking-[0.06em] transition-all duration-300"
+      style={{
+        background: selected ? "linear-gradient(160deg, #1e1838, #2a2150, #1e1838)" : "transparent",
+        color: selected ? "#E8DFD0" : "#9b9284",
+        border: selected
+          ? "1px solid rgba(201,162,74,0.2)"
+          : "1px solid rgba(201,162,74,0.08)",
+        borderRadius: "0 6px 0 6px",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ============================================================
+// Page
+// ============================================================
 
 export default function NomePage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, hydrated } = useAuth();
+  const { balance, reading_count, loading: creditsLoading } = useCredits();
+
+  // Form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState<"female" | "male">("female");
+  const [dominantHand, setDominantHand] = useState<"right" | "left">("right");
   const [emailOptIn, setEmailOptIn] = useState(false);
+  const [isSelf, setIsSelf] = useState(true);
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
-  const [submitting, setSubmitting] = useState(false);
 
-  // Pre-fill com dados da conta quando logada (a logada pode estar lendo
-  // pra si mesma ou pra outra pessoa — ela troca se quiser)
+  // Submission state
+  const [submitting, setSubmitting] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [showCreditGate, setShowCreditGate] = useState(false);
+
+  // When logged in, pre-fill name from account on mount
   useEffect(() => {
     if (!user) return;
     const frame = window.requestAnimationFrame(() => {
-      setName((current) => current || user.name);
-      setEmail((current) => current || user.email);
+      if (isSelf) {
+        setName(user.name);
+      }
     });
     return () => window.cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // When toggling "Pra mim", restore account name
+  const handleIsSelfToggle = (value: boolean) => {
+    setIsSelf(value);
+    if (value && user) {
+      setName(user.name);
+    } else if (!value) {
+      setName("");
+    }
+  };
+
+  // ============================================================
+  // VISITOR SUBMIT
+  // ============================================================
+  const handleVisitorSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
+
     if (trimmedName.length < 2) return;
     if (!trimmedEmail.includes("@") || trimmedEmail.length < 5) {
       setEmailError("Preciso de um email pra te chamar depois.");
       return;
     }
     setEmailError(undefined);
+    setSubmitting(true);
+
+    // Persist legacy session keys for downstream consumers
     if (typeof window !== "undefined") {
       sessionStorage.setItem("maosfalam_name", trimmedName);
       sessionStorage.setItem("maosfalam_email", trimmedEmail);
       sessionStorage.setItem("maosfalam_name_fresh", "1");
       sessionStorage.setItem("maosfalam_target_gender", gender);
     }
-    setSubmitting(true);
-    try {
-      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
-      sessionStorage.setItem("maosfalam_session_id", sessionId);
-      const { lead_id } = await registerLead({
-        name: trimmedName,
-        email: trimmedEmail,
-        gender,
-        session_id: sessionId,
-        email_opt_in: emailOptIn,
-      });
-      sessionStorage.setItem("maosfalam_lead_id", lead_id);
-    } catch {
-      // Lead registration failure must not block the reading funnel
-    }
-    setSubmitting(false);
+
+    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+    sessionStorage.setItem("maosfalam_session_id", sessionId);
+
+    // Fire-and-forget lead registration — failure must not block reading funnel (CTX-09)
+    void registerLead({
+      name: trimmedName,
+      email: trimmedEmail,
+      gender,
+      session_id: sessionId,
+      email_opt_in: emailOptIn,
+    })
+      .then(({ lead_id }) => {
+        sessionStorage.setItem("maosfalam_lead_id", lead_id);
+      })
+      .catch(() => undefined);
+
+    const ctx: ReadingContext = {
+      target_name: trimmedName,
+      target_gender: gender,
+      dominant_hand: dominantHand,
+      is_self: true,
+      session_id: sessionId,
+      credit_used: false,
+    };
+    saveReadingContext(ctx);
     router.push("/ler/toque");
   };
 
-  const canSubmit = name.trim().length >= 2 && email.trim().length >= 5;
+  // ============================================================
+  // LOGGED-IN SUBMIT
+  // ============================================================
+  const handleLoggedInSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2) return;
 
+    // First reading is always free (CTX-06)
+    if (reading_count === 0) {
+      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+      sessionStorage.setItem("maosfalam_session_id", sessionId);
+      const ctx: ReadingContext = {
+        target_name: trimmedName,
+        target_gender: gender,
+        dominant_hand: dominantHand,
+        is_self: isSelf,
+        session_id: sessionId,
+        credit_used: false,
+      };
+      saveReadingContext(ctx);
+      router.push("/ler/toque");
+      return;
+    }
+
+    // Subsequent readings: gate on credit balance (CTX-07)
+    if (balance === 0) {
+      router.push("/creditos");
+      return;
+    }
+
+    // Has credits: show confirmation modal (CTX-05)
+    setShowCreditGate(true);
+  };
+
+  // ============================================================
+  // CREDIT GATE CONFIRM
+  // ============================================================
+  const handleCreditConfirm = async () => {
+    const trimmedName = name.trim();
+    setConfirming(true);
+    try {
+      await requestNewReading({
+        target_name: trimmedName,
+        target_gender: gender,
+        is_self: isSelf,
+      });
+
+      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+      sessionStorage.setItem("maosfalam_session_id", sessionId);
+
+      const ctx: ReadingContext = {
+        target_name: trimmedName,
+        target_gender: gender,
+        dominant_hand: dominantHand,
+        is_self: isSelf,
+        session_id: sessionId,
+        credit_used: true,
+      };
+      saveReadingContext(ctx);
+      router.push("/ler/toque");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "";
+      // 402 = insufficient credits → redirect to /creditos
+      if (message.includes("402") || message.toLowerCase().includes("credito")) {
+        router.push("/creditos");
+      } else {
+        setConfirming(false);
+        setShowCreditGate(false);
+      }
+    }
+  };
+
+  // ============================================================
+  // Derived values
+  // ============================================================
+  const isLoggedIn = hydrated && user !== null;
+  const isVisitor = hydrated && user === null;
+
+  const visitorCanSubmit = name.trim().length >= 2 && email.trim().includes("@");
+  const loggedInCanSubmit = name.trim().length >= 2 && !creditsLoading;
+
+  // ============================================================
+  // Render
+  // ============================================================
   return (
     <main className="relative min-h-dvh bg-black flex flex-col items-center justify-center px-6 pt-28 pb-16 gap-10 overflow-hidden">
       {/* Atmosphere */}
@@ -107,104 +264,201 @@ export default function NomePage() {
         />
       </motion.div>
 
-      <form onSubmit={handleSubmit} className="relative w-full max-w-sm flex flex-col gap-8">
-        <div className="flex flex-col gap-3 text-center">
-          <p className="font-cormorant italic text-[28px] sm:text-[32px] text-bone leading-[1.25]">
-            Me diz duas coisas antes.
-          </p>
-          <p className="font-cormorant italic text-[19px] text-bone-dim leading-[1.35]">
-            Como eu te chamo, e onde eu te encontro depois.
-          </p>
-        </div>
+      {/* ── VISITOR FLOW ── */}
+      {isVisitor && (
+        <form
+          onSubmit={handleVisitorSubmit}
+          className="relative w-full max-w-sm flex flex-col gap-8"
+        >
+          <div className="flex flex-col gap-3 text-center">
+            <p className="font-cormorant italic text-[28px] sm:text-[32px] text-bone leading-[1.25]">
+              Me diz duas coisas antes.
+            </p>
+            <p className="font-cormorant italic text-[19px] text-bone-dim leading-[1.35]">
+              Como eu te chamo, e onde eu te encontro depois.
+            </p>
+          </div>
 
-        <div className="flex flex-col gap-6">
-          <Input
-            label="Seu nome"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="O primeiro que vier"
-            autoFocus
-          />
+          <div className="flex flex-col gap-6">
+            <Input
+              label="Seu nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="O primeiro que vier"
+              autoFocus
+            />
 
-          <Input
-            label="Melhor email"
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (emailError) setEmailError(undefined);
-            }}
-            placeholder="voce@exemplo.com"
-            error={emailError}
-            inputMode="email"
-            autoComplete="email"
-          />
+            <Input
+              label="Melhor email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError(undefined);
+              }}
+              placeholder="voce@exemplo.com"
+              error={emailError}
+              inputMode="email"
+              autoComplete="email"
+            />
 
-          {/* Ela / Ele toggle */}
-          <div className="flex flex-col gap-2">
-            <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-              Essa leitura e pra
-            </span>
+            {/* Ela / Ele toggle */}
+            <div className="flex flex-col gap-2">
+              <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
+                Essa leitura e pra
+              </span>
+              <div className="flex gap-3">
+                <ToggleButton selected={gender === "female"} onClick={() => setGender("female")}>
+                  Ela
+                </ToggleButton>
+                <ToggleButton selected={gender === "male"} onClick={() => setGender("male")}>
+                  Ele
+                </ToggleButton>
+              </div>
+            </div>
+
+            {/* Dominant hand toggle */}
+            <div className="flex flex-col gap-2">
+              <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
+                Qual mao voce usa mais?
+              </span>
+              <div className="flex gap-3">
+                <ToggleButton
+                  selected={dominantHand === "right"}
+                  onClick={() => setDominantHand("right")}
+                >
+                  Destra
+                </ToggleButton>
+                <ToggleButton
+                  selected={dominantHand === "left"}
+                  onClick={() => setDominantHand("left")}
+                >
+                  Canhota
+                </ToggleButton>
+              </div>
+            </div>
+
+            {/* LGPD opt-in */}
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={emailOptIn}
+                onChange={(e) => setEmailOptIn(e.target.checked)}
+                className="mt-1 accent-gold w-4 h-4 shrink-0"
+              />
+              <span className="font-cormorant italic text-[13px] text-bone-dim leading-[1.4]">
+                Aceito receber novidades e leituras por email.
+              </span>
+            </label>
+          </div>
+
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={!visitorCanSubmit || submitting}
+          >
+            Continuar
+          </Button>
+        </form>
+      )}
+
+      {/* ── LOGGED-IN FLOW ── */}
+      {isLoggedIn && (
+        <form
+          onSubmit={handleLoggedInSubmit}
+          className="relative w-full max-w-sm flex flex-col gap-8"
+        >
+          <div className="flex flex-col gap-3 text-center">
+            <p className="font-cormorant italic text-[28px] sm:text-[32px] text-bone leading-[1.25]">
+              Pra quem e essa leitura?
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            {/* Pra mim / Pra outra pessoa toggle */}
             <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => setGender("female")}
-                className="flex-1 py-3 font-raleway text-[10px] uppercase tracking-[0.06em] transition-all duration-300"
-                style={{
-                  background:
-                    gender === "female"
-                      ? "linear-gradient(160deg, #1e1838, #2a2150, #1e1838)"
-                      : "transparent",
-                  color: gender === "female" ? "#E8DFD0" : "#9b9284",
-                  border:
-                    gender === "female"
-                      ? "1px solid rgba(201,162,74,0.2)"
-                      : "1px solid rgba(201,162,74,0.08)",
-                  borderRadius: "0 6px 0 6px",
-                }}
-              >
-                Ela
-              </button>
-              <button
-                type="button"
-                onClick={() => setGender("male")}
-                className="flex-1 py-3 font-raleway text-[10px] uppercase tracking-[0.06em] transition-all duration-300"
-                style={{
-                  background:
-                    gender === "male"
-                      ? "linear-gradient(160deg, #1e1838, #2a2150, #1e1838)"
-                      : "transparent",
-                  color: gender === "male" ? "#E8DFD0" : "#9b9284",
-                  border:
-                    gender === "male"
-                      ? "1px solid rgba(201,162,74,0.2)"
-                      : "1px solid rgba(201,162,74,0.08)",
-                  borderRadius: "0 6px 0 6px",
-                }}
-              >
-                Ele
-              </button>
+              <ToggleButton selected={isSelf} onClick={() => handleIsSelfToggle(true)}>
+                Pra mim
+              </ToggleButton>
+              <ToggleButton selected={!isSelf} onClick={() => handleIsSelfToggle(false)}>
+                Pra outra pessoa
+              </ToggleButton>
+            </div>
+
+            {/* When reading for another person: show name + gender */}
+            {!isSelf && (
+              <>
+                <Input
+                  label="Nome da pessoa"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Como eu a chamo?"
+                  autoFocus
+                />
+
+                <div className="flex flex-col gap-2">
+                  <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
+                    Essa leitura e pra
+                  </span>
+                  <div className="flex gap-3">
+                    <ToggleButton
+                      selected={gender === "female"}
+                      onClick={() => setGender("female")}
+                    >
+                      Ela
+                    </ToggleButton>
+                    <ToggleButton selected={gender === "male"} onClick={() => setGender("male")}>
+                      Ele
+                    </ToggleButton>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Dominant hand toggle (always visible for logged-in) */}
+            <div className="flex flex-col gap-2">
+              <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
+                Qual mao voce usa mais?
+              </span>
+              <div className="flex gap-3">
+                <ToggleButton
+                  selected={dominantHand === "right"}
+                  onClick={() => setDominantHand("right")}
+                >
+                  Destra
+                </ToggleButton>
+                <ToggleButton
+                  selected={dominantHand === "left"}
+                  onClick={() => setDominantHand("left")}
+                >
+                  Canhota
+                </ToggleButton>
+              </div>
             </div>
           </div>
 
-          {/* LGPD opt-in */}
-          <label className="flex items-start gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={emailOptIn}
-              onChange={(e) => setEmailOptIn(e.target.checked)}
-              className="mt-1 accent-gold w-4 h-4 shrink-0"
-            />
-            <span className="font-cormorant italic text-[13px] text-bone-dim leading-[1.4]">
-              Aceito receber novidades e leituras por email.
-            </span>
-          </label>
-        </div>
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={!loggedInCanSubmit || submitting}
+          >
+            Continuar
+          </Button>
+        </form>
+      )}
 
-        <Button type="submit" variant="primary" size="lg" disabled={!canSubmit || submitting}>
-          Continuar
-        </Button>
-      </form>
+      {/* CreditGate modal */}
+      {showCreditGate && (
+        <CreditGate
+          balance={balance}
+          targetName={name.trim()}
+          onConfirm={() => void handleCreditConfirm()}
+          onCancel={() => setShowCreditGate(false)}
+          confirming={confirming}
+        />
+      )}
     </main>
   );
 }
