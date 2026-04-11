@@ -76,8 +76,8 @@ Plans:
 
 Plans:
 
-- [ ] 03-01-PLAN.md — Fix openai.ts: switch to json_schema Structured Outputs, pin model, add Zod validation
-- [ ] 03-02-PLAN.md — Harden selectBlocks: add \_fallback blocks to all four line maps, update buildLineSection
+- [x] 03-01-PLAN.md — Fix openai.ts: switch to json_schema Structured Outputs, pin model, add Zod validation
+- [x] 03-02-PLAN.md — Harden selectBlocks: add \_fallback blocks to all four line maps, update buildLineSection
 - [ ] 03-03-PLAN.md — Write unit tests for analyzeHand (AI-01 to AI-04) and selectBlocks fallback
 
 ### Phase 4: Public API
@@ -130,7 +130,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | ------------------ | -------------- | ----------- | ---------- |
 | 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
 | 2. Auth            | 2/2            | Complete    | 2026-04-11 |
-| 3. AI Pipeline     | 0/3            | Not started | -          |
+| 3. AI Pipeline     | 2/3            | In Progress |            |
 | 4. Public API      | 0/TBD          | Not started | -          |
 | 5. Protected API   | 0/TBD          | Not started | -          |
 | 6. Client Adapters | 0/TBD          | Not started | -          |
