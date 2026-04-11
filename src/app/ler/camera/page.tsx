@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useRef, useState, type ChangeEvent } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import CameraErrorState from "@/components/camera/CameraErrorState";
 import CameraEyebrow from "@/components/camera/CameraEyebrow";
@@ -11,11 +11,14 @@ import CameraViewport from "@/components/camera/CameraViewport";
 import CaptureFlash from "@/components/camera/CaptureFlash";
 import HandInstructionOverlay from "@/components/camera/HandInstructionOverlay";
 import MethodChoice from "@/components/camera/MethodChoice";
-import UploadPreview from "@/components/camera/UploadPreview";
+import UploadConfirmScreen from "@/components/camera/UploadConfirmScreen";
+import UploadInstructionScreen from "@/components/camera/UploadInstructionScreen";
+import UploadValidationScreen from "@/components/camera/UploadValidationScreen";
 import WrongHandFeedback from "@/components/camera/WrongHandFeedback";
 import PageLoading from "@/components/ui/PageLoading";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
+import { useUploadValidation } from "@/hooks/useUploadValidation";
 import { loadReadingContext } from "@/lib/reading-context";
 import {
   CAM_EYEBROW,
@@ -31,15 +34,24 @@ function CameraPageInner() {
   const forced = search?.get("state") as CamState | null;
   const [state, setState] = useState<CamState>(forced ?? "method_choice");
   const [showUpload, setShowUpload] = useState(false);
+  type UploadStep = "instruction" | "validating" | "confirm";
+  const [uploadStep, setUploadStep] = useState<UploadStep>("instruction");
   const [mirrored, setMirrored] = useState(false);
   const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
   const [cameraKey, setCameraKey] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
 
   // Load reading context for dominant hand
   const readingContext = loadReadingContext();
   const dominantHand = readingContext?.dominant_hand ?? "right";
+
+  const {
+    result: uploadResult,
+    validate: validateFile,
+    reset: resetUpload,
+  } = useUploadValidation(dominantHand);
 
   // Guard: sem nome no sessionStorage, volta pro /ler/nome
   useEffect(() => {
@@ -57,11 +69,13 @@ function CameraPageInner() {
     if (state === "camera_permission_denied" || state === "camera_permission_denied_permanent") {
       const timer = setTimeout(() => {
         setState("method_choice");
+        resetUpload();
+        setUploadStep("instruction");
         setShowUpload(true);
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [state]);
+  }, [state, resetUpload]);
 
   const handleCaptured = useCallback(
     (photoBase64: string) => {
@@ -83,8 +97,60 @@ function CameraPageInner() {
     cameraKey,
   });
 
-  const handleUploadSelected = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
+  const handleUploadFileSelected = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setUploadStep("validating");
+      await validateFile(file);
+      setUploadStep("confirm");
+    },
+    [validateFile],
+  );
+
+  const handleUploadConfirm = useCallback(() => {
+    if (!uploadResult.file) return;
+    setState("camera_capturing");
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      navigator.vibrate?.(120);
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const base64 = dataUrl.split(",")[1] ?? "";
+      sessionStorage.setItem("maosfalam_photo", base64);
+      window.setTimeout(() => router.push("/ler/scan"), 600);
+    };
+    reader.readAsDataURL(uploadResult.file);
+  }, [uploadResult.file, router]);
+
+  const handleUploadBack = useCallback(() => {
+    resetUpload();
+    setUploadStep("instruction");
+    setShowUpload(false);
+  }, [resetUpload]);
+
+  const handleUploadRetry = useCallback(() => {
+    resetUpload();
+    setUploadStep("instruction");
+    // Reseta o input file para permitir re-selecao do mesmo arquivo
+    if (uploadInputRef.current) uploadInputRef.current.value = "";
+  }, [resetUpload]);
+
+  const handleSwitchCamera = useCallback(() => {
+    // Stop current stream
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((t) => t.stop());
+      videoRef.current.srcObject = null;
+    }
+    setFacingMode((prev) => (prev === "environment" ? "user" : "environment"));
+    setCameraKey((prev) => prev + 1);
+    setState("loading_mediapipe");
+  }, []);
+
+  const handleUploadSelectedFromError = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       if (!event.target.files?.length) return;
       const file = event.target.files[0];
       if (!file) return;
@@ -103,18 +169,6 @@ function CameraPageInner() {
     },
     [router],
   );
-
-  const handleSwitchCamera = useCallback(() => {
-    // Stop current stream
-    if (videoRef.current?.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach((t) => t.stop());
-      videoRef.current.srcObject = null;
-    }
-    setFacingMode((prev) => (prev === "environment" ? "user" : "environment"));
-    setCameraKey((prev) => prev + 1);
-    setState("loading_mediapipe");
-  }, []);
 
   const errorState = isErrorState(state);
   const showViewport =
@@ -179,28 +233,44 @@ function CameraPageInner() {
       {state === "method_choice" && !showUpload && (
         <MethodChoice
           onPickLive={() => setState("hand_instruction")}
-          onPickUpload={() => setShowUpload(true)}
+          onPickUpload={() => {
+            resetUpload();
+            setUploadStep("instruction");
+            setShowUpload(true);
+          }}
         />
       )}
 
       {showUpload && (
-        <UploadPreview
-          onConfirm={(file: File) => {
-            setState("camera_capturing");
-            if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-              navigator.vibrate?.(120);
-            }
-            const reader = new FileReader();
-            reader.onload = () => {
-              const dataUrl = reader.result as string;
-              const base64 = dataUrl.split(",")[1] ?? "";
-              sessionStorage.setItem("maosfalam_photo", base64);
-              window.setTimeout(() => router.push("/ler/scan"), 600);
-            };
-            reader.readAsDataURL(file);
-          }}
-          onCancel={() => setShowUpload(false)}
-        />
+        <>
+          {/* File input oculto — acionado programaticamente */}
+          <input
+            ref={uploadInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+            className="hidden"
+            onChange={handleUploadFileSelected}
+          />
+
+          {uploadStep === "instruction" && (
+            <UploadInstructionScreen
+              dominantHand={dominantHand}
+              onContinue={() => uploadInputRef.current?.click()}
+              onBack={handleUploadBack}
+            />
+          )}
+
+          {uploadStep === "validating" && <UploadValidationScreen checks={uploadResult.checks} />}
+
+          {uploadStep === "confirm" && (
+            <UploadConfirmScreen
+              result={uploadResult}
+              onConfirm={handleUploadConfirm}
+              onRetry={handleUploadRetry}
+              onBack={handleUploadBack}
+            />
+          )}
+        </>
       )}
 
       {showViewport && (
@@ -224,7 +294,7 @@ function CameraPageInner() {
         <CameraErrorState
           state={state}
           onRetry={() => router.replace("/ler/camera")}
-          onUploadSelected={handleUploadSelected}
+          onUploadSelected={handleUploadSelectedFromError}
         />
       )}
 
