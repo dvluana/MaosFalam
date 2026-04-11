@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 07-frontend-backend-wiring/07-02-PLAN.md
-last_updated: "2026-04-11T03:11:12.207Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 07-frontend-backend-wiring/07-03-PLAN.md
+last_updated: "2026-04-11T03:14:45.244Z"
 progress:
   total_phases: 7
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 17
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 # Project State
@@ -62,6 +62,7 @@ _Updated after each plan completion_
 | Phase 06-client-adapters P02 | 8 | 2 tasks | 2 files |
 | Phase 07 P01 | 5 | 2 tasks | 4 files |
 | Phase 07 P02 | 5 | 2 tasks | 3 files |
+| Phase 07 P03 | 10 | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,8 @@ Recent decisions affecting current work:
 - [Phase 07]: hydrated maps to Clerk isLoaded — prevents flash of wrong auth state before Clerk resolves
 - [Phase 07]: Lead registration failure silently ignored — must not block reading funnel
 - [Phase 07]: onPickLive routes through camera pipeline state machine (loading_mediapipe) not direct /ler/scan push
+- [Phase 07]: captureReading error code propagated as CODE: message prefix for LOW_CONFIDENCE detection without custom error class
+- [Phase 07]: revelacao simplified: no credits check, always routes to free result page — upsell lives inside resultado
 
 ### Pending Todos
 
@@ -122,6 +125,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T03:11:12.204Z
-Stopped at: Completed 07-frontend-backend-wiring/07-02-PLAN.md
+Last session: 2026-04-11T03:14:45.240Z
+Stopped at: Completed 07-frontend-backend-wiring/07-03-PLAN.md
 Resume file: None

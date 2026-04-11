@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Public API** - Lead capture, reading capture, reading GET, rate limiting, security headers (completed 2026-04-11)
 - [x] **Phase 5: Protected API** - Credit debit, reading history, profile CRUD, account deletion (completed 2026-04-11)
 - [x] **Phase 6: Client Adapters** - Frontend mock-to-API transition, end-to-end integration (completed 2026-04-11)
-- [ ] **Phase 7: Frontend-Backend Wiring** - Connect reading funnel pages to real APIs, migrate useAuth to Clerk, delete unused deleteAccount feature
+- [x] **Phase 7: Frontend-Backend Wiring** - Connect reading funnel pages to real APIs, migrate useAuth to Clerk, delete unused deleteAccount feature (completed 2026-04-11)
 
 ## Phase Details
 
@@ -162,7 +162,7 @@ Plans:
 
 - [x] 07-01-PLAN.md — Delete deleteAccount (route + test + user-client export) + migrate useAuth to Clerk
 - [x] 07-02-PLAN.md — Wire nome → registerLead + wire camera → save photo to sessionStorage
-- [ ] 07-03-PLAN.md — Wire scan → captureReading + fix revelacao destination + build gate
+- [x] 07-03-PLAN.md — Wire scan → captureReading + fix revelacao destination + build gate
 
 ## Progress
 
@@ -177,4 +177,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 4. Public API              | 2/2            | Complete    | 2026-04-11 |
 | 5. Protected API           | 3/3            | Complete    | 2026-04-11 |
 | 6. Client Adapters         | 2/2            | Complete    | 2026-04-11 |
-| 7. Frontend-Backend Wiring | 2/3 | In Progress|  |
+| 7. Frontend-Backend Wiring | 3/3            | Complete    | 2026-04-11 |
