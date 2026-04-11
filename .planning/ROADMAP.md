@@ -122,8 +122,13 @@ Plans:
 4. Botoes Destra/Canhota, trocar camera, e badge descartavel tem aria-labels descritivos para leitores de tela
 5. WrongHandFeedback e anunciado como assertive e HandExpectedBadge como polite via aria-live
 6. Outlines SVG de mao tem role="img" e aria-label descrevendo a mao esperada
-   **Plans**: TBD
+   **Plans**: 2 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 04-01-PLAN.md — Camera context: HandInstructionOverlay + HandExpectedBadge + WrongHandFeedback com targetName/isSelf/targetGender
+- [ ] 04-02-PLAN.md — Upload context: UploadInstructionScreen + UploadConfirmScreen com targetName; A11Y-01 aria-labels em ToggleButton
 
 ## Progress
 
@@ -134,5 +139,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | ---------------------- | --------- | -------------- | ----------- | ---------- |
 | 1. Camera UI           | v1.2      | 2/2            | Complete    | 2026-04-11 |
 | 2. Upload Pipeline     | v1.2      | 3/3            | Complete    | 2026-04-11 |
-| 3. Edge Cases + Prompt | v1.2      | 3/3 | Complete   | 2026-04-11 |
-| 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -          |
+| 3. Edge Cases + Prompt | v1.2      | 3/3            | Complete    | 2026-04-11 |
+| 4. Outra Pessoa + A11y | v1.2      | 0/2            | Not started | -          |
