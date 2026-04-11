@@ -101,7 +101,13 @@ Plans:
 4. Celular em modo landscape exibe aviso "Vira o celular pra vertical" sem prosseguir
 5. Apos 3 falhas, usuario ve sugestao de trocar de metodo (camera para upload ou vice-versa)
 6. Screenshot detectado por dimensoes atipicas exibe aviso da cigana pedindo foto real; prompt GPT-4o inclui qual mao dominante esta sendo analisada e instrui a ignorar tatuagens, henna, nail art, aneis e pulseiras
-   **Plans**: TBD
+   **Plans**: 3 plans
+
+Plans:
+
+- [ ] 03-01-PLAN.md — normalizeImage(): HEIC conversion + EXIF correction + compression; wire into useUploadValidation
+- [ ] 03-02-PLAN.md — Landscape warning + retry-suggest logic + screenshot detection
+- [ ] 03-03-PLAN.md — GPT-4o prompt: dominant_hand context + ignore accessories
 
 ### Phase 4: Outra Pessoa + A11y
 
@@ -127,6 +133,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase                  | Milestone | Plans Complete | Status      | Completed  |
 | ---------------------- | --------- | -------------- | ----------- | ---------- |
 | 1. Camera UI           | v1.2      | 2/2            | Complete    | 2026-04-11 |
-| 2. Upload Pipeline     | v1.2      | 3/3 | Complete   | 2026-04-11 |
-| 3. Edge Cases + Prompt | v1.2      | 0/?            | Not started | -          |
+| 2. Upload Pipeline     | v1.2      | 3/3            | Complete    | 2026-04-11 |
+| 3. Edge Cases + Prompt | v1.2      | 0/3            | Not started | -          |
 | 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -          |
