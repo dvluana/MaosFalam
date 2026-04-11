@@ -2,6 +2,8 @@ import { useCallback, useRef, useState } from "react";
 
 import { detectHandedness, validateLandmarks } from "@/lib/mediapipe";
 
+import type { Category, NormalizedLandmark } from "@mediapipe/tasks-vision";
+
 // ============================================================
 // Types
 // ============================================================
@@ -158,8 +160,8 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
       // ----------------------------------------------------------
       updateCheck("hand_detected", { status: "running" });
 
-      let landmarks: import("@mediapipe/tasks-vision").NormalizedLandmark[] = [];
-      let handednessCategories: import("@mediapipe/tasks-vision").Category[] = [];
+      let landmarks: NormalizedLandmark[] = [];
+      let handednessCategories: Category[] = [];
       let mediapipeLoaded = false;
 
       try {
