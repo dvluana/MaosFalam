@@ -110,17 +110,52 @@ Adiados para milestone futura.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement               | Phase | Status |
-| ------------------------- | ----- | ------ |
-| (populated by roadmapper) |       |        |
+| Requirement | Phase   | Status  |
+| ----------- | ------- | ------- |
+| AUDIT-01    | Phase 1 | Pending |
+| AUDIT-02    | Phase 1 | Pending |
+| AUDIT-03    | Phase 1 | Pending |
+| AUDIT-04    | Phase 1 | Pending |
+| AUDIT-05    | Phase 1 | Pending |
+| AUDIT-06    | Phase 1 | Pending |
+| AUDIT-07    | Phase 1 | Pending |
+| AUDIT-08    | Phase 1 | Pending |
+| AUDIT-09    | Phase 1 | Pending |
+| AUDIT-10    | Phase 1 | Pending |
+| AUDIT-11    | Phase 1 | Pending |
+| CTX-01      | Phase 2 | Pending |
+| CTX-02      | Phase 2 | Pending |
+| CTX-03      | Phase 2 | Pending |
+| CTX-04      | Phase 2 | Pending |
+| CTX-05      | Phase 2 | Pending |
+| CTX-06      | Phase 2 | Pending |
+| CTX-07      | Phase 2 | Pending |
+| CTX-08      | Phase 2 | Pending |
+| CTX-09      | Phase 2 | Pending |
+| MP-01       | Phase 3 | Pending |
+| MP-02       | Phase 3 | Pending |
+| MP-03       | Phase 3 | Pending |
+| MP-04       | Phase 3 | Pending |
+| MP-05       | Phase 3 | Pending |
+| MP-06       | Phase 3 | Pending |
+| MP-07       | Phase 3 | Pending |
+| MP-08       | Phase 3 | Pending |
+| CLK-01      | Phase 4 | Pending |
+| CLK-02      | Phase 4 | Pending |
+| CLK-03      | Phase 4 | Pending |
+| CLK-04      | Phase 4 | Pending |
+| DOCS-03     | Phase 4 | Pending |
+| DOCS-04     | Phase 4 | Pending |
+| DOCS-01     | Phase 5 | Pending |
+| DOCS-02     | Phase 5 | Pending |
 
 **Coverage:**
 
-- v1.1 requirements: 38 total
-- Mapped to phases: 0
-- Unmapped: 38
+- v1.1 requirements: 36 total
+- Mapped to phases: 36
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-04-11_
-_Last updated: 2026-04-11 after milestone v1.1 definition_
+_Last updated: 2026-04-11 after roadmap v1.1 creation_
