@@ -1,5 +1,6 @@
 export type CamState =
   | "method_choice"
+  | "hand_instruction"
   | "loading_mediapipe"
   | "camera_active_no_hand"
   | "camera_hand_detected"
@@ -14,6 +15,7 @@ export type CamState =
 
 export const CAM_STATES: readonly CamState[] = [
   "method_choice",
+  "hand_instruction",
   "loading_mediapipe",
   "camera_active_no_hand",
   "camera_hand_detected",
@@ -29,6 +31,7 @@ export const CAM_STATES: readonly CamState[] = [
 
 export const CAM_FEEDBACK: Record<CamState, string> = {
   method_choice: "",
+  hand_instruction: "",
   loading_mediapipe: "Preciso ver melhor.",
   camera_active_no_hand: "Posicione sua mão na moldura.",
   camera_hand_detected: "Segure assim.",
@@ -36,7 +39,7 @@ export const CAM_FEEDBACK: Record<CamState, string> = {
   camera_wrong_hand: "Essa nao e a mao que eu pedi. Me mostra a outra.",
   camera_stable: "Segure.",
   camera_capturing: "",
-  camera_permission_denied: "Preciso dos seus olhos emprestados. Libera a câmera.",
+  camera_permission_denied: "Tudo bem. Me manda uma foto entao.",
   camera_permission_denied_permanent: "Abra nas configurações do celular pra me deixar ver.",
   camera_fallback_upload: "Me manda um retrato da sua mão então.",
   camera_error_generic: "Algo saiu errado. Tente de novo.",
@@ -44,6 +47,7 @@ export const CAM_FEEDBACK: Record<CamState, string> = {
 
 export const CAM_EYEBROW: Record<CamState, string> = {
   method_choice: "Como você me mostra",
+  hand_instruction: "Instrucao",
   loading_mediapipe: "Preparando",
   camera_active_no_hand: "Aguardando",
   camera_hand_detected: "Ajustando",
