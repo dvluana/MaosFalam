@@ -9,7 +9,6 @@ import CameraEyebrow from "@/components/camera/CameraEyebrow";
 import CameraFeedback from "@/components/camera/CameraFeedback";
 import CameraViewport from "@/components/camera/CameraViewport";
 import CaptureFlash from "@/components/camera/CaptureFlash";
-import HandInstructionOverlay from "@/components/camera/HandInstructionOverlay";
 import LandscapeWarning from "@/components/camera/LandscapeWarning";
 import MethodChoice from "@/components/camera/MethodChoice";
 import UploadConfirmScreen from "@/components/camera/UploadConfirmScreen";
@@ -38,6 +37,7 @@ function CameraPageInner() {
   const [cameraKey, setCameraKey] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const landmarkCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
 
   const isLandscape = useLandscapeGuard();
@@ -104,6 +104,7 @@ function CameraPageInner() {
     onCaptured: handleCaptured,
     videoRef,
     canvasRef,
+    landmarkCanvasRef,
     onMirroredChange: setMirrored,
     preferredFacing: facingMode,
     cameraKey,
@@ -185,8 +186,8 @@ function CameraPageInner() {
   );
 
   const errorState = isErrorState(state);
-  const showViewport = !errorState && state !== "method_choice" && state !== "hand_instruction";
-  const showTitle = !errorState && state !== "method_choice" && state !== "hand_instruction";
+  const showViewport = !errorState && state !== "method_choice";
+  const showTitle = !errorState && state !== "method_choice";
 
   // Method switch suggestion message depends on which flow the user is in
   const methodSwitchText = showUpload
@@ -207,16 +208,6 @@ function CameraPageInner() {
             "radial-gradient(ellipse 70% 55% at 50% 45%, rgba(201,162,74,0.06), transparent 75%)",
         }}
       />
-
-      {/* Hand instruction overlay — between method_choice and loading_mediapipe */}
-      {state === "hand_instruction" && (
-        <HandInstructionOverlay
-          dominantHand={dominantHand}
-          targetName={targetName}
-          isSelf={isSelf}
-          onReady={() => setState("loading_mediapipe")}
-        />
-      )}
 
       <CameraEyebrow label={CAM_EYEBROW[state]} />
 
@@ -253,7 +244,7 @@ function CameraPageInner() {
 
       {state === "method_choice" && !showUpload && (
         <MethodChoice
-          onPickLive={() => setState("hand_instruction")}
+          onPickLive={() => setState("loading_mediapipe")}
           onPickUpload={() => {
             resetUpload();
             setUploadStep("instruction");
@@ -302,6 +293,7 @@ function CameraPageInner() {
           state={state}
           videoRef={videoRef}
           canvasRef={canvasRef}
+          landmarkCanvasRef={landmarkCanvasRef}
           mirrored={mirrored}
           dominantHand={dominantHand}
           targetName={targetName}

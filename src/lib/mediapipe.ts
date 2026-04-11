@@ -1,6 +1,6 @@
 "use client";
 
-import { FilesetResolver, HandLandmarker } from "@mediapipe/tasks-vision";
+import { DrawingUtils, FilesetResolver, HandLandmarker } from "@mediapipe/tasks-vision";
 
 import type { Category, NormalizedLandmark } from "@mediapipe/tasks-vision";
 
@@ -129,4 +129,78 @@ export function captureFrame(
   const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
   // Strip data URI prefix, return raw base64
   return dataUrl.replace(/^data:image\/jpeg;base64,/, "");
+}
+
+// Hand connections for DrawingUtils — { start, end } format
+const HAND_CONNECTIONS = [
+  // Thumb
+  { start: 0, end: 1 },
+  { start: 1, end: 2 },
+  { start: 2, end: 3 },
+  { start: 3, end: 4 },
+  // Index
+  { start: 0, end: 5 },
+  { start: 5, end: 6 },
+  { start: 6, end: 7 },
+  { start: 7, end: 8 },
+  // Middle
+  { start: 5, end: 9 },
+  { start: 9, end: 10 },
+  { start: 10, end: 11 },
+  { start: 11, end: 12 },
+  // Ring
+  { start: 9, end: 13 },
+  { start: 13, end: 14 },
+  { start: 14, end: 15 },
+  { start: 15, end: 16 },
+  // Pinky
+  { start: 13, end: 17 },
+  { start: 0, end: 17 },
+  { start: 17, end: 18 },
+  { start: 18, end: 19 },
+  { start: 19, end: 20 },
+];
+
+/**
+ * Draws hand landmarks and connections on a visible overlay canvas.
+ * Called every frame in the detection loop for real-time feedback.
+ */
+export function drawHandLandmarks(
+  canvas: HTMLCanvasElement,
+  landmarks: NormalizedLandmark[],
+  videoWidth: number,
+  videoHeight: number,
+): void {
+  canvas.width = videoWidth;
+  canvas.height = videoHeight;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (landmarks.length < 21) return;
+
+  const drawingUtils = new DrawingUtils(ctx);
+
+  drawingUtils.drawConnectors(landmarks, HAND_CONNECTIONS, {
+    color: "rgba(201, 162, 74, 0.7)",
+    lineWidth: 2,
+  });
+
+  drawingUtils.drawLandmarks(landmarks, {
+    color: "rgba(201, 162, 74, 0.9)",
+    fillColor: "rgba(201, 162, 74, 0.4)",
+    lineWidth: 1,
+    radius: 3,
+  });
+}
+
+/**
+ * Clears the landmark overlay canvas.
+ */
+export function clearLandmarkCanvas(canvas: HTMLCanvasElement): void {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }

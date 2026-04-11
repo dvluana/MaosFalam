@@ -4,7 +4,9 @@ import { useEffect, useRef } from "react";
 
 import {
   captureFrame,
+  clearLandmarkCanvas,
   detectHandedness,
+  drawHandLandmarks,
   loadHandLandmarker,
   validateLandmarks,
 } from "@/lib/mediapipe";
@@ -35,6 +37,8 @@ interface Params {
   onCaptured: (photoBase64: string) => void;
   videoRef: React.RefObject<HTMLVideoElement | null>;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  /** Canvas for drawing landmark overlay in real-time */
+  landmarkCanvasRef: React.RefObject<HTMLCanvasElement | null>;
   /** Called when the camera stream is established with whether the video is mirrored (front camera). */
   onMirroredChange?: (mirrored: boolean) => void;
   /** Preferred facing mode. Defaults to "environment" (back camera). */
@@ -62,6 +66,7 @@ export default function useCameraPipeline({
   onCaptured,
   videoRef,
   canvasRef,
+  landmarkCanvasRef,
   onMirroredChange,
   preferredFacing,
   cameraKey,
@@ -209,6 +214,16 @@ export default function useCameraPipeline({
 
       const result = lm.detectForVideo(vid, performance.now());
       const hasHand = result.landmarks.length > 0 && result.handednesses.length > 0;
+
+      // Draw landmarks overlay in real-time
+      const lmCanvas = landmarkCanvasRef.current;
+      if (lmCanvas) {
+        if (hasHand) {
+          drawHandLandmarks(lmCanvas, result.landmarks[0], vid.videoWidth, vid.videoHeight);
+        } else {
+          clearLandmarkCanvas(lmCanvas);
+        }
+      }
 
       if (!hasHand) {
         // No hand visible — reset to no_hand and clear stability
