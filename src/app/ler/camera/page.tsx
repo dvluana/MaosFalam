@@ -58,10 +58,13 @@ function CameraPageInner() {
   } = useUploadValidation(dominantHand);
 
   // Guard: sem nome no sessionStorage, volta pro /ler/nome
+  // Clear stale photo from previous reading to avoid sending old photo
   useEffect(() => {
     if (!sessionStorage.getItem("maosfalam_name_fresh")) {
       router.replace("/ler/nome");
+      return;
     }
+    sessionStorage.removeItem("maosfalam_photo");
   }, [router]);
 
   if (forced && forced !== state) {

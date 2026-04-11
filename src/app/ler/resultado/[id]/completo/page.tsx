@@ -282,6 +282,9 @@ function CompletoInner({ id }: { id: string }) {
             onClick={() => {
               if (typeof window !== "undefined") {
                 sessionStorage.removeItem("maosfalam_name_fresh");
+                sessionStorage.removeItem("maosfalam_photo");
+                sessionStorage.removeItem("maosfalam_reading_id");
+                sessionStorage.removeItem("maosfalam_impact_phrase");
               }
               window.location.href = "/ler/nome";
             }}
