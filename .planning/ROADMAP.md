@@ -79,8 +79,14 @@ Plans:
 4. Validacao exibe checks progressivos (formato, qualidade, mao detectada, handedness, palma aberta) com feedback visual
 5. Tela de confirmacao mostra preview da foto com checklist de validacao e botao de confirmar antes de enviar
 6. Quando qualidade e ruim mas mao esta OK, usuario ve aviso honesto com opcao "Usar mesmo assim"
-   **Plans**: TBD
+   **Plans**: 3 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 02-01-PLAN.md — UploadInstructionScreen: instrucao de qual mao + dicas de qualidade + outline SVG
+- [ ] 02-02-PLAN.md — useUploadValidation hook + UploadValidationScreen + UploadConfirmScreen
+- [ ] 02-03-PLAN.md — Wiring: fluxo multi-step na camera page, substituir UploadPreview
 
 ### Phase 3: Edge Cases + Prompt
 
@@ -118,9 +124,9 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4
 
-| Phase                  | Milestone | Plans Complete | Status      | Completed |
-| ---------------------- | --------- | -------------- | ----------- | --------- |
-| 1. Camera UI           | v1.2      | 2/2 | Complete   | 2026-04-11 |
-| 2. Upload Pipeline     | v1.2      | 0/?            | Not started | -         |
-| 3. Edge Cases + Prompt | v1.2      | 0/?            | Not started | -         |
-| 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -         |
+| Phase                  | Milestone | Plans Complete | Status      | Completed  |
+| ---------------------- | --------- | -------------- | ----------- | ---------- |
+| 1. Camera UI           | v1.2      | 2/2            | Complete    | 2026-04-11 |
+| 2. Upload Pipeline     | v1.2      | 0/3            | Not started | -          |
+| 3. Edge Cases + Prompt | v1.2      | 0/?            | Not started | -          |
+| 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -          |
