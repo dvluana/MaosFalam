@@ -41,11 +41,13 @@ Two test files covering the protected user API routes:
 ## Tests by Requirement
 
 ### API-08: GET /api/user/profile
+
 - Authenticated with DB profile: merges Clerk name+email with DB cpf+phone
 - Authenticated without DB profile: returns cpf=null, phone=null
 - Unauthenticated (currentUser returns null): returns 401
 
 ### API-09: PUT /api/user/profile
+
 - Valid full body {cpf, phone}: upserts by clerkUserId, returns {ok: true}
 - Partial body {cpf only}: upsert.update contains cpf, does NOT contain phone key (conditional spread verified)
 - Invalid body (cpf too short "123"): returns 400 via Zod
@@ -53,6 +55,7 @@ Two test files covering the protected user API routes:
 - SEC-07 compliance: logger.info never called with cpf or phone in payload
 
 ### API-10: DELETE /api/user/account
+
 - Correct confirmation "EXCLUIR": soft-deletes all readings (isActive: false), returns {ok: true}
 - Wrong case "excluir": returns 400 with "EXCLUIR" in error message
 - Wrong value "delete": returns 400
@@ -61,6 +64,7 @@ Two test files covering the protected user API routes:
 - User isolation: updateMany called with authenticated user's clerkUserId, not another user's
 
 ### SEC-03 (deferred)
+
 Comment added to account test file documenting the deferred rate limit pattern for credits/purchase.
 
 ## Mock Patterns Used

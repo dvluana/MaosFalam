@@ -33,14 +33,15 @@ Wire /ler/nome to call registerLead and persist lead_id; wire /ler/camera to sav
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Wire nome page to registerLead | 3aeddbe | src/app/ler/nome/page.tsx |
-| 2 | Wire camera to save photo before navigating | eccc850 | src/hooks/useCameraPipeline.ts, src/app/ler/camera/page.tsx |
+| Task | Name                                        | Commit  | Files                                                       |
+| ---- | ------------------------------------------- | ------- | ----------------------------------------------------------- |
+| 1    | Wire nome page to registerLead              | 3aeddbe | src/app/ler/nome/page.tsx                                   |
+| 2    | Wire camera to save photo before navigating | eccc850 | src/hooks/useCameraPipeline.ts, src/app/ler/camera/page.tsx |
 
 ## What Was Built
 
 **Task 1 — Nome page lead registration:**
+
 - Added `registerLead` import from `@/lib/reading-client`
 - Made `handleSubmit` async
 - Added `submitting` state — button disabled during in-flight request
@@ -49,6 +50,7 @@ Wire /ler/nome to call registerLead and persist lead_id; wire /ler/camera to sav
 - Lead registration errors caught silently — funnel never blocked
 
 **Task 2 — Camera photo persistence:**
+
 - `useCameraPipeline.ts`: `onCaptured` callback now accepts `(photoBase64: string)` — mock path passes `"mock_photo_placeholder"`
 - `camera/page.tsx` `handleCaptured`: saves `maosfalam_photo` to sessionStorage before `router.push("/ler/scan")`
 - `handleUploadSelected`: uses `FileReader.readAsDataURL` to extract base64, strips data URL prefix, saves to sessionStorage
@@ -61,10 +63,10 @@ None — plan executed exactly as written.
 
 ## Known Stubs
 
-| Stub | File | Reason |
-|------|------|--------|
-| `"mock_photo_placeholder"` in mock timer path | src/hooks/useCameraPipeline.ts:34 | Real MediaPipe base64 extraction is a separate task |
-| `"mock_photo_placeholder"` in UploadPreview onConfirm | src/app/ler/camera/page.tsx:137 | UploadPreview holds file internally without exposing it; real wiring pending |
+| Stub                                                  | File                              | Reason                                                                       |
+| ----------------------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------- |
+| `"mock_photo_placeholder"` in mock timer path         | src/hooks/useCameraPipeline.ts:34 | Real MediaPipe base64 extraction is a separate task                          |
+| `"mock_photo_placeholder"` in UploadPreview onConfirm | src/app/ler/camera/page.tsx:137   | UploadPreview holds file internally without exposing it; real wiring pending |
 
 These stubs do not block the plan goal: the sessionStorage key `maosfalam_photo` is written before scan navigation in all code paths.
 

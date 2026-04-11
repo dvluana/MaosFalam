@@ -6,7 +6,8 @@ tags: [clerk, useAuth, cleanup]
 dependency_graph:
   requires: []
   provides: [clerk-backed-useAuth]
-  affects: [conta/layout, conta/perfil, landing/Nav, login, registro, creditos, ler/nome, ler/revelacao]
+  affects:
+    [conta/layout, conta/perfil, landing/Nav, login, registro, creditos, ler/nome, ler/revelacao]
 tech_stack:
   added: []
   patterns: [useUser-from-clerk, useClerk-signOut]
@@ -34,10 +35,10 @@ metrics:
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Delete deleteAccount files and export | 704a305 | src/app/api/user/account/route.ts (deleted), route.test.ts (deleted), src/lib/user-client.ts |
-| 2 | Migrate useAuth.ts to Clerk | 8c97cd4 | src/hooks/useAuth.ts |
+| Task | Name                                  | Commit  | Files                                                                                        |
+| ---- | ------------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| 1    | Delete deleteAccount files and export | 704a305 | src/app/api/user/account/route.ts (deleted), route.test.ts (deleted), src/lib/user-client.ts |
+| 2    | Migrate useAuth.ts to Clerk           | 8c97cd4 | src/hooks/useAuth.ts                                                                         |
 
 ## What Was Built
 
