@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.2
-milestone_name: fluxo-mao-dominante
-status: Ready to plan
-stopped_at: null
-last_updated: "2026-04-11"
+milestone_name: Fluxo de Mao Dominante
+status: Ready to execute
+stopped_at: Completed 01-camera-ui-01-PLAN.md
+last_updated: "2026-04-11T16:51:38.878Z"
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -19,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-11)
 
 **Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** Phase 1 — Camera UI
+**Current focus:** Phase 01 — camera-ui
 
 ## Current Position
 
-Phase: 1 of 4 (Camera UI)
-Plan: — of — in current phase
-Status: Ready to plan
-Last activity: 2026-04-11 — Roadmap v1.2 criado, 4 fases, 26 requisitos mapeados
-
-Progress: [░░░░░░░░░░] 0%
+Phase: 01 (camera-ui) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -45,6 +41,7 @@ Progress: [░░░░░░░░░░] 0%
 | -     | -     | -     | -        |
 
 _Updated after each plan completion_
+| Phase 01-camera-ui P01 | 1m | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -56,6 +53,7 @@ _Updated after each plan completion_
 - Upload photos NOT mirrored — MediaPipe labels are natural
 - heic2any pra converter HEIC de iPhone
 - Compressao client-side: max 1280px, JPEG 0.85
+- [Phase 01-camera-ui]: SVG drawn as right hand, scaleX(-1) for left — single path, no duplication
 
 ### Pending Todos
 
@@ -67,6 +65,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11
-Stopped at: Roadmap criado. Proximo: /gsd:plan-phase 1
+Last session: 2026-04-11T16:51:38.875Z
+Stopped at: Completed 01-camera-ui-01-PLAN.md
 Resume file: None

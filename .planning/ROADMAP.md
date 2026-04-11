@@ -63,7 +63,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 
-- [ ] 01-01-PLAN.md — Componentes visuais: HandOutlineSVG, HandInstructionOverlay, HandExpectedBadge
+- [x] 01-01-PLAN.md — Componentes visuais: HandOutlineSVG, HandInstructionOverlay, HandExpectedBadge
 - [ ] 01-02-PLAN.md — Wiring: WrongHandFeedback, camera switch, permission redirect, integracao na pagina
 
 ### Phase 2: Upload Pipeline
@@ -120,7 +120,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase                  | Milestone | Plans Complete | Status      | Completed |
 | ---------------------- | --------- | -------------- | ----------- | --------- |
-| 1. Camera UI           | v1.2      | 0/2            | Planning    | -         |
+| 1. Camera UI           | v1.2      | 1/2 | In Progress|  |
 | 2. Upload Pipeline     | v1.2      | 0/?            | Not started | -         |
 | 3. Edge Cases + Prompt | v1.2      | 0/?            | Not started | -         |
 | 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -         |
