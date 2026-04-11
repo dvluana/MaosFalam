@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import CreditGate from "@/components/reading/CreditGate";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import CreditGate from "@/components/reading/CreditGate";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { registerLead, requestNewReading } from "@/lib/reading-client";
