@@ -88,8 +88,13 @@ Plans:
 3. Apos 1.5s de mao valida e estavelizada, a foto e capturada automaticamente do canvas como base64 JPEG sem intervencao do usuario
 4. Handedness (destra/canhota) e perguntado antes da camera e dominant_hand e enviado no ReadingContext para o servidor
 5. Camera frontal espelhada e camera traseira nao espelhada funcionam corretamente sem inversao de landmarks
-   **Plans**: TBD
+   **Plans**: 2 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 03-01-PLAN.md — Instalar MediaPipe, estender CamState, criar modulo mediapipe.ts, reescrever useCameraPipeline com deteccao real
+- [ ] 03-02-PLAN.md — Conectar video+canvas no CameraViewport, passar refs da camera page, verificar fluxo completo
 
 ### Phase 4: Clerk Cleanup + Error Handling
 
@@ -121,10 +126,10 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
-| Phase                             | Milestone | Plans Complete | Status      | Completed |
-| --------------------------------- | --------- | -------------- | ----------- | --------- |
-| 1. Auditoria                      | v1.1      | 2/2            | Complete    | -         |
-| 2. ReadingContext + Creditos      | v1.1      | 2/2 | Complete   | 2026-04-11 |
-| 3. MediaPipe Real                 | v1.1      | 0/?            | Not started | -         |
-| 4. Clerk Cleanup + Error Handling | v1.1      | 0/?            | Not started | -         |
-| 5. Docs Sync                      | v1.1      | 0/?            | Not started | -         |
+| Phase                             | Milestone | Plans Complete | Status      | Completed  |
+| --------------------------------- | --------- | -------------- | ----------- | ---------- |
+| 1. Auditoria                      | v1.1      | 2/2            | Complete    | -          |
+| 2. ReadingContext + Creditos      | v1.1      | 2/2            | Complete    | 2026-04-11 |
+| 3. MediaPipe Real                 | v1.1      | 0/2            | Planning    | -          |
+| 4. Clerk Cleanup + Error Handling | v1.1      | 0/?            | Not started | -          |
+| 5. Docs Sync                      | v1.1      | 0/?            | Not started | -          |
