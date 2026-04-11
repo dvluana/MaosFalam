@@ -9,12 +9,21 @@ import CameraEyebrow from "@/components/camera/CameraEyebrow";
 import CameraFeedback from "@/components/camera/CameraFeedback";
 import CameraViewport from "@/components/camera/CameraViewport";
 import CaptureFlash from "@/components/camera/CaptureFlash";
+import HandInstructionOverlay from "@/components/camera/HandInstructionOverlay";
 import MethodChoice from "@/components/camera/MethodChoice";
 import UploadPreview from "@/components/camera/UploadPreview";
+import WrongHandFeedback from "@/components/camera/WrongHandFeedback";
 import PageLoading from "@/components/ui/PageLoading";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
-import { CAM_EYEBROW, CAM_FEEDBACK, CAM_STATES, isErrorState, type CamState } from "@/types/camera";
+import { loadReadingContext } from "@/lib/reading-context";
+import {
+  CAM_EYEBROW,
+  CAM_FEEDBACK,
+  CAM_STATES,
+  isErrorState,
+  type CamState,
+} from "@/types/camera";
 
 function CameraPageInner() {
   const router = useRouter();
@@ -23,8 +32,14 @@ function CameraPageInner() {
   const [state, setState] = useState<CamState>(forced ?? "method_choice");
   const [showUpload, setShowUpload] = useState(false);
   const [mirrored, setMirrored] = useState(false);
+  const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
+  const [cameraKey, setCameraKey] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // Load reading context for dominant hand
+  const readingContext = loadReadingContext();
+  const dominantHand = readingContext?.dominant_hand ?? "right";
 
   // Guard: sem nome no sessionStorage, volta pro /ler/nome
   useEffect(() => {
@@ -36,6 +51,17 @@ function CameraPageInner() {
   if (forced && forced !== state) {
     setState(forced);
   }
+
+  // Permission denied → auto-redirect to upload after brief pause
+  useEffect(() => {
+    if (state === "camera_permission_denied" || state === "camera_permission_denied_permanent") {
+      const timer = setTimeout(() => {
+        setState("method_choice");
+        setShowUpload(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [state]);
 
   const handleCaptured = useCallback(
     (photoBase64: string) => {
@@ -53,6 +79,8 @@ function CameraPageInner() {
     videoRef,
     canvasRef,
     onMirroredChange: setMirrored,
+    preferredFacing: facingMode,
+    cameraKey,
   });
 
   const handleUploadSelected = useCallback(
@@ -76,9 +104,23 @@ function CameraPageInner() {
     [router],
   );
 
+  const handleSwitchCamera = useCallback(() => {
+    // Stop current stream
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((t) => t.stop());
+      videoRef.current.srcObject = null;
+    }
+    setFacingMode((prev) => (prev === "environment" ? "user" : "environment"));
+    setCameraKey((prev) => prev + 1);
+    setState("loading_mediapipe");
+  }, []);
+
   const errorState = isErrorState(state);
-  const showViewport = !errorState && state !== "method_choice";
-  const showTitle = !errorState && state !== "method_choice";
+  const showViewport =
+    !errorState && state !== "method_choice" && state !== "hand_instruction";
+  const showTitle =
+    !errorState && state !== "method_choice" && state !== "hand_instruction";
 
   return (
     <main className="relative min-h-dvh bg-black flex flex-col items-center justify-center px-6 pt-28 pb-16 gap-10 overflow-hidden">
@@ -92,6 +134,14 @@ function CameraPageInner() {
             "radial-gradient(ellipse 70% 55% at 50% 45%, rgba(201,162,74,0.06), transparent 75%)",
         }}
       />
+
+      {/* Hand instruction overlay — between method_choice and loading_mediapipe */}
+      {state === "hand_instruction" && (
+        <HandInstructionOverlay
+          dominantHand={dominantHand}
+          onReady={() => setState("loading_mediapipe")}
+        />
+      )}
 
       <CameraEyebrow label={CAM_EYEBROW[state]} />
 
@@ -128,7 +178,7 @@ function CameraPageInner() {
 
       {state === "method_choice" && !showUpload && (
         <MethodChoice
-          onPickLive={() => setState("loading_mediapipe")}
+          onPickLive={() => setState("hand_instruction")}
           onPickUpload={() => setShowUpload(true)}
         />
       )}
@@ -159,6 +209,8 @@ function CameraPageInner() {
           videoRef={videoRef}
           canvasRef={canvasRef}
           mirrored={mirrored}
+          dominantHand={dominantHand}
+          onSwitchCamera={handleSwitchCamera}
         />
       )}
 
@@ -175,6 +227,9 @@ function CameraPageInner() {
           onUploadSelected={handleUploadSelected}
         />
       )}
+
+      {/* Wrong hand feedback toast — non-blocking, 3s auto-hide */}
+      <WrongHandFeedback expectedHand={dominantHand} visible={state === "camera_wrong_hand"} />
 
       <StateSwitcher states={CAM_STATES} current={state} />
     </main>

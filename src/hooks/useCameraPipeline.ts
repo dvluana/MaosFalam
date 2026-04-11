@@ -37,6 +37,10 @@ interface Params {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   /** Called when the camera stream is established with whether the video is mirrored (front camera). */
   onMirroredChange?: (mirrored: boolean) => void;
+  /** Preferred facing mode. Defaults to "environment" (back camera). */
+  preferredFacing?: "environment" | "user";
+  /** Increment to force camera re-initialization (e.g., on camera switch). */
+  cameraKey?: number;
 }
 
 /**
@@ -59,6 +63,8 @@ export default function useCameraPipeline({
   videoRef,
   canvasRef,
   onMirroredChange,
+  preferredFacing,
+  cameraKey,
 }: Params): void {
   const landmarkerRef = useRef<HandLandmarker | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -88,12 +94,12 @@ export default function useCameraPipeline({
       const ctx = loadReadingContext();
       dominantHandRef.current = ctx?.dominant_hand ?? "right";
 
-      // Request camera — prefer back camera (environment)
+      // Request camera — prefer back camera (environment) unless overridden
       let stream: MediaStream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({
           video: {
-            facingMode: "environment",
+            facingMode: preferredFacing ?? "environment",
             width: { ideal: 1280 },
             height: { ideal: 960 },
           },
@@ -173,7 +179,7 @@ export default function useCameraPipeline({
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forced]);
+  }, [forced, cameraKey]);
 
   // ============================================================
   // Detection loop — runs while in detection states
