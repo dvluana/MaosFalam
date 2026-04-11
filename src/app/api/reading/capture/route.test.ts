@@ -116,6 +116,7 @@ const validBody = {
   target_name: "Ana",
   target_gender: "female",
   is_self: true,
+  element_hint: "fire" as const,
 };
 
 describe("POST /api/reading/capture", () => {
@@ -185,5 +186,24 @@ describe("POST /api/reading/capture", () => {
     const res = await POST(makeRequest(validBody));
 
     expect(res.status).toBe(500);
+  });
+
+  it("passes element_hint to analyzeHand when present", async () => {
+    await POST(makeRequest(validBody));
+    expect(analyzeHand).toHaveBeenCalledWith(
+      validBody.photo_base64,
+      "right",
+      "fire",
+    );
+  });
+
+  it("passes undefined element_hint when not in body", async () => {
+    const { element_hint: _, ...bodyWithout } = validBody;
+    await POST(makeRequest(bodyWithout));
+    expect(analyzeHand).toHaveBeenCalledWith(
+      validBody.photo_base64,
+      "right",
+      undefined,
+    );
   });
 });
