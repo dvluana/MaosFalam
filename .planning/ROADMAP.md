@@ -92,7 +92,13 @@ Plans:
 3. GET /api/reading/[id] returns the reading JSON; a valid but inactive reading returns 410
 4. A client that POSTs to /api/reading/capture more than 5 times in an hour receives 429 on the 6th request
 5. All API responses include the required security headers (X-Frame-Options, HSTS, Permissions-Policy, etc.)
-   **Plans**: TBD
+
+**Plans**: 2 plans
+
+Plans:
+
+- [ ] 04-01-PLAN.md — Audit and fix the 3 existing public API routes (201 status, body size limit, UUID validation, import verification)
+- [ ] 04-02-PLAN.md — Write route tests proving API-01 through API-04 and SEC-01, SEC-02, SEC-05, SEC-06
 
 ### Phase 5: Protected API
 
@@ -131,6 +137,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
 | 2. Auth            | 2/2            | Complete    | 2026-04-11 |
 | 3. AI Pipeline     | 2/3            | In Progress |            |
-| 4. Public API      | 0/TBD          | Not started | -          |
+| 4. Public API      | 0/2            | Not started | -          |
 | 5. Protected API   | 0/TBD          | Not started | -          |
 | 6. Client Adapters | 0/TBD          | Not started | -          |
