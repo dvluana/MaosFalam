@@ -6,7 +6,7 @@ interface Params {
   state: CamState;
   forced: boolean;
   setState: (s: CamState) => void;
-  onCaptured: () => void;
+  onCaptured: (photoBase64: string) => void;
 }
 
 /**
@@ -31,7 +31,7 @@ export default function useCameraPipeline({ state, forced, setState, onCaptured 
         }
       }, 7000),
     );
-    timers.push(setTimeout(onCaptured, 7500));
+    timers.push(setTimeout(() => onCaptured("mock_photo_placeholder"), 7500));
     return () => timers.forEach(clearTimeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forced]);

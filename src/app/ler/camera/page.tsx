@@ -34,9 +34,13 @@ function CameraPageInner() {
     setState(forced);
   }
 
-  const handleCaptured = useCallback(() => {
-    router.push("/ler/scan");
-  }, [router]);
+  const handleCaptured = useCallback(
+    (photoBase64: string) => {
+      sessionStorage.setItem("maosfalam_photo", photoBase64);
+      router.push("/ler/scan");
+    },
+    [router],
+  );
 
   useCameraPipeline({
     state,
@@ -47,15 +51,21 @@ function CameraPageInner() {
 
   const handleUploadSelected = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      // Mock: ao selecionar um arquivo, flasha capturing e pusha pro scan.
-      // TODO (backend): upload real pra storage, depois envio pra API de
-      // visão com o URL do arquivo.
       if (!event.target.files?.length) return;
+      const file = event.target.files[0];
+      if (!file) return;
       setState("camera_capturing");
       if (typeof navigator !== "undefined" && "vibrate" in navigator) {
         navigator.vibrate?.(120);
       }
-      window.setTimeout(() => router.push("/ler/scan"), 600);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        const base64 = dataUrl.split(",")[1] ?? "";
+        sessionStorage.setItem("maosfalam_photo", base64);
+        window.setTimeout(() => router.push("/ler/scan"), 600);
+      };
+      reader.readAsDataURL(file);
     },
     [router],
   );
@@ -112,7 +122,7 @@ function CameraPageInner() {
 
       {state === "method_choice" && !showUpload && (
         <MethodChoice
-          onPickLive={() => router.push("/ler/scan")}
+          onPickLive={() => setState("loading_mediapipe")}
           onPickUpload={() => setShowUpload(true)}
         />
       )}
@@ -124,6 +134,7 @@ function CameraPageInner() {
             if (typeof navigator !== "undefined" && "vibrate" in navigator) {
               navigator.vibrate?.(120);
             }
+            sessionStorage.setItem("maosfalam_photo", "mock_photo_placeholder");
             window.setTimeout(() => router.push("/ler/scan"), 600);
           }}
           onCancel={() => setShowUpload(false)}
