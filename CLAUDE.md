@@ -105,6 +105,15 @@ Cinzel Decorative: LOGO ONLY. Cormorant Garamond italic: voz da cigana. Cinzel: 
 - Migrations rodam no Neon develop via `npx prisma migrate deploy`.
 - Prisma 7: connection config em `prisma.config.ts`, NAO em `schema.prisma`.
 
+## Vercel (Deploy)
+
+- **Production**: maosfalam.com → branch main. "Em breve" por enquanto.
+- **Staging**: staging.maosfalam.com → branch develop. Env vars apontam pra Neon develop.
+- Push na develop → staging atualiza automaticamente.
+- Push na main → producao atualiza automaticamente.
+- Env vars configuradas por environment (production vs preview) na Vercel.
+- PWA configurado (manifest.json, icons, apple-touch-icon).
+
 ## Behavior
 
 - Seja direto. Faca o trabalho. Sem explicacoes longas.
