@@ -1,6 +1,6 @@
 "use client";
 
-import { notFound, useSearchParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Suspense, use, useEffect, useState } from "react";
 
 import BlurredCard from "@/components/reading/BlurredCard";
@@ -11,7 +11,6 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Separator from "@/components/ui/Separator";
-import StateSwitcher from "@/components/ui/StateSwitcher";
 import { getReading } from "@/lib/reading-client";
 import type { Reading } from "@/types/report";
 
@@ -19,8 +18,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-const STATES = ["free_saved", "premium_saved", "share_options"] as const;
-type State = (typeof STATES)[number];
+type State = "free_saved" | "premium_saved" | "share_options";
 
 function ShareOptions({ readingId }: { readingId: string }) {
   const shareUrl =
@@ -62,8 +60,6 @@ function ShareOptions({ readingId }: { readingId: string }) {
 function LeituraContent({ id }: { id: string }) {
   const [reading, setReading] = useState<Reading | null>(null);
   const [loading, setLoading] = useState(true);
-  const search = useSearchParams();
-  const stateParam = search.get("state") as State | null;
   const [showShare, setShowShare] = useState(false);
 
   useEffect(() => {
@@ -87,14 +83,9 @@ function LeituraContent({ id }: { id: string }) {
     notFound();
   }
 
-  const forcedTier: State =
-    stateParam && (STATES as readonly string[]).includes(stateParam)
-      ? stateParam
-      : reading.tier === "premium"
-        ? "premium_saved"
-        : "free_saved";
+  const currentTier: State = reading.tier === "premium" ? "premium_saved" : "free_saved";
 
-  const isPremium = forcedTier === "premium_saved";
+  const isPremium = currentTier === "premium_saved";
   const heart = reading.report.sections.find((s) => s.key === "heart");
   const other = reading.report.sections.filter((s) => s.key !== "heart");
 
@@ -142,7 +133,7 @@ function LeituraContent({ id }: { id: string }) {
 
       <Separator variant="gold" />
 
-      {showShare || forcedTier === "share_options" ? (
+      {showShare ? (
         <ShareOptions readingId={reading.id} />
       ) : (
         <div className="flex justify-center">
@@ -151,8 +142,6 @@ function LeituraContent({ id }: { id: string }) {
           </Button>
         </div>
       )}
-
-      <StateSwitcher states={STATES} current={forcedTier} />
     </div>
   );
 }

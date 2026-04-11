@@ -2,13 +2,12 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 
 import BuyCreditsModal from "@/components/account/BuyCreditsModal";
 import ElementGlyph from "@/components/reading/ElementGlyph";
 import Button from "@/components/ui/Button";
-import StateSwitcher from "@/components/ui/StateSwitcher";
 import { useToast } from "@/components/ui/ToastProvider";
 import { getCredits } from "@/lib/payment-client";
 import { getUserProfile, getUserReadings } from "@/lib/user-client";
@@ -16,8 +15,7 @@ import type { Reading as BaseReading, HandElement, ReportJSON, Tier } from "@/ty
 
 type Reading = BaseReading & { target_name?: string };
 
-const STATES = ["has_readings", "empty", "loading"] as const;
-type State = (typeof STATES)[number];
+type State = "has_readings" | "empty" | "loading";
 
 type View = "cards" | "list";
 
@@ -368,8 +366,6 @@ function CreditsBanner({ credits, onBuyMore }: { credits: number; onBuyMore: () 
 
 function LeiturasContent() {
   const router = useRouter();
-  const search = useSearchParams();
-  const stateParam = search.get("state") as State | null;
   const [userData, setUserData] = useState<{ name: string; credits: number } | null>(null);
   const [readings, setReadings] = useState<Reading[]>([]);
   const [loading, setLoading] = useState(true);
@@ -401,13 +397,10 @@ function LeiturasContent() {
   }, [showToast]);
 
   const currentState: State = useMemo(() => {
-    if (stateParam && (STATES as readonly string[]).includes(stateParam)) {
-      return stateParam;
-    }
     if (loading) return "loading";
     if (!readings.length) return "empty";
     return "has_readings";
-  }, [stateParam, loading, readings]);
+  }, [loading, readings]);
 
   return (
     <div className="max-w-xl mx-auto px-5 pt-4 pb-16">
@@ -545,8 +538,6 @@ function LeiturasContent() {
           )}
         </>
       )}
-
-      <StateSwitcher states={STATES} current={currentState} />
     </div>
   );
 }
