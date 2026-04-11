@@ -11,7 +11,6 @@ import HeroCTA from "./HeroCTA";
 import HeroTitle from "./HeroTitle";
 import Nav from "./Nav";
 import SceneVignette from "./SceneVignette";
-import Smoke from "./Smoke";
 import VideoHero from "./VideoHero";
 
 /**
@@ -42,24 +41,34 @@ export default function HomeLanding() {
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-black overflow-hidden cursor-none">
+    <main
+      className="relative min-h-screen overflow-hidden cursor-none"
+      style={{ background: "#000" }}
+    >
       {/* Camada 1: ruído cinematográfico (z baixo) */}
       <Grain />
 
       {/* Camada 2: constelação de fundo */}
       <Constellation />
 
-      {/* Camada 3: fumaça atmosférica */}
-      <Smoke />
+      {/* Camada 3: fumaça atmosférica (removida — clareava o fundo) */}
 
       {/* Camada 4: vinheta moldando a cena */}
       <SceneVignette />
 
-      {/* Camada 5: hero com vídeo + mandala (HeroTitle dentro) */}
-      <VideoHero>
-        <HeroTitle />
-        <HeroCTA />
-      </VideoHero>
+      {/* Camada 5: vídeo + mandala (centralizado) */}
+      <VideoHero />
+
+      {/* Camada 5b: texto + CTA fixos na base */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-30 flex flex-col items-center pointer-events-none"
+        style={{ paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}
+      >
+        <div className="pointer-events-auto">
+          <HeroTitle />
+        </div>
+      </div>
+      <HeroCTA />
 
       {/* Camada 6: lâmpada Edison + stage-dark + cone de luz */}
       <EdisonLamp />

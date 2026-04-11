@@ -328,26 +328,9 @@
   }
 }
 
-/* ── CONE (cone de luz atmosférico) ── */
+/* ── CONE (desativado) ── */
 .cone {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 28vh;
-  z-index: 16;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      ellipse 32% 100% at 50% 0%,
-      rgba(228, 192, 75, 0.14) 0%,
-      rgba(212, 172, 62, 0.05) 50%,
-      transparent 100%
-    ),
-    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(201, 162, 54, 0.05) 0%, transparent 100%);
-  opacity: 0;
-  -webkit-mask-image: linear-gradient(180deg, black 0%, black 40%, transparent 100%);
-  mask-image: linear-gradient(180deg, black 0%, black 40%, transparent 100%);
+  display: none;
 }
 .cone.on {
   animation: coneIgnite 3s ease forwards;

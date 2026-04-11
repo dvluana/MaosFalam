@@ -10,16 +10,43 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export default function Input({ label, error, className = "", ...rest }: InputProps) {
   return (
     <div className="w-full">
-      <label className="block font-cormorant italic text-[14px] tracking-[0.02em] text-bone-dim mb-2">
+      <label className="block font-raleway text-[13px] tracking-[0.02em] text-bone mb-2">
         {label}
       </label>
-      <div className="relative">
+      <div className="relative group">
+        {/* Corner ornaments */}
+        <span
+          aria-hidden
+          className="absolute top-[-1px] left-[-1px] w-2 h-2 transition-all duration-300 group-focus-within:w-3 group-focus-within:h-3 pointer-events-none"
+          style={{
+            borderTop: "1px solid rgba(201,162,74,0.2)",
+            borderLeft: "1px solid rgba(201,162,74,0.2)",
+          }}
+        />
+        <span
+          aria-hidden
+          className="absolute bottom-[-1px] right-[-1px] w-2 h-2 transition-all duration-300 group-focus-within:w-3 group-focus-within:h-3 pointer-events-none"
+          style={{
+            borderBottom: "1px solid rgba(201,162,74,0.2)",
+            borderRight: "1px solid rgba(201,162,74,0.2)",
+          }}
+        />
         <input
           {...rest}
-          className={`w-full bg-[#171222] text-bone font-raleway text-[15px] py-3 px-4 outline-none transition-all duration-300 placeholder:font-cormorant placeholder:italic placeholder:text-bone-dim/40 placeholder:text-[14px] focus:ring-1 focus:ring-gold/30 ${className}`}
+          className={`w-full text-bone font-raleway text-[15px] py-3 px-4 outline-none transition-all duration-300 placeholder:font-raleway placeholder:text-bone-dim/40 placeholder:text-[14px] focus:ring-0 ${className}`}
           style={{
-            border: "1px solid rgba(123,107,165,0.18)",
+            background: "linear-gradient(160deg, #110c1a, #171222, #110c1a)",
+            border: "1px solid rgba(201,162,74,0.1)",
             borderRadius: "0 6px 0 6px",
+            boxShadow: "inset 0 1px 4px rgba(0,0,0,0.3)",
+          }}
+        />
+        {/* Focus accent line — gold gradient at bottom */}
+        <span
+          aria-hidden
+          className="absolute bottom-0 left-[10%] right-[10%] h-px opacity-0 group-focus-within:opacity-100 transition-opacity duration-400 pointer-events-none"
+          style={{
+            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.4), transparent)",
           }}
         />
       </div>
