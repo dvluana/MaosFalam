@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type React from "react";
 
-import type { HandLandmarker } from "@mediapipe/tasks-vision";
-
-import { captureFrame, detectHandedness, loadHandLandmarker, validateLandmarks } from "@/lib/mediapipe";
+import {
+  captureFrame,
+  detectHandedness,
+  loadHandLandmarker,
+  validateLandmarks,
+} from "@/lib/mediapipe";
 import { loadReadingContext } from "@/lib/reading-context";
 import type { CamState } from "@/types/camera";
+
+import type { HandLandmarker } from "@mediapipe/tasks-vision";
+import type React from "react";
 
 // States where the detection rAF loop should run
 const DETECTION_STATES: ReadonlySet<CamState> = new Set([

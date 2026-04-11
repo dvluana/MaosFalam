@@ -1,6 +1,7 @@
 "use client";
 
 import { FilesetResolver, HandLandmarker } from "@mediapipe/tasks-vision";
+
 import type { Category, NormalizedLandmark } from "@mediapipe/tasks-vision";
 
 const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm";

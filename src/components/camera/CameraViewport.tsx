@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type React from "react";
 
 import type { CamState } from "@/types/camera";
 import { isFrameActive } from "@/types/camera";
+
+import type React from "react";
 
 interface Props {
   state: CamState;
