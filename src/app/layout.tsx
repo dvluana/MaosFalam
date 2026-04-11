@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import {
   Cinzel,
   Cinzel_Decorative,
@@ -55,31 +56,33 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR">
-      <body
-        className={`${cinzel.variable} ${cormorant.variable} ${raleway.variable} ${jetbrains.variable} ${cinzelDecorative.variable} font-raleway antialiased`}
-      >
-        <svg
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-[0.025] mix-blend-overlay"
+    <ClerkProvider>
+      <html lang="pt-BR">
+        <body
+          className={`${cinzel.variable} ${cormorant.variable} ${raleway.variable} ${jetbrains.variable} ${cinzelDecorative.variable} font-raleway antialiased`}
         >
-          <filter id="grain">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.9"
-              numOctaves="2"
-              stitchTiles="stitch"
-            />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#grain)" />
-        </svg>
-        <ToastProvider>
-          <OfflineDetector />
-          <SiteHeader />
-          {children}
-        </ToastProvider>
-      </body>
-    </html>
+          <svg
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-[0.025] mix-blend-overlay"
+          >
+            <filter id="grain">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.9"
+                numOctaves="2"
+                stitchTiles="stitch"
+              />
+              <feColorMatrix type="saturate" values="0" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#grain)" />
+          </svg>
+          <ToastProvider>
+            <OfflineDetector />
+            <SiteHeader />
+            {children}
+          </ToastProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
