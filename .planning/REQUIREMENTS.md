@@ -77,17 +77,42 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 
 ## Traceability
 
-| Requirement               | Phase | Status |
-| ------------------------- | ----- | ------ |
-| (populated by roadmapper) |       |        |
+| Requirement | Phase   | Status  |
+| ----------- | ------- | ------- |
+| CAM-01      | Phase 1 | Pending |
+| CAM-02      | Phase 1 | Pending |
+| CAM-03      | Phase 1 | Pending |
+| CAM-04      | Phase 1 | Pending |
+| CAM-05      | Phase 1 | Pending |
+| CAM-06      | Phase 1 | Pending |
+| UPL-01      | Phase 2 | Pending |
+| UPL-02      | Phase 2 | Pending |
+| UPL-03      | Phase 2 | Pending |
+| UPL-04      | Phase 2 | Pending |
+| UPL-05      | Phase 2 | Pending |
+| UPL-06      | Phase 2 | Pending |
+| EDGE-01     | Phase 3 | Pending |
+| EDGE-02     | Phase 3 | Pending |
+| EDGE-03     | Phase 3 | Pending |
+| EDGE-04     | Phase 3 | Pending |
+| EDGE-05     | Phase 3 | Pending |
+| EDGE-06     | Phase 3 | Pending |
+| PROMPT-01   | Phase 3 | Pending |
+| PROMPT-02   | Phase 3 | Pending |
+| OTHER-01    | Phase 4 | Pending |
+| OTHER-02    | Phase 4 | Pending |
+| OTHER-03    | Phase 4 | Pending |
+| A11Y-01     | Phase 4 | Pending |
+| A11Y-02     | Phase 4 | Pending |
+| A11Y-03     | Phase 4 | Pending |
 
 **Coverage:**
 
-- v1.2 requirements: 24 total
-- Mapped to phases: 0
-- Unmapped: 24
+- v1.2 requirements: 26 total
+- Mapped to phases: 26
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-04-11_
-_Last updated: 2026-04-11 after milestone v1.2 definition_
+_Last updated: 2026-04-11 after roadmap v1.2 created_

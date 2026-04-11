@@ -3,7 +3,8 @@
 ## Milestones
 
 - ✅ **v1.0 Backend MVP** - Phases 1-7 (shipped 2026-04-11)
-- 🚧 **v1.1 Alinhamento Arquitetural** - Phases 1-5 (in progress)
+- ✅ **v1.1 Alinhamento Arquitetural** - Phases 1-5 (shipped 2026-04-11)
+- 🚧 **v1.2 Fluxo de Mao Dominante** - Phases 1-4 (in progress)
 
 <details>
 <summary>✅ v1.0 Backend MVP (Phases 1-7) - SHIPPED 2026-04-11</summary>
@@ -14,11 +15,20 @@ All 17 plans completed. See `.planning/archive/v1.0/` for history.
 
 </details>
 
+<details>
+<summary>✅ v1.1 Alinhamento Arquitetural (Phases 1-5) - SHIPPED 2026-04-11</summary>
+
+Phase 1: Auditoria | Phase 2: ReadingContext + Creditos | Phase 3: MediaPipe Real | Phase 4: Clerk Cleanup + Error Handling | Phase 5: Docs Sync
+
+All 9 plans completed. See `.planning/archive/v1.1/` for history.
+
+</details>
+
 ---
 
-### 🚧 v1.1 Alinhamento Arquitetural (In Progress)
+### 🚧 v1.2 Fluxo de Mao Dominante (In Progress)
 
-**Milestone Goal:** Auditar e alinhar o codigo com as decisoes de arquitetura tomadas, refatorar fluxos core, e implementar MediaPipe real antes de features novas.
+**Milestone Goal:** Completar o fluxo de mao dominante end-to-end: instrucoes visuais na camera, upload pipeline com validacao client-side, edge cases de imagem, prompt GPT-4o com contexto de dominancia, e suporte a leitura pra outra pessoa.
 
 ## Phases
 
@@ -29,111 +39,83 @@ All 17 plans completed. See `.planning/archive/v1.0/` for history.
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Auditoria** - Remover artefatos obsoletos e alinhar nomenclatura com decisoes v1.0
-- [x] **Phase 2: ReadingContext + Creditos** - Refatorar fluxo /ler/nome e gate de creditos (completed 2026-04-11)
-- [x] **Phase 3: MediaPipe Real** - Substituir mock por Hand Landmarker real com auto-captura (completed 2026-04-11)
-- [x] **Phase 4: Clerk Cleanup + Error Handling** - Delegar auth flows ao Clerk e diferenciar erros (completed 2026-04-11)
-- [x] **Phase 5: Docs Sync** - Alinhar architecture.md e CLAUDE.md com o codigo real (completed 2026-04-11)
+- [ ] **Phase 1: Camera UI** - Instrucoes visuais, badge de mao esperada, feedback de mao errada, outline SVG, camera traseira default
+- [ ] **Phase 2: Upload Pipeline** - Tela de escolha de metodo, instrucoes de upload, validacao de arquivo, confirmacao com preview
+- [ ] **Phase 3: Edge Cases + Prompt** - HEIC, EXIF, compressao, orientacao, retry logic, deteccao de screenshot, prompt GPT-4o atualizado
+- [ ] **Phase 4: Outra Pessoa + A11y** - Camera e upload adaptados ao contexto de outra pessoa, aria-labels, aria-live, role=img
 
 ## Phase Details
 
-### Phase 1: Auditoria
+### Phase 1: Camera UI
 
-**Goal**: Codebase limpa e alinhada com as decisoes arquiteturais de v1.0 — sem referencias a share_token, NextAuth, R2, Claude Vision, ou dados obsoletos
+**Goal**: Usuario ve instrucoes claras antes de abrir a camera, sabe qual mao posicionar, recebe aviso quando usa a mao errada, e a camera abre na traseira por padrao
 **Depends on**: Nothing (first phase)
-**Requirements**: AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04, AUDIT-05, AUDIT-06, AUDIT-07, AUDIT-08, AUDIT-09, AUDIT-10, AUDIT-11
+**Requirements**: CAM-01, CAM-02, CAM-03, CAM-04, CAM-05, CAM-06
 **Success Criteria** (what must be TRUE):
 
-1. Nenhuma referencia a share_token, share_expires_at, expires_at de credit_packs existe em qualquer arquivo TypeScript ou JSON
-2. Nenhuma referencia a NextAuth, next-auth, useSession, getServerSession existe no projeto
-3. Nenhuma referencia a R2, Cloudflare, photo_key, photoKey existe no projeto
-4. Toda ocorrencia de "Planeta dominante" foi substituida por "Monte dominante" e "Claude Vision" por "GPT-4o"
-5. A pagina de resultado nao usa VALID_MOCK_IDS nem fallbackName="Marina"; login()/register() stubs e TODOs obsoletos foram removidos
-   **Plans**: 2 plans
-
-Plans:
-
-- [x] 01-01-PLAN.md — Remover share_token, VALID_MOCK_IDS, fallbackName="Marina" de types e paginas
-- [x] 01-02-PLAN.md — Corrigir ordem de secoes, verificar items ja limpos, limpar TODOs obsoletos
-
-### Phase 2: ReadingContext + Creditos
-
-**Goal**: Visitante e usuario logado passam pelo /ler/nome com coleta completa de contexto e o debito de credito ocorre no servidor antes de qualquer captura
-**Depends on**: Phase 1
-**Requirements**: CTX-01, CTX-02, CTX-03, CTX-04, CTX-05, CTX-06, CTX-07, CTX-08, CTX-09
-**Success Criteria** (what must be TRUE):
-
-1. Visitante em /ler/nome preenche nome, email, genero e dominancia antes de prosseguir; lead e salvo via POST /api/lead/register
-2. Usuario logado ve "Pra mim" / "Pra outra pessoa" na mesma tela e ambos os caminhos montam ReadingContext correto com is_self flag
-3. Modal CreditGate aparece para usuario logado fazendo segunda leitura ou mais, mostrando saldo antes de confirmar
-4. Sem saldo, o usuario e redirecionado para /creditos antes de chegar na camera
-5. Debito de credito acontece exclusivamente via POST /api/reading/new no servidor, nunca no cliente
-   **Plans**: 2 plans
-   **UI hint**: yes
-
-Plans:
-
-- [x] 02-01-PLAN.md — ReadingContext type, sessionStorage helpers, useCredits hook
-- [x] 02-02-PLAN.md — Refatorar /ler/nome com fluxo dual visitante/logada + CreditGate modal
-
-### Phase 3: MediaPipe Real
-
-**Goal**: Camera usa Hand Landmarker real com validacao de landmarks e auto-captura; a mao dominante e coletada antes da camera e validada em tempo real
-**Depends on**: Phase 2
-**Requirements**: MP-01, MP-02, MP-03, MP-04, MP-05, MP-06, MP-07, MP-08
-**Success Criteria** (what must be TRUE):
-
-1. @mediapipe/tasks-vision esta instalado e o Hand Landmarker carrega sem erros em celular moderno
-2. Camera abre, detecta a mao em tempo real e exibe feedback textual da cigana quando a posicao esta errada (mao fechada, descentralizada, mao errada)
-3. Apos 1.5s de mao valida e estavelizada, a foto e capturada automaticamente do canvas como base64 JPEG sem intervencao do usuario
-4. Handedness (destra/canhota) e perguntado antes da camera e dominant_hand e enviado no ReadingContext para o servidor
-5. Camera frontal espelhada e camera traseira nao espelhada funcionam corretamente sem inversao de landmarks
+1. Antes de ver o viewfinder, usuario ve overlay com frase da cigana e outline SVG mostrando qual mao posicionar (direita ou esquerda conforme dominancia)
+2. Durante a captura, badge no viewfinder exibe "MAO DIREITA" ou "MAO ESQUERDA" e pode ser descartado com botao x
+3. Quando MediaPipe detecta a mao errada, toast aparece por 3s com aviso — sem bloquear a captura
+4. Outline SVG no viewfinder esta espelhado conforme a mao dominante escolhida
+5. Camera abre na traseira (facingMode: environment) com botao para trocar pra frontal; permissao negada redireciona para upload com frase da cigana
    **Plans**: TBD
    **UI hint**: yes
 
-### Phase 4: Clerk Cleanup + Error Handling
+### Phase 2: Upload Pipeline
 
-**Goal**: Fluxos de senha e perfil delegados ao Clerk sem telas customizadas; pagina de leituras exibe erros claros; resultado diferencia 404 de 500
-**Depends on**: Phase 3
-**Requirements**: CLK-01, CLK-02, CLK-03, CLK-04, DOCS-03, DOCS-04
+**Goal**: Usuario que nao usa a camera ao vivo consegue enviar foto da palma com instrucoes claras, validacao de formato e qualidade, e confirmacao antes do envio
+**Depends on**: Phase 1
+**Requirements**: UPL-01, UPL-02, UPL-03, UPL-04, UPL-05, UPL-06
 **Success Criteria** (what must be TRUE):
 
-1. /esqueci-senha e /redefinir-senha/[token] redirecionam para o fluxo Clerk sem renderizar formulario customizado
-2. /conta/perfil usa Clerk UserProfile para edicao de nome e troca de senha; nao existe formulario manual para essas acoes
-3. /conta/leituras mostra toast na voz da cigana quando a API falha ao carregar leituras
-4. Pagina de resultado exibe mensagem distinta para leitura nao encontrada (404) versus erro de servidor (500)
-   **Plans**: 2 plans
+1. Usuario ve tela de escolha com dois caminhos claros: camera ao vivo ou upload da galeria
+2. Ao escolher upload, ve instrucao de qual mao fotografar, dicas de qualidade, e outline SVG do esperado
+3. File picker aceita JPEG, PNG, WebP, HEIC e rejeita outros formatos antes de qualquer processamento
+4. Validacao exibe checks progressivos (formato, qualidade, mao detectada, handedness, palma aberta) com feedback visual
+5. Tela de confirmacao mostra preview da foto com checklist de validacao e botao de confirmar antes de enviar
+6. Quando qualidade e ruim mas mao esta OK, usuario ve aviso honesto com opcao "Usar mesmo assim"
+   **Plans**: TBD
    **UI hint**: yes
 
-Plans:
+### Phase 3: Edge Cases + Prompt
 
-- [x] 04-01-PLAN.md — Clerk auth delegation: redirect /esqueci-senha e /redefinir-senha; UserProfile em /conta/perfil
-- [x] 04-02-PLAN.md — Error handling: toast em /conta/leituras; 404 vs 500 em /ler/resultado/[id]
-
-### Phase 5: Docs Sync
-
-**Goal**: architecture.md e CLAUDE.md refletem com precisao o codigo que existe hoje, sem referencias a sistemas removidos ou planos nao implementados
-**Depends on**: Phase 4
-**Requirements**: DOCS-01, DOCS-02
+**Goal**: Imagens de iPhone (HEIC), fotos com rotacao EXIF incorreta, arquivos grandes, celular em landscape, capturas repetidas, e screenshots sao tratados sem erro; o prompt do GPT-4o inclui contexto da mao dominante e ignora decoracoes
+**Depends on**: Phase 2
+**Requirements**: EDGE-01, EDGE-02, EDGE-03, EDGE-04, EDGE-05, EDGE-06, PROMPT-01, PROMPT-02
 **Success Criteria** (what must be TRUE):
 
-1. architecture.md nao menciona share_token, expires_at de creditos, NextAuth, R2, ou Claude Vision; reflete fluxo unico com is_self flag e decisoes v1.1
-2. CLAUDE.md lista Clerk (sem NextAuth), GPT-4o (sem Claude Vision), sem mencao a R2, e a estrutura de pastas bate com o projeto real
-   **Plans**: 1 plan
+1. Foto tirada no iPhone em formato HEIC e convertida automaticamente antes de qualquer processamento, sem erro ou mensagem tecnica
+2. Foto com rotacao EXIF incorreta e exibida e processada na orientacao correta
+3. Imagem grande e comprimida para max 1280px e JPEG 0.85 no client antes de ser enviada ao servidor
+4. Celular em modo landscape exibe aviso "Vira o celular pra vertical" sem prosseguir
+5. Apos 3 falhas, usuario ve sugestao de trocar de metodo (camera para upload ou vice-versa)
+6. Screenshot detectado por dimensoes atipicas exibe aviso da cigana pedindo foto real; prompt GPT-4o inclui qual mao dominante esta sendo analisada e instrui a ignorar tatuagens, henna, nail art, aneis e pulseiras
+   **Plans**: TBD
 
-Plans:
+### Phase 4: Outra Pessoa + A11y
 
-- [x] 05-01-PLAN.md — Atualizar architecture.md e CLAUDE.md com decisoes v1.1
+**Goal**: Quando a leitura e para outra pessoa, camera e upload refletem o nome e mao dessa pessoa em todos os textos; botoes e feedbacks sao acessiveis com leitores de tela
+**Depends on**: Phase 3
+**Requirements**: OTHER-01, OTHER-02, OTHER-03, A11Y-01, A11Y-02, A11Y-03
+**Success Criteria** (what must be TRUE):
+
+1. Badge no viewfinder e instrucao de upload exibem nome e mao da outra pessoa ("MAO DIREITA . CARLOS") quando is_self=false
+2. Toast de mao errada usa o pronome correto da outra pessoa ("dele" ou "dela") conforme genero escolhido
+3. Tela de instrucao e confirmacao de upload mencionam o nome da outra pessoa
+4. Botoes Destra/Canhota, trocar camera, e badge descartavel tem aria-labels descritivos para leitores de tela
+5. WrongHandFeedback e anunciado como assertive e HandExpectedBadge como polite via aria-live
+6. Outlines SVG de mao tem role="img" e aria-label descrevendo a mao esperada
+   **Plans**: TBD
+   **UI hint**: yes
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 → 2 → 3 → 4
 
-| Phase                             | Milestone | Plans Complete | Status      | Completed  |
-| --------------------------------- | --------- | -------------- | ----------- | ---------- |
-| 1. Auditoria                      | v1.1      | 2/2            | Complete    | -          |
-| 2. ReadingContext + Creditos      | v1.1      | 2/2            | Complete    | 2026-04-11 |
-| 3. MediaPipe Real                 | v1.1      | 2/2            | Complete    | 2026-04-11 |
-| 4. Clerk Cleanup + Error Handling | v1.1      | 2/2            | Complete    | 2026-04-11 |
-| 5. Docs Sync                      | v1.1      | 1/1 | Complete   | 2026-04-11 |
+| Phase                  | Milestone | Plans Complete | Status      | Completed |
+| ---------------------- | --------- | -------------- | ----------- | --------- |
+| 1. Camera UI           | v1.2      | 0/?            | Not started | -         |
+| 2. Upload Pipeline     | v1.2      | 0/?            | Not started | -         |
+| 3. Edge Cases + Prompt | v1.2      | 0/?            | Not started | -         |
+| 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -         |

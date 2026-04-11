@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: fluxo-mao-dominante
-status: Defining requirements
+status: Ready to plan
 stopped_at: null
 last_updated: "2026-04-11"
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -19,14 +19,32 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-11)
 
 **Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** Milestone v1.2 — Fluxo de Mao Dominante
+**Current focus:** Phase 1 — Camera UI
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-04-11 — Milestone v1.2 started
+Phase: 1 of 4 (Camera UI)
+Plan: — of — in current phase
+Status: Ready to plan
+Last activity: 2026-04-11 — Roadmap v1.2 criado, 4 fases, 26 requisitos mapeados
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+
+- Total plans completed: 0
+- Average duration: —
+- Total execution time: —
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+| ----- | ----- | ----- | -------- |
+| -     | -     | -     | -        |
+
+_Updated after each plan completion_
 
 ## Accumulated Context
 
@@ -50,5 +68,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-11
-Stopped at: Milestone v1.2 initialization
+Stopped at: Roadmap criado. Proximo: /gsd:plan-phase 1
 Resume file: None
