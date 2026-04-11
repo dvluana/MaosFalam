@@ -23,7 +23,7 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 ### Upload Pipeline
 
 - [ ] **UPL-01**: Tela de escolha de metodo (camera ao vivo vs upload da galeria) com 2 botoes claros
-- [ ] **UPL-02**: UploadInstructionScreen com instrucao de qual mao + dicas de qualidade + outline SVG
+- [x] **UPL-02**: UploadInstructionScreen com instrucao de qual mao + dicas de qualidade + outline SVG
 - [ ] **UPL-03**: File picker aceita JPEG, PNG, WebP, HEIC; rejeita GIF, SVG, BMP, PDF
 - [ ] **UPL-04**: UploadValidationScreen com checks progressivos (formato, qualidade, mao, handedness, palma aberta)
 - [ ] **UPL-05**: UploadConfirmScreen com preview + checklist de validacao + confirmacao
@@ -86,7 +86,7 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 | CAM-05      | Phase 1 | Complete |
 | CAM-06      | Phase 1 | Complete |
 | UPL-01      | Phase 2 | Pending |
-| UPL-02      | Phase 2 | Pending |
+| UPL-02      | Phase 2 | Complete |
 | UPL-03      | Phase 2 | Pending |
 | UPL-04      | Phase 2 | Pending |
 | UPL-05      | Phase 2 | Pending |

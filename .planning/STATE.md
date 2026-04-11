@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Fluxo de Mao Dominante
-status: Ready to plan
-stopped_at: Completed 01-camera-ui-02-PLAN.md
-last_updated: "2026-04-11T17:00:37.220Z"
+status: Ready to execute
+stopped_at: Completed 02-upload-pipeline-01-PLAN.md
+last_updated: "2026-04-11T17:08:07.900Z"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 3
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-11)
 
 **Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** Phase 01 — camera-ui
+**Current focus:** Phase 02 — upload-pipeline
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
+Phase: 02 (upload-pipeline) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -43,6 +43,7 @@ Plan: Not started
 _Updated after each plan completion_
 | Phase 01-camera-ui P01 | 1m | 3 tasks | 3 files |
 | Phase 01-camera-ui P02 | 6m | 3 tasks | 6 files |
+| Phase 02-upload-pipeline P01 | 1 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -58,6 +59,8 @@ _Updated after each plan completion_
 - [Phase 01-camera-ui]: Render-time rising-edge (not useEffect) drives WrongHandFeedback show state to avoid react-hooks/set-state-in-effect lint violation
 - [Phase 01-camera-ui]: cameraKey counter passed to useCameraPipeline forces init effect re-run on camera switch without modifying effect deps semantics
 - [Phase 01-camera-ui]: Permission denied auto-redirects to upload after 1.5s with cigana phrase instead of showing permanent error state
+- [Phase 02-upload-pipeline]: Import order: camera components before ui primitives per ESLint import/order rule
+- [Phase 02-upload-pipeline]: UploadInstructionScreen is pure presentation — no internal state, all via props
 
 ### Pending Todos
 
@@ -69,6 +72,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T16:59:54.432Z
-Stopped at: Completed 01-camera-ui-02-PLAN.md
+Last session: 2026-04-11T17:08:07.898Z
+Stopped at: Completed 02-upload-pipeline-01-PLAN.md
 Resume file: None
