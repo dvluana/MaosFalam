@@ -36,6 +36,7 @@ import { analyzeHand } from "@/server/lib/openai";
 import { prisma } from "@/server/lib/prisma";
 import { rateLimit } from "@/server/lib/rate-limit";
 import { selectBlocks } from "@/server/lib/select-blocks";
+import type { HandAttributes } from "@/types/hand-attributes";
 
 import { POST } from "./route";
 
@@ -50,8 +51,8 @@ function makeRequest(body: unknown, ip = "1.2.3.4") {
   });
 }
 
-const validAttributes = {
-  element: "fire" as const,
+const validAttributes: HandAttributes = {
+  element: "fire",
   heart: { variation: "long_straight", modifiers: [] },
   head: { variation: "medium_curved", modifiers: [] },
   life: { variation: "long_deep" },
