@@ -3,14 +3,14 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 import BuyCreditsModal from "@/components/account/BuyCreditsModal";
 import ElementGlyph from "@/components/reading/ElementGlyph";
 import Button from "@/components/ui/Button";
 import StateSwitcher from "@/components/ui/StateSwitcher";
-import { useMock } from "@/hooks/useMock";
-import type { Reading, User, HandElement } from "@/types/reading";
+import { getUserProfile, getUserReadings } from "@/lib/user-client";
+import type { Reading, HandElement, ReportJSON, Tier } from "@/types/report";
 
 const STATES = ["has_readings", "empty", "loading"] as const;
 type State = (typeof STATES)[number];
@@ -65,9 +65,11 @@ function formatDate(iso: string): string {
 
 function getVariant(
   reading: Reading,
-  currentUserName: string,
+  _currentUserName: string,
 ): "active_free" | "active_premium" | "for_other" {
-  if (reading.report.user_name !== currentUserName) return "for_other";
+  // v2: user_name is no longer on the report. For mock, assume self-reading.
+  // TODO: when backend exists, compare with reading.target_name from DB.
+  void _currentUserName;
   if (reading.tier === "premium") return "active_premium";
   return "active_free";
 }
@@ -93,7 +95,7 @@ function TarotReadingCard({
 }) {
   const variant = getVariant(reading, currentUserName);
   const badge = BADGE_META[variant];
-  const element = reading.report.element.type;
+  const element = reading.report.element.key;
 
   return (
     <Link href={`/conta/leituras/${reading.id}`} className="block">
@@ -183,9 +185,9 @@ function TarotReadingCard({
           <div className="flex flex-col items-center gap-1 w-full">
             <h3
               className="font-cinzel text-[13px] sm:text-[14px] font-medium tracking-[0.04em] text-bone leading-none line-clamp-1 max-w-full"
-              title={reading.report.user_name}
+              title={"Marina"}
             >
-              {reading.report.user_name}
+              {"Marina"}
             </h3>
             <span className="font-cormorant italic text-[12px] text-bone-dim">
               {ELEMENT_LABEL[element]}
@@ -227,7 +229,7 @@ function ListReadingItem({
 }) {
   const variant = getVariant(reading, currentUserName);
   const badge = BADGE_META[variant];
-  const element = reading.report.element.type;
+  const element = reading.report.element.key;
 
   return (
     <Link href={`/conta/leituras/${reading.id}`} className="block">
@@ -262,14 +264,14 @@ function ListReadingItem({
         <div className="flex-1 min-w-0 flex flex-col gap-1">
           <div className="flex items-baseline gap-2">
             <h3 className="font-cinzel text-[15px] sm:text-[16px] font-medium tracking-[0.04em] text-bone leading-none truncate">
-              {reading.report.user_name}
+              {"Marina"}
             </h3>
             <span className="font-cormorant italic text-[13px] text-bone-dim">
               · {ELEMENT_LABEL[element]}
             </span>
           </div>
           <p className="font-cormorant italic text-[13px] sm:text-[14px] text-bone-dim leading-[1.35] line-clamp-1">
-            {reading.report.element.impact}
+            {reading.report.impact_phrase}
           </p>
           <span className="font-jetbrains text-[8px] tracking-[1.5px] uppercase text-gold-dim mt-0.5">
             {formatDate(reading.created_at)}
@@ -300,8 +302,8 @@ function ListReadingItem({
 /**
  * Bloco de saldo de créditos no topo da página.
  */
-function CreditsBanner({ user, onBuyMore }: { user: User; onBuyMore: () => void }) {
-  const lowCredits = user.credits <= 1;
+function CreditsBanner({ credits, onBuyMore }: { credits: number; onBuyMore: () => void }) {
+  const lowCredits = credits <= 1;
 
   return (
     <motion.div
@@ -341,13 +343,13 @@ function CreditsBanner({ user, onBuyMore }: { user: User; onBuyMore: () => void 
                 textShadow: "0 0 24px rgba(201,162,74,0.45), 0 0 48px rgba(201,162,74,0.2)",
               }}
             >
-              {user.credits}
+              {credits}
             </span>
             <span className="font-cormorant italic text-[16px] text-bone-dim">
-              {user.credits === 1 ? "leitura" : "leituras"}
+              {credits === 1 ? "leitura" : "leituras"}
             </span>
           </div>
-          {lowCredits && user.credits > 0 && (
+          {lowCredits && credits > 0 && (
             <span className="font-cormorant italic text-[12px] text-bone-dim mt-1">
               Sobrou pouco. Usa com sabedoria.
             </span>
@@ -366,18 +368,40 @@ function LeiturasContent() {
   const router = useRouter();
   const search = useSearchParams();
   const stateParam = search.get("state") as State | null;
-  const { data, loading } = useMock<User>("user");
+  const [userData, setUserData] = useState<{ name: string; credits: number } | null>(null);
+  const [readings, setReadings] = useState<Reading[]>([]);
+  const [loading, setLoading] = useState(true);
   const [view, setView] = useState<View>("list");
   const [buyModalOpen, setBuyModalOpen] = useState(false);
+
+  useEffect(() => {
+    Promise.all([getUserProfile(), getUserReadings()])
+      .then(([profile, data]) => {
+        setUserData({ name: profile.name, credits: 0 });
+        const mapped: Reading[] = data.readings.map((r) => ({
+          id: r.id,
+          tier: r.tier as Tier,
+          share_token: r.id,
+          share_expires_at: "2099-12-31T00:00:00.000Z",
+          report: r.report as ReportJSON,
+          created_at: r.created_at,
+        }));
+        setReadings(mapped);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const currentState: State = useMemo(() => {
     if (stateParam && (STATES as readonly string[]).includes(stateParam)) {
       return stateParam;
     }
     if (loading) return "loading";
-    if (!data || data.readings.length === 0) return "empty";
+    if (!readings.length) return "empty";
     return "has_readings";
-  }, [stateParam, loading, data]);
+  }, [stateParam, loading, readings]);
 
   return (
     <div className="max-w-xl mx-auto px-5 pt-4 pb-16">
@@ -404,8 +428,8 @@ function LeiturasContent() {
       </header>
 
       {/* Credits banner (só quando tem data) */}
-      {data && currentState !== "loading" && (
-        <CreditsBanner user={data} onBuyMore={() => setBuyModalOpen(true)} />
+      {userData && currentState !== "loading" && (
+        <CreditsBanner credits={userData.credits} onBuyMore={() => setBuyModalOpen(true)} />
       )}
 
       <BuyCreditsModal open={buyModalOpen} onClose={() => setBuyModalOpen(false)} />
@@ -421,13 +445,13 @@ function LeiturasContent() {
       )}
 
       {/* Toggle de view + contador */}
-      {currentState === "has_readings" && data && (
+      {currentState === "has_readings" && userData && (
         <div className="flex items-center justify-between mb-5">
           <span
             className="font-jetbrains text-[9px] tracking-[1.8px] uppercase text-gold-dim"
             style={{ fontWeight: 500 }}
           >
-            {data.readings.length} {data.readings.length === 1 ? "leitura" : "leituras"}
+            {readings.length} {readings.length === 1 ? "leitura" : "leituras"}
           </span>
           <div className="flex items-center gap-1">
             <button
@@ -493,18 +517,23 @@ function LeiturasContent() {
         </div>
       )}
 
-      {currentState === "has_readings" && data && (
+      {currentState === "has_readings" && userData && (
         <>
           {view === "cards" ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-              {data.readings.map((r, i) => (
-                <TarotReadingCard key={r.id} reading={r} currentUserName={data.name} index={i} />
+              {readings.map((r, i) => (
+                <TarotReadingCard
+                  key={r.id}
+                  reading={r}
+                  currentUserName={userData.name}
+                  index={i}
+                />
               ))}
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {data.readings.map((r, i) => (
-                <ListReadingItem key={r.id} reading={r} currentUserName={data.name} index={i} />
+              {readings.map((r, i) => (
+                <ListReadingItem key={r.id} reading={r} currentUserName={userData.name} index={i} />
               ))}
             </div>
           )}
