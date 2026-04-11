@@ -16,7 +16,7 @@ import type { NextRequest } from "next/server";
 const schema = z.object({
   photo_base64: z.string().min(100),
   session_id: z.string().min(10).max(64),
-  lead_id: z.string().uuid(),
+  lead_id: z.string().uuid().optional(),
   target_name: z.string().min(2).max(100),
   target_gender: z.enum(["female", "male"]),
   is_self: z.boolean(),
@@ -82,12 +82,14 @@ export async function POST(req: NextRequest) {
     );
 
     // 5. Send email to lead (non-blocking)
-    const lead = await prisma.lead.findUnique({
-      where: { id: data.lead_id },
-    });
-    if (lead?.email) {
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-      sendLeadReading(lead.email, lead.name, `${baseUrl}/ler/resultado/${reading.id}`);
+    if (data.lead_id) {
+      const lead = await prisma.lead.findUnique({
+        where: { id: data.lead_id },
+      });
+      if (lead?.email) {
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+        sendLeadReading(lead.email, lead.name, `${baseUrl}/ler/resultado/${reading.id}`);
+      }
     }
 
     return NextResponse.json({

@@ -72,21 +72,15 @@ export async function createBilling(
   });
 }
 
-export function validateWebhookSignature(
-  body: string,
-  signature: string,
-): boolean {
+export function validateWebhookSignature(body: string, signature: string): boolean {
   const secret = process.env.ABACATEPAY_WEBHOOK_SECRET;
   if (!secret) {
     logger.warn("ABACATEPAY_WEBHOOK_SECRET not set, rejecting webhook");
     return false;
   }
-  const expected = crypto
-    .createHmac("sha256", secret)
-    .update(body)
-    .digest("hex");
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expected),
-  );
+  const expected = crypto.createHmac("sha256", secret).update(body).digest("hex");
+  const sigBuf = Buffer.from(signature);
+  const expBuf = Buffer.from(expected);
+  if (sigBuf.length !== expBuf.length) return false;
+  return crypto.timingSafeEqual(sigBuf, expBuf);
 }

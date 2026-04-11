@@ -22,7 +22,7 @@ export async function registerLead(data: {
 export async function captureReading(data: {
   photo_base64: string;
   session_id: string;
-  lead_id: string;
+  lead_id?: string;
   target_name: string;
   target_gender: "female" | "male";
   is_self: boolean;
@@ -37,6 +37,23 @@ export async function captureReading(data: {
     throw new Error(body.error ?? "Erro interno");
   }
   return res.json() as Promise<{ reading_id: string; report: ReportJSON }>;
+}
+
+export async function requestNewReading(data: {
+  target_name: string;
+  target_gender: "female" | "male";
+  is_self: boolean;
+}): Promise<{ ok: boolean; credits_remaining: number }> {
+  const res = await fetch("/api/reading/new", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => ({}))) as { error?: string };
+    throw new Error(body.error ?? "Erro ao criar leitura");
+  }
+  return res.json() as Promise<{ ok: boolean; credits_remaining: number }>;
 }
 
 export async function getReading(id: string): Promise<Reading | null> {

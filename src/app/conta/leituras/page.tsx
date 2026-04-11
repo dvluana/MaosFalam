@@ -9,6 +9,7 @@ import BuyCreditsModal from "@/components/account/BuyCreditsModal";
 import ElementGlyph from "@/components/reading/ElementGlyph";
 import Button from "@/components/ui/Button";
 import StateSwitcher from "@/components/ui/StateSwitcher";
+import { getCredits } from "@/lib/payment-client";
 import { getUserProfile, getUserReadings } from "@/lib/user-client";
 import type { Reading, HandElement, ReportJSON, Tier } from "@/types/report";
 
@@ -375,9 +376,9 @@ function LeiturasContent() {
   const [buyModalOpen, setBuyModalOpen] = useState(false);
 
   useEffect(() => {
-    Promise.all([getUserProfile(), getUserReadings()])
-      .then(([profile, data]) => {
-        setUserData({ name: profile.name, credits: 0 });
+    Promise.all([getUserProfile(), getUserReadings(), getCredits()])
+      .then(([profile, data, creditsData]) => {
+        setUserData({ name: profile.name, credits: creditsData.balance });
         const mapped: Reading[] = data.readings.map((r) => ({
           id: r.id,
           tier: r.tier as Tier,

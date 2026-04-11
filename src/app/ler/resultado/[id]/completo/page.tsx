@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { Suspense, use, useEffect, useState } from "react";
 
 import CompatibilityGrid from "@/components/reading/CompatibilityGrid";
@@ -32,6 +33,7 @@ const ELEMENT_LABEL: Record<HandElement, string> = {
 };
 
 function CompletoInner({ id }: { id: string }) {
+  const router = useRouter();
   const [data, setData] = useState<Reading | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -42,6 +44,10 @@ function CompletoInner({ id }: { id: string }) {
         if (!r) {
           setNotFound(true);
           setLoading(false);
+          return;
+        }
+        if (r.tier !== "premium") {
+          router.replace(`/ler/resultado/${id}`);
           return;
         }
         setData({
@@ -58,7 +64,7 @@ function CompletoInner({ id }: { id: string }) {
         setNotFound(true);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, router]);
 
   if (loading) return <PageLoading />;
   if (notFound || !data) {
