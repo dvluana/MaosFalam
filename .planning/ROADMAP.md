@@ -71,7 +71,14 @@ Plans:
 2. A GPT-4o response with `confidence < 0.3` routes to the rejection path without calling `selectBlocks`
 3. An unrecognized variation in GPT-4o output triggers a fallback block instead of a thrown error
 4. The photo is not present in any database record, log line, or response after processing
-   **Plans**: TBD
+
+**Plans**: 3 plans
+
+Plans:
+
+- [ ] 03-01-PLAN.md — Fix openai.ts: switch to json_schema Structured Outputs, pin model, add Zod validation
+- [ ] 03-02-PLAN.md — Harden selectBlocks: add \_fallback blocks to all four line maps, update buildLineSection
+- [ ] 03-03-PLAN.md — Write unit tests for analyzeHand (AI-01 to AI-04) and selectBlocks fallback
 
 ### Phase 4: Public API
 
@@ -123,7 +130,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | ------------------ | -------------- | ----------- | ---------- |
 | 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
 | 2. Auth            | 2/2            | Complete    | 2026-04-11 |
-| 3. AI Pipeline     | 0/TBD          | Not started | -          |
+| 3. AI Pipeline     | 0/3            | Not started | -          |
 | 4. Public API      | 0/TBD          | Not started | -          |
 | 5. Protected API   | 0/TBD          | Not started | -          |
 | 6. Client Adapters | 0/TBD          | Not started | -          |
