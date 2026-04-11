@@ -41,7 +41,10 @@ export interface ValidLandmarkResult {
 // Landmark indices (MediaPipe 21-point hand model)
 const WRIST = 0;
 const THUMB_TIP = 4;
+const INDEX_MCP = 5;
 const MIDDLE_MCP = 9;
+const MIDDLE_TIP = 12;
+const PINKY_MCP = 17;
 const PINKY_TIP = 20;
 
 /**
@@ -107,10 +110,39 @@ export function detectHandedness(handedness: Category[]): "Left" | "Right" {
  * Captures a video frame to a canvas and returns raw base64 JPEG.
  * If mirrored (front camera), the canvas is un-mirrored so GPT-4o sees the natural orientation.
  */
+type HandElement = "fire" | "water" | "earth" | "air";
+
+/**
+ * Estimates hand element type from MediaPipe normalized landmarks.
+ * Uses palm aspect ratio (palmHeight/palmWidth) and finger-to-palm length ratio.
+ * Returns undefined if landmarks are insufficient or geometry is degenerate.
+ *
+ * This is a client-side pre-hint sent to GPT-4o for confirmation.
+ * GPT-4o is the authoritative classifier.
+ */
+export function computeElementHint(landmarks: NormalizedLandmark[]): HandElement | undefined {
+  if (landmarks.length < 21) return undefined;
+
+  const palmWidth = dist(landmarks[INDEX_MCP], landmarks[PINKY_MCP]); // INDEX_MCP → PINKY_MCP
+  const palmHeight = dist(landmarks[WRIST], landmarks[MIDDLE_MCP]); // WRIST → MIDDLE_MCP
+  const fingerLength = dist(landmarks[MIDDLE_MCP], landmarks[MIDDLE_TIP]); // MIDDLE_MCP → MIDDLE_TIP
+
+  if (palmWidth < 0.01 || palmHeight < 0.01) return undefined;
+
+  const isLongPalm = palmHeight / palmWidth > 1.1;
+  const isLongFingers = fingerLength / palmHeight > 0.95;
+
+  if (!isLongPalm && isLongFingers) return "air";
+  if (!isLongPalm && !isLongFingers) return "earth";
+  if (isLongPalm && !isLongFingers) return "fire";
+  return "water";
+}
+
 export function captureFrame(
   video: HTMLVideoElement,
   canvas: HTMLCanvasElement,
   mirrored: boolean,
+  quality = 0.82,
 ): string {
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
@@ -126,7 +158,7 @@ export function captureFrame(
   ctx.drawImage(video, 0, 0);
   ctx.restore();
 
-  const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
+  const dataUrl = canvas.toDataURL("image/jpeg", quality);
   // Strip data URI prefix, return raw base64
   return dataUrl.replace(/^data:image\/jpeg;base64,/, "");
 }
