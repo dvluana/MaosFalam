@@ -1,21 +1,21 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-/**
- * Rewrites para HTMLs estáticos legados em /public.
- *
- * `/`          → renderizado por src/app/page.tsx (HomeLanding nativo).
- * `/manifesto` → MIGRADO para src/app/manifesto/page.tsx.
- *                O rewrite abaixo pode ser removido. A rota App Router tem
- *                prioridade, mas manter o rewrite causa conflito.
- *                TODO: remover este rewrite e deletar public/manifesto.html.
- */
-export function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname === "/manifesto") {
-    return NextResponse.rewrite(new URL("/manifesto.html", request.url));
+const isProtectedRoute = createRouteMatcher([
+  "/api/reading/new(.*)",
+  "/api/credits/(.*)",
+  "/api/user/(.*)",
+  "/conta(.*)",
+]);
+
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) {
+    await auth.protect();
   }
-  return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: ["/manifesto"],
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|png|webp|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+  ],
 };
