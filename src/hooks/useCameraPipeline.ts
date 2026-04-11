@@ -186,8 +186,7 @@ export default function useCameraPipeline({
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forced, cameraKey]);
+  }, [forced, cameraKey, state, preferredFacing, setState, onMirroredChange, videoRef]);
 
   // ============================================================
   // Detection loop — runs while in detection states
