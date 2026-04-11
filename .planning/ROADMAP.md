@@ -68,8 +68,13 @@ Plans:
 3. Modal CreditGate aparece para usuario logado fazendo segunda leitura ou mais, mostrando saldo antes de confirmar
 4. Sem saldo, o usuario e redirecionado para /creditos antes de chegar na camera
 5. Debito de credito acontece exclusivamente via POST /api/reading/new no servidor, nunca no cliente
-   **Plans**: TBD
+   **Plans**: 2 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 02-01-PLAN.md — ReadingContext type, sessionStorage helpers, useCredits hook
+- [ ] 02-02-PLAN.md — Refatorar /ler/nome com fluxo dual visitante/logada + CreditGate modal
 
 ### Phase 3: MediaPipe Real
 
@@ -118,8 +123,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase                             | Milestone | Plans Complete | Status      | Completed |
 | --------------------------------- | --------- | -------------- | ----------- | --------- |
-| 1. Auditoria                      | v1.1      | 0/2            | Not started | -         |
-| 2. ReadingContext + Creditos      | v1.1      | 0/?            | Not started | -         |
+| 1. Auditoria                      | v1.1      | 2/2            | Complete    | -         |
+| 2. ReadingContext + Creditos      | v1.1      | 0/2            | Not started | -         |
 | 3. MediaPipe Real                 | v1.1      | 0/?            | Not started | -         |
 | 4. Clerk Cleanup + Error Handling | v1.1      | 0/?            | Not started | -         |
 | 5. Docs Sync                      | v1.1      | 0/?            | Not started | -         |
