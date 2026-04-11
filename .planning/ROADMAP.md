@@ -24,6 +24,17 @@ All 9 plans completed. See `.planning/archive/v1.1/` for history.
 
 </details>
 
+### Phase 5: Pipeline Refactor — eliminar sessionStorage pra foto, corrigir race condition scan/API, pre-hint MediaPipe pro GPT-4o
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 4
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run /gsd:plan-phase 5 to break down)
+
 ---
 
 ### 🚧 v1.2 Fluxo de Mao Dominante (In Progress)
@@ -135,9 +146,9 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4
 
-| Phase                  | Milestone | Plans Complete | Status      | Completed  |
-| ---------------------- | --------- | -------------- | ----------- | ---------- |
-| 1. Camera UI           | v1.2      | 2/2            | Complete    | 2026-04-11 |
-| 2. Upload Pipeline     | v1.2      | 3/3            | Complete    | 2026-04-11 |
-| 3. Edge Cases + Prompt | v1.2      | 3/3            | Complete    | 2026-04-11 |
-| 4. Outra Pessoa + A11y | v1.2      | 2/2 | Complete   | 2026-04-11 |
+| Phase                  | Milestone | Plans Complete | Status   | Completed  |
+| ---------------------- | --------- | -------------- | -------- | ---------- |
+| 1. Camera UI           | v1.2      | 2/2            | Complete | 2026-04-11 |
+| 2. Upload Pipeline     | v1.2      | 3/3            | Complete | 2026-04-11 |
+| 3. Edge Cases + Prompt | v1.2      | 3/3            | Complete | 2026-04-11 |
+| 4. Outra Pessoa + A11y | v1.2      | 2/2            | Complete | 2026-04-11 |

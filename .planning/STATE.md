@@ -54,6 +54,10 @@ _Updated after each plan completion_
 
 ## Accumulated Context
 
+### Roadmap Evolution
+
+- Phase 5 added: Pipeline Refactor — eliminar sessionStorage pra foto, corrigir race condition scan/API, pre-hint MediaPipe pro GPT-4o
+
 ### Decisions
 
 - MediaPipe handedness assumes mirrored input (front camera labels correct, back camera swap)
