@@ -26,20 +26,13 @@ const LOGGED_STATIC = [
     href: "/conta/leituras",
   },
   {
-    id: "nova",
-    num: "03",
-    label: "Nova leitura",
-    sub: "Mostre sua mão de novo",
-    href: "/ler/nome",
-  },
-  {
     id: "tarot",
-    num: "04",
+    num: "03",
     label: "Tarot Online",
     sub: "Três cartas pra distrair a sorte",
     href: "/tarot",
   },
-  { id: "perfil", num: "05", label: "Perfil", sub: "Quem você é pra mim", href: "/conta/perfil" },
+  { id: "perfil", num: "04", label: "Perfil", sub: "Quem você é pra mim", href: "/conta/perfil" },
 ];
 
 interface NavProps {
