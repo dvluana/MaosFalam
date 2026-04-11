@@ -1,73 +1,75 @@
-# Requirements: MaosFalam Backend
+# Requirements: MaosFalam
 
-**Defined:** 2026-04-10
+**Defined:** 2026-04-11
 **Core Value:** Foto da palma entra, leitura personalizada sai. Backend conecta GPT-4o ao motor de leitura e persiste resultados.
 
-## v1 Requirements
+## v1.0 Requirements (Complete)
 
-Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
+All v1.0 requirements shipped. See `.planning/archive/v1.0/` for history.
 
-### Database
+- ✓ DB-01 through DB-04 (Database schema + Prisma + Neon)
+- ✓ AUTH-01 through AUTH-04 (Clerk auth + middleware)
+- ✓ AI-01 through AI-04 (GPT-4o integration)
+- ✓ API-01 through API-10 (Public + protected API routes)
+- ✓ SEC-01 through SEC-07 (Security + rate limiting)
+- ✓ INFRA-01 through INFRA-05 (Logger + build + env)
+- ✓ ADAPT-01 through ADAPT-04 (Client adapters)
+- ✓ WIRE-01 through WIRE-06 (Frontend-backend wiring)
 
-- [x] **DB-01**: Schema Prisma com 5 tabelas (leads, user_profiles, readings, credit_packs, payments) alinhado com docs/architecture.md secao 5
-- [x] **DB-02**: Prisma client singleton com Neon adapter (`@prisma/adapter-neon`) e connection pooling
-- [x] **DB-03**: DIRECT_URL configurado pra Prisma migrations (conexao direta, nao pooled)
-- [x] **DB-04**: Migration inicial roda sem erro (`prisma migrate dev --name init`)
+## v1.1 Requirements
 
-### Auth
+Requirements for milestone v1.1: Alinhamento Arquitetural.
 
-- [x] **AUTH-01**: Clerk middleware em proxy.ts protegendo rotas /api/user/_, /api/credits/_, /api/reading/new, /conta/\*
-- [x] **AUTH-02**: Rotas publicas acessiveis sem auth: /, /ler/_, /compartilhar/_, /api/lead/register, /api/reading/capture, /api/reading/[id]
-- [x] **AUTH-03**: ClerkProvider wrapping o app no layout.tsx
-- [x] **AUTH-04**: Helpers server-side getClerkUser() e getClerkUserId() funcionais
+### Audit + Cleanup
 
-### API Public
+- [ ] **AUDIT-01**: share_token e share_expires_at removidos de types, mocks, componentes, reading-client
+- [ ] **AUDIT-02**: expires_at removido de credit_packs (types, queries, API, componentes)
+- [ ] **AUDIT-03**: Referencias NextAuth removidas (useSession, getServerSession, next-auth)
+- [ ] **AUDIT-04**: Referencias R2/Cloudflare removidas (photo_key, photoKey)
+- [ ] **AUDIT-05**: "Claude Vision" substituido por "GPT-4o" em todo o codigo
+- [ ] **AUDIT-06**: "Planeta dominante" substituido por "Monte dominante"
+- [ ] **AUDIT-07**: Ordem das secoes do resultado segue v2 (Prologo > Coracao > Paywall > Cabeca > Vida > Venus > Montes > Destino > Cruzamentos > Compatibilidade > Raros > Epilogo)
+- [ ] **AUDIT-08**: VALID_MOCK_IDS removido do resultado page
+- [ ] **AUDIT-09**: fallbackName="Marina" removido (usa nome do sessionStorage/API)
+- [ ] **AUDIT-10**: Dead stubs login()/register() removidos do useAuth
+- [ ] **AUDIT-11**: TODOs obsoletos limpos
 
-- [x] **API-01**: POST /api/lead/register salva lead no banco (name, email, gender, session_id, email_opt_in)
-- [x] **API-02**: POST /api/reading/capture recebe foto base64, chama GPT-4o, roda selectBlocks, salva reading com tier 'free'
-- [x] **API-03**: POST /api/reading/capture rejeita com mensagem da cigana quando confidence < 0.3
-- [x] **API-04**: GET /api/reading/[id] retorna leitura por UUID, retorna 410 se is_active = false
+### ReadingContext + Credits
 
-### API Protected
+- [ ] **CTX-01**: ReadingContext type criado (target_name, target_gender, dominant_hand, is_self, session_id, credit_used)
+- [ ] **CTX-02**: /ler/nome visitante coleta nome + email + genero + dominancia + opt-in
+- [ ] **CTX-03**: /ler/nome logada mostra "Pra mim" / "Pra outra pessoa" na MESMA tela
+- [ ] **CTX-04**: Fluxo "pra outra pessoa" monta ReadingContext com is_self=false e dados do formulario
+- [ ] **CTX-05**: CreditGate component mostra confirmacao de credito antes de prosseguir
+- [ ] **CTX-06**: Visitante e logada primeira leitura passam sem check de credito
+- [ ] **CTX-07**: Logada segunda leitura+ confirma credito (com saldo) ou redireciona pra /creditos (sem saldo)
+- [ ] **CTX-08**: Debito real acontece no SERVER via POST /api/reading/new (nao no client)
+- [ ] **CTX-09**: Lead salvo via POST /api/lead/register ANTES do toque
 
-- [x] **API-05**: POST /api/reading/new debita 1 credito FIFO atomicamente (transaction SQL), retorna 402 sem creditos
-- [x] **API-06**: GET /api/user/credits retorna saldo e lista de packs
-- [x] **API-07**: GET /api/user/readings retorna historico de leituras do usuario
-- [x] **API-08**: GET /api/user/profile retorna name/email (Clerk) + cpf/phone (Neon)
-- [x] **API-09**: PUT /api/user/profile faz upsert de cpf e phone no user_profiles
-- [x] **API-10**: DELETE /api/user/account faz soft delete (is_active = false) com confirmacao "EXCLUIR"
+### MediaPipe
 
-### GPT-4o
+- [ ] **MP-01**: @mediapipe/tasks-vision instalado e Hand Landmarker configurado
+- [ ] **MP-02**: useCameraPipeline real: getUserMedia + Hand Landmarker + loop de frames
+- [ ] **MP-03**: Validacao de landmarks: mao aberta, centralizada, estavel por 1.5s
+- [ ] **MP-04**: Auto-captura do canvas como base64 JPEG quando validacao passa
+- [ ] **MP-05**: Handedness: perguntar destra/canhota antes da camera
+- [ ] **MP-06**: Instrucao na camera e validacao da mao correta (feedback da cigana se mao errada)
+- [ ] **MP-07**: Espelhamento de camera frontal tratado corretamente
+- [ ] **MP-08**: dominant_hand salvo no HandAttributes e enviado no ReadingContext
 
-- [x] **AI-01**: Wrapper envia foto base64 pro GPT-4o com Structured Outputs (json_schema, nao json_object)
-- [x] **AI-02**: Prompt retorna HandAttributes valido conforme src/types/hand-attributes.ts
-- [x] **AI-03**: Foto nunca armazenada — processada e descartada
-- [x] **AI-04**: Logs registram apenas element e confidence, nunca a foto
+### Clerk Cleanup
 
-### Security
+- [ ] **CLK-01**: /esqueci-senha redireciona pra fluxo Clerk (nao implementacao custom)
+- [ ] **CLK-02**: /redefinir-senha/[token] redireciona pra fluxo Clerk
+- [ ] **CLK-03**: /conta/perfil edit nome usa Clerk UserProfile
+- [ ] **CLK-04**: /conta/perfil trocar senha usa Clerk UserProfile
 
-- [x] **SEC-01**: Rate limit POST /api/reading/capture: 5/hora por IP
-- [x] **SEC-02**: Rate limit POST /api/lead/register: 10/hora por IP
-- [x] **SEC-03**: Rate limit POST /api/credits/purchase: 5/hora por user (quando implementado)
-- [x] **SEC-04**: Security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, HSTS
-- [x] **SEC-05**: Nenhuma API route aceita 'tier' como input do client
-- [x] **SEC-06**: Zod valida input em TODA API route
-- [x] **SEC-07**: Nenhum dado pessoal (nome, email, CPF) nos logs do Pino
+### Docs + Error Handling
 
-### Infrastructure
-
-- [x] **INFRA-01**: Logger Pino configurado com pino-pretty em dev
-- [x] **INFRA-02**: .env.example com todas as vars necessarias
-- [x] **INFRA-03**: ESLint no-console: error ativo e funcionando
-- [x] **INFRA-04**: npm run build passa sem erro
-- [x] **INFRA-05**: npm run type-check passa sem erro
-
-### Adapters
-
-- [x] **ADAPT-01**: src/lib/reading-client.ts com funcoes pra chamar API de leitura (captureReading, getReading, registerLead)
-- [x] **ADAPT-02**: src/lib/payment-client.ts com funcoes pra chamar API de creditos (purchaseCredits, getCredits)
-- [x] **ADAPT-03**: src/lib/user-client.ts com funcoes pra chamar API de usuario (getUserProfile, updateProfile, getUserReadings, deleteAccount)
-- [x] **ADAPT-04**: Nenhum import de @/server/\* em arquivos client
+- [ ] **DOCS-01**: architecture.md alinhado com codigo real (decisoes v1.1 refletidas)
+- [ ] **DOCS-02**: CLAUDE.md atualizado (Clerk, sem R2, GPT-4o, estrutura atual)
+- [ ] **DOCS-03**: /conta/leituras mostra toast de erro quando API falha
+- [ ] **DOCS-04**: Resultado diferencia 404 (leitura nao existe) de 500 (erro de servidor)
 
 ## v2 Requirements
 
@@ -90,70 +92,35 @@ Adiados para milestone futura.
 ### Scaling
 
 - **SCALE-01**: Migrar rate limiting de Map in-memory pra @upstash/ratelimit
-- **SCALE-02**: Consolidar Clerk de middleware.ts pra proxy.ts
 
 ## Out of Scope
 
-| Feature                    | Reason                                         |
-| -------------------------- | ---------------------------------------------- |
-| AbacatePay webhook         | Webhook v2 nao documentado                     |
-| Resend email               | Depende de dominio verificado                  |
-| App nativo                 | Web-first                                      |
-| Assinatura mensal          | Modelo e creditos avulsos                      |
-| Compatibilidade entre maos | v2 do produto                                  |
-| Seed de blocos no banco    | Blocos ficam em TS estatico, nao no banco      |
-| Upload de foto pro storage | Foto processada e descartada, nunca armazenada |
+| Feature                        | Reason                                         |
+| ------------------------------ | ---------------------------------------------- |
+| AbacatePay webhook             | Webhook v2 nao documentado                     |
+| Resend email                   | Depende de dominio verificado                  |
+| App nativo                     | Web-first                                      |
+| Assinatura mensal              | Modelo e creditos avulsos                      |
+| Compatibilidade entre maos     | v2 do produto                                  |
+| Upload de foto pro storage     | Foto processada e descartada, nunca armazenada |
+| dominant_hand no prompt GPT-4o | Fase futura apos MediaPipe funcionar           |
+| Blocos de texto novos          | Conteudo atual suficiente                      |
 
 ## Traceability
 
-| Requirement | Phase   | Status   |
-| ----------- | ------- | -------- |
-| DB-01       | Phase 1 | Complete |
-| DB-02       | Phase 1 | Complete |
-| DB-03       | Phase 1 | Complete |
-| DB-04       | Phase 1 | Complete |
-| AUTH-01     | Phase 2 | Complete |
-| AUTH-02     | Phase 2 | Complete |
-| AUTH-03     | Phase 2 | Complete |
-| AUTH-04     | Phase 2 | Complete |
-| AI-01       | Phase 3 | Complete |
-| AI-02       | Phase 3 | Complete |
-| AI-03       | Phase 3 | Complete |
-| AI-04       | Phase 3 | Complete |
-| API-01      | Phase 4 | Complete |
-| API-02      | Phase 4 | Complete |
-| API-03      | Phase 4 | Complete |
-| API-04      | Phase 4 | Complete |
-| API-05      | Phase 5 | Complete |
-| API-06      | Phase 5 | Complete |
-| API-07      | Phase 5 | Complete |
-| API-08      | Phase 5 | Complete |
-| API-09      | Phase 5 | Complete |
-| API-10      | Phase 5 | Complete |
-| SEC-01      | Phase 4 | Complete |
-| SEC-02      | Phase 4 | Complete |
-| SEC-03      | Phase 5 | Complete |
-| SEC-04      | Phase 4 | Complete |
-| SEC-05      | Phase 4 | Complete |
-| SEC-06      | Phase 4 | Complete |
-| SEC-07      | Phase 1 | Complete |
-| INFRA-01    | Phase 1 | Complete |
-| INFRA-02    | Phase 1 | Complete |
-| INFRA-03    | Phase 1 | Complete |
-| INFRA-04    | Phase 6 | Complete |
-| INFRA-05    | Phase 6 | Complete |
-| ADAPT-01    | Phase 6 | Complete |
-| ADAPT-02    | Phase 6 | Complete |
-| ADAPT-03    | Phase 6 | Complete |
-| ADAPT-04    | Phase 6 | Complete |
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement               | Phase | Status |
+| ------------------------- | ----- | ------ |
+| (populated by roadmapper) |       |        |
 
 **Coverage:**
 
-- v1 requirements: 33 total
-- Mapped to phases: 33
-- Unmapped: 0
+- v1.1 requirements: 38 total
+- Mapped to phases: 0
+- Unmapped: 38
 
 ---
 
-_Requirements defined: 2026-04-10_
-_Last updated: 2026-04-10 after initial definition_
+_Requirements defined: 2026-04-11_
+_Last updated: 2026-04-11 after milestone v1.1 definition_
