@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState, type ChangeEvent } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import CameraErrorState from "@/components/camera/CameraErrorState";
 import CameraEyebrow from "@/components/camera/CameraEyebrow";
@@ -22,6 +22,8 @@ function CameraPageInner() {
   const forced = search?.get("state") as CamState | null;
   const [state, setState] = useState<CamState>(forced ?? "method_choice");
   const [showUpload, setShowUpload] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Guard: sem nome no sessionStorage, volta pro /ler/nome
   useEffect(() => {
@@ -47,6 +49,8 @@ function CameraPageInner() {
     forced: Boolean(forced),
     setState,
     onCaptured: handleCaptured,
+    videoRef,
+    canvasRef,
   });
 
   const handleUploadSelected = useCallback(
@@ -146,6 +150,17 @@ function CameraPageInner() {
           onCancel={() => setShowUpload(false)}
         />
       )}
+
+      {/* Hidden video + canvas used by useCameraPipeline for MediaPipe detection and frame capture */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        aria-hidden
+        className="sr-only"
+      />
+      <canvas ref={canvasRef} aria-hidden className="sr-only" />
 
       {showViewport && <CameraViewport state={state} />}
 
