@@ -126,17 +126,14 @@
   z-index: 2;
   filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 30px rgba(0, 0, 0, 0.6));
 }
-/* Gradient overlay that bleeds the video edges into the black background */
+/* Gradient overlay — bleeds video edges into page bg (#08050E) */
 .dioramaWrap::after {
   content: "";
   position: absolute;
-  inset: -2px;
+  inset: -20px;
   z-index: 3;
   pointer-events: none;
-  background:
-    linear-gradient(to right, #000 0%, transparent 18%, transparent 82%, #000 100%),
-    linear-gradient(to bottom, #000 0%, transparent 15%, transparent 80%, #000 100%);
-  mix-blend-mode: normal;
+  background: radial-gradient(ellipse 70% 65% at 50% 45%, transparent 40%, #08050e 100%);
 }
 
 /* ── HERO CONTENT ── */

@@ -46,7 +46,7 @@ interface EdisonLampProps {
 export default function EdisonLamp({
   fixtureDelay = 800,
   igniteDelay = 1800,
-  stageClearDelay = 800,
+  stageClearDelay = 100,
   steadyDelay = 5000,
   onFixtureOn,
   onIgnite,

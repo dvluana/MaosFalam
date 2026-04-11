@@ -79,18 +79,15 @@
   border-color: rgba(201, 162, 74, 0.45);
 }
 
-/* Mobile: CTA fixed flutuante na bottom — sempre visível */
+/* Mobile: CTA sticky na bottom — survives overscroll bounce */
 @media (max-width: 768px) {
   .cta {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    width: auto;
+    position: sticky;
+    bottom: 0;
     z-index: 100;
-    margin: 0;
+    margin: 20px;
+    margin-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     padding: 18px 24px;
-    padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     border-radius: 0 6px 0 6px;
     background: linear-gradient(160deg, #1a1538, #2a2150, #1a1538);
     box-shadow:

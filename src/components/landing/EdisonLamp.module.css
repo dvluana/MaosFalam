@@ -14,13 +14,13 @@
   position: fixed;
   inset: 0;
   z-index: 15;
-  background: #000;
+  background: rgba(0, 0, 0, 0.88);
   pointer-events: none;
   /* transição é setada via JS quando a lâmpada começa a iluminar */
 }
 .stageDark.clearing {
   opacity: 0;
-  transition: opacity 2.5s cubic-bezier(0.12, 0, 0.04, 1);
+  transition: opacity 2s ease-out;
 }
 
 /* ── FIXTURE WRAPPER ── */
