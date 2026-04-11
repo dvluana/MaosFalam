@@ -1,19 +1,19 @@
 "use client";
 
-import { Suspense, use, useState } from "react";
-import { notFound } from "next/navigation";
-import { useSearchParams } from "next/navigation";
-import { useMock } from "@/hooks/useMock";
-import type { User } from "@/types/reading";
+import { notFound, useSearchParams } from "next/navigation";
+import { Suspense, use, useEffect, useState } from "react";
+
+import BlurredCard from "@/components/reading/BlurredCard";
 import ElementSection from "@/components/reading/ElementSection";
 import ReadingSection from "@/components/reading/ReadingSection";
-import BlurredCard from "@/components/reading/BlurredCard";
 import UpsellSection from "@/components/reading/UpsellSection";
-import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import Separator from "@/components/ui/Separator";
 import StateSwitcher from "@/components/ui/StateSwitcher";
+import { getReading } from "@/lib/reading-client";
+import type { Reading } from "@/types/report";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -27,9 +27,7 @@ function ShareOptions({ token }: { token: string }) {
     typeof window !== "undefined"
       ? `${window.location.origin}/compartilhar/${token}`
       : `/compartilhar/${token}`;
-  const waMessage = encodeURIComponent(
-    `Olha o que suas mãos disseram: ${shareUrl}`,
-  );
+  const waMessage = encodeURIComponent(`Olha o que suas mãos disseram: ${shareUrl}`);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
@@ -42,10 +40,7 @@ function ShareOptions({ token }: { token: string }) {
     <Card accentColor="gold">
       <h3 className="font-cinzel text-[15px] text-bone mb-4">Compartilhar</h3>
       <div className="flex flex-col gap-3">
-        <Button
-          variant="secondary"
-          onClick={() => window.alert("Card pronto pros stories.")}
-        >
+        <Button variant="secondary" onClick={() => window.alert("Card pronto pros stories.")}>
           Stories
         </Button>
         <a
@@ -65,12 +60,22 @@ function ShareOptions({ token }: { token: string }) {
 }
 
 function LeituraContent({ id }: { id: string }) {
-  const { data, loading } = useMock<User>("user");
+  const [reading, setReading] = useState<Reading | null>(null);
+  const [loading, setLoading] = useState(true);
   const search = useSearchParams();
   const stateParam = search.get("state") as State | null;
   const [showShare, setShowShare] = useState(false);
 
-  if (loading || !data) {
+  useEffect(() => {
+    getReading(id)
+      .then((r) => {
+        setReading(r);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
     return (
       <main className="min-h-dvh velvet-bg flex items-center justify-center">
         <p className="font-cormorant italic text-bone-dim">Um momento...</p>
@@ -78,20 +83,20 @@ function LeituraContent({ id }: { id: string }) {
     );
   }
 
-  const reading = data.readings.find((r) => r.id === id);
   if (!reading) {
     notFound();
   }
 
-  const forcedTier: State = stateParam && (STATES as readonly string[]).includes(stateParam)
-    ? stateParam
-    : reading.tier === "premium"
-      ? "premium_saved"
-      : "free_saved";
+  const forcedTier: State =
+    stateParam && (STATES as readonly string[]).includes(stateParam)
+      ? stateParam
+      : reading.tier === "premium"
+        ? "premium_saved"
+        : "free_saved";
 
   const isPremium = forcedTier === "premium_saved";
-  const heart = reading.report.sections.find((s) => s.line === "heart");
-  const other = reading.report.sections.filter((s) => s.line !== "heart");
+  const heart = reading.report.sections.find((s) => s.key === "heart");
+  const other = reading.report.sections.filter((s) => s.key !== "heart");
 
   return (
     <div className="max-w-xl mx-auto px-4 py-10 flex flex-col gap-8 pb-20">
@@ -103,38 +108,21 @@ function LeituraContent({ id }: { id: string }) {
           {isPremium ? "Suas linhas inteiras" : "Suas mãos falaram"}
         </h1>
         <div className="mt-3 flex justify-center">
-          <Badge variant={isPremium ? "violet" : "gold"}>
-            {isPremium ? "Completa" : "Free"}
-          </Badge>
+          <Badge variant={isPremium ? "violet" : "gold"}>{isPremium ? "Completa" : "Free"}</Badge>
         </div>
       </header>
 
-      <ElementSection element={reading.report.element} />
+      <ElementSection
+        element={reading.report.element}
+        impactPhrase={reading.report.impact_phrase}
+      />
       <Separator variant="gold" />
 
       {isPremium ? (
         <>
           {reading.report.sections.map((s) => (
-            <ReadingSection key={s.line} section={s} />
+            <ReadingSection key={s.key} section={s} />
           ))}
-          {reading.report.mounts.length > 0 && (
-            <>
-              <Separator variant="ornamental" />
-              <h2 className="font-cinzel text-[18px] text-bone text-center">
-                Os Montes
-              </h2>
-              {reading.report.mounts.map((m) => (
-                <Card key={m.name} parchment accentColor="violet">
-                  <h3 className="font-cinzel text-[15px] text-bone mb-3">
-                    {m.name}
-                  </h3>
-                  <p className="font-raleway text-[15px] leading-[1.85] text-bone">
-                    {m.content}
-                  </p>
-                </Card>
-              ))}
-            </>
-          )}
         </>
       ) : (
         <>
@@ -145,13 +133,7 @@ function LeituraContent({ id }: { id: string }) {
           </p>
           <div className="flex flex-col gap-6">
             {other.map((s) => (
-              <BlurredCard
-                key={s.line}
-                line={s.line}
-                symbol={s.symbol}
-                planet={s.planet}
-                teaser={s.intro}
-              />
+              <BlurredCard key={s.key} label={s.label} teaser={s.opening} />
             ))}
           </div>
           <UpsellSection />
