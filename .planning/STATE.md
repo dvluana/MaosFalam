@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 07-frontend-backend-wiring/07-01-PLAN.md
-last_updated: "2026-04-11T03:10:40.883Z"
+stopped_at: Completed 07-frontend-backend-wiring/07-02-PLAN.md
+last_updated: "2026-04-11T03:11:12.207Z"
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 17
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-10)
 ## Current Position
 
 Phase: 07 (frontend-backend-wiring) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ _Updated after each plan completion_
 | Phase 06-client-adapters P01 | 282 | 2 tasks | 6 files |
 | Phase 06-client-adapters P02 | 8 | 2 tasks | 2 files |
 | Phase 07 P01 | 5 | 2 tasks | 4 files |
+| Phase 07 P02 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,8 @@ Recent decisions affecting current work:
 - [Phase 06-client-adapters]: conta/leituras/[id] notFound() called after loading=false and reading=null — guards against stale IDs
 - [Phase 07]: login/register in useAuth return false (no-op) — Clerk hosted flow handles real auth
 - [Phase 07]: hydrated maps to Clerk isLoaded — prevents flash of wrong auth state before Clerk resolves
+- [Phase 07]: Lead registration failure silently ignored — must not block reading funnel
+- [Phase 07]: onPickLive routes through camera pipeline state machine (loading_mediapipe) not direct /ler/scan push
 
 ### Pending Todos
 
@@ -119,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T03:10:40.879Z
-Stopped at: Completed 07-frontend-backend-wiring/07-01-PLAN.md
+Last session: 2026-04-11T03:11:12.204Z
+Stopped at: Completed 07-frontend-backend-wiring/07-02-PLAN.md
 Resume file: None
