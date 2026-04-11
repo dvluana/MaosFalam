@@ -1,13 +1,11 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { Suspense, use, useEffect, useState } from "react";
 
 import BlurredDeck from "@/components/reading/BlurredDeck";
 import ElementHero from "@/components/reading/ElementHero";
 import ReadingOverview from "@/components/reading/ReadingOverview";
 import ReadingSection from "@/components/reading/ReadingSection";
-import ResultStateSwitcher from "@/components/reading/ResultStateSwitcher";
 import ShareButton from "@/components/reading/ShareButton";
 import UpsellSection from "@/components/reading/UpsellSection";
 import PageLoading from "@/components/ui/PageLoading";
@@ -80,7 +78,6 @@ function ServerError() {
 }
 
 function ResultadoInner({ id }: { id: string }) {
-  const search = useSearchParams();
   const [reading, setReading] = useState<Reading | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -102,9 +99,6 @@ function ResultadoInner({ id }: { id: string }) {
         setLoading(false);
       });
   }, [id]);
-
-  // Keep search params available for ResultStateSwitcher
-  void search;
 
   if (loading) return <PageLoading />;
   if (serverError) return <ServerError />;
@@ -155,8 +149,6 @@ function ResultadoInner({ id }: { id: string }) {
           </div>
         </div>
       </div>
-
-      <ResultStateSwitcher element={element} tier="free" readingId={id} />
     </main>
   );
 }

@@ -59,7 +59,7 @@ interface Params {
  *     → camera_stable (1.5s of valid frames)
  *     → camera_capturing → onCaptured(base64)
  *
- * forced=true skips all logic (dev preview / StateSwitcher mode).
+ * forced=true skips all logic (dev preview mode).
  */
 export default function useCameraPipeline({
   state,
@@ -239,8 +239,9 @@ export default function useCameraPipeline({
 
       // ---- Handedness check ----
       const rawHandedness = detectHandedness(result.handednesses[0]);
-      // Front camera (mirrored): MediaPipe "Left"/"Right" matches user's hand directly
-      // Back camera (not mirrored): MediaPipe labels are flipped relative to user
+      // MediaPipe classifies from its own POV. When viewing someone's palm:
+      //   Back camera (not mirrored): palm facing camera → invert label
+      //   Front camera (mirrored): mirror + invert cancel out → use label directly
       const userHandedness: "left" | "right" = mirroredRef.current
         ? rawHandedness === "Left"
           ? "left"

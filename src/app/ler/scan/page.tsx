@@ -1,12 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 
 import PageLoading from "@/components/ui/PageLoading";
 import ProgressBar from "@/components/ui/ProgressBar";
-import StateSwitcher from "@/components/ui/StateSwitcher";
 import { clearPhotoStore, getElementHint, getPhoto } from "@/lib/photo-store";
 import { captureReading } from "@/lib/reading-client";
 import { loadReadingContext } from "@/lib/reading-context";
@@ -14,13 +13,6 @@ import { generateUUID } from "@/lib/uuid";
 import type { ReportJSON } from "@/types/report";
 
 type ScanState = "scanning" | "scan_slow" | "scan_failed_low_confidence" | "scan_failed_api_error";
-
-const STATES: readonly ScanState[] = [
-  "scanning",
-  "scan_slow",
-  "scan_failed_low_confidence",
-  "scan_failed_api_error",
-];
 
 const PHRASES = [
   "Vejo uma linha forte aqui...",
@@ -37,9 +29,7 @@ function extractImpactPhrase(report: ReportJSON): string {
 
 function ScanInner() {
   const router = useRouter();
-  const search = useSearchParams();
-  const forced = search?.get("state") as ScanState | null;
-  const [state, setState] = useState<ScanState>(forced ?? "scanning");
+  const [state, setState] = useState<ScanState>("scanning");
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [progress, setProgress] = useState(0);
   const [animDone, setAnimDone] = useState(false);
@@ -51,13 +41,8 @@ function ScanInner() {
   const didCapture = useRef(false);
   const didNavigate = useRef(false);
 
-  if (forced && forced !== state) {
-    setState(forced);
-  }
-
   // Effect 1 — API call
   useEffect(() => {
-    if (forced) return;
     if (state === "scan_failed_low_confidence" || state === "scan_failed_api_error") return;
     if (didCapture.current) return;
     didCapture.current = true;
@@ -98,7 +83,7 @@ function ScanInner() {
           errorType: msg.includes("LOW_CONFIDENCE") ? "low_confidence" : "api_error",
         });
       });
-  }, [forced, state]);
+  }, [state]);
 
   // Effect: phrase rotation
   useEffect(() => {
@@ -111,7 +96,6 @@ function ScanInner() {
 
   // Effect 2 — Progress animation (caps at 99 until apiResult is ready)
   useEffect(() => {
-    if (forced) return;
     if (state === "scan_failed_low_confidence" || state === "scan_failed_api_error") return;
 
     const start = Date.now();
@@ -126,7 +110,7 @@ function ScanInner() {
       }
     }, 80);
     return () => clearInterval(tick);
-  }, [forced, state]);
+  }, [state]);
 
   // scan_slow: animation done but API still pending — rising-edge at render time
   if (animDone && !apiResult && state === "scanning") {
@@ -232,8 +216,6 @@ function ScanInner() {
           </span>
         </div>
       </div>
-
-      <StateSwitcher states={STATES} current={state} />
     </main>
   );
 }

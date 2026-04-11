@@ -281,9 +281,11 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
       // ----------------------------------------------------------
       updateCheck("handedness", { status: "running" });
 
-      // For uploads (NOT mirrored): MediaPipe "Right" = real right, "Left" = real left
+      // MediaPipe classifies from its own POV (as if looking at its own hand).
+      // A palm photo facing the camera has the anatomy flipped from MediaPipe's
+      // perspective, so we invert: MediaPipe "Left" = user's right hand.
       const detectedLabel = detectHandedness(handednessCategories);
-      const detectedSide = detectedLabel === "Right" ? "right" : "left";
+      const detectedSide = detectedLabel === "Left" ? "right" : "left";
       let handOk = false;
 
       if (detectedSide !== dominantHand) {

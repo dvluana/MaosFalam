@@ -9,8 +9,6 @@ import EdisonLamp from "./EdisonLamp";
 import Grain from "./Grain";
 import HeroCTA from "./HeroCTA";
 import HeroTitle from "./HeroTitle";
-import LogoReveal from "./LogoReveal";
-import LunarClock from "./LunarClock";
 import Nav from "./Nav";
 import SceneVignette from "./SceneVignette";
 import Smoke from "./Smoke";
@@ -37,15 +35,10 @@ import VideoHero from "./VideoHero";
 
 export default function HomeLanding() {
   const [navVisible, setNavVisible] = useState(false);
-  const [clockVisible, setClockVisible] = useState(false);
 
   useEffect(() => {
-    const ids: number[] = [];
-    ids.push(window.setTimeout(() => setNavVisible(true), 6200));
-    ids.push(window.setTimeout(() => setClockVisible(true), 6200));
-    return () => {
-      ids.forEach((id) => window.clearTimeout(id));
-    };
+    const id = window.setTimeout(() => setNavVisible(true), 6200);
+    return () => window.clearTimeout(id);
   }, []);
 
   return (
@@ -74,14 +67,10 @@ export default function HomeLanding() {
       {/* Camada 7: cursor de cristal (z baixo, pointer-events none) */}
       <CrystalCursor />
 
-      {/* Camada 8: nav + relógio lunar (aparecem juntos) */}
+      {/* Camada 8: nav */}
       <Nav activeId="home" visible={navVisible} />
-      <LunarClock visible={clockVisible} />
 
-      {/* Camada 9: logo reveal — materializa no gap das cortinas */}
-      <LogoReveal />
-
-      {/* Camada 10 (top): cortinas de veludo — preloader */}
+      {/* Camada 9 (top): cortinas de veludo — preloader */}
       <Curtains />
     </main>
   );

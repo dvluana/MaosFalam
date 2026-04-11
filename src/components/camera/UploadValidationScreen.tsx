@@ -25,7 +25,13 @@ function StatusIcon({ status }: { status: CheckStatus }) {
   if (status === "pass") {
     return (
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-        <path d="M2 6l3 3 5-5" stroke="#c9a24a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M2 6l3 3 5-5"
+          stroke="#c9a24a"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     );
   }
@@ -71,7 +77,7 @@ export default function UploadValidationScreen({ checks }: UploadValidationScree
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="flex flex-col items-center justify-center min-h-dvh px-6 bg-black gap-8"
+      className="flex flex-col items-center gap-8 w-full max-w-md"
     >
       {/* Eyebrow */}
       <p

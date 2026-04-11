@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import CameraErrorState from "@/components/camera/CameraErrorState";
@@ -14,22 +14,18 @@ import MethodChoice from "@/components/camera/MethodChoice";
 import UploadConfirmScreen from "@/components/camera/UploadConfirmScreen";
 import UploadInstructionScreen from "@/components/camera/UploadInstructionScreen";
 import UploadValidationScreen from "@/components/camera/UploadValidationScreen";
-import WrongHandFeedback from "@/components/camera/WrongHandFeedback";
 import PageLoading from "@/components/ui/PageLoading";
-import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
 import { useFailureCounter } from "@/hooks/useFailureCounter";
 import { useLandscapeGuard } from "@/hooks/useLandscapeGuard";
 import { useUploadValidation } from "@/hooks/useUploadValidation";
 import { clearPhotoStore, setPhoto } from "@/lib/photo-store";
 import { loadReadingContext } from "@/lib/reading-context";
-import { CAM_EYEBROW, CAM_FEEDBACK, CAM_STATES, isErrorState, type CamState } from "@/types/camera";
+import { CAM_EYEBROW, CAM_FEEDBACK, isErrorState, type CamState } from "@/types/camera";
 
 function CameraPageInner() {
   const router = useRouter();
-  const search = useSearchParams();
-  const forced = search?.get("state") as CamState | null;
-  const [state, setState] = useState<CamState>(forced ?? "method_choice");
+  const [state, setState] = useState<CamState>("method_choice");
   const [showUpload, setShowUpload] = useState(false);
   type UploadStep = "instruction" | "validating" | "confirm";
   const [uploadStep, setUploadStep] = useState<UploadStep>("instruction");
@@ -50,7 +46,6 @@ function CameraPageInner() {
   const dominantHand = readingContext?.dominant_hand ?? "right";
   const targetName = readingContext?.target_name ?? "";
   const isSelf = readingContext?.is_self ?? true;
-  const targetGender = readingContext?.target_gender ?? "female";
 
   const {
     result: uploadResult,
@@ -67,10 +62,6 @@ function CameraPageInner() {
     }
     clearPhotoStore();
   }, [router]);
-
-  if (forced && forced !== state) {
-    setState(forced);
-  }
 
   // Permission denied → auto-redirect to upload after brief pause
   useEffect(() => {
@@ -103,7 +94,7 @@ function CameraPageInner() {
 
   useCameraPipeline({
     state,
-    forced: Boolean(forced),
+    forced: false,
     setState,
     onCaptured: handleCaptured,
     videoRef,
@@ -189,6 +180,31 @@ function CameraPageInner() {
     [router],
   );
 
+  const stopCameraStream = useCallback(() => {
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((t) => t.stop());
+      videoRef.current.srcObject = null;
+    }
+  }, []);
+
+  const handleBack = useCallback(() => {
+    if (state === "method_choice" && !showUpload) {
+      router.back();
+    } else if (showUpload) {
+      resetUpload();
+      setUploadStep("instruction");
+      setShowUpload(false);
+      setState("method_choice");
+    } else {
+      stopCameraStream();
+      setState("method_choice");
+      setShowUpload(false);
+    }
+  }, [state, showUpload, router, resetUpload, stopCameraStream]);
+
+  const canGoBack = state !== "camera_capturing";
+
   const errorState = isErrorState(state);
   const showViewport = !errorState && state !== "method_choice";
   const showTitle = !errorState && state !== "method_choice";
@@ -215,6 +231,29 @@ function CameraPageInner() {
 
       <CameraEyebrow label={CAM_EYEBROW[state]} />
 
+      {/* Back button — hidden during capture */}
+      {canGoBack && (
+        <button
+          type="button"
+          onClick={handleBack}
+          className="fixed top-5 left-5 z-[60] flex items-center gap-2 py-2 px-3 transition-opacity duration-300 hover:opacity-100 opacity-70"
+          aria-label="Voltar"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path
+              d="M9 2.5L4.5 7L9 11.5"
+              stroke="var(--color-gold)"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="font-raleway text-[11px] tracking-[0.06em] uppercase text-bone-dim">
+            Voltar
+          </span>
+        </button>
+      )}
+
       <AnimatePresence mode="wait">
         {showTitle && (
           <motion.p
@@ -225,7 +264,9 @@ function CameraPageInner() {
             transition={{ duration: 0.6 }}
             className="relative font-cormorant italic text-[24px] sm:text-[28px] text-bone text-center max-w-sm leading-[1.3]"
           >
-            {CAM_FEEDBACK[state]}
+            {state === "camera_wrong_hand"
+              ? `Essa é a mão ${dominantHand === "right" ? "esquerda" : "direita"}. Me mostre a ${dominantHand === "right" ? "direita" : "esquerda"}.`
+              : CAM_FEEDBACK[state]}
           </motion.p>
         )}
         {state === "method_choice" && (
@@ -324,16 +365,6 @@ function CameraPageInner() {
           onUploadSelected={handleUploadSelectedFromError}
         />
       )}
-
-      {/* Wrong hand feedback toast — non-blocking, 3s auto-hide */}
-      <WrongHandFeedback
-        expectedHand={dominantHand}
-        visible={state === "camera_wrong_hand"}
-        isSelf={isSelf}
-        targetGender={targetGender}
-      />
-
-      <StateSwitcher states={CAM_STATES} current={state} />
     </main>
   );
 }

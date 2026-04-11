@@ -11,7 +11,6 @@ import HandSummary from "@/components/reading/HandSummary";
 import RareSignGlyph from "@/components/reading/RareSignGlyph";
 import ReadingOverview from "@/components/reading/ReadingOverview";
 import ReadingSection from "@/components/reading/ReadingSection";
-import ResultStateSwitcher from "@/components/reading/ResultStateSwitcher";
 import SectionDivider from "@/components/reading/SectionDivider";
 import ShareButton from "@/components/reading/ShareButton";
 import TransitionLine from "@/components/reading/TransitionLine";
@@ -294,8 +293,6 @@ function CompletoInner({ id }: { id: string }) {
           </button>
         </div>
       </div>
-
-      <ResultStateSwitcher element={element} tier="completo" readingId={id} />
     </main>
   );
 }

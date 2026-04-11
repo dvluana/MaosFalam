@@ -100,7 +100,7 @@ export default function UploadConfirmScreen({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center gap-5 w-full max-w-sm px-6"
+      className="flex flex-col items-center gap-5 w-full max-w-md"
     >
       {/* Photo preview */}
       {previewUrl && (

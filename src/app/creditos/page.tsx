@@ -5,15 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState, type FormEvent } from "react";
 
-import {
-  Button,
-  Card,
-  Input,
-  Toast,
-  StateSwitcher,
-  GoogleButton,
-  PageLoading,
-} from "@/components/ui";
+import { Button, Card, GoogleButton, Input, PageLoading, Toast } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 import { saveCheckoutIntent, readCheckoutIntent } from "@/lib/checkout-intent";
 
@@ -27,18 +19,6 @@ type PageState =
   | "payment_failed_card_declined"
   | "payment_failed_generic"
   | "requires_login";
-
-const STATES: readonly PageState[] = [
-  "default",
-  "pix_selected",
-  "card_selected",
-  "processing_payment",
-  "payment_success",
-  "payment_failed_pix_expired",
-  "payment_failed_card_declined",
-  "payment_failed_generic",
-  "requires_login",
-] as const;
 
 type PaymentMethod = "pix" | "card";
 
@@ -129,11 +109,7 @@ function CreditosInner() {
   const params = useSearchParams();
   const { user } = useAuth();
 
-  const stateParam = params?.get("state") as PageState | null;
-  const [localState, setLocalState] = useState<PageState | null>(null);
-  const pageState: PageState =
-    localState ?? (stateParam && STATES.includes(stateParam) ? stateParam : "default");
-  const setPageState = (s: PageState): void => setLocalState(s);
+  const [pageState, setPageState] = useState<PageState>("default");
 
   // Deck: a carta atual é a "selecionada". Default inicia em Roda (index 2),
   // mas pode ser sobrescrita pelo ?pacote= ou pelo intent salvo no checkout.
@@ -1104,8 +1080,6 @@ function CreditosInner() {
           </motion.div>
         )}
       </div>
-
-      <StateSwitcher states={STATES} current={pageState} />
     </main>
   );
 }
