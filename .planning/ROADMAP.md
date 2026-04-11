@@ -49,7 +49,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 3. Nenhuma referencia a R2, Cloudflare, photo_key, photoKey existe no projeto
 4. Toda ocorrencia de "Planeta dominante" foi substituida por "Monte dominante" e "Claude Vision" por "GPT-4o"
 5. A pagina de resultado nao usa VALID_MOCK_IDS nem fallbackName="Marina"; login()/register() stubs e TODOs obsoletos foram removidos
-   **Plans**: TBD
+   **Plans**: 2 plans
+
+Plans:
+
+- [ ] 01-01-PLAN.md — Remover share_token, VALID_MOCK_IDS, fallbackName="Marina" de types e paginas
+- [ ] 01-02-PLAN.md — Corrigir ordem de secoes, verificar items ja limpos, limpar TODOs obsoletos
 
 ### Phase 2: ReadingContext + Creditos
 
@@ -113,7 +118,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase                             | Milestone | Plans Complete | Status      | Completed |
 | --------------------------------- | --------- | -------------- | ----------- | --------- |
-| 1. Auditoria                      | v1.1      | 0/?            | Not started | -         |
+| 1. Auditoria                      | v1.1      | 0/2            | Not started | -         |
 | 2. ReadingContext + Creditos      | v1.1      | 0/?            | Not started | -         |
 | 3. MediaPipe Real                 | v1.1      | 0/?            | Not started | -         |
 | 4. Clerk Cleanup + Error Handling | v1.1      | 0/?            | Not started | -         |
