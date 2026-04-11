@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 import { readStoredName } from "@/lib/personalize";
 
-export default function useStoredName(fallbackName: string | null = null): string | null {
-  const [name, setName] = useState<string | null>(fallbackName);
+export default function useStoredName(): string | null {
+  const [name, setName] = useState<string | null>(null);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {

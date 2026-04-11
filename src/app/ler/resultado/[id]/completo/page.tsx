@@ -78,7 +78,7 @@ function CompletoInner({ id }: { id: string }) {
       <ElementHero
         element={{ key: element }}
         impactPhrase={report.impact_phrase}
-        fallbackName="Marina"
+        targetName={data.target_name}
       />
 
       {/* Retrato da mão */}

@@ -13,10 +13,7 @@ import UpsellSection from "@/components/reading/UpsellSection";
 import PageLoading from "@/components/ui/PageLoading";
 import Separator from "@/components/ui/Separator";
 import { getReading } from "@/lib/reading-client";
-import type { HandElement, ReportJSON } from "@/types/report";
-
-/** IDs de mock validos enquanto nao tem backend */
-const VALID_MOCK_IDS = new Set(["fire", "water", "earth", "air", "mock", "demo"]);
+import type { HandElement, Reading, ReportJSON } from "@/types/report";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -66,7 +63,7 @@ function InvalidReading() {
 
 function ResultadoInner({ id }: { id: string }) {
   const search = useSearchParams();
-  const [report, setReport] = useState<ReportJSON | null>(null);
+  const [reading, setReading] = useState<Reading | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -78,7 +75,7 @@ function ResultadoInner({ id }: { id: string }) {
           setLoading(false);
           return;
         }
-        setReport(r.report);
+        setReading(r);
         setLoading(false);
       })
       .catch(() => {
@@ -91,8 +88,9 @@ function ResultadoInner({ id }: { id: string }) {
   void search;
 
   if (loading) return <PageLoading />;
-  if (notFound || !report) return <InvalidReading />;
+  if (notFound || !reading) return <InvalidReading />;
 
+  const report: ReportJSON = reading.report;
   const element: HandElement = report.element.key;
   const heart = report.sections.find((s) => s.key === "heart");
 
@@ -101,7 +99,7 @@ function ResultadoInner({ id }: { id: string }) {
       <ElementHero
         element={{ key: element }}
         impactPhrase={report.impact_phrase}
-        fallbackName="Marina"
+        targetName={reading.target_name}
       />
 
       <div className="px-4 max-w-xl mx-auto flex flex-col gap-10">
@@ -145,15 +143,6 @@ function ResultadoInner({ id }: { id: string }) {
 
 export default function ResultadoPage({ params }: PageProps) {
   const { id } = use(params);
-
-  // Guard: IDs invalidos sem sessao ativa
-  if (
-    typeof window !== "undefined" &&
-    !VALID_MOCK_IDS.has(id) &&
-    !sessionStorage.getItem("maosfalam_name_fresh")
-  ) {
-    return <InvalidReading />;
-  }
 
   return (
     <Suspense fallback={<PageLoading />}>

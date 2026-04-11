@@ -43,11 +43,12 @@ const nameGlow: Record<HandElement, string> = {
 interface Props {
   element: { key: HandElement };
   impactPhrase: string;
-  fallbackName: string;
+  targetName?: string;
 }
 
-export default function ElementHero({ element, impactPhrase, fallbackName }: Props) {
-  const name = useStoredName(fallbackName) ?? fallbackName;
+export default function ElementHero({ element, impactPhrase, targetName }: Props) {
+  const storedName = useStoredName();
+  const name = storedName ?? targetName ?? "Voce";
 
   return (
     <section className="relative overflow-hidden pt-28 pb-20 px-6">
