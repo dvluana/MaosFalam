@@ -12,7 +12,7 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 - [x] **DB-01**: Schema Prisma com 5 tabelas (leads, user_profiles, readings, credit_packs, payments) alinhado com docs/architecture.md secao 5
 - [x] **DB-02**: Prisma client singleton com Neon adapter (`@prisma/adapter-neon`) e connection pooling
 - [x] **DB-03**: DIRECT_URL configurado pra Prisma migrations (conexao direta, nao pooled)
-- [ ] **DB-04**: Migration inicial roda sem erro (`prisma migrate dev --name init`)
+- [x] **DB-04**: Migration inicial roda sem erro (`prisma migrate dev --name init`)
 
 ### Auth
 
@@ -111,7 +111,7 @@ Adiados para milestone futura.
 | DB-01       | Phase 1 | Complete |
 | DB-02       | Phase 1 | Complete |
 | DB-03       | Phase 1 | Complete |
-| DB-04       | Phase 1 | Pending  |
+| DB-04       | Phase 1 | Complete |
 | AUTH-01     | Phase 2 | Pending  |
 | AUTH-02     | Phase 2 | Pending  |
 | AUTH-03     | Phase 2 | Pending  |

@@ -13,7 +13,7 @@ The frontend exists and runs on mocks. This milestone replaces mocks with a real
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Database schema, Prisma client, logger, and env vars
+- [x] **Phase 1: Foundation** - Database schema, Prisma client, logger, and env vars (completed 2026-04-11)
 - [ ] **Phase 2: Auth** - Clerk middleware, route protection, and server-side auth helpers
 - [ ] **Phase 3: AI Pipeline** - GPT-4o wrapper, selectBlocks hardening, reading persistence
 - [ ] **Phase 4: Public API** - Lead capture, reading capture, reading GET, rate limiting, security headers
@@ -39,7 +39,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 
 - [x] 01-01-PLAN.md — Neon provisioning + fix Prisma schema, prisma.config.ts, Pino logger, and .env.example
-- [ ] 01-02-PLAN.md — Write logger/prisma unit tests and run prisma migrate dev --name init
+- [x] 01-02-PLAN.md — Write logger/prisma unit tests and run prisma migrate dev --name init
 
 ### Phase 2: Auth
 
@@ -113,11 +113,11 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
-| Phase              | Plans Complete | Status      | Completed |
-| ------------------ | -------------- | ----------- | --------- |
-| 1. Foundation      | 1/2            | In Progress |           |
-| 2. Auth            | 0/TBD          | Not started | -         |
-| 3. AI Pipeline     | 0/TBD          | Not started | -         |
-| 4. Public API      | 0/TBD          | Not started | -         |
-| 5. Protected API   | 0/TBD          | Not started | -         |
-| 6. Client Adapters | 0/TBD          | Not started | -         |
+| Phase              | Plans Complete | Status      | Completed  |
+| ------------------ | -------------- | ----------- | ---------- |
+| 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
+| 2. Auth            | 0/TBD          | Not started | -          |
+| 3. AI Pipeline     | 0/TBD          | Not started | -          |
+| 4. Public API      | 0/TBD          | Not started | -          |
+| 5. Protected API   | 0/TBD          | Not started | -          |
+| 6. Client Adapters | 0/TBD          | Not started | -          |

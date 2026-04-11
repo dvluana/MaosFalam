@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 01-foundation/01-01-PLAN.md
-last_updated: "2026-04-11T01:01:53.214Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 01-foundation/01-02-PLAN.md
+last_updated: "2026-04-11T01:07:41.548Z"
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -47,6 +47,7 @@ Plan: 2 of 2
 
 _Updated after each plan completion_
 | Phase 01-foundation P01 | 15 | 4 tasks | 4 files |
+| Phase 01-foundation P02 | 4 | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: Two-URL Prisma pattern: DATABASE_URL (pooled PgBouncer) for runtime, DIRECT_URL (direct Neon) for migrations — prevents P1001 timeout on DDL
 - [Phase 01-foundation]: Pino redact covers root and nested (\*.field) PII paths — logger.info({ user: { name } }) also redacts
 - [Phase 01-foundation]: .env.example force-added to git (git add -f): .gitignore .env\* glob catches it but example templates should be tracked
+- [Phase 01-foundation]: Prisma 7: url/directUrl removed from schema.prisma — datasource block has provider only, connection config lives in prisma.config.ts
+- [Phase 01-foundation]: prisma.config.ts loads .env.local explicitly (override:false) before .env — dotenv/config only loads .env, missing Next.js .env.local convention
+- [Phase 01-foundation]: Pino test pattern: use Writable stream + JSON.parse to verify redact — avoids pino-pretty TTY requirement in vitest jsdom
 
 ### Pending Todos
 
@@ -76,6 +80,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T01:01:53.211Z
-Stopped at: Completed 01-foundation/01-01-PLAN.md
+Last session: 2026-04-11T01:07:41.545Z
+Stopped at: Completed 01-foundation/01-02-PLAN.md
 Resume file: None
