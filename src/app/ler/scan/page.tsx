@@ -7,6 +7,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import PageLoading from "@/components/ui/PageLoading";
 import ProgressBar from "@/components/ui/ProgressBar";
 import StateSwitcher from "@/components/ui/StateSwitcher";
+import { clearPhotoStore, getElementHint, getPhoto } from "@/lib/photo-store";
 import { captureReading } from "@/lib/reading-client";
 import { loadReadingContext } from "@/lib/reading-context";
 import { generateUUID } from "@/lib/uuid";
@@ -41,25 +42,35 @@ function ScanInner() {
   const [state, setState] = useState<ScanState>(forced ?? "scanning");
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [animDone, setAnimDone] = useState(false);
+  const [apiResult, setApiResult] = useState<
+    | { ok: true; reading_id: string; impact_phrase: string }
+    | { ok: false; errorType: "low_confidence" | "api_error" }
+    | null
+  >(null);
   const didCapture = useRef(false);
+  const didNavigate = useRef(false);
 
   if (forced && forced !== state) {
     setState(forced);
   }
 
+  // Effect 1 — API call
   useEffect(() => {
     if (forced) return;
     if (state === "scan_failed_low_confidence" || state === "scan_failed_api_error") return;
     if (didCapture.current) return;
     didCapture.current = true;
 
-    const photo = sessionStorage.getItem("maosfalam_photo") ?? "";
-    const leadId = sessionStorage.getItem("maosfalam_lead_id") ?? undefined;
+    const photo = getPhoto();
+    const elementHint = getElementHint();
+    clearPhotoStore(); // free memory immediately
 
+    const leadId = sessionStorage.getItem("maosfalam_lead_id") ?? undefined;
     const ctx = loadReadingContext();
     const sessionId =
       ctx?.session_id ?? sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
-    const targetName = ctx?.target_name ?? sessionStorage.getItem("maosfalam_name") ?? "você";
+    const targetName = ctx?.target_name ?? sessionStorage.getItem("maosfalam_name") ?? "voce";
     const targetGender =
       ctx?.target_gender ??
       (sessionStorage.getItem("maosfalam_target_gender") as "female" | "male") ??
@@ -75,21 +86,21 @@ function ScanInner() {
       target_gender: targetGender,
       is_self: isSelf,
       dominant_hand: dominantHand,
+      element_hint: elementHint,
     })
       .then(({ reading_id, report }) => {
-        sessionStorage.setItem("maosfalam_reading_id", reading_id);
-        sessionStorage.setItem("maosfalam_impact_phrase", extractImpactPhrase(report));
+        setApiResult({ ok: true, reading_id, impact_phrase: extractImpactPhrase(report) });
       })
       .catch((err: unknown) => {
         const msg = err instanceof Error ? err.message : "";
-        if (msg.includes("LOW_CONFIDENCE")) {
-          setState("scan_failed_low_confidence");
-        } else {
-          setState("scan_failed_api_error");
-        }
+        setApiResult({
+          ok: false,
+          errorType: msg.includes("LOW_CONFIDENCE") ? "low_confidence" : "api_error",
+        });
       });
   }, [forced, state]);
 
+  // Effect: phrase rotation
   useEffect(() => {
     const total = state === "scan_slow" ? 6 : 5;
     const phraseTimer = setInterval(() => {
@@ -98,30 +109,52 @@ function ScanInner() {
     return () => clearInterval(phraseTimer);
   }, [state]);
 
+  // Effect 2 — Progress animation (caps at 99 until apiResult is ready)
   useEffect(() => {
-    if (state === "scan_failed_low_confidence") {
-      router.replace("/ler/erro?type=low_confidence");
-      return;
-    }
-    if (state === "scan_failed_api_error") {
-      router.replace("/ler/erro?type=api_error");
-      return;
-    }
-    if (state !== "scanning" && state !== "scan_slow") return;
+    if (forced) return;
+    if (state === "scan_failed_low_confidence" || state === "scan_failed_api_error") return;
 
     const start = Date.now();
     const duration = 8000;
     const tick = setInterval(() => {
       const elapsed = Date.now() - start;
-      const pct = Math.min(100, (elapsed / duration) * 100);
+      const pct = Math.min(99, (elapsed / duration) * 100);
       setProgress(pct);
-      if (pct >= 100) {
+      if (elapsed >= duration) {
         clearInterval(tick);
-        router.push("/ler/revelacao");
+        setAnimDone(true);
       }
     }, 80);
     return () => clearInterval(tick);
-  }, [state, router]);
+  }, [forced, state]);
+
+  // scan_slow: animation done but API still pending — rising-edge at render time
+  if (animDone && !apiResult && state === "scanning") {
+    setState("scan_slow");
+  }
+
+  // Effect 3 — Gate: navigate only when both animDone AND apiResult are set
+  useEffect(() => {
+    if (!animDone || !apiResult) return;
+    if (didNavigate.current) return;
+    didNavigate.current = true;
+
+    if (!apiResult.ok) {
+      const path =
+        apiResult.errorType === "low_confidence"
+          ? "/ler/erro?type=low_confidence"
+          : "/ler/erro?type=api_error";
+      router.replace(path);
+      return;
+    }
+
+    sessionStorage.setItem("maosfalam_reading_id", apiResult.reading_id);
+    sessionStorage.setItem("maosfalam_impact_phrase", apiResult.impact_phrase);
+    setTimeout(() => {
+      setProgress(100);
+      router.push("/ler/revelacao");
+    }, 200);
+  }, [animDone, apiResult, router]);
 
   if (state === "scan_failed_low_confidence" || state === "scan_failed_api_error") {
     return <main className="min-h-dvh bg-black" />;
