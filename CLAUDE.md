@@ -74,7 +74,7 @@ Componentes: PascalCase.tsx | Hooks: useCamelCase.ts | Types: PascalCase | Const
 - @docs/blocks.md — blocos de texto. Quando criar mocks ou resultado.
 - @docs/palmistry.md — quiromancia. Quando tocar em deteccao.
 - @docs/brand-voice.md — tom de voz. Quando tiver duvida sobre copy.
-- @docs/architecture.md — PLANO de backend (ainda nao implementado). Stack, banco, APIs, motor de leitura, pagamentos, auth.
+- @docs/architecture.md — Arquitetura backend (parcialmente implementado v1.0). Stack, banco, APIs, motor de leitura, pagamentos, auth.
 - @docs/product.md — mercado, monetizacao. Se precisar contexto de negocio.
 - @docs/DS.md — design system. Quando criar componentes visuais.
 
@@ -89,9 +89,21 @@ Cinzel Decorative: LOGO ONLY. Cormorant Garamond italic: voz da cigana. Cinzel: 
 
 ## Git
 
-- develop: branch de trabalho livre.
-- main: protegida. Checks obrigatorios.
-- feature/\*: so quando a mudanca for maior ou arriscada.
+- **develop**: branch de trabalho padrao. Todo desenvolvimento acontece aqui.
+- **main**: protegida. Checks obrigatorios. So recebe merges de develop via PR.
+- **feature/\***: so quando a mudanca for maior ou arriscada. Branch de develop.
+- Sempre trabalhe na branch develop. Nunca commite direto na main.
+- PRs de develop → main quando milestone estiver estavel.
+
+## Neon (Banco de Dados)
+
+- **main** (Neon branch): producao. Vinculada a branch git main. NAO usar pra dev.
+- **develop** (Neon branch): desenvolvimento. Vinculada a branch git develop. Usar como padrao.
+- Neon project ID: `steep-bread-93583259`
+- Develop branch ID: `br-weathered-violet-akp280bb`
+- .env.local aponta pra Neon develop por padrao.
+- Migrations rodam no Neon develop via `npx prisma migrate deploy`.
+- Prisma 7: connection config em `prisma.config.ts`, NAO em `schema.prisma`.
 
 ## Behavior
 
