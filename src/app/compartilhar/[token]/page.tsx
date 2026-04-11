@@ -6,8 +6,7 @@ import ReadingSection from "@/components/reading/ReadingSection";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
-import { buildMockReading } from "@/mocks/build-reading";
-import type { Reading } from "@/types/reading";
+import type { Reading, ReportJSON, Tier } from "@/types/report";
 
 import type { Metadata } from "next";
 
@@ -18,16 +17,40 @@ interface Resolved {
   reading: Reading | null;
 }
 
-// NOTE: Share links no longer expire in production. The "expired" state is kept
-// here only for the mock switcher / dev preview. In production, resolveToken
-// will never return "expired".
-function resolveToken(token: string): Resolved {
-  const data: Reading = buildMockReading("fire");
-  if (token === "abc123") return { state: "valid_free", reading: data };
-  if (token === "premium") return { state: "valid_premium", reading: data };
-  if (token === "expired") return { state: "expired", reading: null };
-  return { state: "not_found", reading: null };
+const ELEMENT_LABEL: Record<string, string> = {
+  fire: "Fogo",
+  water: "Água",
+  earth: "Terra",
+  air: "Ar",
+};
+
+async function resolveReading(token: string): Promise<Resolved> {
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  const res = await fetch(`${base}/api/reading/${token}`, { cache: "no-store" });
+  if (res.status === 410) return { state: "expired", reading: null };
+  if (!res.ok) return { state: "not_found", reading: null };
+  const data = (await res.json()) as {
+    reading: { id: string; tier: string; report: ReportJSON; created_at: string };
+  };
+  const r = data.reading;
+  const reading: Reading = {
+    id: r.id,
+    tier: r.tier as Tier,
+    share_token: r.id,
+    share_expires_at: "2099-12-31T00:00:00.000Z",
+    report: r.report as ReportJSON,
+    created_at: r.created_at,
+  };
+  const state: ShareState = r.tier === "premium" ? "valid_premium" : "valid_free";
+  return { state, reading };
 }
+
+// Paywall teasers for blurred cards on share page
+const SHARE_TEASERS: Array<{ label: string; teaser: string }> = [
+  { label: "Mente", teaser: "Sua cabeça decide rápido. Seu coração demora pra aceitar." },
+  { label: "Passado", teaser: "Tem uma marca aqui que apareceu faz uns anos." },
+  { label: "Destino", teaser: "Tem algo chegando. E não, não é o que você tá esperando." },
+];
 
 interface PageProps {
   params: Promise<{ token: string }>;
@@ -35,7 +58,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { token } = await params;
-  const { state, reading } = resolveToken(token);
+  const { state, reading } = await resolveReading(token);
   if (!reading || state === "expired" || state === "not_found") {
     return {
       title: "MãosFalam",
@@ -43,25 +66,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
   return {
-    title: `Leitura de ${reading.report.user_name}`,
-    description: reading.report.share_phrase,
+    title: "Leitura de Marina",
+    description: reading.report.impact_phrase,
     openGraph: {
-      title: `Leitura de ${reading.report.user_name}`,
-      description: reading.report.share_phrase,
+      title: "Leitura de Marina",
+      description: reading.report.impact_phrase,
     },
   };
 }
 
-const elementLabel: Record<string, string> = {
-  fire: "Fogo",
-  water: "Água",
-  earth: "Terra",
-  air: "Ar",
-};
-
 export default async function SharePage({ params }: PageProps) {
   const { token } = await params;
-  const { state, reading } = resolveToken(token);
+  const { state, reading } = await resolveReading(token);
 
   if (state === "expired") {
     return (
@@ -90,29 +106,28 @@ export default async function SharePage({ params }: PageProps) {
   }
 
   const { report } = reading;
-  const heart = report.sections.find((s) => s.line === "heart");
-  const others = report.sections.filter((s) => s.line !== "heart");
+  const heart = report.sections.find((s) => s.key === "heart");
 
   return (
     <main className="min-h-dvh velvet-bg pb-20">
       <div className="px-4 pt-10 max-w-xl mx-auto flex flex-col gap-8">
         <header className="text-center flex flex-col items-center gap-3">
           <p className="font-jetbrains text-[9px] text-bone-dim uppercase tracking-widest">
-            leitura de {report.user_name}
+            leitura de Marina
           </p>
           <h1 className="font-cinzel text-[26px] text-bone">As mãos dela falaram</h1>
           <div className="flex gap-2 justify-center mt-1">
-            <Badge variant="gold">{elementLabel[report.element.type]}</Badge>
+            <Badge variant="gold">{ELEMENT_LABEL[report.element.key]}</Badge>
           </div>
         </header>
 
         <p className="font-cormorant italic text-2xl text-gold text-center leading-snug px-2">
-          &ldquo;{report.share_phrase}&rdquo;
+          &ldquo;{report.impact_phrase}&rdquo;
         </p>
 
         <Separator variant="gold" />
 
-        <ElementSection element={report.element} />
+        <ElementSection element={report.element} impactPhrase={report.impact_phrase} />
 
         {state === "valid_free" && (
           <>
@@ -123,14 +138,8 @@ export default async function SharePage({ params }: PageProps) {
               Tem mais. Muito mais.
             </p>
             <div className="flex flex-col gap-6">
-              {others.map((s) => (
-                <BlurredCard
-                  key={s.line}
-                  line={s.line}
-                  symbol={s.symbol}
-                  planet={s.planet}
-                  teaser={s.intro}
-                />
+              {SHARE_TEASERS.map((t) => (
+                <BlurredCard key={t.label} label={t.label} teaser={t.teaser} />
               ))}
             </div>
           </>
@@ -142,17 +151,12 @@ export default async function SharePage({ params }: PageProps) {
             <div className="flex flex-col gap-6">
               {report.sections.map((s) => (
                 <div
-                  key={s.line}
+                  key={s.key}
                   className="border-l-2 border-[rgba(201,162,74,0.2)] pl-4 flex flex-col gap-2"
                 >
-                  <Badge variant="bone" icon={s.symbol}>
-                    {s.planet}
-                  </Badge>
+                  <Badge variant="bone">{s.label}</Badge>
                   <p className="font-cormorant italic text-lg text-bone-dim leading-snug">
-                    {s.intro}
-                  </p>
-                  <p className="font-cormorant italic text-base text-gold leading-snug">
-                    &ldquo;{s.impact_phrase}&rdquo;
+                    {s.opening}
                   </p>
                 </div>
               ))}

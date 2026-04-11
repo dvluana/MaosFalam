@@ -1,12 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { use, useCallback, useMemo, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { buildMockReading } from "@/mocks/build-reading";
+import PageLoading from "@/components/ui/PageLoading";
+import { getReading } from "@/lib/reading-client";
+import type { HandElement, Reading } from "@/types/report";
+
+const ELEMENT_LABEL: Record<HandElement, string> = {
+  fire: "Fogo",
+  water: "Água",
+  earth: "Terra",
+  air: "Ar",
+};
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -190,13 +199,37 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
 
 export default function SharePage({ params }: PageProps) {
   const { id } = use(params);
-  const data = useMemo(() => buildMockReading("fire"), []);
+  const [data, setData] = useState<Reading | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [shared, setShared] = useState(false);
 
+  useEffect(() => {
+    getReading(id)
+      .then((r) => {
+        if (!r) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+        setData(r);
+        setLoading(false);
+      })
+      .catch(() => {
+        setNotFound(true);
+        setLoading(false);
+      });
+  }, [id]);
+
   const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/compartilhar/${data.share_token}`
-      : `/compartilhar/${data.share_token}`;
+    data !== null
+      ? typeof window !== "undefined"
+        ? `${window.location.origin}/compartilhar/${data.share_token}`
+        : `/compartilhar/${data.share_token}`
+      : "";
+
+  const impactPhrase = data?.report.impact_phrase ?? "";
+  const elementTitle = data ? ELEMENT_LABEL[data.report.element.key] : "";
 
   const handleCopy = useCallback(async () => {
     try {
@@ -208,7 +241,7 @@ export default function SharePage({ params }: PageProps) {
   }, [shareUrl]);
 
   const handleDownload = useCallback(() => {
-    const canvas = renderShareCard(data.report.share_phrase, data.report.element.title);
+    const canvas = renderShareCard(impactPhrase, elementTitle);
     const link = document.createElement("a");
     link.download = "maosfalam-leitura.png";
     link.href = canvas.toDataURL("image/png");
@@ -216,18 +249,18 @@ export default function SharePage({ params }: PageProps) {
     link.click();
     document.body.removeChild(link);
     setShared(true);
-  }, [data.report.share_phrase, data.report.element.title]);
+  }, [impactPhrase, elementTitle]);
 
   const handleShare = useCallback(async () => {
     if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
-        const canvas = renderShareCard(data.report.share_phrase, data.report.element.title);
+        const canvas = renderShareCard(impactPhrase, elementTitle);
         const blob = await canvasToBlob(canvas);
         if (blob && typeof navigator.canShare === "function") {
           const file = new File([blob], "maosfalam-leitura.png", { type: "image/png" });
           const shareData = {
             title: "MaosFalam",
-            text: data.report.share_phrase,
+            text: impactPhrase,
             url: shareUrl,
             files: [file],
           };
@@ -240,7 +273,7 @@ export default function SharePage({ params }: PageProps) {
         // Fallback: share without image
         await navigator.share({
           title: "MaosFalam",
-          text: data.report.share_phrase,
+          text: impactPhrase,
           url: shareUrl,
         });
         setShared(true);
@@ -250,7 +283,20 @@ export default function SharePage({ params }: PageProps) {
       }
     }
     void handleCopy();
-  }, [data.report.share_phrase, data.report.element.title, shareUrl, handleCopy]);
+  }, [impactPhrase, elementTitle, shareUrl, handleCopy]);
+
+  if (loading) return <PageLoading />;
+
+  if (notFound || !data) {
+    return (
+      <main className="min-h-dvh bg-black flex flex-col items-center justify-center px-6 gap-6 text-center">
+        <p className="font-cormorant italic text-2xl text-bone max-w-sm">Leitura não encontrada.</p>
+        <Link href="/ler/nome">
+          <Button variant="secondary">Começar leitura</Button>
+        </Link>
+      </main>
+    );
+  }
 
   if (shared) {
     return (
@@ -274,9 +320,9 @@ export default function SharePage({ params }: PageProps) {
       <div className="w-full max-w-xs aspect-[9/16]">
         <Card parchment accentColor="gold" className="h-full">
           <div className="flex flex-col h-full justify-between items-center text-center py-6 px-2">
-            <Badge variant="gold">{data.report.element.title}</Badge>
+            <Badge variant="gold">{elementTitle}</Badge>
             <p className="font-cormorant italic text-[22px] leading-snug text-bone px-2">
-              &ldquo;{data.report.share_phrase}&rdquo;
+              &ldquo;{impactPhrase}&rdquo;
             </p>
             <p className="font-logo text-[18px] text-gold tracking-wider">MaosFalam</p>
           </div>

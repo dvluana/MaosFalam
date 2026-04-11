@@ -6,10 +6,6 @@ import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
-import { buildMockReading } from "@/mocks/build-reading";
-import mockUser from "@/mocks/user.json";
-
-const RAW_PHRASE = buildMockReading("fire").report.element.impact;
 
 function personalize(phrase: string, name: string | null): string {
   if (!name) return phrase;
@@ -20,7 +16,9 @@ function personalize(phrase: string, name: string | null): string {
 export default function RevelacaoPage() {
   const router = useRouter();
   const { user } = useAuth();
-  const [phrase, setPhrase] = useState(RAW_PHRASE);
+  const [phrase, setPhrase] = useState(
+    "Você carrega mais do que mostra. E isso te protege e te prende.",
+  );
   const [typed, setTyped] = useState("");
   const [complete, setComplete] = useState(false);
   const [flipped, setFlipped] = useState(false);
@@ -30,7 +28,9 @@ export default function RevelacaoPage() {
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       const name = sessionStorage.getItem("maosfalam_name");
-      setPhrase(personalize(RAW_PHRASE, name));
+      const stored = sessionStorage.getItem("maosfalam_impact_phrase");
+      const raw = stored ?? "Você carrega mais do que mostra. E isso te protege e te prende.";
+      setPhrase(personalize(raw, name));
     });
     return () => window.cancelAnimationFrame(frame);
   }, []);
@@ -63,18 +63,13 @@ export default function RevelacaoPage() {
 
   const onContinue = () => {
     setFadingOut(true);
-    // Decisão de destino:
-    //   - Logada COM créditos → /completo (consome 1 crédito no backend
-    //     futuramente; hoje o mock user.credits é read-only)
-    //   - Logada SEM créditos → free, com CTA de upsell pra comprar
-    //   - Visitante → free
-    //
-    // TODO (backend): ao pushar pra /completo, chamar POST /api/readings
-    // que debita 1 crédito da conta e cria o registro da leitura. Se
-    // retorno for 402 Payment Required, cai no fluxo de upsell.
-    const hasCredits = user ? mockUser.credits > 0 : false;
+    const readingId = sessionStorage.getItem("maosfalam_reading_id") ?? "demo";
+    const hasCredits = user
+      ? (user as { credits?: number }).credits !== undefined &&
+        ((user as { credits?: number }).credits ?? 0) > 0
+      : false;
     const destination =
-      user && hasCredits ? "/ler/resultado/mock-fire-001/completo" : "/ler/resultado/mock-fire-001";
+      user && hasCredits ? `/ler/resultado/${readingId}/completo` : `/ler/resultado/${readingId}`;
     setTimeout(() => router.push(destination), 500);
   };
 

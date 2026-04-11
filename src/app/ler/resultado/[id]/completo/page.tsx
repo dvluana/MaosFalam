@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useSearchParams } from "next/navigation";
-import { Suspense, use, useMemo } from "react";
+import { Suspense, use, useEffect, useState } from "react";
 
 import CompatibilityGrid from "@/components/reading/CompatibilityGrid";
 import CrossingGlyph from "@/components/reading/CrossingGlyph";
@@ -18,18 +17,11 @@ import TransitionLine from "@/components/reading/TransitionLine";
 import VenusSection from "@/components/reading/VenusSection";
 import PageLoading from "@/components/ui/PageLoading";
 import Separator from "@/components/ui/Separator";
-import { MOCK_ATTRIBUTES } from "@/mocks/hand-attributes";
-import { selectBlocks } from "@/server/lib/select-blocks";
-import type { HandElement } from "@/types/report";
+import { getReading } from "@/lib/reading-client";
+import type { HandElement, Reading } from "@/types/report";
 
 interface PageProps {
   params: Promise<{ id: string }>;
-}
-
-const VALID_ELEMENTS: HandElement[] = ["fire", "water", "earth", "air"];
-
-function isElement(v: string | null): v is HandElement {
-  return v !== null && (VALID_ELEMENTS as string[]).includes(v);
 }
 
 const ELEMENT_LABEL: Record<HandElement, string> = {
@@ -40,29 +32,52 @@ const ELEMENT_LABEL: Record<HandElement, string> = {
 };
 
 function CompletoInner({ id }: { id: string }) {
-  const search = useSearchParams();
-  const elementParam = search?.get("element") ?? null;
-  const element: HandElement = isElement(elementParam) ? elementParam : "fire";
+  const [data, setData] = useState<Reading | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  const data = useMemo(() => {
-    const attributes = MOCK_ATTRIBUTES[element];
-    const report = selectBlocks(attributes, "Marina", "female");
-    return {
-      id: `mock-${element}-001`,
-      tier: "premium" as const,
-      share_token: `${element}-mock-token`,
-      share_expires_at: "2026-12-31T00:00:00.000Z",
-      report,
-      created_at: new Date().toISOString(),
-    };
-  }, [element]);
+  useEffect(() => {
+    getReading(id)
+      .then((r) => {
+        if (!r) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+        setData({
+          id: r.id,
+          tier: r.tier,
+          share_token: r.share_token,
+          share_expires_at: r.share_expires_at,
+          report: r.report,
+          created_at: r.created_at,
+        });
+        setLoading(false);
+      })
+      .catch(() => {
+        setNotFound(true);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) return <PageLoading />;
+  if (notFound || !data) {
+    return (
+      <main className="min-h-dvh bg-black flex items-center justify-center px-6">
+        <p className="font-cormorant italic text-[22px] text-bone text-center">
+          Leitura não encontrada.
+        </p>
+      </main>
+    );
+  }
 
   const report = data.report;
+  const element: HandElement = report.element.key;
 
   return (
     <main className="min-h-dvh bg-black pb-24">
       <ElementHero
-        element={{ key: report.element.key }}
+        element={{ key: element }}
         impactPhrase={report.impact_phrase}
         fallbackName="Marina"
       />
@@ -70,8 +85,8 @@ function CompletoInner({ id }: { id: string }) {
       {/* Retrato da mão */}
       <div className="px-4 max-w-xl mx-auto -mt-4 mb-2">
         <HandSummary
-          element={report.element.key}
-          elementName={ELEMENT_LABEL[report.element.key]}
+          element={element}
+          elementName={ELEMENT_LABEL[element]}
           portrait={report.portrait}
         />
       </div>

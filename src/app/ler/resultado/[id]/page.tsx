@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense, use, useMemo } from "react";
+import { Suspense, use, useEffect, useState } from "react";
 
 import BlurredDeck from "@/components/reading/BlurredDeck";
 import ElementHero from "@/components/reading/ElementHero";
@@ -12,8 +12,8 @@ import ShareButton from "@/components/reading/ShareButton";
 import UpsellSection from "@/components/reading/UpsellSection";
 import PageLoading from "@/components/ui/PageLoading";
 import Separator from "@/components/ui/Separator";
-import { buildMockReading } from "@/mocks/build-reading";
-import type { HandElement } from "@/types/reading";
+import { getReading } from "@/lib/reading-client";
+import type { HandElement, ReportJSON } from "@/types/report";
 
 /** IDs de mock validos enquanto nao tem backend */
 const VALID_MOCK_IDS = new Set(["fire", "water", "earth", "air", "mock", "demo"]);
@@ -22,11 +22,29 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-const VALID_ELEMENTS: HandElement[] = ["fire", "water", "earth", "air"];
-
-function isElement(v: string | null): v is HandElement {
-  return v !== null && (VALID_ELEMENTS as string[]).includes(v);
-}
+// Paywall teasers (from architecture doc section 3)
+const PAYWALL_TEASERS: Array<{ label: string; teaser: string }> = [
+  {
+    label: "Mente",
+    teaser: "Sua cabeça decide rápido. Seu coração demora pra aceitar. E no meio desse atraso...",
+  },
+  {
+    label: "Passado",
+    teaser: "Tem uma marca aqui que apareceu faz uns anos. Você sabe do que eu tô falando.",
+  },
+  {
+    label: "Intimidade",
+    teaser: "Quando a porta fecha, você é outra pessoa. E quase ninguém sabe.",
+  },
+  {
+    label: "Destino",
+    teaser: "Tem algo chegando. E não, não é o que você tá esperando.",
+  },
+  {
+    label: "Sinais Raros",
+    teaser: "Tem uma marca na sua mão que quase ninguém tem. Eu vi.",
+  },
+];
 
 function InvalidReading() {
   return (
@@ -48,20 +66,51 @@ function InvalidReading() {
 
 function ResultadoInner({ id }: { id: string }) {
   const search = useSearchParams();
-  const elementParam = search?.get("element") ?? null;
-  const element: HandElement = isElement(elementParam) ? elementParam : "fire";
-  const data = useMemo(() => buildMockReading(element), [element]);
+  const [report, setReport] = useState<ReportJSON | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  const heart = data.report.sections.find((s) => s.line === "heart");
-  const otherLines = data.report.sections.filter((s) => s.line !== "heart");
+  useEffect(() => {
+    getReading(id)
+      .then((r) => {
+        if (!r) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+        setReport(r.report);
+        setLoading(false);
+      })
+      .catch(() => {
+        setNotFound(true);
+        setLoading(false);
+      });
+  }, [id]);
+
+  // Keep search params available for ResultStateSwitcher
+  void search;
+
+  if (loading) return <PageLoading />;
+  if (notFound || !report) return <InvalidReading />;
+
+  const element: HandElement = report.element.key;
+  const heart = report.sections.find((s) => s.key === "heart");
 
   return (
     <main className="min-h-dvh bg-black pb-24">
-      <ElementHero element={data.report.element} fallbackName={data.report.user_name} />
+      <ElementHero
+        element={{ key: element }}
+        impactPhrase={report.impact_phrase}
+        fallbackName="Marina"
+      />
 
       <div className="px-4 max-w-xl mx-auto flex flex-col gap-10">
         {/* Visão geral da mão */}
-        <ReadingOverview element={data.report.element} fallbackName={data.report.user_name} />
+        <ReadingOverview
+          opening={report.opening}
+          elementIntro={report.element.intro}
+          elementBody={report.element.body}
+        />
 
         <Separator variant="gold" />
 
@@ -79,14 +128,7 @@ function ResultadoInner({ id }: { id: string }) {
           </p>
         </div>
 
-        <BlurredDeck
-          cards={otherLines.map((s) => ({
-            line: s.line,
-            symbol: s.symbol,
-            planet: s.planet,
-            teaser: s.intro,
-          }))}
-        />
+        <BlurredDeck cards={PAYWALL_TEASERS} />
 
         <div className="flex flex-col gap-6 mt-4">
           <UpsellSection />
