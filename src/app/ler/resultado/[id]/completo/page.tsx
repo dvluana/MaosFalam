@@ -50,14 +50,7 @@ function CompletoInner({ id }: { id: string }) {
           router.replace(`/ler/resultado/${id}`);
           return;
         }
-        setData({
-          id: r.id,
-          tier: r.tier,
-          share_token: r.share_token,
-          share_expires_at: r.share_expires_at,
-          report: r.report,
-          created_at: r.created_at,
-        });
+        setData(r);
         setLoading(false);
       })
       .catch(() => {
@@ -129,18 +122,10 @@ function CompletoInner({ id }: { id: string }) {
         <VenusSection venus={report.venus} />
         {report.venus.transition && <TransitionLine text={report.venus.transition} />}
 
-        {/* Compatibilidade */}
-        {report.compatibility.length > 0 && (
-          <div className="mt-6">
-            <SectionDivider number="07" label="Com quem você casa" accent="gold" />
-            <CompatibilityGrid items={report.compatibility} />
-          </div>
-        )}
-
         {/* Cruzamentos */}
         {report.crossings.length > 0 && (
           <>
-            <SectionDivider number="08" label="Onde as linhas se encontram" accent="rose" />
+            <SectionDivider number="07" label="Onde as linhas se encontram" accent="rose" />
             <div className="flex flex-col gap-8">
               {report.crossings.map((c, i) => {
                 // Primeira sentença vira lead/subtítulo técnico
@@ -222,6 +207,14 @@ function CompletoInner({ id }: { id: string }) {
               })}
             </div>
           </>
+        )}
+
+        {/* Compatibilidade */}
+        {report.compatibility.length > 0 && (
+          <div className="mt-6">
+            <SectionDivider number="08" label="Com quem você casa" accent="gold" />
+            <CompatibilityGrid items={report.compatibility} />
+          </div>
         )}
 
         {/* Sinais Raros */}
