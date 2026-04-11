@@ -28,6 +28,7 @@ export async function captureReading(data: {
   is_self: boolean;
   dominant_hand?: "right" | "left";
   element_hint?: "fire" | "water" | "earth" | "air";
+  credit_used?: boolean;
 }): Promise<{ reading_id: string; report: ReportJSON }> {
   const res = await fetch("/api/reading/capture", {
     method: "POST",
@@ -59,6 +60,22 @@ export async function requestNewReading(data: {
     throw new Error(body.error ?? "Erro ao criar leitura");
   }
   return res.json() as Promise<{ ok: boolean; credits_remaining: number }>;
+}
+
+export async function upgradeReading(
+  readingId: string,
+): Promise<{ tier: string; credits_remaining: number; already_premium?: boolean }> {
+  const res = await fetch(`/api/reading/${readingId}/upgrade`, { method: "PATCH" });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => ({}))) as { error?: string };
+    const status = res.status;
+    throw new Error(`${status}: ${body.error ?? "Erro ao desbloquear"}`);
+  }
+  return res.json() as Promise<{
+    tier: string;
+    credits_remaining: number;
+    already_premium?: boolean;
+  }>;
 }
 
 export async function getReading(id: string): Promise<Reading | null> {
