@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import CreditGate from "@/components/reading/CreditGate";
 import Button from "@/components/ui/Button";
@@ -63,10 +63,25 @@ export default function NomePage() {
   const [isSelf, setIsSelf] = useState(true);
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
 
+  // Existing account feedback (email already registered in Clerk)
+  const [existingAccountEmail, setExistingAccountEmail] = useState(false);
+
+  // Repeat reading gate: visitor already completed one free reading
+  const [showRepeatGate, setShowRepeatGate] = useState(false);
+
   // Submission state
   const [submitting, setSubmitting] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [showCreditGate, setShowCreditGate] = useState(false);
+
+  // Check on mount if visitor already has a reading (repeat gate)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hasReading = sessionStorage.getItem("maosfalam_reading_id");
+    if (hasReading) {
+      setShowRepeatGate(true);
+    }
+  }, []);
 
   // When logged in, pre-fill name from account on mount
   useEffect(() => {
@@ -98,12 +113,20 @@ export default function NomePage() {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
 
-    if (trimmedName.length < 2) return;
+    if (trimmedName.length < 2) {
+      setValidationError("Preciso saber seu nome.");
+      scrollToAndShake(nameRef);
+      return;
+    }
     if (!trimmedEmail.includes("@") || trimmedEmail.length < 5) {
       setEmailError("Preciso de um email pra te chamar depois.");
+      setValidationError(null);
+      scrollToAndShake(emailRef);
       return;
     }
     setEmailError(undefined);
+    setExistingAccountEmail(false);
+    setValidationError(null);
     setSubmitting(true);
 
     // Persist legacy session keys for downstream consumers
@@ -117,18 +140,30 @@ export default function NomePage() {
     const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
     sessionStorage.setItem("maosfalam_session_id", sessionId);
 
-    // Fire-and-forget lead registration — failure must not block reading funnel (CTX-09)
-    void registerLead({
-      name: trimmedName,
-      email: trimmedEmail,
-      gender,
-      session_id: sessionId,
-      email_opt_in: emailOptIn,
-    })
-      .then(({ lead_id }) => {
-        sessionStorage.setItem("maosfalam_lead_id", lead_id);
-      })
-      .catch(() => undefined);
+    // Await lead registration to detect existing account (CTX-09)
+    // Failure is non-blocking: if it throws, we proceed to the funnel anyway
+    try {
+      const result = await registerLead({
+        name: trimmedName,
+        email: trimmedEmail,
+        gender,
+        session_id: sessionId,
+        email_opt_in: emailOptIn,
+      });
+
+      if (result.existing_account) {
+        // Email already has a Clerk account — show inline feedback
+        setExistingAccountEmail(true);
+        setSubmitting(false);
+        return;
+      }
+
+      if (result.lead_id) {
+        sessionStorage.setItem("maosfalam_lead_id", result.lead_id);
+      }
+    } catch {
+      // Lead registration failure is non-blocking — proceed anyway
+    }
 
     const ctx: ReadingContext = {
       target_name: trimmedName,
@@ -224,6 +259,16 @@ export default function NomePage() {
   const visitorCanSubmit = name.trim().length >= 2 && email.trim().includes("@");
   const loggedInCanSubmit = name.trim().length >= 2 && !creditsLoading;
 
+  // Refs for scroll-to-error
+  const nameRef = useRef<HTMLDivElement>(null);
+  const emailRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const scrollToAndShake = useCallback((ref: React.RefObject<HTMLDivElement | null>) => {
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, []);
+
   // ============================================================
   // Render
   // ============================================================
@@ -268,165 +313,259 @@ export default function NomePage() {
 
       {/* ── VISITOR FLOW ── */}
       {isVisitor && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="relative w-full max-w-sm"
-          style={{
-            background: "#110C1A",
-            borderRadius: "0 6px 0 6px",
-          }}
-        >
-          {/* Gold accent line */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[2px]"
-            style={{
-              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55), transparent)",
-            }}
-          />
-          {/* Corner ornaments */}
-          <span
-            className="absolute top-[-1px] left-[-1px] w-3 h-3 pointer-events-none"
-            style={{
-              borderTop: "1px solid rgba(201,162,74,0.25)",
-              borderLeft: "1px solid rgba(201,162,74,0.25)",
-            }}
-          />
-          <span
-            className="absolute bottom-[-1px] right-[-1px] w-3 h-3 pointer-events-none"
-            style={{
-              borderBottom: "1px solid rgba(201,162,74,0.25)",
-              borderRight: "1px solid rgba(201,162,74,0.25)",
-            }}
-          />
-
-          <form
-            onSubmit={handleVisitorSubmit}
-            className="m-[5px] p-6 flex flex-col gap-6"
-            style={{ border: "1px solid rgba(201,162,74,0.04)" }}
-          >
-            <div className="flex flex-col gap-2 text-center">
+        <>
+          {/* Repeat reading gate: visitor already has a reading */}
+          {showRepeatGate ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="relative w-full max-w-sm flex flex-col items-center gap-6 text-center px-2"
+            >
               <p className="font-cormorant italic text-[24px] sm:text-[28px] text-bone leading-[1.25]">
-                Me diz duas coisas antes.
+                Sua leitura ja esta feita.
               </p>
-              <p className="font-cormorant italic text-[16px] text-bone-dim leading-[1.35]">
-                Como eu te chamo, e onde eu te encontro depois.
+              <p className="font-raleway text-[14px] text-bone-dim leading-[1.6]">
+                Crie uma conta pra fazer mais leituras. E pra guardar o que ja leu.
               </p>
-            </div>
-
-            <div className="flex flex-col gap-5">
-              <Input
-                label="Seu nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="O primeiro que vier"
-                autoFocus
-              />
-
-              <Input
-                label="Melhor email"
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (emailError) setEmailError(undefined);
-                }}
-                placeholder="voce@exemplo.com"
-                error={emailError}
-                inputMode="email"
-                autoComplete="email"
-              />
-
-              {/* Ela / Ele + Destra / Canhota — side by side */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2">
-                  <span className="font-cormorant italic text-[13px] text-bone-dim tracking-[0.02em]">
-                    Essa leitura é pra
-                  </span>
-                  <div className="flex gap-2">
-                    <ToggleButton
-                      selected={gender === "female"}
-                      onClick={() => setGender("female")}
-                      ariaLabel="Leitura para ela (feminino)"
-                    >
-                      Ela
-                    </ToggleButton>
-                    <ToggleButton
-                      selected={gender === "male"}
-                      onClick={() => setGender("male")}
-                      ariaLabel="Leitura para ele (masculino)"
-                    >
-                      Ele
-                    </ToggleButton>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <span className="font-cormorant italic text-[13px] text-bone-dim tracking-[0.02em]">
-                    Mão que usa mais
-                  </span>
-                  <div className="flex gap-2">
-                    <ToggleButton
-                      selected={dominantHand === "right"}
-                      onClick={() => setDominantHand("right")}
-                      ariaLabel="Mão destra (direita)"
-                    >
-                      Destra
-                    </ToggleButton>
-                    <ToggleButton
-                      selected={dominantHand === "left"}
-                      onClick={() => setDominantHand("left")}
-                      ariaLabel="Mão canhota (esquerda)"
-                    >
-                      Canhota
-                    </ToggleButton>
-                  </div>
-                </div>
+              <div className="flex flex-col gap-3 w-full">
+                <Button variant="primary" size="lg" onClick={() => router.push("/registro")}>
+                  Criar conta
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => router.push("/login")}
+                  className="w-full text-center font-raleway text-[13px] text-gold hover:text-gold-light transition-colors"
+                >
+                  Ja tenho conta. Entrar.
+                </button>
               </div>
-
-              {/* LGPD opt-in */}
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={emailOptIn}
-                  onChange={(e) => setEmailOptIn(e.target.checked)}
-                  className="mt-1 accent-gold w-4 h-4 shrink-0"
-                />
-                <span className="font-cormorant italic text-[13px] text-bone-dim leading-[1.4]">
-                  Aceito receber novidades e leituras por email.
-                </span>
-              </label>
-            </div>
-
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              disabled={!visitorCanSubmit || submitting}
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="relative w-full max-w-sm"
+              style={{
+                background: "#110C1A",
+                borderRadius: "0 6px 0 6px",
+              }}
             >
-              {submitting ? "Aguarde..." : "Continuar"}
-            </Button>
+              {/* Gold accent line */}
+              <div
+                className="absolute top-0 left-0 right-0 h-[2px]"
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent, rgba(201,162,74,0.55), transparent)",
+                }}
+              />
+              {/* Corner ornaments */}
+              <span
+                className="absolute top-[-1px] left-[-1px] w-3 h-3 pointer-events-none"
+                style={{
+                  borderTop: "1px solid rgba(201,162,74,0.25)",
+                  borderLeft: "1px solid rgba(201,162,74,0.25)",
+                }}
+              />
+              <span
+                className="absolute bottom-[-1px] right-[-1px] w-3 h-3 pointer-events-none"
+                style={{
+                  borderBottom: "1px solid rgba(201,162,74,0.25)",
+                  borderRight: "1px solid rgba(201,162,74,0.25)",
+                }}
+              />
 
-            {/* Separator */}
-            <div className="flex items-center gap-3">
-              <span className="flex-1 h-px" style={{ background: "rgba(201,162,74,0.08)" }} />
-              <span className="font-jetbrains text-[8px] tracking-[1.5px] uppercase text-bone-dim">
-                ou
-              </span>
-              <span className="flex-1 h-px" style={{ background: "rgba(201,162,74,0.08)" }} />
-            </div>
+              <form
+                onSubmit={handleVisitorSubmit}
+                className="m-[5px] flex flex-col"
+                style={{ border: "1px solid rgba(201,162,74,0.04)" }}
+              >
+                {/* Scrollable content area */}
+                <div
+                  ref={scrollContainerRef}
+                  className="flex flex-col gap-6 p-6 overflow-y-auto max-h-[calc(100dvh-220px)]"
+                >
+                  <div className="flex flex-col gap-2 text-center">
+                    <p className="font-cormorant italic text-[24px] sm:text-[28px] text-bone leading-[1.25]">
+                      Me diz duas coisas antes.
+                    </p>
+                    <p className="font-cormorant italic text-[16px] text-bone-dim leading-[1.35]">
+                      Como eu te chamo, e onde eu te encontro depois.
+                    </p>
+                  </div>
 
-            {/* Login link */}
-            <button
-              type="button"
-              onClick={() => router.push("/login")}
-              className="w-full text-center font-cormorant italic text-[14px] text-gold hover:text-gold-light transition-colors"
-            >
-              Já tenho conta. Entrar.
-            </button>
-          </form>
-        </motion.div>
+                  <div className="flex flex-col gap-5">
+                    <div ref={nameRef}>
+                      <Input
+                        label="Seu nome"
+                        value={name}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                          if (validationError) setValidationError(null);
+                        }}
+                        placeholder="O primeiro que vier"
+                        autoFocus
+                      />
+                      {validationError && (
+                        <p
+                          className="font-jetbrains text-[11px] tracking-[0.5px] text-rose mt-2"
+                          style={{ fontWeight: 500 }}
+                        >
+                          {validationError}
+                        </p>
+                      )}
+                    </div>
+
+                    <div ref={emailRef}>
+                      <Input
+                        label="Melhor email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          if (emailError) setEmailError(undefined);
+                          if (existingAccountEmail) setExistingAccountEmail(false);
+                        }}
+                        placeholder="voce@exemplo.com"
+                        error={emailError}
+                        inputMode="email"
+                        autoComplete="email"
+                      />
+                      {/* Existing account inline feedback */}
+                      {existingAccountEmail && (
+                        <p
+                          className="font-jetbrains text-[11px] tracking-[0.5px] text-gold mt-2"
+                          style={{ fontWeight: 500 }}
+                        >
+                          Esse email ja tem conta.{" "}
+                          <button
+                            type="button"
+                            onClick={() => router.push("/login")}
+                            className="underline hover:text-gold-light transition-colors"
+                          >
+                            Faz login pra continuar.
+                          </button>
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Ela / Ele — stacked */}
+                    <div className="flex flex-col gap-2">
+                      <span className="font-raleway text-[13px] text-bone tracking-[0.02em]">
+                        Essa leitura e pra
+                      </span>
+                      <div className="flex gap-2">
+                        <ToggleButton
+                          selected={gender === "female"}
+                          onClick={() => setGender("female")}
+                          ariaLabel="Leitura para ela (feminino)"
+                        >
+                          Ela
+                        </ToggleButton>
+                        <ToggleButton
+                          selected={gender === "male"}
+                          onClick={() => setGender("male")}
+                          ariaLabel="Leitura para ele (masculino)"
+                        >
+                          Ele
+                        </ToggleButton>
+                      </div>
+                    </div>
+
+                    {/* Destra / Canhota — stacked below */}
+                    <div className="flex flex-col gap-2">
+                      <span className="font-raleway text-[13px] text-bone tracking-[0.02em]">
+                        Mao que usa mais
+                      </span>
+                      <div className="flex gap-2">
+                        <ToggleButton
+                          selected={dominantHand === "right"}
+                          onClick={() => setDominantHand("right")}
+                          ariaLabel="Mão destra (direita)"
+                        >
+                          Destra
+                        </ToggleButton>
+                        <ToggleButton
+                          selected={dominantHand === "left"}
+                          onClick={() => setDominantHand("left")}
+                          ariaLabel="Mão canhota (esquerda)"
+                        >
+                          Canhota
+                        </ToggleButton>
+                      </div>
+                    </div>
+
+                    {/* LGPD opt-in — styled checkbox */}
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <span
+                        className="relative flex shrink-0 items-center justify-center w-[18px] h-[18px] transition-all duration-200"
+                        style={{
+                          borderRadius: "0 4px 0 4px",
+                          border: emailOptIn
+                            ? "1px solid rgba(201,162,74,0.5)"
+                            : "1px solid rgba(123,107,165,0.25)",
+                          background: emailOptIn ? "rgba(201,162,74,0.15)" : "transparent",
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={emailOptIn}
+                          onChange={(e) => setEmailOptIn(e.target.checked)}
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
+                        {emailOptIn && (
+                          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                            <path
+                              d="M1 4L3.5 6.5L9 1"
+                              stroke="#C9A24A"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
+                      </span>
+                      <span className="font-raleway text-[12px] text-bone leading-[1.4]">
+                        Aceito receber novidades e leituras por email.
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Fixed footer — always visible */}
+                <div className="sticky bottom-0 flex flex-col gap-4 p-6 pt-4 bg-[#110C1A]">
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    disabled={!visitorCanSubmit || submitting}
+                  >
+                    {submitting ? "Aguarde..." : "Continuar"}
+                  </Button>
+
+                  {/* Separator */}
+                  <div className="flex items-center gap-3">
+                    <span className="flex-1 h-px" style={{ background: "rgba(201,162,74,0.08)" }} />
+                    <span className="font-jetbrains text-[8px] tracking-[1.5px] uppercase text-bone-dim">
+                      ou
+                    </span>
+                    <span className="flex-1 h-px" style={{ background: "rgba(201,162,74,0.08)" }} />
+                  </div>
+
+                  {/* Login link */}
+                  <button
+                    type="button"
+                    onClick={() => router.push("/login")}
+                    className="w-full text-center font-raleway text-[13px] text-gold hover:text-gold-light transition-colors"
+                  >
+                    Ja tenho conta. Entrar.
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </>
       )}
 
       {/* ── LOGGED-IN FLOW ── */}
@@ -437,7 +576,7 @@ export default function NomePage() {
         >
           <div className="flex flex-col gap-3 text-center">
             <p className="font-cormorant italic text-[28px] sm:text-[32px] text-bone leading-[1.25]">
-              Pra quem é essa leitura?
+              Pra quem e essa leitura?
             </p>
           </div>
 
@@ -472,8 +611,8 @@ export default function NomePage() {
                 />
 
                 <div className="flex flex-col gap-2">
-                  <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                    Essa leitura é pra
+                  <span className="font-raleway text-[13px] text-bone tracking-[0.02em]">
+                    Essa leitura e pra
                   </span>
                   <div className="flex gap-3">
                     <ToggleButton
@@ -497,8 +636,8 @@ export default function NomePage() {
 
             {/* Dominant hand toggle (always visible for logged-in) */}
             <div className="flex flex-col gap-2">
-              <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                Qual mão você usa mais?
+              <span className="font-raleway text-[13px] text-bone tracking-[0.02em]">
+                Mao que usa mais
               </span>
               <div className="flex gap-3">
                 <ToggleButton

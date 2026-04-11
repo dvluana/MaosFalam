@@ -6,7 +6,7 @@ export async function registerLead(data: {
   gender: "female" | "male";
   session_id: string;
   email_opt_in: boolean;
-}): Promise<{ lead_id: string }> {
+}): Promise<{ lead_id: string | null; existing_account?: boolean }> {
   const res = await fetch("/api/lead/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -16,7 +16,7 @@ export async function registerLead(data: {
     const body = (await res.json().catch(() => ({}))) as { error?: string };
     throw new Error(body.error ?? "Erro ao registrar lead");
   }
-  return res.json() as Promise<{ lead_id: string }>;
+  return res.json() as Promise<{ lead_id: string | null; existing_account?: boolean }>;
 }
 
 export async function captureReading(data: {
