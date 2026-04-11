@@ -13,12 +13,12 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 
 ### Camera UI
 
-- [ ] **CAM-01**: HandInstructionOverlay aparece ANTES do viewfinder com frase da cigana e outline SVG espelhado conforme dominancia
-- [ ] **CAM-02**: HandExpectedBadge mostra "MAO DIREITA" ou "MAO ESQUERDA" no viewfinder (descartavel com botao x)
-- [ ] **CAM-03**: WrongHandFeedback toast aparece por 3s quando MediaPipe detecta mao errada (aviso, nao bloqueio)
-- [ ] **CAM-04**: Outline SVG de palma aberta no viewfinder espelhado conforme dominant_hand
-- [ ] **CAM-05**: Camera traseira como default (facingMode: "environment"), botao pra trocar pra frontal
-- [ ] **CAM-06**: Permissao de camera negada redireciona pra upload com frase da cigana
+- [x] **CAM-01**: HandInstructionOverlay aparece ANTES do viewfinder com frase da cigana e outline SVG espelhado conforme dominancia
+- [x] **CAM-02**: HandExpectedBadge mostra "MAO DIREITA" ou "MAO ESQUERDA" no viewfinder (descartavel com botao x)
+- [x] **CAM-03**: WrongHandFeedback toast aparece por 3s quando MediaPipe detecta mao errada (aviso, nao bloqueio)
+- [x] **CAM-04**: Outline SVG de palma aberta no viewfinder espelhado conforme dominant_hand
+- [x] **CAM-05**: Camera traseira como default (facingMode: "environment"), botao pra trocar pra frontal
+- [x] **CAM-06**: Permissao de camera negada redireciona pra upload com frase da cigana
 
 ### Upload Pipeline
 
@@ -79,12 +79,12 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 
 | Requirement | Phase   | Status  |
 | ----------- | ------- | ------- |
-| CAM-01      | Phase 1 | Pending |
-| CAM-02      | Phase 1 | Pending |
-| CAM-03      | Phase 1 | Pending |
-| CAM-04      | Phase 1 | Pending |
-| CAM-05      | Phase 1 | Pending |
-| CAM-06      | Phase 1 | Pending |
+| CAM-01      | Phase 1 | Complete |
+| CAM-02      | Phase 1 | Complete |
+| CAM-03      | Phase 1 | Complete |
+| CAM-04      | Phase 1 | Complete |
+| CAM-05      | Phase 1 | Complete |
+| CAM-06      | Phase 1 | Complete |
 | UPL-01      | Phase 2 | Pending |
 | UPL-02      | Phase 2 | Pending |
 | UPL-03      | Phase 2 | Pending |
