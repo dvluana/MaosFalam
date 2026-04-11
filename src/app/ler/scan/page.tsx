@@ -2,11 +2,13 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 
 import PageLoading from "@/components/ui/PageLoading";
 import ProgressBar from "@/components/ui/ProgressBar";
 import StateSwitcher from "@/components/ui/StateSwitcher";
+import { captureReading } from "@/lib/reading-client";
+import type { ReportJSON } from "@/types/report";
 
 type ScanState = "scanning" | "scan_slow" | "scan_failed_low_confidence" | "scan_failed_api_error";
 
@@ -26,6 +28,10 @@ const PHRASES = [
   "Suas linhas são complexas. Preciso de mais tempo.",
 ];
 
+function extractImpactPhrase(report: ReportJSON): string {
+  return report.impact_phrase || "Suas linhas dizem mais do que você imagina.";
+}
+
 function ScanInner() {
   const router = useRouter();
   const search = useSearchParams();
@@ -33,10 +39,46 @@ function ScanInner() {
   const [state, setState] = useState<ScanState>(forced ?? "scanning");
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [progress, setProgress] = useState(0);
+  const didCapture = useRef(false);
 
   if (forced && forced !== state) {
     setState(forced);
   }
+
+  useEffect(() => {
+    if (forced) return;
+    if (state === "scan_failed_low_confidence" || state === "scan_failed_api_error") return;
+    if (didCapture.current) return;
+    didCapture.current = true;
+
+    const photo = sessionStorage.getItem("maosfalam_photo") ?? "";
+    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? crypto.randomUUID();
+    const leadId = sessionStorage.getItem("maosfalam_lead_id") ?? undefined;
+    const targetName = sessionStorage.getItem("maosfalam_name") ?? "você";
+    const targetGender =
+      (sessionStorage.getItem("maosfalam_target_gender") as "female" | "male") ?? "female";
+
+    captureReading({
+      photo_base64: photo,
+      session_id: sessionId,
+      lead_id: leadId,
+      target_name: targetName,
+      target_gender: targetGender,
+      is_self: true,
+    })
+      .then(({ reading_id, report }) => {
+        sessionStorage.setItem("maosfalam_reading_id", reading_id);
+        sessionStorage.setItem("maosfalam_impact_phrase", extractImpactPhrase(report));
+      })
+      .catch((err: unknown) => {
+        const msg = err instanceof Error ? err.message : "";
+        if (msg.includes("LOW_CONFIDENCE")) {
+          setState("scan_failed_low_confidence");
+        } else {
+          setState("scan_failed_api_error");
+        }
+      });
+  }, [forced, state]);
 
   useEffect(() => {
     const total = state === "scan_slow" ? 6 : 5;

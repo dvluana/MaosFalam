@@ -33,8 +33,11 @@ export async function captureReading(data: {
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(body.error ?? "Erro interno");
+    const body = (await res.json().catch(() => ({}))) as { error?: string; code?: string };
+    const msg = body.code
+      ? `${body.code}: ${body.error ?? "Erro interno"}`
+      : (body.error ?? "Erro interno");
+    throw new Error(msg);
   }
   return res.json() as Promise<{ reading_id: string; report: ReportJSON }>;
 }
