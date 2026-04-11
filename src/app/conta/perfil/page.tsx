@@ -1,7 +1,5 @@
 "use client";
 
-import { UserProfile } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,12 +8,12 @@ import Separator from "@/components/ui/Separator";
 import { useAuth } from "@/hooks/useAuth";
 
 /**
- * Perfil do usuário logado.
- * Edição de nome e senha delegada ao Clerk UserProfile (CLK-03, CLK-04).
- * Mantém bloco de logout com confirmação.
+ * Perfil — mostra dados da conta (Clerk) com visual do DS.
+ * Nome e email são read-only (Clerk é source of truth).
+ * Botões: trocar senha (via Clerk hosted) e logout.
  */
 export default function PerfilPage() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
   const [confirmingLogout, setConfirmingLogout] = useState(false);
 
@@ -47,23 +45,75 @@ export default function PerfilPage() {
         </h1>
       </header>
 
-      <UserProfile
-        appearance={{
-          baseTheme: dark,
-          variables: {
-            colorPrimary: "#C9A24A",
-            colorBackground: "#110C1A",
-            colorText: "#E8DFD0",
-            colorTextSecondary: "#9b9284",
-            colorInputBackground: "#171222",
-            colorInputText: "#E8DFD0",
-            borderRadius: "0.375rem",
-          },
+      {/* Profile card */}
+      <div
+        className="relative"
+        style={{
+          background: "#110C1A",
+          borderRadius: "0 6px 0 6px",
         }}
-      />
+      >
+        {/* Gold accent line */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2px]"
+          style={{
+            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55), transparent)",
+          }}
+        />
+        {/* Corner ornaments */}
+        <span
+          className="absolute top-[-1px] left-[-1px] w-3 h-3 pointer-events-none"
+          style={{
+            borderTop: "1px solid rgba(201,162,74,0.25)",
+            borderLeft: "1px solid rgba(201,162,74,0.25)",
+          }}
+        />
+        <span
+          className="absolute bottom-[-1px] right-[-1px] w-3 h-3 pointer-events-none"
+          style={{
+            borderBottom: "1px solid rgba(201,162,74,0.25)",
+            borderRight: "1px solid rgba(201,162,74,0.25)",
+          }}
+        />
+
+        <div
+          className="m-[5px] p-6 flex flex-col gap-5"
+          style={{ border: "1px solid rgba(201,162,74,0.04)" }}
+        >
+          {/* Name */}
+          <div className="flex flex-col gap-1">
+            <span className="font-cormorant italic text-[13px] text-bone-dim tracking-[0.02em]">
+              Nome
+            </span>
+            <span className="font-raleway text-[16px] text-bone">{user?.name ?? "..."}</span>
+          </div>
+
+          {/* Email */}
+          <div className="flex flex-col gap-1">
+            <span className="font-cormorant italic text-[13px] text-bone-dim tracking-[0.02em]">
+              Email
+            </span>
+            <span className="font-raleway text-[16px] text-bone">{user?.email ?? "..."}</span>
+          </div>
+
+          <Separator variant="thin" />
+
+          {/* Actions */}
+          <div className="flex flex-col gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/login#/user/security")}
+              className="w-full text-left font-cormorant italic text-[14px] text-gold hover:text-gold-light transition-colors"
+            >
+              Trocar senha
+            </button>
+          </div>
+        </div>
+      </div>
 
       <Separator variant="gold" />
 
+      {/* Logout */}
       <div className="flex flex-col items-center gap-3">
         {confirmingLogout ? (
           <div className="flex flex-col items-center gap-3">
