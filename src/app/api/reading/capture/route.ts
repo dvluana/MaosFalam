@@ -20,6 +20,7 @@ const schema = z.object({
   target_name: z.string().min(2).max(100),
   target_gender: z.enum(["female", "male"]),
   is_self: z.boolean(),
+  dominant_hand: z.enum(["right", "left"]).default("right"),
 });
 
 export async function POST(req: NextRequest) {
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
     const data = schema.parse(body);
 
     // 1. Analyze with GPT-4o
-    const attributes = await analyzeHand(data.photo_base64);
+    const attributes = await analyzeHand(data.photo_base64, data.dominant_hand);
 
     // 2. Check confidence
     if (attributes.confidence < 0.3) {

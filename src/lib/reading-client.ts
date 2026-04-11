@@ -26,6 +26,7 @@ export async function captureReading(data: {
   target_name: string;
   target_gender: "female" | "male";
   is_self: boolean;
+  dominant_hand?: "right" | "left";
 }): Promise<{ reading_id: string; report: ReportJSON }> {
   const res = await fetch("/api/reading/capture", {
     method: "POST",
