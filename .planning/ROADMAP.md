@@ -97,7 +97,7 @@ Plans:
 
 Plans:
 
-- [ ] 04-01-PLAN.md — Audit and fix the 3 existing public API routes (201 status, body size limit, UUID validation, import verification)
+- [x] 04-01-PLAN.md — Audit and fix the 3 existing public API routes (201 status, body size limit, UUID validation, import verification)
 - [ ] 04-02-PLAN.md — Write route tests proving API-01 through API-04 and SEC-01, SEC-02, SEC-05, SEC-06
 
 ### Phase 5: Protected API
@@ -137,6 +137,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
 | 2. Auth            | 2/2            | Complete    | 2026-04-11 |
 | 3. AI Pipeline     | 2/3            | In Progress |            |
-| 4. Public API      | 0/2            | Not started | -          |
+| 4. Public API      | 1/2            | In Progress |            |
 | 5. Protected API   | 0/TBD          | Not started | -          |
 | 6. Client Adapters | 0/TBD          | Not started | -          |

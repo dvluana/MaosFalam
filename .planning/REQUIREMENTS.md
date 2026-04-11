@@ -23,10 +23,10 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 
 ### API Public
 
-- [ ] **API-01**: POST /api/lead/register salva lead no banco (name, email, gender, session_id, email_opt_in)
-- [ ] **API-02**: POST /api/reading/capture recebe foto base64, chama GPT-4o, roda selectBlocks, salva reading com tier 'free'
-- [ ] **API-03**: POST /api/reading/capture rejeita com mensagem da cigana quando confidence < 0.3
-- [ ] **API-04**: GET /api/reading/[id] retorna leitura por UUID, retorna 410 se is_active = false
+- [x] **API-01**: POST /api/lead/register salva lead no banco (name, email, gender, session_id, email_opt_in)
+- [x] **API-02**: POST /api/reading/capture recebe foto base64, chama GPT-4o, roda selectBlocks, salva reading com tier 'free'
+- [x] **API-03**: POST /api/reading/capture rejeita com mensagem da cigana quando confidence < 0.3
+- [x] **API-04**: GET /api/reading/[id] retorna leitura por UUID, retorna 410 se is_active = false
 
 ### API Protected
 
@@ -46,12 +46,12 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 
 ### Security
 
-- [ ] **SEC-01**: Rate limit POST /api/reading/capture: 5/hora por IP
-- [ ] **SEC-02**: Rate limit POST /api/lead/register: 10/hora por IP
+- [x] **SEC-01**: Rate limit POST /api/reading/capture: 5/hora por IP
+- [x] **SEC-02**: Rate limit POST /api/lead/register: 10/hora por IP
 - [ ] **SEC-03**: Rate limit POST /api/credits/purchase: 5/hora por user (quando implementado)
-- [ ] **SEC-04**: Security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, HSTS
-- [ ] **SEC-05**: Nenhuma API route aceita 'tier' como input do client
-- [ ] **SEC-06**: Zod valida input em TODA API route
+- [x] **SEC-04**: Security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, HSTS
+- [x] **SEC-05**: Nenhuma API route aceita 'tier' como input do client
+- [x] **SEC-06**: Zod valida input em TODA API route
 - [x] **SEC-07**: Nenhum dado pessoal (nome, email, CPF) nos logs do Pino
 
 ### Infrastructure
@@ -120,22 +120,22 @@ Adiados para milestone futura.
 | AI-02       | Phase 3 | Complete |
 | AI-03       | Phase 3 | Complete |
 | AI-04       | Phase 3 | Complete |
-| API-01      | Phase 4 | Pending  |
-| API-02      | Phase 4 | Pending  |
-| API-03      | Phase 4 | Pending  |
-| API-04      | Phase 4 | Pending  |
+| API-01      | Phase 4 | Complete |
+| API-02      | Phase 4 | Complete |
+| API-03      | Phase 4 | Complete |
+| API-04      | Phase 4 | Complete |
 | API-05      | Phase 5 | Pending  |
 | API-06      | Phase 5 | Pending  |
 | API-07      | Phase 5 | Pending  |
 | API-08      | Phase 5 | Pending  |
 | API-09      | Phase 5 | Pending  |
 | API-10      | Phase 5 | Pending  |
-| SEC-01      | Phase 4 | Pending  |
-| SEC-02      | Phase 4 | Pending  |
+| SEC-01      | Phase 4 | Complete |
+| SEC-02      | Phase 4 | Complete |
 | SEC-03      | Phase 5 | Pending  |
-| SEC-04      | Phase 4 | Pending  |
-| SEC-05      | Phase 4 | Pending  |
-| SEC-06      | Phase 4 | Pending  |
+| SEC-04      | Phase 4 | Complete |
+| SEC-05      | Phase 4 | Complete |
+| SEC-06      | Phase 4 | Complete |
 | SEC-07      | Phase 1 | Complete |
 | INFRA-01    | Phase 1 | Complete |
 | INFRA-02    | Phase 1 | Complete |
