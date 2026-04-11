@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/Button";
-import { useAuth } from "@/hooks/useAuth";
 
 function personalize(phrase: string, name: string | null): string {
   if (!name) return phrase;
@@ -15,7 +14,6 @@ function personalize(phrase: string, name: string | null): string {
 
 export default function RevelacaoPage() {
   const router = useRouter();
-  const { user } = useAuth();
   const [phrase, setPhrase] = useState(
     "Você carrega mais do que mostra. E isso te protege e te prende.",
   );
@@ -63,14 +61,12 @@ export default function RevelacaoPage() {
 
   const onContinue = () => {
     setFadingOut(true);
-    const readingId = sessionStorage.getItem("maosfalam_reading_id") ?? "demo";
-    const hasCredits = user
-      ? (user as { credits?: number }).credits !== undefined &&
-        ((user as { credits?: number }).credits ?? 0) > 0
-      : false;
-    const destination =
-      user && hasCredits ? `/ler/resultado/${readingId}/completo` : `/ler/resultado/${readingId}`;
-    setTimeout(() => router.push(destination), 500);
+    const readingId = sessionStorage.getItem("maosfalam_reading_id");
+    if (!readingId) {
+      setTimeout(() => router.replace("/ler/nome"), 500);
+      return;
+    }
+    setTimeout(() => router.push(`/ler/resultado/${readingId}`), 500);
   };
 
   return (
