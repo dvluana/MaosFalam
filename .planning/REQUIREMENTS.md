@@ -36,14 +36,14 @@ Requirements for milestone v1.1: Alinhamento Arquitetural.
 
 ### ReadingContext + Credits
 
-- [ ] **CTX-01**: ReadingContext type criado (target_name, target_gender, dominant_hand, is_self, session_id, credit_used)
+- [x] **CTX-01**: ReadingContext type criado (target_name, target_gender, dominant_hand, is_self, session_id, credit_used)
 - [ ] **CTX-02**: /ler/nome visitante coleta nome + email + genero + dominancia + opt-in
 - [ ] **CTX-03**: /ler/nome logada mostra "Pra mim" / "Pra outra pessoa" na MESMA tela
 - [ ] **CTX-04**: Fluxo "pra outra pessoa" monta ReadingContext com is_self=false e dados do formulario
 - [ ] **CTX-05**: CreditGate component mostra confirmacao de credito antes de prosseguir
-- [ ] **CTX-06**: Visitante e logada primeira leitura passam sem check de credito
+- [x] **CTX-06**: Visitante e logada primeira leitura passam sem check de credito
 - [ ] **CTX-07**: Logada segunda leitura+ confirma credito (com saldo) ou redireciona pra /creditos (sem saldo)
-- [ ] **CTX-08**: Debito real acontece no SERVER via POST /api/reading/new (nao no client)
+- [x] **CTX-08**: Debito real acontece no SERVER via POST /api/reading/new (nao no client)
 - [ ] **CTX-09**: Lead salvo via POST /api/lead/register ANTES do toque
 
 ### MediaPipe
@@ -123,14 +123,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUDIT-09    | Phase 1 | Complete |
 | AUDIT-10    | Phase 1 | Complete |
 | AUDIT-11    | Phase 1 | Complete |
-| CTX-01      | Phase 2 | Pending  |
+| CTX-01      | Phase 2 | Complete |
 | CTX-02      | Phase 2 | Pending  |
 | CTX-03      | Phase 2 | Pending  |
 | CTX-04      | Phase 2 | Pending  |
 | CTX-05      | Phase 2 | Pending  |
-| CTX-06      | Phase 2 | Pending  |
+| CTX-06      | Phase 2 | Complete |
 | CTX-07      | Phase 2 | Pending  |
-| CTX-08      | Phase 2 | Pending  |
+| CTX-08      | Phase 2 | Complete |
 | CTX-09      | Phase 2 | Pending  |
 | MP-01       | Phase 3 | Pending  |
 | MP-02       | Phase 3 | Pending  |

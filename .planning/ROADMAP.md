@@ -73,7 +73,7 @@ Plans:
 
 Plans:
 
-- [ ] 02-01-PLAN.md — ReadingContext type, sessionStorage helpers, useCredits hook
+- [x] 02-01-PLAN.md — ReadingContext type, sessionStorage helpers, useCredits hook
 - [ ] 02-02-PLAN.md — Refatorar /ler/nome com fluxo dual visitante/logada + CreditGate modal
 
 ### Phase 3: MediaPipe Real
@@ -124,7 +124,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase                             | Milestone | Plans Complete | Status      | Completed |
 | --------------------------------- | --------- | -------------- | ----------- | --------- |
 | 1. Auditoria                      | v1.1      | 2/2            | Complete    | -         |
-| 2. ReadingContext + Creditos      | v1.1      | 0/2            | Not started | -         |
+| 2. ReadingContext + Creditos      | v1.1      | 1/2 | In Progress|  |
 | 3. MediaPipe Real                 | v1.1      | 0/?            | Not started | -         |
 | 4. Clerk Cleanup + Error Handling | v1.1      | 0/?            | Not started | -         |
 | 5. Docs Sync                      | v1.1      | 0/?            | Not started | -         |
