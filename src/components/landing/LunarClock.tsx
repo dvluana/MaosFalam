@@ -122,8 +122,8 @@ export default function LunarClock({ visible = true }: LunarClockProps) {
       aria-label="Hora e fase da lua"
       className={[
         "pointer-events-none fixed z-[60] flex items-center gap-[7px] transition-opacity duration-[600ms] ease-out",
-        "bottom-6 left-5",
-        "max-[480px]:left-1/2 max-[480px]:bottom-3 max-[480px]:-translate-x-1/2",
+        "bottom-[90px] left-5",
+        "max-[480px]:left-1/2 max-[480px]:bottom-[85px] max-[480px]:-translate-x-1/2",
         "max-[480px]:rounded-none max-[480px]:rounded-tr-[3px] max-[480px]:rounded-bl-[3px]",
         "max-[480px]:border max-[480px]:border-gold/10 max-[480px]:bg-black/40 max-[480px]:px-[10px] max-[480px]:py-[4px]",
         visible ? "opacity-100" : "opacity-0",

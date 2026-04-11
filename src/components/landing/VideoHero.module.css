@@ -1,18 +1,29 @@
 /* ═══════════════════════════════════
-   HERO — porta fiel de public/home.html
+   HERO — mobile-first layout
+
+   Structure:
+   .hero (100dvh flex column)
+     ├─ spacer (flex-grow, pushes video down from lamp)
+     ├─ .dioramaWrap (video + effects)
+     ├─ .heroContent (title + subtitle)
+     └─ spacer (flex-grow, pushes content up from bottom)
+
+   The video sits in the vertical center with content below it.
+   Lamp is fixed at top (separate component). Clock is fixed at bottom-left.
+   CTA is fixed at bottom (separate component).
    ═══════════════════════════════════ */
+
 .hero {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   position: relative;
-  padding: 60px 0 80px;
   overflow: hidden;
   z-index: 25;
-  gap: 0;
 }
+
+/* Bottom vignette */
 .hero::before {
   content: "";
   position: absolute;
@@ -30,9 +41,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -52%);
-  width: min(520px, 90vw);
-  height: min(520px, 90vw);
+  transform: translate(-50%, -55%);
+  width: min(420px, 85vw);
+  height: min(420px, 85vw);
   pointer-events: none;
   z-index: 1;
   animation: mandalaSpin 60s linear infinite;
@@ -40,10 +51,10 @@
 }
 @keyframes mandalaSpin {
   from {
-    transform: translate(-50%, -52%) rotate(0deg);
+    transform: translate(-50%, -55%) rotate(0deg);
   }
   to {
-    transform: translate(-50%, -52%) rotate(360deg);
+    transform: translate(-50%, -55%) rotate(360deg);
   }
 }
 
@@ -51,9 +62,12 @@
 .dioramaWrap {
   position: relative;
   z-index: 2;
-  width: min(400px, 82vw);
-  margin-bottom: 8px;
+  width: min(340px, 75vw);
+  /* Push video down from the lamp — the top spacer handles this via flex */
+  margin-top: auto;
+  flex-shrink: 0;
 }
+
 .dioramaVoid {
   position: absolute;
   bottom: -8px;
@@ -70,6 +84,7 @@
   pointer-events: none;
   z-index: 0;
 }
+
 .dioramaGlow {
   position: absolute;
   top: 5%;
@@ -99,6 +114,7 @@
     transform: translateX(-50%) scale(1.08);
   }
 }
+
 .dioramaStage {
   position: absolute;
   bottom: -32px;
@@ -119,21 +135,15 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(139, 123, 191, 0.14), transparent);
 }
+
 .dioramaImg {
   width: 100%;
   display: block;
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 30px rgba(0, 0, 0, 0.6));
-}
-/* Gradient overlay — bleeds video edges into page bg (#08050E) */
-.dioramaWrap::after {
-  content: "";
-  position: absolute;
-  inset: -20px;
-  z-index: 3;
-  pointer-events: none;
-  background: radial-gradient(ellipse 70% 65% at 50% 45%, transparent 40%, #08050e 100%);
+  /* Soft edge blend — mask fades edges to transparent, bg shows through */
+  mask-image: radial-gradient(ellipse 82% 78% at 50% 48%, black 45%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 82% 78% at 50% 48%, black 45%, transparent 100%);
 }
 
 /* ── HERO CONTENT ── */
@@ -144,7 +154,10 @@
   width: 100%;
   max-width: 430px;
   padding: 0 20px;
-  margin-top: -32px;
+  margin-top: 16px;
+  /* Push content up from the bottom — bottom spacer after this handles CTA clearance */
+  margin-bottom: auto;
+  padding-bottom: 100px; /* Room for fixed CTA + LunarClock */
 }
 
 /* ── PARTICLES ── */
@@ -201,51 +214,28 @@
   }
 }
 
+/* ── MOBILE ── */
 @media (max-width: 480px) {
   .dioramaWrap {
-    width: 92vw;
-  }
-}
-
-/* ── MOBILE VIDEO CENTERING ── */
-@media (max-width: 480px) {
-  .dioramaWrap {
-    margin-left: auto;
-    margin-right: auto;
-    width: 88vw;
-  }
-  .hero {
-    align-items: center;
-    padding: 40px 0 90px;
-  }
-}
-
-/* ── SHORT SCREENS: compress video to fit everything without scroll ── */
-@media (max-height: 700px) {
-  .hero {
-    padding: 30px 0 80px;
-  }
-  .dioramaWrap {
-    width: min(320px, 70vw);
+    width: min(300px, 80vw);
   }
   .heroMandala {
-    width: min(380px, 75vw);
-    height: min(380px, 75vw);
+    width: min(360px, 80vw);
+    height: min(360px, 80vw);
+  }
+}
+
+/* ── SHORT SCREENS (iPhone SE, landscape-ish) ── */
+@media (max-height: 680px) {
+  .dioramaWrap {
+    width: min(240px, 60vw);
+  }
+  .heroMandala {
+    width: min(280px, 65vw);
+    height: min(280px, 65vw);
   }
   .heroContent {
-    margin-top: -16px;
-  }
-}
-
-@media (max-height: 600px) {
-  .dioramaWrap {
-    width: min(260px, 60vw);
-  }
-  .heroMandala {
-    width: min(300px, 65vw);
-    height: min(300px, 65vw);
-  }
-  .hero {
-    padding: 20px 0 70px;
+    margin-top: 8px;
+    padding-bottom: 80px;
   }
 }
