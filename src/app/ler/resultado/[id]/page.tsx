@@ -61,11 +61,30 @@ function InvalidReading() {
   );
 }
 
+function ServerError() {
+  return (
+    <main className="min-h-dvh bg-black flex items-center justify-center px-6">
+      <div className="text-center max-w-sm">
+        <p className="font-cormorant italic text-[22px] text-bone leading-snug mb-6">
+          Eu preciso de um momento. Volte em breve.
+        </p>
+        <a
+          href={typeof window !== "undefined" ? window.location.href : "#"}
+          className="font-body text-[10px] uppercase tracking-[0.06em] text-bone border border-gold/10 rounded-[0_6px_0_6px] px-10 py-4 inline-block hover:bg-violet/5 transition-colors"
+        >
+          Tentar de novo
+        </a>
+      </div>
+    </main>
+  );
+}
+
 function ResultadoInner({ id }: { id: string }) {
   const search = useSearchParams();
   const [reading, setReading] = useState<Reading | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
   useEffect(() => {
     getReading(id)
@@ -79,7 +98,7 @@ function ResultadoInner({ id }: { id: string }) {
         setLoading(false);
       })
       .catch(() => {
-        setNotFound(true);
+        setServerError(true);
         setLoading(false);
       });
   }, [id]);
@@ -88,6 +107,7 @@ function ResultadoInner({ id }: { id: string }) {
   void search;
 
   if (loading) return <PageLoading />;
+  if (serverError) return <ServerError />;
   if (notFound || !reading) return <InvalidReading />;
 
   const report: ReportJSON = reading.report;
