@@ -1,7 +1,9 @@
 "use client";
 
 import { useClerk, useUser } from "@clerk/nextjs";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
+
+const CLAIMED_KEY = "maosfalam_readings_claimed";
 
 interface AuthUser {
   id: string;
@@ -13,6 +15,9 @@ export function useAuth() {
   const { user: clerkUser, isLoaded, isSignedIn } = useUser();
   const { signOut } = useClerk();
 
+  // Track whether we've already attempted the claim in this render cycle
+  const claimAttempted = useRef(false);
+
   const user: AuthUser | null =
     isLoaded && isSignedIn && clerkUser
       ? {
@@ -22,6 +27,26 @@ export function useAuth() {
         }
       : null;
 
+  // On first authenticated hydration: claim any anonymous readings
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn || claimAttempted.current) return;
+    if (typeof window === "undefined") return;
+
+    const alreadyClaimed = localStorage.getItem(CLAIMED_KEY);
+    if (alreadyClaimed) return;
+
+    claimAttempted.current = true;
+
+    // Fire-and-forget: failure must not block the user
+    void fetch("/api/user/claim-readings", { method: "POST" })
+      .then((res) => {
+        if (res.ok) {
+          localStorage.setItem(CLAIMED_KEY, "1");
+        }
+      })
+      .catch(() => undefined);
+  }, [isLoaded, isSignedIn]);
+
   const login = useCallback((_email: string, _password: string): boolean => false, []);
 
   const register = useCallback(
@@ -30,6 +55,8 @@ export function useAuth() {
   );
 
   const logout = useCallback((): void => {
+    // Clear claim flag on logout so next login re-checks
+    localStorage.removeItem(CLAIMED_KEY);
     void signOut();
   }, [signOut]);
 
