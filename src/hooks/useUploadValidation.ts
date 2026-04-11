@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 
 import { detectHandedness, validateLandmarks } from "@/lib/mediapipe";
+import { normalizeImage } from "@/lib/normalize-image";
 
 import type { Category, NormalizedLandmark } from "@mediapipe/tasks-vision";
 
@@ -66,12 +67,42 @@ const INITIAL: ValidationResult = {
 };
 
 // ============================================================
+// Screenshot detection (local helper, not exported)
+// ============================================================
+
+// Known iPhone/Android screenshot widths (logical pixels, common 2022+ models)
+const SCREENSHOT_WIDTHS = new Set([1170, 1179, 1284, 1290, 1080, 828, 750, 1242]);
+
+/**
+ * Returns true if the file looks like a phone screenshot:
+ * exact match to a known device pixel width AND tall aspect ratio (h/w > 1.8).
+ */
+async function checkIfScreenshot(file: File): Promise<boolean> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const { naturalWidth: w, naturalHeight: h } = img;
+      const aspectRatio = h / w;
+      resolve(SCREENSHOT_WIDTHS.has(w) && aspectRatio > 1.8);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(false);
+    };
+    img.src = url;
+  });
+}
+
+// ============================================================
 // Hook
 // ============================================================
 
 /**
  * Validates an uploaded hand photo through 5 progressive checks:
  * 1. Format (JPEG/PNG/WebP/HEIC accepted; GIF/SVG/BMP/PDF rejected)
+ *    + screenshot detection (after format pass)
  * 2. Size (max 15MB)
  * 3. Hand detected (MediaPipe, skipped if unavailable)
  * 4. Correct hand (matches dominantHand param)
@@ -103,15 +134,18 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
   // ============================================================
   const validate = useCallback(
     async (file: File) => {
+      // Normalize: HEIC→JPEG, EXIF correction, compress to max 1280px
+      const normalizedFile = await normalizeImage(file);
+
       // Reset to validating state
-      const previewUrl = URL.createObjectURL(file);
+      const previewUrl = URL.createObjectURL(normalizedFile);
       previewUrlRef.current = previewUrl;
 
       setResult({
         phase: "validating",
         checks: INITIAL_CHECKS.map((c) => ({ ...c })),
         previewUrl,
-        file,
+        file: normalizedFile,
         handOk: false,
         qualityOk: false,
         canProceed: false,
@@ -123,9 +157,9 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
       // ----------------------------------------------------------
       updateCheck("format", { status: "running" });
 
-      const typeLabel = file.type.split("/")[1]?.toUpperCase() ?? "UNKNOWN";
+      const typeLabel = normalizedFile.type.split("/")[1]?.toUpperCase() ?? "UNKNOWN";
 
-      if (!ACCEPTED_TYPES.has(file.type)) {
+      if (!ACCEPTED_TYPES.has(normalizedFile.type)) {
         updateCheck("format", { status: "fail" });
         setResult((prev) => ({
           ...prev,
@@ -138,11 +172,26 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
       updateCheck("format", { status: "pass", detail: typeLabel });
 
       // ----------------------------------------------------------
+      // Screenshot detection — after format pass, before size check
+      // Common phone screenshots have exact device pixel widths + tall aspect ratio
+      // ----------------------------------------------------------
+      const screenshotDetected = await checkIfScreenshot(normalizedFile);
+      if (screenshotDetected) {
+        updateCheck("format", { status: "fail" });
+        setResult((prev) => ({
+          ...prev,
+          phase: "done",
+          error: "Isso parece um print, nao uma foto. Preciso ver sua mao de verdade.",
+        }));
+        return;
+      }
+
+      // ----------------------------------------------------------
       // CHECK 2 — Size
       // ----------------------------------------------------------
       updateCheck("size", { status: "running" });
 
-      if (file.size > MAX_SIZE_BYTES) {
+      if (normalizedFile.size > MAX_SIZE_BYTES) {
         updateCheck("size", { status: "fail" });
         setResult((prev) => ({
           ...prev,
@@ -152,7 +201,7 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
         return;
       }
 
-      const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+      const sizeMb = (normalizedFile.size / (1024 * 1024)).toFixed(1);
       updateCheck("size", { status: "pass", detail: `${sizeMb} MB` });
 
       // ----------------------------------------------------------
@@ -251,7 +300,11 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
           img.src = previewUrl;
         });
 
-        const { isOpen } = validateLandmarks(landmarks, loadedImg.naturalWidth, loadedImg.naturalHeight);
+        const { isOpen } = validateLandmarks(
+          landmarks,
+          loadedImg.naturalWidth,
+          loadedImg.naturalHeight,
+        );
         updateCheck("palm_open", { status: isOpen ? "pass" : "fail" });
 
         setResult((prev) => ({
@@ -283,7 +336,11 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
         img.src = previewUrl;
       });
 
-      const { isOpen } = validateLandmarks(landmarks, imgForPalmCheck.naturalWidth, imgForPalmCheck.naturalHeight);
+      const { isOpen } = validateLandmarks(
+        landmarks,
+        imgForPalmCheck.naturalWidth,
+        imgForPalmCheck.naturalHeight,
+      );
 
       updateCheck("palm_open", { status: isOpen ? "pass" : "fail" });
 
