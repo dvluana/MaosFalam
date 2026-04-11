@@ -58,8 +58,13 @@ Decimal phases appear between their surrounding integers in numeric order.
 3. Quando MediaPipe detecta a mao errada, toast aparece por 3s com aviso — sem bloquear a captura
 4. Outline SVG no viewfinder esta espelhado conforme a mao dominante escolhida
 5. Camera abre na traseira (facingMode: environment) com botao para trocar pra frontal; permissao negada redireciona para upload com frase da cigana
-   **Plans**: TBD
+   **Plans**: 2 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 01-01-PLAN.md — Componentes visuais: HandOutlineSVG, HandInstructionOverlay, HandExpectedBadge
+- [ ] 01-02-PLAN.md — Wiring: WrongHandFeedback, camera switch, permission redirect, integracao na pagina
 
 ### Phase 2: Upload Pipeline
 
@@ -115,7 +120,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase                  | Milestone | Plans Complete | Status      | Completed |
 | ---------------------- | --------- | -------------- | ----------- | --------- |
-| 1. Camera UI           | v1.2      | 0/?            | Not started | -         |
+| 1. Camera UI           | v1.2      | 0/2            | Planning    | -         |
 | 2. Upload Pipeline     | v1.2      | 0/?            | Not started | -         |
 | 3. Edge Cases + Prompt | v1.2      | 0/?            | Not started | -         |
 | 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -         |
