@@ -6,12 +6,16 @@ import type { CamState } from "@/types/camera";
 import { isFrameActive } from "@/types/camera";
 
 import type React from "react";
+import HandExpectedBadge from "./HandExpectedBadge";
+import HandOutlineSVG from "./HandOutlineSVG";
 
 interface Props {
   state: CamState;
   videoRef: React.RefObject<HTMLVideoElement | null>;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   mirrored: boolean;
+  dominantHand: "right" | "left";
+  onSwitchCamera?: () => void;
 }
 
 type CornerVertical = "top" | "bottom";
@@ -31,9 +35,12 @@ const HAND_IN_FRAME_STATES: ReadonlySet<CamState> = new Set([
   "camera_stable",
 ]);
 
-function CameraViewport({ state, videoRef, canvasRef, mirrored }: Props) {
+function CameraViewport({ state, videoRef, canvasRef, mirrored, dominantHand, onSwitchCamera }: Props) {
   const frameActive = isFrameActive(state);
   const showCrosshair = !HAND_IN_FRAME_STATES.has(state);
+  const showBadge = state !== "loading_mediapipe" && state !== "camera_capturing";
+  // Show HandOutlineSVG when no hand detected (replaces crosshair center target for that state)
+  const showHandOutline = state === "camera_active_no_hand";
 
   return (
     <div className="relative flex items-center justify-center">
@@ -72,6 +79,13 @@ function CameraViewport({ state, videoRef, canvasRef, mirrored }: Props) {
         {/* Hidden canvas used only for frame capture */}
         <canvas ref={canvasRef} aria-hidden className="hidden" />
 
+        {/* HandExpectedBadge — top-left inside viewport */}
+        {showBadge && (
+          <div className="absolute top-3 left-3 z-10">
+            <HandExpectedBadge dominantHand={dominantHand} />
+          </div>
+        )}
+
         {CORNERS.map(([v, h]) => (
           <motion.span
             key={`${v}-${h}`}
@@ -93,7 +107,13 @@ function CameraViewport({ state, videoRef, canvasRef, mirrored }: Props) {
           />
         ))}
 
-        {showCrosshair && (
+        {showHandOutline && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <HandOutlineSVG dominantHand={dominantHand} size={140} className="opacity-[0.12]" />
+          </div>
+        )}
+
+        {showCrosshair && !showHandOutline && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <motion.div
               className="relative"
@@ -152,6 +172,44 @@ function CameraViewport({ state, videoRef, canvasRef, mirrored }: Props) {
               boxShadow: "0 0 12px rgba(201,162,74,0.7)",
             }}
           />
+        )}
+
+        {/* Camera switch button — bottom-right of viewport */}
+        {onSwitchCamera && (
+          <button
+            type="button"
+            onClick={onSwitchCamera}
+            aria-label="Alternar entre camera frontal e traseira"
+            className="absolute bottom-3 right-3 z-10 flex items-center justify-center"
+            style={{
+              width: 44,
+              height: 44,
+              border: "1px solid rgba(201,162,74,0.08)",
+              borderRadius: "0 4px 0 4px",
+              background: "transparent",
+              color: "var(--color-bone, #E8DFD0)",
+              cursor: "pointer",
+            }}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M20 7H4" />
+              <path d="M4 7l4-4" />
+              <path d="M4 7l4 4" />
+              <path d="M4 17h16" />
+              <path d="M20 17l-4-4" />
+              <path d="M20 17l-4 4" />
+            </svg>
+          </button>
         )}
       </motion.div>
     </div>
