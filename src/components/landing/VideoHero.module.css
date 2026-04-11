@@ -2,15 +2,16 @@
    HERO — porta fiel de public/home.html
    ═══════════════════════════════════ */
 .hero {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   position: relative;
-  padding: 0 0 8vh;
+  padding: 60px 0 80px;
   overflow: hidden;
   z-index: 25;
+  gap: 0;
 }
 .hero::before {
   content: "";
@@ -218,7 +219,36 @@
   }
   .hero {
     align-items: center;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 40px 0 90px;
+  }
+}
+
+/* ── SHORT SCREENS: compress video to fit everything without scroll ── */
+@media (max-height: 700px) {
+  .hero {
+    padding: 30px 0 80px;
+  }
+  .dioramaWrap {
+    width: min(320px, 70vw);
+  }
+  .heroMandala {
+    width: min(380px, 75vw);
+    height: min(380px, 75vw);
+  }
+  .heroContent {
+    margin-top: -16px;
+  }
+}
+
+@media (max-height: 600px) {
+  .dioramaWrap {
+    width: min(260px, 60vw);
+  }
+  .heroMandala {
+    width: min(300px, 65vw);
+    height: min(300px, 65vw);
+  }
+  .hero {
+    padding: 20px 0 70px;
   }
 }
