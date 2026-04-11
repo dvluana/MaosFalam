@@ -18,8 +18,8 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 
 - [x] **AUTH-01**: Clerk middleware em proxy.ts protegendo rotas /api/user/_, /api/credits/_, /api/reading/new, /conta/\*
 - [x] **AUTH-02**: Rotas publicas acessiveis sem auth: /, /ler/_, /compartilhar/_, /api/lead/register, /api/reading/capture, /api/reading/[id]
-- [ ] **AUTH-03**: ClerkProvider wrapping o app no layout.tsx
-- [ ] **AUTH-04**: Helpers server-side getClerkUser() e getClerkUserId() funcionais
+- [x] **AUTH-03**: ClerkProvider wrapping o app no layout.tsx
+- [x] **AUTH-04**: Helpers server-side getClerkUser() e getClerkUserId() funcionais
 
 ### API Public
 
@@ -114,8 +114,8 @@ Adiados para milestone futura.
 | DB-04       | Phase 1 | Complete |
 | AUTH-01     | Phase 2 | Complete |
 | AUTH-02     | Phase 2 | Complete |
-| AUTH-03     | Phase 2 | Pending  |
-| AUTH-04     | Phase 2 | Pending  |
+| AUTH-03     | Phase 2 | Complete |
+| AUTH-04     | Phase 2 | Complete |
 | AI-01       | Phase 3 | Pending  |
 | AI-02       | Phase 3 | Pending  |
 | AI-03       | Phase 3 | Pending  |

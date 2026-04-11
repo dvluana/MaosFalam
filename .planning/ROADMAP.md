@@ -14,7 +14,7 @@ The frontend exists and runs on mocks. This milestone replaces mocks with a real
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Database schema, Prisma client, logger, and env vars (completed 2026-04-11)
-- [ ] **Phase 2: Auth** - Clerk middleware, route protection, and server-side auth helpers
+- [x] **Phase 2: Auth** - Clerk middleware, route protection, and server-side auth helpers (completed 2026-04-11)
 - [ ] **Phase 3: AI Pipeline** - GPT-4o wrapper, selectBlocks hardening, reading persistence
 - [ ] **Phase 4: Public API** - Lead capture, reading capture, reading GET, rate limiting, security headers
 - [ ] **Phase 5: Protected API** - Credit debit, reading history, profile CRUD, account deletion
@@ -58,7 +58,7 @@ Plans:
 Plans:
 
 - [x] 02-01-PLAN.md — Migrate clerkMiddleware from middleware.ts to proxy.ts, delete middleware.ts
-- [ ] 02-02-PLAN.md — Verify and test auth helpers (getClerkUser, getClerkUserId), confirm ClerkProvider in layout
+- [x] 02-02-PLAN.md — Verify and test auth helpers (getClerkUser, getClerkUserId), confirm ClerkProvider in layout
 
 ### Phase 3: AI Pipeline
 
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase              | Plans Complete | Status      | Completed  |
 | ------------------ | -------------- | ----------- | ---------- |
 | 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
-| 2. Auth            | 1/2            | In Progress |            |
+| 2. Auth            | 2/2            | Complete    | 2026-04-11 |
 | 3. AI Pipeline     | 0/TBD          | Not started | -          |
 | 4. Public API      | 0/TBD          | Not started | -          |
 | 5. Protected API   | 0/TBD          | Not started | -          |
