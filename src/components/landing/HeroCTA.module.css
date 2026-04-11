@@ -79,25 +79,24 @@
   border-color: rgba(201, 162, 74, 0.45);
 }
 
-/* Mobile: CTA fixed na bottom — sempre visível */
+/* Mobile: CTA fixed flutuante na bottom — sempre visível */
 @media (max-width: 768px) {
   .cta {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    width: auto;
     z-index: 100;
     margin: 0;
-    border-radius: 0;
-    padding: 20px 24px;
+    padding: 18px 24px;
+    padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    border-radius: 0 6px 0 6px;
     background: linear-gradient(160deg, #1a1538, #2a2150, #1a1538);
     box-shadow:
-      0 -4px 24px rgba(0, 0, 0, 0.8),
-      0 0 0 1px rgba(201, 162, 74, 0.15);
-  }
-  .cta::before,
-  .cta::after {
-    display: none;
+      0 8px 32px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(201, 162, 74, 0.2),
+      0 0 40px rgba(123, 107, 165, 0.15);
   }
 }
 
