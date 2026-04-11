@@ -39,10 +39,10 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 
 ### GPT-4o
 
-- [ ] **AI-01**: Wrapper envia foto base64 pro GPT-4o com Structured Outputs (json_schema, nao json_object)
-- [ ] **AI-02**: Prompt retorna HandAttributes valido conforme src/types/hand-attributes.ts
-- [ ] **AI-03**: Foto nunca armazenada — processada e descartada
-- [ ] **AI-04**: Logs registram apenas element e confidence, nunca a foto
+- [x] **AI-01**: Wrapper envia foto base64 pro GPT-4o com Structured Outputs (json_schema, nao json_object)
+- [x] **AI-02**: Prompt retorna HandAttributes valido conforme src/types/hand-attributes.ts
+- [x] **AI-03**: Foto nunca armazenada — processada e descartada
+- [x] **AI-04**: Logs registram apenas element e confidence, nunca a foto
 
 ### Security
 
@@ -116,10 +116,10 @@ Adiados para milestone futura.
 | AUTH-02     | Phase 2 | Complete |
 | AUTH-03     | Phase 2 | Complete |
 | AUTH-04     | Phase 2 | Complete |
-| AI-01       | Phase 3 | Pending  |
-| AI-02       | Phase 3 | Pending  |
-| AI-03       | Phase 3 | Pending  |
-| AI-04       | Phase 3 | Pending  |
+| AI-01       | Phase 3 | Complete |
+| AI-02       | Phase 3 | Complete |
+| AI-03       | Phase 3 | Complete |
+| AI-04       | Phase 3 | Complete |
 | API-01      | Phase 4 | Pending  |
 | API-02      | Phase 4 | Pending  |
 | API-03      | Phase 4 | Pending  |

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 03-ai-pipeline/03-02-PLAN.md
-last_updated: "2026-04-11T02:04:19.555Z"
+stopped_at: Completed 03-ai-pipeline/03-01-PLAN.md
+last_updated: "2026-04-11T02:04:50.081Z"
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-10)
 ## Current Position
 
 Phase: 03 (ai-pipeline) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ _Updated after each plan completion_
 | Phase 02-auth P01 | 2 | 3 tasks | 1 files |
 | Phase 02-auth P02 | 5 | 2 tasks | 2 files |
 | Phase 03-ai-pipeline P02 | 2 | 2 tasks | 5 files |
+| Phase 03-ai-pipeline P01 | 2 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,9 @@ Recent decisions affecting current work:
 - [Phase 02-auth]: getClerkUserId() uses auth() not currentUser() — auth() is session-only (no network call), currentUser() makes a Clerk API call
 - [Phase 02-auth]: Test mock pattern for @clerk/nextjs/server: vi.mock at module level + vi.mocked(await import(...)) for typed refs
 - [Phase 03-ai-pipeline]: \_fallback blocks in line block maps use brand voice text — can surface to user on schema drift, not just a dev placeholder
+- [Phase 03-ai-pipeline]: json_schema strict mode requires Record<K,V> types expanded as fixed properties — additionalProperties with schema value rejected by OpenAI API
+- [Phase 03-ai-pipeline]: gpt-4o-2024-08-06 pinned (not floating gpt-4o) to prevent silent behavior changes from OpenAI snapshot updates
+- [Phase 03-ai-pipeline]: Both Structured Outputs and Zod kept: API-level enforcement + TypeScript narrowing serve different purposes
 
 ### Pending Todos
 
@@ -88,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T02:04:19.552Z
-Stopped at: Completed 03-ai-pipeline/03-02-PLAN.md
+Last session: 2026-04-11T02:04:50.077Z
+Stopped at: Completed 03-ai-pipeline/03-01-PLAN.md
 Resume file: None
