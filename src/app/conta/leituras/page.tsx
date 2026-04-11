@@ -9,6 +9,7 @@ import BuyCreditsModal from "@/components/account/BuyCreditsModal";
 import ElementGlyph from "@/components/reading/ElementGlyph";
 import Button from "@/components/ui/Button";
 import StateSwitcher from "@/components/ui/StateSwitcher";
+import { useToast } from "@/components/ui/ToastProvider";
 import { getCredits } from "@/lib/payment-client";
 import { getUserProfile, getUserReadings } from "@/lib/user-client";
 import type { Reading as BaseReading, HandElement, ReportJSON, Tier } from "@/types/report";
@@ -374,6 +375,7 @@ function LeiturasContent() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<View>("list");
   const [buyModalOpen, setBuyModalOpen] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     Promise.all([getUserProfile(), getUserReadings(), getCredits()])
@@ -390,9 +392,13 @@ function LeiturasContent() {
         setLoading(false);
       })
       .catch(() => {
+        showToast({
+          variant: "rose",
+          message: "Nao consegui trazer suas leituras. Tenta de novo.",
+        });
         setLoading(false);
       });
-  }, []);
+  }, [showToast]);
 
   const currentState: State = useMemo(() => {
     if (stateParam && (STATES as readonly string[]).includes(stateParam)) {
