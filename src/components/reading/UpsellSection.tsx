@@ -1,28 +1,55 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
+import { useAuth } from "@/hooks/useAuth";
+import { upgradeReading } from "@/lib/reading-client";
 
-/**
- * Ao clicar "Desbloquear tudo", salva o reading id atual em sessionStorage
- * pra que depois do pagamento a /creditos consiga mandar a usuária de volta
- * exatamente pra essa leitura em modo /completo (sem perder contexto).
- * O id é extraído do pathname: /ler/resultado/{id}.
- */
 export default function UpsellSection() {
   const router = useRouter();
+  const { user } = useAuth();
+  const [upgrading, setUpgrading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleClick = () => {
-    if (typeof window !== "undefined") {
-      // Extrai o id da leitura atual do pathname: /ler/resultado/{id}
-      const match = window.location.pathname.match(/\/ler\/resultado\/([^/]+)/);
-      if (match?.[1]) {
-        sessionStorage.setItem("maosfalam_pending_reading", match[1]);
+  const handleClick = async () => {
+    if (typeof window === "undefined") return;
+
+    // Extract reading id from pathname: /ler/resultado/{id} or /conta/leituras/{id}
+    const match =
+      window.location.pathname.match(/\/ler\/resultado\/([^/]+)/) ??
+      window.location.pathname.match(/\/conta\/leituras\/([^/]+)/);
+    const readingId = match?.[1];
+
+    if (!readingId) {
+      router.push("/creditos");
+      return;
+    }
+
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    setUpgrading(true);
+    setError(null);
+
+    try {
+      await upgradeReading(readingId);
+      router.push(`/ler/resultado/${readingId}/completo`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.startsWith("401") || msg.toLowerCase().includes("autenticado")) {
+        router.push("/login");
+      } else if (msg.startsWith("402") || msg.toLowerCase().includes("credito")) {
+        router.push("/creditos");
+      } else {
+        setError("Algo saiu do caminho. Tente de novo.");
+        setUpgrading(false);
       }
     }
-    router.push("/creditos");
   };
 
   return (
@@ -33,8 +60,9 @@ export default function UpsellSection() {
         Você leu o coração. Faltam três linhas, oito montes, e os sinais que quase ninguém tem. Eu
         vi todos na sua mão.
       </p>
-      <Button variant="primary" size="lg" onClick={handleClick}>
-        Desbloquear tudo
+      {error && <p className="font-raleway text-[13px] text-rose mb-4">{error}</p>}
+      <Button variant="primary" size="lg" onClick={handleClick} disabled={upgrading}>
+        {upgrading ? "Desbloqueando..." : "Desbloquear tudo"}
       </Button>
     </div>
   );
