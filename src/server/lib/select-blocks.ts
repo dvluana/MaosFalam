@@ -42,6 +42,8 @@ import type {
   Tier,
 } from "@/types/report";
 
+import { logger } from "./logger";
+
 // ---------------------------------------------------------------------------
 // Helpers (internal)
 // ---------------------------------------------------------------------------
@@ -303,7 +305,10 @@ function buildLineSection(
 ): ReportSection {
   const meta = resolveMeta(key);
 
-  const lineBlock = blocks[variation];
+  if (blocks[variation] === undefined) {
+    logger.warn({ axis: key, variation }, "Unknown variation — using _fallback block");
+  }
+  const lineBlock = blocks[variation] ?? blocks["_fallback"];
   const sectionOpening = lineBlock ? pickRandom(lineBlock.opening) : "";
   const bodyPast = lineBlock ? pickRandom(lineBlock.body_past) : "";
   const bodyPresent = lineBlock ? pickRandom(lineBlock.body_present) : "";
