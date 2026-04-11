@@ -129,13 +129,19 @@ function CameraPageInner() {
 
       {showUpload && (
         <UploadPreview
-          onConfirm={() => {
+          onConfirm={(file: File) => {
             setState("camera_capturing");
             if (typeof navigator !== "undefined" && "vibrate" in navigator) {
               navigator.vibrate?.(120);
             }
-            sessionStorage.setItem("maosfalam_photo", "mock_photo_placeholder");
-            window.setTimeout(() => router.push("/ler/scan"), 600);
+            const reader = new FileReader();
+            reader.onload = () => {
+              const dataUrl = reader.result as string;
+              const base64 = dataUrl.split(",")[1] ?? "";
+              sessionStorage.setItem("maosfalam_photo", base64);
+              window.setTimeout(() => router.push("/ler/scan"), 600);
+            };
+            reader.readAsDataURL(file);
           }}
           onCancel={() => setShowUpload(false)}
         />

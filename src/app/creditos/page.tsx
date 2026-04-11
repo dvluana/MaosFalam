@@ -127,7 +127,7 @@ export default function CreditosPage() {
 function CreditosInner() {
   const router = useRouter();
   const params = useSearchParams();
-  const { user, login } = useAuth();
+  const { user } = useAuth();
 
   const stateParam = params?.get("state") as PageState | null;
   const [localState, setLocalState] = useState<PageState | null>(null);
@@ -173,7 +173,7 @@ function CreditosInner() {
   const [cardCvv, setCardCvv] = useState<string>("");
   const [cardName, setCardName] = useState<string>("");
 
-  const [loginLoading, setLoginLoading] = useState<boolean>(false);
+  const [loginLoading] = useState<boolean>(false);
 
   const pacote = useMemo(
     () => PACOTES.find((p) => p.id === selectedPacote) ?? null,
@@ -277,13 +277,7 @@ function CreditosInner() {
   }
 
   function handleGoogleLogin(): void {
-    setLoginLoading(true);
-    // Mock: simula OAuth Google com delay
-    window.setTimeout(() => {
-      login("cigana@google.com", "123456");
-      setLoginLoading(false);
-      setPageState("default");
-    }, 1400);
+    router.push("/login?return=/creditos");
   }
 
   function handleRetry(): void {
