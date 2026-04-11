@@ -21,13 +21,16 @@ interface ToggleButtonProps {
   selected: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  ariaLabel?: string;
 }
 
-function ToggleButton({ selected, onClick, children }: ToggleButtonProps) {
+function ToggleButton({ selected, onClick, children, ariaLabel }: ToggleButtonProps) {
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-label={ariaLabel}
+      aria-pressed={selected}
       className="flex-1 py-3 font-raleway text-[10px] uppercase tracking-[0.06em] transition-all duration-300"
       style={{
         background: selected ? "linear-gradient(160deg, #1e1838, #2a2150, #1e1838)" : "transparent",
@@ -308,10 +311,18 @@ export default function NomePage() {
                 Essa leitura e pra
               </span>
               <div className="flex gap-3">
-                <ToggleButton selected={gender === "female"} onClick={() => setGender("female")}>
+                <ToggleButton
+                  selected={gender === "female"}
+                  onClick={() => setGender("female")}
+                  ariaLabel="Leitura para ela (feminino)"
+                >
                   Ela
                 </ToggleButton>
-                <ToggleButton selected={gender === "male"} onClick={() => setGender("male")}>
+                <ToggleButton
+                  selected={gender === "male"}
+                  onClick={() => setGender("male")}
+                  ariaLabel="Leitura para ele (masculino)"
+                >
                   Ele
                 </ToggleButton>
               </div>
@@ -326,12 +337,14 @@ export default function NomePage() {
                 <ToggleButton
                   selected={dominantHand === "right"}
                   onClick={() => setDominantHand("right")}
+                  ariaLabel="Mao destra (direita)"
                 >
                   Destra
                 </ToggleButton>
                 <ToggleButton
                   selected={dominantHand === "left"}
                   onClick={() => setDominantHand("left")}
+                  ariaLabel="Mao canhota (esquerda)"
                 >
                   Canhota
                 </ToggleButton>
@@ -378,10 +391,18 @@ export default function NomePage() {
           <div className="flex flex-col gap-6">
             {/* Pra mim / Pra outra pessoa toggle */}
             <div className="flex gap-3">
-              <ToggleButton selected={isSelf} onClick={() => handleIsSelfToggle(true)}>
+              <ToggleButton
+                selected={isSelf}
+                onClick={() => handleIsSelfToggle(true)}
+                ariaLabel="Leitura para mim"
+              >
                 Pra mim
               </ToggleButton>
-              <ToggleButton selected={!isSelf} onClick={() => handleIsSelfToggle(false)}>
+              <ToggleButton
+                selected={!isSelf}
+                onClick={() => handleIsSelfToggle(false)}
+                ariaLabel="Leitura para outra pessoa"
+              >
                 Pra outra pessoa
               </ToggleButton>
             </div>
@@ -405,10 +426,15 @@ export default function NomePage() {
                     <ToggleButton
                       selected={gender === "female"}
                       onClick={() => setGender("female")}
+                      ariaLabel="Leitura para ela (feminino)"
                     >
                       Ela
                     </ToggleButton>
-                    <ToggleButton selected={gender === "male"} onClick={() => setGender("male")}>
+                    <ToggleButton
+                      selected={gender === "male"}
+                      onClick={() => setGender("male")}
+                      ariaLabel="Leitura para ele (masculino)"
+                    >
                       Ele
                     </ToggleButton>
                   </div>
@@ -425,12 +451,14 @@ export default function NomePage() {
                 <ToggleButton
                   selected={dominantHand === "right"}
                   onClick={() => setDominantHand("right")}
+                  ariaLabel="Mao destra (direita)"
                 >
                   Destra
                 </ToggleButton>
                 <ToggleButton
                   selected={dominantHand === "left"}
                   onClick={() => setDominantHand("left")}
+                  ariaLabel="Mao canhota (esquerda)"
                 >
                   Canhota
                 </ToggleButton>
