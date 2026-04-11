@@ -50,11 +50,3 @@ export async function getUserReadings(): Promise<{
   }>;
 }
 
-export async function deleteAccount(): Promise<void> {
-  const res = await fetch("/api/user/account", {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ confirm: "EXCLUIR" }),
-  });
-  if (!res.ok) throw new Error("Erro ao excluir conta");
-}
