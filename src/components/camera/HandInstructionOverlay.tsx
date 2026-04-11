@@ -22,8 +22,8 @@ export default function HandInstructionOverlay({
   const handSide = dominantHand === "right" ? "direita" : "esquerda";
   const phrase =
     isSelf || !targetName
-      ? `Me mostra a mao ${handSide}. Palma aberta, virada pra mim.`
-      : `Me mostra a mao ${handSide} do ${targetName}. Palma aberta, virada pra mim.`;
+      ? `Me mostra a mão ${handSide}. Palma aberta, virada pra mim.`
+      : `Me mostra a mão ${handSide} do ${targetName}. Palma aberta, virada pra mim.`;
 
   return (
     <motion.div
@@ -43,7 +43,7 @@ export default function HandInstructionOverlay({
         </p>
 
         <Button variant="primary" onClick={onReady}>
-          Abrir camera
+          Abrir câmera
         </Button>
       </div>
     </motion.div>

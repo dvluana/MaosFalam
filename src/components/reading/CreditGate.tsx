@@ -41,8 +41,7 @@ export default function CreditGate({
         <div
           className="absolute top-0 left-0 right-0 h-[2px]"
           style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(201,162,74,0.55), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55), transparent)",
           }}
         />
 
@@ -73,7 +72,7 @@ export default function CreditGate({
               className="font-cormorant italic text-bone leading-[1.3]"
               style={{ fontSize: "22px" }}
             >
-              Usar 1 credito pra leitura de {targetName}?
+              Usar 1 crédito pra leitura de {targetName}?
             </p>
             <p
               className="font-jetbrains text-violet"
@@ -81,7 +80,7 @@ export default function CreditGate({
             >
               Saldo:{" "}
               <span className="text-gold">
-                {balance} credito{balance !== 1 ? "s" : ""}
+                {balance} crédito{balance !== 1 ? "s" : ""}
               </span>
             </p>
           </div>

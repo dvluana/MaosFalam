@@ -13,13 +13,12 @@ export default function HandOutlineSVG({
 }: HandOutlineSVGProps) {
   // The SVG is drawn as a RIGHT hand (thumb on viewer's left, pinky on viewer's right).
   // When dominantHand is "left", scaleX(-1) mirrors it horizontally.
-  const flipStyle =
-    dominantHand === "left" ? { transform: "scaleX(-1)" } : undefined;
+  const flipStyle = dominantHand === "left" ? { transform: "scaleX(-1)" } : undefined;
 
   const handLabel =
     dominantHand === "right"
-      ? "Guia de posicionamento da mao direita"
-      : "Guia de posicionamento da mao esquerda";
+      ? "Guia de posicionamento da mão direita"
+      : "Guia de posicionamento da mão esquerda";
 
   return (
     <svg

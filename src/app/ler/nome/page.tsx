@@ -35,9 +35,7 @@ function ToggleButton({ selected, onClick, children, ariaLabel }: ToggleButtonPr
       style={{
         background: selected ? "linear-gradient(160deg, #1e1838, #2a2150, #1e1838)" : "transparent",
         color: selected ? "#E8DFD0" : "#9b9284",
-        border: selected
-          ? "1px solid rgba(201,162,74,0.2)"
-          : "1px solid rgba(201,162,74,0.08)",
+        border: selected ? "1px solid rgba(201,162,74,0.2)" : "1px solid rgba(201,162,74,0.08)",
         borderRadius: "0 6px 0 6px",
       }}
     >
@@ -308,7 +306,7 @@ export default function NomePage() {
             {/* Ela / Ele toggle */}
             <div className="flex flex-col gap-2">
               <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                Essa leitura e pra
+                Essa leitura é pra
               </span>
               <div className="flex gap-3">
                 <ToggleButton
@@ -331,20 +329,20 @@ export default function NomePage() {
             {/* Dominant hand toggle */}
             <div className="flex flex-col gap-2">
               <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                Qual mao voce usa mais?
+                Qual mão você usa mais?
               </span>
               <div className="flex gap-3">
                 <ToggleButton
                   selected={dominantHand === "right"}
                   onClick={() => setDominantHand("right")}
-                  ariaLabel="Mao destra (direita)"
+                  ariaLabel="Mão destra (direita)"
                 >
                   Destra
                 </ToggleButton>
                 <ToggleButton
                   selected={dominantHand === "left"}
                   onClick={() => setDominantHand("left")}
-                  ariaLabel="Mao canhota (esquerda)"
+                  ariaLabel="Mão canhota (esquerda)"
                 >
                   Canhota
                 </ToggleButton>
@@ -384,7 +382,7 @@ export default function NomePage() {
         >
           <div className="flex flex-col gap-3 text-center">
             <p className="font-cormorant italic text-[28px] sm:text-[32px] text-bone leading-[1.25]">
-              Pra quem e essa leitura?
+              Pra quem é essa leitura?
             </p>
           </div>
 
@@ -420,7 +418,7 @@ export default function NomePage() {
 
                 <div className="flex flex-col gap-2">
                   <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                    Essa leitura e pra
+                    Essa leitura é pra
                   </span>
                   <div className="flex gap-3">
                     <ToggleButton
@@ -445,20 +443,20 @@ export default function NomePage() {
             {/* Dominant hand toggle (always visible for logged-in) */}
             <div className="flex flex-col gap-2">
               <span className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                Qual mao voce usa mais?
+                Qual mão você usa mais?
               </span>
               <div className="flex gap-3">
                 <ToggleButton
                   selected={dominantHand === "right"}
                   onClick={() => setDominantHand("right")}
-                  ariaLabel="Mao destra (direita)"
+                  ariaLabel="Mão destra (direita)"
                 >
                   Destra
                 </ToggleButton>
                 <ToggleButton
                   selected={dominantHand === "left"}
                   onClick={() => setDominantHand("left")}
-                  ariaLabel="Mao canhota (esquerda)"
+                  ariaLabel="Mão canhota (esquerda)"
                 >
                   Canhota
                 </ToggleButton>

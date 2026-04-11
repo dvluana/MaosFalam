@@ -22,7 +22,7 @@ export default function LandscapeWarning({ visible }: LandscapeWarningProps) {
             Vira o celular pra vertical.
           </p>
           <p className="font-raleway text-[13px] text-bone-dim text-center">
-            Preciso ver sua mao com clareza.
+            Preciso ver sua mão com clareza.
           </p>
         </motion.div>
       )}

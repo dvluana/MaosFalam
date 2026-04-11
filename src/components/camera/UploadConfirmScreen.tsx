@@ -27,7 +27,13 @@ function StatusIcon({ status }: { status: CheckStatus }) {
   if (status === "pass") {
     return (
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-        <path d="M2 6l3 3 5-5" stroke="#c9a24a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M2 6l3 3 5-5"
+          stroke="#c9a24a"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     );
   }
@@ -59,8 +65,8 @@ function checkLabelClass(status: CheckStatus): string {
 const ABBREVIATED_LABELS: Record<ValidationCheck["id"], string> = {
   format: "Formato",
   size: "Tamanho",
-  hand_detected: "Mao detectada",
-  handedness: "Mao correta",
+  hand_detected: "Mão detectada",
+  handedness: "Mão correta",
   palm_open: "Palma aberta",
 };
 
@@ -111,10 +117,7 @@ export default function UploadConfirmScreen({
       )}
 
       {/* Checklist — 2 columns */}
-      <div
-        className="grid grid-cols-2 gap-x-6 gap-y-2 w-full"
-        aria-label="Resultado da validacao"
-      >
+      <div className="grid grid-cols-2 gap-x-6 gap-y-2 w-full" aria-label="Resultado da validacao">
         {checks.map((check) => (
           <div key={check.id} className="flex items-center gap-2">
             <StatusIcon status={check.status} />
@@ -136,7 +139,9 @@ export default function UploadConfirmScreen({
               className="font-cormorant italic text-[16px] text-gold text-center"
               style={{ letterSpacing: "0.02em" }}
             >
-              {targetName ? `Tudo certo. A mao do ${targetName} fala.` : "Tudo certo. Essa mao fala."}
+              {targetName
+                ? `Tudo certo. A mão do ${targetName} fala.`
+                : "Tudo certo. Essa mão fala."}
             </p>
             <Button variant="primary" onClick={onConfirm} className="w-full">
               Enviar pra leitura
@@ -155,8 +160,8 @@ export default function UploadConfirmScreen({
               style={{ letterSpacing: "0.02em" }}
             >
               {targetName
-                ? `A mao do ${targetName} esta aqui. A foto podia ser melhor.`
-                : "A mao esta aqui. A foto podia ser melhor."}
+                ? `A mão do ${targetName} está aqui. A foto podia ser melhor.`
+                : "A mão está aqui. A foto podia ser melhor."}
             </p>
             <p className="font-jetbrains text-[9px] text-bone-dim tracking-[1px] uppercase">
               PODE AFETAR A LEITURA

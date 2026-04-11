@@ -52,8 +52,8 @@ export default function WrongHandFeedback({
   const handLabel = expectedHand === "right" ? "direita" : "esquerda";
   const pronoun = targetGender === "male" ? "dele" : "dela";
   const text = isSelf
-    ? `Essa e a outra mao. Me mostra a ${handLabel}.`
-    : `Essa e a mao errada ${pronoun}. Me mostra a ${handLabel} ${pronoun}.`;
+    ? `Essa é a outra mão. Me mostra a ${handLabel}.`
+    : `Essa é a mão errada ${pronoun}. Me mostra a ${handLabel} ${pronoun}.`;
 
   return (
     <div aria-live="assertive" className="pointer-events-none">

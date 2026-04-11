@@ -50,8 +50,8 @@ const MODEL_URL =
 const INITIAL_CHECKS: ValidationCheck[] = [
   { id: "format", label: "Formato aceito", status: "pending" },
   { id: "size", label: "Tamanho ok", status: "pending" },
-  { id: "hand_detected", label: "Mao na foto", status: "pending" },
-  { id: "handedness", label: "Mao correta", status: "pending" },
+  { id: "hand_detected", label: "Mão na foto", status: "pending" },
+  { id: "handedness", label: "Mão correta", status: "pending" },
   { id: "palm_open", label: "Palma aberta", status: "pending" },
 ];
 
@@ -181,7 +181,7 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
         setResult((prev) => ({
           ...prev,
           phase: "done",
-          error: "Isso parece um print, nao uma foto. Preciso ver sua mao de verdade.",
+          error: "Isso parece um print, não uma foto. Preciso ver sua mão de verdade.",
         }));
         return;
       }
@@ -196,7 +196,7 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
         setResult((prev) => ({
           ...prev,
           phase: "done",
-          error: "A foto e muito grande. Use uma menor que 15MB.",
+          error: "A foto é muito grande. Use uma menor que 15MB.",
         }));
         return;
       }
@@ -268,7 +268,7 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
         setResult((prev) => ({
           ...prev,
           phase: "done",
-          error: "Nao encontrei uma mao na foto. Tente de novo.",
+          error: "Não encontrei uma mão na foto. Tente de novo.",
         }));
         return;
       }
@@ -313,7 +313,7 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
           handOk: false,
           qualityOk: isOpen,
           canProceed: false,
-          error: `Essa e a mao ${wrongName}. Me manda a ${rightName}.`,
+          error: `Essa é a mão ${wrongName}. Me manda a ${rightName}.`,
         }));
         return;
       }

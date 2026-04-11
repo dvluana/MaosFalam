@@ -11,7 +11,7 @@ interface HandExpectedBadgeProps {
 export default function HandExpectedBadge({ dominantHand, targetName }: HandExpectedBadgeProps) {
   const [dismissed, setDismissed] = useState(false);
 
-  const handPart = dominantHand === "right" ? "MAO DIREITA" : "MAO ESQUERDA";
+  const handPart = dominantHand === "right" ? "MÃO DIREITA" : "MÃO ESQUERDA";
   const label = targetName ? `${handPart} . ${targetName.toUpperCase()}` : handPart;
 
   return (
@@ -45,7 +45,7 @@ export default function HandExpectedBadge({ dominantHand, targetName }: HandExpe
             <button
               type="button"
               onClick={() => setDismissed(true)}
-              aria-label="Fechar aviso de mao esperada"
+              aria-label="Fechar aviso de mão esperada"
               style={{
                 background: "none",
                 border: "none",
