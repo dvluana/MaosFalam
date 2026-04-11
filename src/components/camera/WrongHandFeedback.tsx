@@ -1,26 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 interface WrongHandFeedbackProps {
   expectedHand: "right" | "left";
   visible: boolean;
 }
 
+/**
+ * Non-blocking toast shown when the wrong hand is detected.
+ * Auto-hides after 3s. Driven by AnimatePresence + internal counter.
+ */
 export default function WrongHandFeedback({ expectedHand, visible }: WrongHandFeedbackProps) {
-  const [show, setShow] = useState(false);
+  // showCount increments each time visible transitions to true.
+  // This lets us key AnimatePresence entries so repeated wrong-hand detections
+  // re-trigger the animation without calling setState in an effect.
+  const [showCount, setShowCount] = useState(0);
+  const [hidden, setHidden] = useState(true);
+  const prevVisibleRef = useRef(false);
+
+  // Detect rising edge of visible without calling setState inside an effect
+  if (visible && !prevVisibleRef.current) {
+    prevVisibleRef.current = true;
+    // Increment outside of effect — this is a render-time update (allowed in React 18)
+    setShowCount((c) => c + 1);
+    setHidden(false);
+  } else if (!visible) {
+    prevVisibleRef.current = false;
+  }
 
   useEffect(() => {
-    if (!visible) return;
+    if (hidden) return;
 
-    setShow(true);
     const timer = setTimeout(() => {
-      setShow(false);
+      setHidden(true);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [visible]);
+    // Re-run when a new show is triggered
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showCount]);
 
   const handLabel = expectedHand === "right" ? "direita" : "esquerda";
   const text = `Essa e a outra mao. Me mostra a ${handLabel}.`;
@@ -28,8 +48,9 @@ export default function WrongHandFeedback({ expectedHand, visible }: WrongHandFe
   return (
     <div aria-live="assertive" className="pointer-events-none">
       <AnimatePresence>
-        {show && (
+        {!hidden && (
           <motion.div
+            key={showCount}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}

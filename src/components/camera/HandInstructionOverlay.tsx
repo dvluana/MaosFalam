@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 
 import Button from "@/components/ui/Button";
+
 import HandOutlineSVG from "./HandOutlineSVG";
 
 interface HandInstructionOverlayProps {

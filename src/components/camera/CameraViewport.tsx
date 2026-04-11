@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import type { CamState } from "@/types/camera";
 import { isFrameActive } from "@/types/camera";
 
-import type React from "react";
 import HandExpectedBadge from "./HandExpectedBadge";
 import HandOutlineSVG from "./HandOutlineSVG";
+
+import type React from "react";
 
 interface Props {
   state: CamState;
