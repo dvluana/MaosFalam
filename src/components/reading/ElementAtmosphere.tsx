@@ -1,4 +1,4 @@
-import type { HandElement } from "@/types/reading";
+import type { HandElement } from "@/types/report";
 
 interface Props {
   type: HandElement;

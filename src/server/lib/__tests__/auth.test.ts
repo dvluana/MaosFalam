@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { getClerkUser, getClerkUserId } from "./auth";
+import { getClerkUser, getClerkUserId } from "../auth";
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
