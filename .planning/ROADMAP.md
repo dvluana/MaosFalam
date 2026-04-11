@@ -57,7 +57,7 @@ Plans:
 
 Plans:
 
-- [ ] 02-01-PLAN.md — Migrate clerkMiddleware from middleware.ts to proxy.ts, delete middleware.ts
+- [x] 02-01-PLAN.md — Migrate clerkMiddleware from middleware.ts to proxy.ts, delete middleware.ts
 - [ ] 02-02-PLAN.md — Verify and test auth helpers (getClerkUser, getClerkUserId), confirm ClerkProvider in layout
 
 ### Phase 3: AI Pipeline
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase              | Plans Complete | Status      | Completed  |
 | ------------------ | -------------- | ----------- | ---------- |
 | 1. Foundation      | 2/2            | Complete    | 2026-04-11 |
-| 2. Auth            | 0/2            | Not started | -          |
+| 2. Auth            | 1/2            | In Progress |            |
 | 3. AI Pipeline     | 0/TBD          | Not started | -          |
 | 4. Public API      | 0/TBD          | Not started | -          |
 | 5. Protected API   | 0/TBD          | Not started | -          |
