@@ -132,7 +132,13 @@ Plans:
 2. The logged-in area (readings list, profile, credits) displays real data from the protected API
 3. No file under `src/` imports from `@/server/*`; `npm run type-check` confirms this
 4. `npm run build` passes without errors or type warnings
-   **Plans**: TBD
+
+**Plans**: 2 plans
+
+Plans:
+
+- [ ] 06-01-PLAN.md — Rewrite reading-client.ts + remove @/server/\* imports from 5 app pages
+- [ ] 06-02-PLAN.md — Replace useMock in conta pages + full build/type-check gate
 
 ## Progress
 
@@ -145,5 +151,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Auth            | 2/2            | Complete    | 2026-04-11 |
 | 3. AI Pipeline     | 2/3            | In Progress |            |
 | 4. Public API      | 2/2            | Complete    | 2026-04-11 |
-| 5. Protected API   | 3/3 | Complete   | 2026-04-11 |
-| 6. Client Adapters | 0/TBD          | Not started | -          |
+| 5. Protected API   | 3/3            | Complete    | 2026-04-11 |
+| 6. Client Adapters | 0/2            | Not started | -          |
