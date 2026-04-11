@@ -30,12 +30,12 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 
 ### API Protected
 
-- [ ] **API-05**: POST /api/reading/new debita 1 credito FIFO atomicamente (transaction SQL), retorna 402 sem creditos
-- [ ] **API-06**: GET /api/user/credits retorna saldo e lista de packs
-- [ ] **API-07**: GET /api/user/readings retorna historico de leituras do usuario
-- [ ] **API-08**: GET /api/user/profile retorna name/email (Clerk) + cpf/phone (Neon)
-- [ ] **API-09**: PUT /api/user/profile faz upsert de cpf e phone no user_profiles
-- [ ] **API-10**: DELETE /api/user/account faz soft delete (is_active = false) com confirmacao "EXCLUIR"
+- [x] **API-05**: POST /api/reading/new debita 1 credito FIFO atomicamente (transaction SQL), retorna 402 sem creditos
+- [x] **API-06**: GET /api/user/credits retorna saldo e lista de packs
+- [x] **API-07**: GET /api/user/readings retorna historico de leituras do usuario
+- [x] **API-08**: GET /api/user/profile retorna name/email (Clerk) + cpf/phone (Neon)
+- [x] **API-09**: PUT /api/user/profile faz upsert de cpf e phone no user_profiles
+- [x] **API-10**: DELETE /api/user/account faz soft delete (is_active = false) com confirmacao "EXCLUIR"
 
 ### GPT-4o
 
@@ -48,7 +48,7 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 
 - [x] **SEC-01**: Rate limit POST /api/reading/capture: 5/hora por IP
 - [x] **SEC-02**: Rate limit POST /api/lead/register: 10/hora por IP
-- [ ] **SEC-03**: Rate limit POST /api/credits/purchase: 5/hora por user (quando implementado)
+- [x] **SEC-03**: Rate limit POST /api/credits/purchase: 5/hora por user (quando implementado)
 - [x] **SEC-04**: Security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, HSTS
 - [x] **SEC-05**: Nenhuma API route aceita 'tier' como input do client
 - [x] **SEC-06**: Zod valida input em TODA API route
@@ -124,15 +124,15 @@ Adiados para milestone futura.
 | API-02      | Phase 4 | Complete |
 | API-03      | Phase 4 | Complete |
 | API-04      | Phase 4 | Complete |
-| API-05      | Phase 5 | Pending  |
-| API-06      | Phase 5 | Pending  |
-| API-07      | Phase 5 | Pending  |
-| API-08      | Phase 5 | Pending  |
-| API-09      | Phase 5 | Pending  |
-| API-10      | Phase 5 | Pending  |
+| API-05      | Phase 5 | Complete |
+| API-06      | Phase 5 | Complete |
+| API-07      | Phase 5 | Complete |
+| API-08      | Phase 5 | Complete |
+| API-09      | Phase 5 | Complete |
+| API-10      | Phase 5 | Complete |
 | SEC-01      | Phase 4 | Complete |
 | SEC-02      | Phase 4 | Complete |
-| SEC-03      | Phase 5 | Pending  |
+| SEC-03      | Phase 5 | Complete |
 | SEC-04      | Phase 4 | Complete |
 | SEC-05      | Phase 4 | Complete |
 | SEC-06      | Phase 4 | Complete |
