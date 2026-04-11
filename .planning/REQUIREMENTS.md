@@ -64,10 +64,10 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 
 ### Adapters
 
-- [ ] **ADAPT-01**: src/lib/reading-client.ts com funcoes pra chamar API de leitura (captureReading, getReading, registerLead)
+- [x] **ADAPT-01**: src/lib/reading-client.ts com funcoes pra chamar API de leitura (captureReading, getReading, registerLead)
 - [ ] **ADAPT-02**: src/lib/payment-client.ts com funcoes pra chamar API de creditos (purchaseCredits, getCredits)
 - [ ] **ADAPT-03**: src/lib/user-client.ts com funcoes pra chamar API de usuario (getUserProfile, updateProfile, getUserReadings, deleteAccount)
-- [ ] **ADAPT-04**: Nenhum import de @/server/\* em arquivos client
+- [x] **ADAPT-04**: Nenhum import de @/server/\* em arquivos client
 
 ## v2 Requirements
 
@@ -142,10 +142,10 @@ Adiados para milestone futura.
 | INFRA-03    | Phase 1 | Complete |
 | INFRA-04    | Phase 6 | Pending  |
 | INFRA-05    | Phase 6 | Pending  |
-| ADAPT-01    | Phase 6 | Pending  |
+| ADAPT-01    | Phase 6 | Complete |
 | ADAPT-02    | Phase 6 | Pending  |
 | ADAPT-03    | Phase 6 | Pending  |
-| ADAPT-04    | Phase 6 | Pending  |
+| ADAPT-04    | Phase 6 | Complete |
 
 **Coverage:**
 
