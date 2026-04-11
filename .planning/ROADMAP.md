@@ -112,7 +112,14 @@ Plans:
 3. GET /api/user/readings returns only readings belonging to the authenticated user
 4. PUT /api/user/profile upserts CPF and phone without exposing them in any log
 5. DELETE /api/user/account with body `{"confirmation": "EXCLUIR"}` sets `is_active = false`; without the confirmation string it returns 400
-   **Plans**: TBD
+
+**Plans**: 3 plans
+
+Plans:
+
+- [ ] 05-01-PLAN.md — Audit and fix all 5 protected routes (Zod v4 compliance, PII-safe logs, SEC-03 stub)
+- [ ] 05-02-PLAN.md — Tests for reading/new (API-05), user/credits (API-06), user/readings (API-07)
+- [ ] 05-03-PLAN.md — Tests for user/profile (API-08, API-09) and user/account (API-10)
 
 ### Phase 6: Client Adapters
 
@@ -138,5 +145,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Auth            | 2/2            | Complete    | 2026-04-11 |
 | 3. AI Pipeline     | 2/3            | In Progress |            |
 | 4. Public API      | 2/2            | Complete    | 2026-04-11 |
-| 5. Protected API   | 0/TBD          | Not started | -          |
+| 5. Protected API   | 0/3            | Not started | -          |
 | 6. Client Adapters | 0/TBD          | Not started | -          |
