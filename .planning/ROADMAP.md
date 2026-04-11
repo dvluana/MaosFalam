@@ -160,7 +160,7 @@ Plans:
 
 Plans:
 
-- [ ] 07-01-PLAN.md — Delete deleteAccount (route + test + user-client export) + migrate useAuth to Clerk
+- [x] 07-01-PLAN.md — Delete deleteAccount (route + test + user-client export) + migrate useAuth to Clerk
 - [ ] 07-02-PLAN.md — Wire nome → registerLead + wire camera → save photo to sessionStorage
 - [ ] 07-03-PLAN.md — Wire scan → captureReading + fix revelacao destination + build gate
 
@@ -177,4 +177,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 4. Public API              | 2/2            | Complete    | 2026-04-11 |
 | 5. Protected API           | 3/3            | Complete    | 2026-04-11 |
 | 6. Client Adapters         | 2/2            | Complete    | 2026-04-11 |
-| 7. Frontend-Backend Wiring | 0/3            | Not started |            |
+| 7. Frontend-Backend Wiring | 1/3 | In Progress|  |

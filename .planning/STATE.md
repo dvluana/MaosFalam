@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Milestone complete
-stopped_at: Completed 06-client-adapters/06-02-PLAN.md
-last_updated: "2026-04-11T02:47:22.883Z"
+status: Ready to execute
+stopped_at: Completed 07-frontend-backend-wiring/07-01-PLAN.md
+last_updated: "2026-04-11T03:10:40.883Z"
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 6
-  total_plans: 14
-  completed_plans: 14
+  total_plans: 17
+  completed_plans: 15
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-10)
 
 **Core value:** Foto da palma entra, leitura personalizada sai. Backend conecta GPT-4o ao motor de leitura e persiste resultados.
-**Current focus:** Phase 06 — client-adapters
+**Current focus:** Phase 07 — frontend-backend-wiring
 
 ## Current Position
 
-Phase: 06
-Plan: Not started
+Phase: 07 (frontend-backend-wiring) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ _Updated after each plan completion_
 | Phase 05-protected-api P02 | 2 | 2 tasks | 3 files |
 | Phase 06-client-adapters P01 | 282 | 2 tasks | 6 files |
 | Phase 06-client-adapters P02 | 8 | 2 tasks | 2 files |
+| Phase 07 P01 | 5 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,8 @@ Recent decisions affecting current work:
 - [Phase 06-client-adapters]: getReading uses reading.id as share_token fallback; share_expires_at hardcoded 2099-12-31; revelacao phrase read from sessionStorage.maosfalam_impact_phrase
 - [Phase 06-client-adapters]: CreditsBanner receives credits:number prop directly — no User object needed since credits always show 0
 - [Phase 06-client-adapters]: conta/leituras/[id] notFound() called after loading=false and reading=null — guards against stale IDs
+- [Phase 07]: login/register in useAuth return false (no-op) — Clerk hosted flow handles real auth
+- [Phase 07]: hydrated maps to Clerk isLoaded — prevents flash of wrong auth state before Clerk resolves
 
 ### Pending Todos
 
@@ -116,6 +119,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T02:47:00.121Z
-Stopped at: Completed 06-client-adapters/06-02-PLAN.md
+Last session: 2026-04-11T03:10:40.879Z
+Stopped at: Completed 07-frontend-backend-wiring/07-01-PLAN.md
 Resume file: None
