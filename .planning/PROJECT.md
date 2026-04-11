@@ -1,61 +1,85 @@
-# MaosFalam Backend
+# MaosFalam
 
 ## What This Is
 
-Backend do MaosFalam, webapp de quiromancia com IA. O frontend existe com mocks. Esta milestone implementa a infraestrutura de backend: banco de dados (Neon + Prisma), autenticacao (Clerk), API routes, integracao GPT-4o pra analise de palma, e seguranca. Pagamento (AbacatePay) e email (Resend) ficam pra milestone futura.
+Webapp de quiromancia com IA. Mobile-first. Foto da palma entra, leitura personalizada sai. Frontend completo, backend v1.0 implementado (Neon + Prisma, Clerk auth, GPT-4o, API routes, client adapters). Pagamento (AbacatePay) e email (Resend) ficam pra milestone futura.
 
 ## Core Value
 
-A foto da palma entra, a leitura personalizada sai. O backend precisa conectar GPT-4o ao motor de leitura (`selectBlocks`) e persistir os resultados no Neon.
+A foto da palma entra, a leitura personalizada sai. O backend conecta GPT-4o ao motor de leitura (`selectBlocks`) e persiste os resultados no Neon.
+
+## Current Milestone: v1.1 Alinhamento Arquitetural
+
+**Goal:** Auditar e alinhar o codigo com as decisoes de arquitetura tomadas, refatorar fluxos core, e implementar MediaPipe real antes de features novas.
+
+**Target features:**
+
+- Auditoria + limpeza (share_token, expires_at, NextAuth, R2, nomenclatura)
+- ReadingContext unificado + gate de creditos no /ler/nome
+- MediaPipe real (hand landmarker, auto-captura, handedness)
+- Clerk cleanup (esqueci-senha, redefinir, perfil via Clerk)
+- Docs sync + error handling (architecture.md, CLAUDE.md alinhados)
 
 ## Requirements
 
 ### Validated
 
-- ✓ Motor de leitura (`selectBlocks`) — existente em `src/server/lib/select-blocks.ts`
-- ✓ Blocos de texto (~515 textos) — existente em `src/data/blocks/`
-- ✓ Tipos v2 (HandAttributes, ReportJSON) — existente em `src/types/`
-- ✓ Frontend completo com mocks — existente em `src/app/`, `src/components/`
-- ✓ Design system — existente, documentado em `docs/DS.md`
-- ✓ Camera pipeline (MediaPipe) — existente em `src/hooks/useCameraPipeline.ts`
+- ✓ Motor de leitura (`selectBlocks`) — `src/server/lib/select-blocks.ts` (v1.0)
+- ✓ Blocos de texto (~515 textos) — `src/data/blocks/` (v1.0)
+- ✓ Tipos v2 (HandAttributes, ReportJSON) — `src/types/` (v1.0)
+- ✓ Frontend completo com mocks — `src/app/`, `src/components/` (v1.0)
+- ✓ Design system — `docs/DS.md` (v1.0)
+- ✓ Camera pipeline (mock MediaPipe) — `src/hooks/useCameraPipeline.ts` (v1.0)
+- ✓ Schema do banco (Prisma + Neon) — 5 tabelas (v1.0 Phase 1)
+- ✓ Auth (Clerk) — proxy.ts, Google OAuth + email/senha (v1.0 Phase 2)
+- ✓ Integracao GPT-4o — wrapper + Zod validation (v1.0 Phase 3)
+- ✓ API routes publicas — lead/register, reading/capture, reading/[id] (v1.0 Phase 4)
+- ✓ API routes protegidas — reading/new, user/credits, user/readings, user/profile, user/account (v1.0 Phase 5)
+- ✓ Client adapters — reading-client.ts, mock-to-API transition (v1.0 Phase 6)
+- ✓ Frontend-backend wiring — funnel conectado (v1.0 Phase 7)
+- ✓ Logger (Pino) — sem dados pessoais (v1.0 Phase 1)
+- ✓ Rate limiting — in-memory Map (v1.0 Phase 4)
+- ✓ Security headers (v1.0 Phase 4)
 
 ### Active
 
-- [ ] Schema do banco (Prisma + Neon) — 5 tabelas: leads, user_profiles, readings, credit_packs, payments
-- [ ] Auth (Clerk) — middleware, Google OAuth + email/senha, helpers server-side
-- [ ] API route: POST /api/lead/register — captura lead antes da leitura
-- [ ] API route: POST /api/reading/capture — foto > GPT-4o > selectBlocks > salva reading
-- [ ] API route: GET /api/reading/[id] — retorna leitura por ID
-- [ ] API route: POST /api/reading/new — debita credito FIFO pra nova leitura (auth required)
-- [ ] API route: GET /api/user/credits — saldo de creditos (auth required)
-- [ ] API route: GET /api/user/readings — historico de leituras (auth required)
-- [ ] API route: GET/PUT /api/user/profile — perfil do usuario (auth required)
-- [ ] API route: DELETE /api/user/account — soft delete (auth required)
-- [ ] Integracao GPT-4o — wrapper que envia foto base64 e recebe HandAttributes
-- [ ] Logger (Pino) — sem dados pessoais nos logs
-- [ ] Rate limiting — /api/reading/capture: 5/h por IP, /api/lead/register: 10/h por IP
-- [ ] Security headers — X-Frame-Options, HSTS, CSP, Permissions-Policy
-- [ ] Adapters front > backend — `src/lib/reading-client.ts`, `src/lib/payment-client.ts`
+- [ ] Auditoria: remover share_token de types, mocks, componentes, reading-client
+- [ ] Auditoria: remover expires_at de credit_packs
+- [ ] Auditoria: limpar referencias NextAuth, R2/Cloudflare, "Claude Vision"
+- [ ] Auditoria: "Planeta dominante" → "Monte dominante"
+- [ ] Auditoria: verificar e corrigir ordem das secoes (v2)
+- [ ] Auditoria: remover VALID_MOCK_IDS, fallbackName="Marina", dead stubs
+- [ ] ReadingContext unificado (target_name, target_gender, dominant_hand, is_self, session_id)
+- [ ] /ler/nome refatorado: visitante (nome+email+genero+dominancia+opt-in) vs logada (pra mim/pra outra)
+- [ ] CreditGate component (modal de confirmacao de credito)
+- [ ] Debito real no server via POST /api/reading/new antes do capture
+- [ ] MediaPipe real: @mediapipe/tasks-vision, useCameraPipeline com Hand Landmarker
+- [ ] MediaPipe: validacao landmarks (mao aberta, centralizada, estavel 1.5s)
+- [ ] MediaPipe: auto-captura do canvas como base64 JPEG
+- [ ] Handedness: perguntar destra/canhota + instrucao na camera + validar mao correta
+- [ ] Clerk cleanup: esqueci-senha, redefinir-senha, perfil edit via Clerk
+- [ ] Docs: architecture.md alinhado com codigo real
+- [ ] Docs: CLAUDE.md atualizado
+- [ ] Error handling: /conta/leituras toast de erro, resultado diferenciar 404 de 500
 
 ### Out of Scope
 
 - Pagamento (AbacatePay) — webhook nao documentado na v2, resolver depois
 - Email transacional (Resend) — depende de dominio configurado
-- Webhook route (/api/webhook/abacatepay) — depende de pagamento
-- API route: POST /api/credits/purchase — depende de pagamento
 - App nativo — web-first
 - Assinatura mensal — modelo e creditos avulsos
 - Compatibilidade entre maos — v2
+- Blocos de texto novos — conteudo atual suficiente
+- Mao dominante no prompt GPT-4o — fase futura apos MediaPipe funcionar
 
 ## Context
 
-- Frontend 100% pronto com mocks. Transicao mock > backend via adapters em `src/lib/`
-- Motor de leitura v2 sendo finalizado em paralelo (blocos e tipos prontos, front sendo adaptado)
-- Stack definida: Next.js 16 App Router, TypeScript strict, Tailwind v4, Framer Motion
-- Neon (Postgres serverless) como banco, Prisma como ORM com driver adapter `@prisma/adapter-neon`
-- Clerk como auth (50K users free tier)
-- AbacatePay v2 API: base URL `https://api.abacatepay.com/v2`, Bearer token auth, checkout via `/checkouts/create`
-- Docs de referencia: `docs/architecture.md` (schema, API routes, seguranca), `docs/palmistry.md` (quiromancia + JSON schema)
+- Backend v1.0 completo (7 fases, 17 plans executados)
+- 10 decisoes arquiteturais tomadas que mudaram tipos, fluxos e nomenclatura
+- Codigo pode estar desalinhado com essas decisoes
+- Fluxo unico de leitura com is_self flag (nao rota separada)
+- Creditos nao expiram, share_token removido, fotos nunca armazenadas
+- MediaPipe atual e mock/stub — precisa implementacao real
 
 ## Constraints
 
@@ -69,11 +93,15 @@ A foto da palma entra, a leitura personalizada sai. O backend precisa conectar G
 
 | Decision                     | Rationale                                             | Outcome   |
 | ---------------------------- | ----------------------------------------------------- | --------- |
-| Neon + Prisma v6 com adapter | Serverless, free tier generoso, driver adapter nativo | — Pending |
-| Clerk pra auth               | 50K users free, Google OAuth + email/senha built-in   | — Pending |
-| GPT-4o pra visao             | Melhor modelo multimodal pra analise de linhas finas  | — Pending |
+| Neon + Prisma 7 com adapter  | Serverless, free tier generoso, driver adapter nativo | ✓ Good    |
+| Clerk pra auth               | 50K users free, Google OAuth + email/senha built-in   | ✓ Good    |
+| GPT-4o pra visao             | Melhor modelo multimodal pra analise de linhas finas  | ✓ Good    |
 | Pagamento adiado             | Webhook AbacatePay v2 nao documentado                 | — Pending |
-| Rate limit in-memory (Map)   | Suficiente pro MVP, migrar pra Upstash quando escalar | — Pending |
+| Rate limit in-memory (Map)   | Suficiente pro MVP, migrar pra Upstash quando escalar | ✓ Good    |
+| Fluxo unico com is_self flag | Nao existe rota separada pra "ler outra pessoa"       | — Pending |
+| Creditos nao expiram         | Simplifica logica, sem check de expiracao             | — Pending |
+| Share via reading UUID       | Remover share_token, URL usa reading ID direto        | — Pending |
+| MediaPipe Hand Landmarker    | Deteccao client-side, zero server, ~30fps             | — Pending |
 
 ## Evolution
 
@@ -96,4 +124,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-10 after initialization_
+_Last updated: 2026-04-11 after milestone v1.1 start_
