@@ -18,6 +18,7 @@ export const GENDER_MAP = {
     "{{segura}}": "segura",
     "{{certa}}": "certa",
     "{{perdida}}": "perdida",
+    "{{igual}}": "igual",
   },
   male: {
     "{{inteira}}": "inteiro",
@@ -38,5 +39,6 @@ export const GENDER_MAP = {
     "{{segura}}": "seguro",
     "{{certa}}": "certo",
     "{{perdida}}": "perdido",
+    "{{igual}}": "igual",
   },
 } as const;
