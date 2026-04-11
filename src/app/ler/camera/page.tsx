@@ -19,6 +19,7 @@ import WrongHandFeedback from "@/components/camera/WrongHandFeedback";
 import PageLoading from "@/components/ui/PageLoading";
 import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
+import { useFailureCounter } from "@/hooks/useFailureCounter";
 import { useLandscapeGuard } from "@/hooks/useLandscapeGuard";
 import { useUploadValidation } from "@/hooks/useUploadValidation";
 import { loadReadingContext } from "@/lib/reading-context";
@@ -46,6 +47,8 @@ function CameraPageInner() {
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
 
   const isLandscape = useLandscapeGuard();
+
+  const { suggestMethodSwitch, recordFailure, resetFailures } = useFailureCounter();
 
   // Load reading context for dominant hand
   const readingContext = loadReadingContext();
@@ -81,12 +84,20 @@ function CameraPageInner() {
     }
   }, [state, resetUpload]);
 
+  // Record failure when camera enters error state
+  useEffect(() => {
+    if (state === "camera_error_generic") {
+      recordFailure();
+    }
+  }, [state, recordFailure]);
+
   const handleCaptured = useCallback(
     (photoBase64: string) => {
+      resetFailures();
       sessionStorage.setItem("maosfalam_photo", photoBase64);
       router.push("/ler/scan");
     },
-    [router],
+    [router, resetFailures],
   );
 
   useCameraPipeline({
@@ -114,6 +125,7 @@ function CameraPageInner() {
 
   const handleUploadConfirm = useCallback(() => {
     if (!uploadResult.file) return;
+    resetFailures();
     setState("camera_capturing");
     if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       navigator.vibrate?.(120);
@@ -126,7 +138,7 @@ function CameraPageInner() {
       window.setTimeout(() => router.push("/ler/scan"), 600);
     };
     reader.readAsDataURL(uploadResult.file);
-  }, [uploadResult.file, router]);
+  }, [uploadResult.file, router, resetFailures]);
 
   const handleUploadBack = useCallback(() => {
     resetUpload();
@@ -135,11 +147,12 @@ function CameraPageInner() {
   }, [resetUpload]);
 
   const handleUploadRetry = useCallback(() => {
+    recordFailure();
     resetUpload();
     setUploadStep("instruction");
     // Reseta o input file para permitir re-selecao do mesmo arquivo
     if (uploadInputRef.current) uploadInputRef.current.value = "";
-  }, [resetUpload]);
+  }, [resetUpload, recordFailure]);
 
   const handleSwitchCamera = useCallback(() => {
     // Stop current stream
@@ -179,6 +192,11 @@ function CameraPageInner() {
     !errorState && state !== "method_choice" && state !== "hand_instruction";
   const showTitle =
     !errorState && state !== "method_choice" && state !== "hand_instruction";
+
+  // Method switch suggestion message depends on which flow the user is in
+  const methodSwitchText = showUpload
+    ? "Tente agora pela camera. Ao vivo fica mais facil."
+    : "Tente agora na galeria. Uma foto bem iluminada resolve.";
 
   return (
     <main className="relative min-h-dvh bg-black flex flex-col items-center justify-center px-6 pt-28 pb-16 gap-10 overflow-hidden">
@@ -293,6 +311,12 @@ function CameraPageInner() {
       {!errorState && state !== "camera_capturing" && (
         <div className="relative">
           <CameraFeedback text="" />
+          {/* Method switch suggestion after 3 failures */}
+          {suggestMethodSwitch && (
+            <p className="font-cormorant italic text-[15px] text-bone-dim text-center max-w-xs mt-2">
+              {methodSwitchText}
+            </p>
+          )}
         </div>
       )}
 
