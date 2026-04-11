@@ -18,6 +18,15 @@ vi.mock("@/server/lib/rate-limit", () => ({
   rateLimit: vi.fn().mockReturnValue(true),
 }));
 
+vi.mock("@clerk/nextjs/server", () => ({
+  clerkClient: () =>
+    Promise.resolve({
+      users: {
+        getUserList: () => Promise.resolve({ totalCount: 0, data: [] }),
+      },
+    }),
+}));
+
 import { prisma } from "@/server/lib/prisma";
 import { rateLimit } from "@/server/lib/rate-limit";
 

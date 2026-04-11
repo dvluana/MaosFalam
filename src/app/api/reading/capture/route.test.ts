@@ -32,6 +32,10 @@ vi.mock("@/server/lib/select-blocks", () => ({
   selectBlocks: vi.fn().mockReturnValue({ element: "fire", sections: [] }),
 }));
 
+vi.mock("@clerk/nextjs/server", () => ({
+  auth: () => Promise.resolve({ userId: null }),
+}));
+
 import { analyzeHand } from "@/server/lib/openai";
 import { prisma } from "@/server/lib/prisma";
 import { rateLimit } from "@/server/lib/rate-limit";
@@ -190,20 +194,12 @@ describe("POST /api/reading/capture", () => {
 
   it("passes element_hint to analyzeHand when present", async () => {
     await POST(makeRequest(validBody));
-    expect(analyzeHand).toHaveBeenCalledWith(
-      validBody.photo_base64,
-      "right",
-      "fire",
-    );
+    expect(analyzeHand).toHaveBeenCalledWith(validBody.photo_base64, "right", "fire");
   });
 
   it("passes undefined element_hint when not in body", async () => {
     const { element_hint: _, ...bodyWithout } = validBody;
     await POST(makeRequest(bodyWithout));
-    expect(analyzeHand).toHaveBeenCalledWith(
-      validBody.photo_base64,
-      "right",
-      undefined,
-    );
+    expect(analyzeHand).toHaveBeenCalledWith(validBody.photo_base64, "right", undefined);
   });
 });
