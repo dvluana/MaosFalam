@@ -7,43 +7,20 @@ import styles from "./HeroTitle.module.css";
 /**
  * HeroTitle — título do hero com efeito typewriter + subtítulo em fade.
  *
- * A cigana não grita. Ela datilografa cada letra como quem escreve à mão,
- * e só depois, num suspiro, solta a provocação embaixo.
- *
- * Porta fiel do IIFE original em public/home.html (linhas ~1660-1706):
- *  - Digita TITLE_1, quebra de linha, TITLE_2
- *  - Cursor pisca enquanto digita, vira `done` (fade out) ao terminar
- *  - Subtítulo aparece com fade 80ms depois do cursor terminar
- *  - Cada char tem delay base + variance aleatória, com pausas extras em
- *    `.` (+460ms), `,` (+180ms), espaço (-10ms)
+ * Chars are pre-populated as invisible. The effect reveals them one by one
+ * via index tracking — no append, so re-mount with stale state is impossible.
  */
 
 interface HeroTitleProps {
-  /** Primeira linha do título. */
   title?: string;
-  /** Segunda linha do título (renderizada após <br>). */
   titleLine2?: string;
-  /** Subtítulo que aparece em fade depois do typewriter. */
   subtitle?: string;
-  /** Delay base por caractere em ms. */
   typeSpeed?: number;
-  /** Variação aleatória somada ao typeSpeed (0..variance ms). */
   typeVariance?: number;
-  /** Delay antes de começar a digitar (em ms). */
   startDelay?: number;
-  /** Pausa entre as duas linhas do título (em ms). */
   lineBreakDelay?: number;
-  /** Pausa depois do título antes de marcar o cursor como done (em ms). */
   cursorDoneDelay?: number;
-  /** Pausa depois do cursor done antes de revelar o subtítulo (em ms). */
   subtitleDelay?: number;
-}
-
-type VisibleChar = { ch: string; visible: boolean };
-
-interface LineState {
-  chars: VisibleChar[];
-  done: boolean;
 }
 
 export default function HeroTitle({
@@ -57,22 +34,20 @@ export default function HeroTitle({
   cursorDoneDelay = 1100,
   subtitleDelay = 80,
 }: HeroTitleProps) {
-  const [line1, setLine1] = useState<LineState>({ chars: [], done: false });
-  const [line2, setLine2] = useState<LineState>({ chars: [], done: false });
-  const [showBreak, setShowBreak] = useState(false);
+  // Index of next char to reveal (-1 = not started)
+  const [revealIdx, setRevealIdx] = useState(-1);
   const [cursorDone, setCursorDone] = useState(false);
   const [subtitleShown, setSubtitleShown] = useState(false);
 
+  const fullText = title + "\n" + titleLine2;
   const timeoutsRef = useRef<number[]>([]);
-  const rafIdsRef = useRef<number[]>([]);
 
   useEffect(() => {
-    const timeouts = timeoutsRef.current;
-    const rafIds = rafIdsRef.current;
+    const timeouts: number[] = [];
+    timeoutsRef.current = timeouts;
 
     function schedule(fn: () => void, ms: number) {
-      const id = window.setTimeout(fn, ms);
-      timeouts.push(id);
+      timeouts.push(window.setTimeout(fn, ms));
     }
 
     function charDelay(ch: string): number {
@@ -83,67 +58,39 @@ export default function HeroTitle({
       return wait;
     }
 
-    function typeLine(
-      text: string,
-      setLine: React.Dispatch<React.SetStateAction<LineState>>,
-      onDone: () => void,
-    ) {
-      let i = 0;
-      function next() {
-        if (i >= text.length) {
-          setLine((prev) => ({ ...prev, done: true }));
-          onDone();
-          return;
-        }
-        const ch = text[i];
-        i += 1;
-        setLine((prev) => ({
-          ...prev,
-          chars: [...prev.chars, { ch, visible: false }],
-        }));
-        // two RAFs to let CSS transition trigger (mirrors original)
-        const outerRaf = requestAnimationFrame(() => {
-          const innerRaf = requestAnimationFrame(() => {
-            setLine((prev) => {
-              const chars = prev.chars.slice();
-              const idx = chars.length - 1;
-              if (idx >= 0) chars[idx] = { ...chars[idx], visible: true };
-              return { ...prev, chars };
-            });
-          });
-          rafIds.push(innerRaf);
-        });
-        rafIds.push(outerRaf);
-        schedule(next, charDelay(ch));
-      }
-      next();
-    }
+    let idx = 0;
 
-    function run() {
-      typeLine(title, setLine1, () => {
-        setShowBreak(true);
+    function revealNext() {
+      if (idx >= fullText.length) {
         schedule(() => {
-          typeLine(titleLine2, setLine2, () => {
-            schedule(() => {
-              setCursorDone(true);
-              schedule(() => setSubtitleShown(true), subtitleDelay);
-            }, cursorDoneDelay);
-          });
-        }, lineBreakDelay);
-      });
+          setCursorDone(true);
+          schedule(() => setSubtitleShown(true), subtitleDelay);
+        }, cursorDoneDelay);
+        return;
+      }
+
+      const ch = fullText[idx];
+      setRevealIdx(idx);
+      idx += 1;
+
+      // Newline = line break pause
+      if (ch === "\n") {
+        schedule(revealNext, lineBreakDelay);
+      } else {
+        schedule(revealNext, charDelay(ch));
+      }
     }
 
-    schedule(run, startDelay);
+    schedule(() => {
+      revealNext();
+    }, startDelay);
 
     return () => {
       for (const id of timeouts) window.clearTimeout(id);
       timeouts.length = 0;
-      for (const id of rafIds) cancelAnimationFrame(id);
-      rafIds.length = 0;
     };
   }, [
-    title,
-    titleLine2,
+    fullText,
     typeSpeed,
     typeVariance,
     startDelay,
@@ -152,29 +99,38 @@ export default function HeroTitle({
     subtitleDelay,
   ]);
 
-  const fullTitle = `${title} ${titleLine2}`;
+  // Split fullText into line1 and line2 at the newline
+  const nlIdx = fullText.indexOf("\n");
+  const line1Chars = fullText.slice(0, nlIdx);
+  const line2Chars = fullText.slice(nlIdx + 1);
+  const showBreak = revealIdx >= nlIdx;
+
+  const fullLabel = `${title} ${titleLine2}`;
 
   return (
     <>
-      <p className={styles.heroTitle} aria-label={fullTitle}>
+      <p className={styles.heroTitle} aria-label={fullLabel}>
         <span aria-hidden="true">
-          {line1.chars.map((c, i) => (
+          {line1Chars.split("").map((ch, i) => (
             <span
               key={`l1-${i}`}
-              className={`${styles.typeChar} ${c.visible ? styles.visible : ""}`}
+              className={`${styles.typeChar} ${i <= revealIdx ? styles.visible : ""}`}
             >
-              {c.ch}
+              {ch}
             </span>
           ))}
           {showBreak && <br />}
-          {line2.chars.map((c, i) => (
-            <span
-              key={`l2-${i}`}
-              className={`${styles.typeChar} ${c.visible ? styles.visible : ""}`}
-            >
-              {c.ch}
-            </span>
-          ))}
+          {line2Chars.split("").map((ch, i) => {
+            const globalIdx = nlIdx + 1 + i;
+            return (
+              <span
+                key={`l2-${i}`}
+                className={`${styles.typeChar} ${globalIdx <= revealIdx ? styles.visible : ""}`}
+              >
+                {ch}
+              </span>
+            );
+          })}
           <span className={`${styles.typeCursor} ${cursorDone ? styles.done : ""}`} />
         </span>
       </p>
