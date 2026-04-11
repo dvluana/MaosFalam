@@ -4,7 +4,6 @@ import { useClerk, useUser } from "@clerk/nextjs";
 import { useCallback, useEffect, useRef } from "react";
 
 const CLAIMED_KEY = "maosfalam_readings_claimed";
-const STAGING_SEEDED_KEY = "maosfalam_staging_seeded";
 
 interface AuthUser {
   id: string;
@@ -47,18 +46,9 @@ export function useAuth() {
         .catch(() => undefined);
     }
 
-    // Staging only: seed 100 test credits on first login
+    // Staging only: seed test credits (endpoint is idempotent — skips if user already has packs)
     if (process.env.NEXT_PUBLIC_ENV_LABEL === "Testes") {
-      const alreadySeeded = localStorage.getItem(STAGING_SEEDED_KEY);
-      if (!alreadySeeded) {
-        void fetch("/api/dev/seed-credits", { method: "POST" })
-          .then((res) => {
-            if (res.ok) {
-              localStorage.setItem(STAGING_SEEDED_KEY, "1");
-            }
-          })
-          .catch(() => undefined);
-      }
+      void fetch("/api/dev/seed-credits", { method: "POST" }).catch(() => undefined);
     }
   }, [isLoaded, isSignedIn]);
 

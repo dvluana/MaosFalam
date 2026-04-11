@@ -238,17 +238,12 @@ export default function useCameraPipeline({
       }
 
       // ---- Handedness check ----
+      // MediaPipe handedness in live video: use label directly for both cameras.
+      // In live video the user holds their own hand in front of the camera —
+      // MediaPipe's label matches the user's actual hand regardless of facing mode.
+      // (Upload/photo is different — see useUploadValidation which inverts.)
       const rawHandedness = detectHandedness(result.handednesses[0]);
-      // MediaPipe classifies from its own POV. When viewing someone's palm:
-      //   Back camera (not mirrored): palm facing camera → invert label
-      //   Front camera (mirrored): mirror + invert cancel out → use label directly
-      const userHandedness: "left" | "right" = mirroredRef.current
-        ? rawHandedness === "Left"
-          ? "left"
-          : "right"
-        : rawHandedness === "Left"
-          ? "right"
-          : "left";
+      const userHandedness: "left" | "right" = rawHandedness === "Left" ? "left" : "right";
 
       const expectedHand = dominantHandRef.current;
       if (userHandedness !== expectedHand) {
