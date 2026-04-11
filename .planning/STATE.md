@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Fluxo de Mao Dominante
-status: Ready to plan
-stopped_at: Completed 03-edge-cases-prompt-02-PLAN.md
-last_updated: "2026-04-11T17:24:52.260Z"
+status: Ready to execute
+stopped_at: Completed 04-outra-pessoa-a11y/04-01-PLAN.md
+last_updated: "2026-04-11T17:31:24.371Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 10
+  completed_plans: 9
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-11)
 
 **Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** Phase 03 — edge-cases-prompt
+**Current focus:** Phase 04 — outra-pessoa-a11y
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 04 (outra-pessoa-a11y) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ _Updated after each plan completion_
 | Phase 03 P03 | 5 | 2 tasks | 4 files |
 | Phase 03 P01 | 3m | 2 tasks | 4 files |
 | Phase 03 P02 | 8m | 2 tasks | 5 files |
+| Phase 04 P01 | 5m | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,8 @@ _Updated after each plan completion_
 - [Phase 03]: ScreenOrientation.lock cast to intersection type for TS compatibility (experimental API)
 - [Phase 03]: Screenshot detection uses SCREENSHOT_WIDTHS Set + aspect ratio > 1.8, no new ValidationCheck
 - [Phase 03]: Method switch suggestion is inline text (not toast), appears when failureCount >= 3
+- [Phase 04]: isSelf=true as default preserves original behavior with zero regression
+- [Phase 04]: pronoun dela/dele computed from targetGender for camera wrong-hand feedback
 
 ### Pending Todos
 
@@ -88,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T17:24:12.961Z
-Stopped at: Completed 03-edge-cases-prompt-02-PLAN.md
+Last session: 2026-04-11T17:31:24.369Z
+Stopped at: Completed 04-outra-pessoa-a11y/04-01-PLAN.md
 Resume file: None

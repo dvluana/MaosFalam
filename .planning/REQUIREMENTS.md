@@ -45,8 +45,8 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 
 ### Outra Pessoa
 
-- [ ] **OTHER-01**: Camera mostra instrucao e badge com nome e mao da outra pessoa ("MAO DIREITA . CARLOS")
-- [ ] **OTHER-02**: Feedback de mao errada usa pronome da outra pessoa ("dele"/"dela")
+- [x] **OTHER-01**: Camera mostra instrucao e badge com nome e mao da outra pessoa ("MAO DIREITA . CARLOS")
+- [x] **OTHER-02**: Feedback de mao errada usa pronome da outra pessoa ("dele"/"dela")
 - [ ] **OTHER-03**: Upload instrucao e confirmacao usam nome da outra pessoa
 
 ### Acessibilidade
@@ -99,8 +99,8 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 | EDGE-06     | Phase 3 | Complete |
 | PROMPT-01   | Phase 3 | Complete |
 | PROMPT-02   | Phase 3 | Complete |
-| OTHER-01    | Phase 4 | Pending |
-| OTHER-02    | Phase 4 | Pending |
+| OTHER-01    | Phase 4 | Complete |
+| OTHER-02    | Phase 4 | Complete |
 | OTHER-03    | Phase 4 | Pending |
 | A11Y-01     | Phase 4 | Pending |
 | A11Y-02     | Phase 4 | Pending |
