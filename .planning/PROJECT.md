@@ -2,84 +2,65 @@
 
 ## What This Is
 
-Webapp de quiromancia com IA. Mobile-first. Foto da palma entra, leitura personalizada sai. Frontend completo, backend v1.0 implementado (Neon + Prisma, Clerk auth, GPT-4o, API routes, client adapters). Pagamento (AbacatePay) e email (Resend) ficam pra milestone futura.
+Webapp de quiromancia com IA. Mobile-first. Foto da palma entra, leitura personalizada sai. Backend implementado (Neon + Prisma, Clerk auth, GPT-4o, API routes). MediaPipe real com Hand Landmarker. ReadingContext unificado com CreditGate. Pagamento (AbacatePay) e email (Resend) ficam pra milestone futura.
 
 ## Core Value
 
 A foto da palma entra, a leitura personalizada sai. O backend conecta GPT-4o ao motor de leitura (`selectBlocks`) e persiste os resultados no Neon.
 
-## Current Milestone: v1.1 Alinhamento Arquitetural
+## Current Milestone: v1.2 Fluxo de Mao Dominante
 
-**Goal:** Auditar e alinhar o codigo com as decisoes de arquitetura tomadas, refatorar fluxos core, e implementar MediaPipe real antes de features novas.
+**Goal:** Completar o fluxo de mao dominante end-to-end: instrucoes visuais na camera, upload pipeline com validacao client-side, edge cases, e prompt GPT-4o com contexto de dominancia.
 
 **Target features:**
 
-- Auditoria + limpeza (share_token, expires_at, NextAuth, R2, nomenclatura)
-- ReadingContext unificado + gate de creditos no /ler/nome
-- MediaPipe real (hand landmarker, auto-captura, handedness)
-- Clerk cleanup (esqueci-senha, redefinir, perfil via Clerk)
-- Docs sync + error handling (architecture.md, CLAUDE.md alinhados)
+- Camera UI: HandInstructionOverlay, HandExpectedBadge, WrongHandFeedback, outline SVG espelhado
+- Upload pipeline completo: instrucao → file picker → validacao → confirmacao
+- Edge cases: HEIC conversion, EXIF rotation, compressao, orientacao, retry logic
+- GPT-4o prompt: contexto de mao dominante + ignorar tatuagens/acessorios
+- "Pra outra pessoa" refinements: camera adapta nome+mao da outra pessoa
+- A11y basica: aria-labels, aria-live nos feedbacks
 
 ## Requirements
 
 ### Validated
 
-- ✓ Motor de leitura (`selectBlocks`) — `src/server/lib/select-blocks.ts` (v1.0)
-- ✓ Blocos de texto (~515 textos) — `src/data/blocks/` (v1.0)
-- ✓ Tipos v2 (HandAttributes, ReportJSON) — `src/types/` (v1.0)
-- ✓ Frontend completo com mocks — `src/app/`, `src/components/` (v1.0)
-- ✓ Design system — `docs/DS.md` (v1.0)
-- ✓ Camera pipeline (mock MediaPipe) — `src/hooks/useCameraPipeline.ts` (v1.0)
-- ✓ Schema do banco (Prisma + Neon) — 5 tabelas (v1.0 Phase 1)
-- ✓ Auth (Clerk) — proxy.ts, Google OAuth + email/senha (v1.0 Phase 2)
-- ✓ Integracao GPT-4o — wrapper + Zod validation (v1.0 Phase 3)
-- ✓ API routes publicas — lead/register, reading/capture, reading/[id] (v1.0 Phase 4)
-- ✓ API routes protegidas — reading/new, user/credits, user/readings, user/profile, user/account (v1.0 Phase 5)
-- ✓ Client adapters — reading-client.ts, mock-to-API transition (v1.0 Phase 6)
-- ✓ Frontend-backend wiring — funnel conectado (v1.0 Phase 7)
-- ✓ Logger (Pino) — sem dados pessoais (v1.0 Phase 1)
-- ✓ Rate limiting — in-memory Map (v1.0 Phase 4)
-- ✓ Security headers (v1.0 Phase 4)
+- ✓ Motor de leitura (`selectBlocks`) — v1.0
+- ✓ Blocos de texto (~515 textos) — v1.0
+- ✓ Schema do banco (Prisma + Neon) — v1.0
+- ✓ Auth (Clerk) — v1.0
+- ✓ GPT-4o integration — v1.0
+- ✓ API routes (9 total) — v1.0
+- ✓ Client adapters — v1.0
+- ✓ Auditoria codebase limpa — v1.1
+- ✓ ReadingContext unificado + CreditGate — v1.1
+- ✓ MediaPipe real (Hand Landmarker, auto-captura 1.5s, handedness) — v1.1
+- ✓ Clerk cleanup (esqueci/redefinir-senha, UserProfile) — v1.1
+- ✓ Docs alinhados (architecture.md, CLAUDE.md) — v1.1
+- ✓ Error handling (toast, 404 vs 500) — v1.1
 
 ### Active
 
-- [ ] Auditoria: remover share_token de types, mocks, componentes, reading-client
-- [ ] Auditoria: remover expires_at de credit_packs
-- [ ] Auditoria: limpar referencias NextAuth, R2/Cloudflare, "Claude Vision"
-- [ ] Auditoria: "Planeta dominante" → "Monte dominante"
-- [ ] Auditoria: verificar e corrigir ordem das secoes (v2)
-- [ ] Auditoria: remover VALID_MOCK_IDS, fallbackName="Marina", dead stubs
-- [ ] ReadingContext unificado (target_name, target_gender, dominant_hand, is_self, session_id)
-- [ ] /ler/nome refatorado: visitante (nome+email+genero+dominancia+opt-in) vs logada (pra mim/pra outra)
-- [ ] CreditGate component (modal de confirmacao de credito)
-- [ ] Debito real no server via POST /api/reading/new antes do capture
-- [ ] MediaPipe real: @mediapipe/tasks-vision, useCameraPipeline com Hand Landmarker
-- [ ] MediaPipe: validacao landmarks (mao aberta, centralizada, estavel 1.5s)
-- [ ] MediaPipe: auto-captura do canvas como base64 JPEG
-- [ ] Handedness: perguntar destra/canhota + instrucao na camera + validar mao correta
-- [ ] Clerk cleanup: esqueci-senha, redefinir-senha, perfil edit via Clerk
-- [ ] Docs: architecture.md alinhado com codigo real
-- [ ] Docs: CLAUDE.md atualizado
-- [ ] Error handling: /conta/leituras toast de erro, resultado diferenciar 404 de 500
+(Populated by v1.2 requirements definition)
 
 ### Out of Scope
 
-- Pagamento (AbacatePay) — webhook nao documentado na v2, resolver depois
+- Pagamento (AbacatePay) — webhook v2 nao documentado
 - Email transacional (Resend) — depende de dominio configurado
 - App nativo — web-first
 - Assinatura mensal — modelo e creditos avulsos
 - Compatibilidade entre maos — v2
-- Blocos de texto novos — conteudo atual suficiente
-- Mao dominante no prompt GPT-4o — fase futura apos MediaPipe funcionar
+- Leitura da mao nao-dominante — MVP le apenas dominante
 
 ## Context
 
-- Backend v1.0 completo (7 fases, 17 plans executados)
-- 10 decisoes arquiteturais tomadas que mudaram tipos, fluxos e nomenclatura
-- Codigo pode estar desalinhado com essas decisoes
-- Fluxo unico de leitura com is_self flag (nao rota separada)
-- Creditos nao expiram, share_token removido, fotos nunca armazenadas
-- MediaPipe atual e mock/stub — precisa implementacao real
+- v1.0 Backend MVP completo (7 fases)
+- v1.1 Alinhamento Arquitetural completo (5 fases)
+- MediaPipe real ja funciona: detecta mao, valida landmarks, auto-captura
+- Destra/Canhota ja coletado em /ler/nome (ReadingContext.dominant_hand)
+- Handedness validation ja existe em mediapipe.ts (detectHandedness)
+- Falta: instrucoes visuais, upload pipeline, edge cases, prompt GPT-4o
+- Prompt completo em docs/maodominante.md
 
 ## Constraints
 
@@ -88,20 +69,22 @@ A foto da palma entra, a leitura personalizada sai. O backend conecta GPT-4o ao 
 - **Performance**: `selectBlocks` <1ms (zero I/O, tudo em memoria)
 - **Auth**: Clerk e source of truth pra name/email/foto. Neon so tem CPF e customer_id
 - **Brand voice**: todo texto pro usuario segue `docs/brand-voice.md` (voz da cigana)
+- **MediaPipe**: handedness assume input espelhado (front camera labels corretos, back camera swap)
 
 ## Key Decisions
 
-| Decision                     | Rationale                                             | Outcome   |
-| ---------------------------- | ----------------------------------------------------- | --------- |
-| Neon + Prisma 7 com adapter  | Serverless, free tier generoso, driver adapter nativo | ✓ Good    |
-| Clerk pra auth               | 50K users free, Google OAuth + email/senha built-in   | ✓ Good    |
-| GPT-4o pra visao             | Melhor modelo multimodal pra analise de linhas finas  | ✓ Good    |
-| Pagamento adiado             | Webhook AbacatePay v2 nao documentado                 | — Pending |
-| Rate limit in-memory (Map)   | Suficiente pro MVP, migrar pra Upstash quando escalar | ✓ Good    |
-| Fluxo unico com is_self flag | Nao existe rota separada pra "ler outra pessoa"       | — Pending |
-| Creditos nao expiram         | Simplifica logica, sem check de expiracao             | — Pending |
-| Share via reading UUID       | Remover share_token, URL usa reading ID direto        | — Pending |
-| MediaPipe Hand Landmarker    | Deteccao client-side, zero server, ~30fps             | — Pending |
+| Decision                         | Rationale                                  | Outcome   |
+| -------------------------------- | ------------------------------------------ | --------- |
+| Neon + Prisma 7 com adapter      | Serverless, free tier generoso             | ✓ Good    |
+| Clerk pra auth                   | 50K users free, Google OAuth + email/senha | ✓ Good    |
+| GPT-4o pra visao                 | Melhor modelo multimodal                   | ✓ Good    |
+| Pagamento adiado                 | Webhook AbacatePay v2 nao documentado      | — Pending |
+| Fluxo unico com is_self flag     | Nao existe rota separada                   | ✓ Good    |
+| Creditos nao expiram             | Simplifica logica                          | ✓ Good    |
+| Share via reading UUID           | URL usa reading ID direto                  | ✓ Good    |
+| MediaPipe Hand Landmarker        | Deteccao client-side, zero server          | ✓ Good    |
+| Camera traseira como default     | Mais resolucao, sem espelhamento           | — Pending |
+| Mao errada = aviso, nao bloqueio | Edge case: amputacao, deficiencia          | — Pending |
 
 ## Evolution
 
@@ -124,4 +107,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-11 after milestone v1.1 start_
+_Last updated: 2026-04-11 after milestone v1.2 start_
