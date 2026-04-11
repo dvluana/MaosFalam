@@ -102,8 +102,13 @@ Plans:
 2. /conta/perfil usa Clerk UserProfile para edicao de nome e troca de senha; nao existe formulario manual para essas acoes
 3. /conta/leituras mostra toast na voz da cigana quando a API falha ao carregar leituras
 4. Pagina de resultado exibe mensagem distinta para leitura nao encontrada (404) versus erro de servidor (500)
-   **Plans**: TBD
+   **Plans**: 2 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 04-01-PLAN.md — Clerk auth delegation: redirect /esqueci-senha e /redefinir-senha; UserProfile em /conta/perfil
+- [ ] 04-02-PLAN.md — Error handling: toast em /conta/leituras; 404 vs 500 em /ler/resultado/[id]
 
 ### Phase 5: Docs Sync
 
@@ -121,10 +126,10 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
-| Phase                             | Milestone | Plans Complete | Status      | Completed |
-| --------------------------------- | --------- | -------------- | ----------- | --------- |
-| 1. Auditoria                      | v1.1      | 2/2            | Complete    | -         |
-| 2. ReadingContext + Creditos      | v1.1      | 2/2 | Complete   | 2026-04-11 |
-| 3. MediaPipe Real                 | v1.1      | 2/2 | Complete   | 2026-04-11 |
-| 4. Clerk Cleanup + Error Handling | v1.1      | 0/?            | Not started | -         |
-| 5. Docs Sync                      | v1.1      | 0/?            | Not started | -         |
+| Phase                             | Milestone | Plans Complete | Status      | Completed  |
+| --------------------------------- | --------- | -------------- | ----------- | ---------- |
+| 1. Auditoria                      | v1.1      | 2/2            | Complete    | -          |
+| 2. ReadingContext + Creditos      | v1.1      | 2/2            | Complete    | 2026-04-11 |
+| 3. MediaPipe Real                 | v1.1      | 2/2            | Complete    | 2026-04-11 |
+| 4. Clerk Cleanup + Error Handling | v1.1      | 0/2            | Not started | -          |
+| 5. Docs Sync                      | v1.1      | 0/?            | Not started | -          |
