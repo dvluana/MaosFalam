@@ -5,15 +5,17 @@ import { useEffect, useRef } from "react";
 import {
   captureFrame,
   clearLandmarkCanvas,
+  computeElementHint,
   detectHandedness,
   drawHandLandmarks,
   loadHandLandmarker,
   validateLandmarks,
 } from "@/lib/mediapipe";
+import { setElementHint } from "@/lib/photo-store";
 import { loadReadingContext } from "@/lib/reading-context";
 import type { CamState } from "@/types/camera";
 
-import type { HandLandmarker } from "@mediapipe/tasks-vision";
+import type { HandLandmarker, NormalizedLandmark } from "@mediapipe/tasks-vision";
 import type React from "react";
 
 // States where the detection rAF loop should run
@@ -79,6 +81,7 @@ export default function useCameraPipeline({
   const stabilityStartRef = useRef<number | null>(null);
   const capturedRef = useRef<boolean>(false);
   const stateRef = useRef<CamState>(state);
+  const lastLandmarksRef = useRef<NormalizedLandmark[] | null>(null);
 
   // Keep stateRef in sync so the rAF callback reads fresh state
   useEffect(() => {
@@ -275,6 +278,9 @@ export default function useCameraPipeline({
 
       // ---- Stability accumulation ----
       const now = Date.now();
+      // Valid frame — keep track of landmarks for element hint computation
+      lastLandmarksRef.current = result.landmarks[0];
+
       if (stabilityStartRef.current === null) {
         stabilityStartRef.current = now;
         if (currentState !== "camera_hand_detected") {
@@ -305,6 +311,14 @@ export default function useCameraPipeline({
       setTimeout(() => {
         if (capturedRef.current) return;
         capturedRef.current = true;
+
+        // Compute and store element hint from last valid landmarks
+        if (lastLandmarksRef.current) {
+          const hint = computeElementHint(lastLandmarksRef.current);
+          if (hint) {
+            setElementHint(hint);
+          }
+        }
 
         const v = videoRef.current;
         const c = canvasRef.current;

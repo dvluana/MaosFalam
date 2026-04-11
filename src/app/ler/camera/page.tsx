@@ -21,6 +21,7 @@ import useCameraPipeline from "@/hooks/useCameraPipeline";
 import { useFailureCounter } from "@/hooks/useFailureCounter";
 import { useLandscapeGuard } from "@/hooks/useLandscapeGuard";
 import { useUploadValidation } from "@/hooks/useUploadValidation";
+import { clearPhotoStore, setPhoto } from "@/lib/photo-store";
 import { loadReadingContext } from "@/lib/reading-context";
 import { CAM_EYEBROW, CAM_FEEDBACK, CAM_STATES, isErrorState, type CamState } from "@/types/camera";
 
@@ -64,7 +65,7 @@ function CameraPageInner() {
       router.replace("/ler/nome");
       return;
     }
-    sessionStorage.removeItem("maosfalam_photo");
+    clearPhotoStore();
   }, [router]);
 
   if (forced && forced !== state) {
@@ -94,7 +95,7 @@ function CameraPageInner() {
   const handleCaptured = useCallback(
     (photoBase64: string) => {
       resetFailures();
-      sessionStorage.setItem("maosfalam_photo", photoBase64);
+      setPhoto(photoBase64);
       router.push("/ler/scan");
     },
     [router, resetFailures],
@@ -135,7 +136,7 @@ function CameraPageInner() {
     reader.onload = () => {
       const dataUrl = reader.result as string;
       const base64 = dataUrl.split(",")[1] ?? "";
-      sessionStorage.setItem("maosfalam_photo", base64);
+      setPhoto(base64);
       window.setTimeout(() => router.push("/ler/scan"), 600);
     };
     reader.readAsDataURL(uploadResult.file);
@@ -180,7 +181,7 @@ function CameraPageInner() {
       reader.onload = () => {
         const dataUrl = reader.result as string;
         const base64 = dataUrl.split(",")[1] ?? "";
-        sessionStorage.setItem("maosfalam_photo", base64);
+        setPhoto(base64);
         window.setTimeout(() => router.push("/ler/scan"), 600);
       };
       reader.readAsDataURL(file);
