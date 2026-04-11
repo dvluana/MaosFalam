@@ -22,6 +22,7 @@ function CameraPageInner() {
   const forced = search?.get("state") as CamState | null;
   const [state, setState] = useState<CamState>(forced ?? "method_choice");
   const [showUpload, setShowUpload] = useState(false);
+  const [mirrored, setMirrored] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -51,6 +52,7 @@ function CameraPageInner() {
     onCaptured: handleCaptured,
     videoRef,
     canvasRef,
+    onMirroredChange: setMirrored,
   });
 
   const handleUploadSelected = useCallback(
@@ -151,18 +153,14 @@ function CameraPageInner() {
         />
       )}
 
-      {/* Hidden video + canvas used by useCameraPipeline for MediaPipe detection and frame capture */}
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        muted
-        aria-hidden
-        className="sr-only"
-      />
-      <canvas ref={canvasRef} aria-hidden className="sr-only" />
-
-      {showViewport && <CameraViewport state={state} />}
+      {showViewport && (
+        <CameraViewport
+          state={state}
+          videoRef={videoRef}
+          canvasRef={canvasRef}
+          mirrored={mirrored}
+        />
+      )}
 
       {!errorState && state !== "camera_capturing" && (
         <div className="relative">

@@ -30,6 +30,8 @@ interface Params {
   onCaptured: (photoBase64: string) => void;
   videoRef: React.RefObject<HTMLVideoElement | null>;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  /** Called when the camera stream is established with whether the video is mirrored (front camera). */
+  onMirroredChange?: (mirrored: boolean) => void;
 }
 
 /**
@@ -51,6 +53,7 @@ export default function useCameraPipeline({
   onCaptured,
   videoRef,
   canvasRef,
+  onMirroredChange,
 }: Params): void {
   const landmarkerRef = useRef<HandLandmarker | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -112,6 +115,7 @@ export default function useCameraPipeline({
       const track = stream.getVideoTracks()[0];
       const settings = track?.getSettings();
       mirroredRef.current = settings?.facingMode === "user";
+      onMirroredChange?.(mirroredRef.current);
 
       // Attach stream to video element
       const video = videoRef.current;

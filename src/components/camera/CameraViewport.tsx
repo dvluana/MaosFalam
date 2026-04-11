@@ -1,12 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type React from "react";
 
 import type { CamState } from "@/types/camera";
 import { isFrameActive } from "@/types/camera";
 
 interface Props {
   state: CamState;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  mirrored: boolean;
 }
 
 type CornerVertical = "top" | "bottom";
@@ -18,8 +22,17 @@ const CORNERS: ReadonlyArray<readonly [CornerVertical, CornerHorizontal]> = [
   ["bottom", "right"],
 ];
 
-function CameraViewport({ state }: Props) {
+// States where the hand is in frame — hide the center crosshair target indicator
+const HAND_IN_FRAME_STATES: ReadonlySet<CamState> = new Set([
+  "camera_hand_detected",
+  "camera_adjusting",
+  "camera_wrong_hand",
+  "camera_stable",
+]);
+
+function CameraViewport({ state, videoRef, canvasRef, mirrored }: Props) {
   const frameActive = isFrameActive(state);
+  const showCrosshair = !HAND_IN_FRAME_STATES.has(state);
 
   return (
     <div className="relative flex items-center justify-center">
@@ -40,6 +53,24 @@ function CameraViewport({ state }: Props) {
             : "0 28px 56px -16px rgba(0,0,0,0.85)",
         }}
       >
+        {/* Live camera feed */}
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover rounded-[inherit]"
+          style={{
+            transform: mirrored ? "scaleX(-1)" : "none",
+            opacity: state === "loading_mediapipe" ? 0 : 1,
+            transition: "opacity 0.5s ease",
+          }}
+        />
+
+        {/* Hidden canvas used only for frame capture */}
+        <canvas ref={canvasRef} aria-hidden className="hidden" />
+
         {CORNERS.map(([v, h]) => (
           <motion.span
             key={`${v}-${h}`}
@@ -61,51 +92,53 @@ function CameraViewport({ state }: Props) {
           />
         ))}
 
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <motion.div
-            className="relative"
-            animate={{ opacity: state === "loading_mediapipe" ? 0.3 : 0.6 }}
-            transition={{ duration: 0.8 }}
-          >
-            <span
-              className="absolute left-1/2 top-0 w-px h-16 -translate-x-1/2 -translate-y-full"
-              style={{
-                background: "linear-gradient(180deg, transparent, rgba(201,162,74,0.45))",
-              }}
-            />
-            <span
-              className="absolute left-1/2 bottom-0 w-px h-16 -translate-x-1/2 translate-y-full"
-              style={{
-                background: "linear-gradient(0deg, transparent, rgba(201,162,74,0.45))",
-              }}
-            />
-            <span
-              className="absolute top-1/2 left-0 h-px w-16 -translate-y-1/2 -translate-x-full"
-              style={{
-                background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.45))",
-              }}
-            />
-            <span
-              className="absolute top-1/2 right-0 h-px w-16 -translate-y-1/2 translate-x-full"
-              style={{
-                background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.45))",
-              }}
-            />
-            <motion.span
-              className="block w-2 h-2 rotate-45 bg-gold"
-              animate={{
-                opacity: [0.6, 1, 0.6],
-                scale: frameActive ? [1, 1.3, 1] : [1, 1.1, 1],
-              }}
-              transition={{
-                duration: frameActive ? 1.2 : 2.4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              style={{ boxShadow: "0 0 10px rgba(201,162,74,0.6)" }}
-            />
-          </motion.div>
-        </div>
+        {showCrosshair && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <motion.div
+              className="relative"
+              animate={{ opacity: state === "loading_mediapipe" ? 0.3 : 0.6 }}
+              transition={{ duration: 0.8 }}
+            >
+              <span
+                className="absolute left-1/2 top-0 w-px h-16 -translate-x-1/2 -translate-y-full"
+                style={{
+                  background: "linear-gradient(180deg, transparent, rgba(201,162,74,0.45))",
+                }}
+              />
+              <span
+                className="absolute left-1/2 bottom-0 w-px h-16 -translate-x-1/2 translate-y-full"
+                style={{
+                  background: "linear-gradient(0deg, transparent, rgba(201,162,74,0.45))",
+                }}
+              />
+              <span
+                className="absolute top-1/2 left-0 h-px w-16 -translate-y-1/2 -translate-x-full"
+                style={{
+                  background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.45))",
+                }}
+              />
+              <span
+                className="absolute top-1/2 right-0 h-px w-16 -translate-y-1/2 translate-x-full"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.45))",
+                }}
+              />
+              <motion.span
+                className="block w-2 h-2 rotate-45 bg-gold"
+                animate={{
+                  opacity: [0.6, 1, 0.6],
+                  scale: frameActive ? [1, 1.3, 1] : [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: frameActive ? 1.2 : 2.4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                style={{ boxShadow: "0 0 10px rgba(201,162,74,0.6)" }}
+              />
+            </motion.div>
+          </div>
+        )}
 
         {state === "camera_stable" && (
           <motion.div
