@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import CameraErrorState from "@/components/camera/CameraErrorState";
 import CameraEyebrow from "@/components/camera/CameraEyebrow";
@@ -44,12 +44,8 @@ function CameraPageInner() {
 
   const { suggestMethodSwitch, recordFailure, resetFailures } = useFailureCounter();
 
-  // Load reading context via useSyncExternalStore (hydration-safe, no setState in effect)
-  const readingContext = useSyncExternalStore(
-    () => () => {},
-    () => loadReadingContext(),
-    () => null,
-  );
+  // Load reading context — "use client" page, no SSR content to mismatch
+  const readingContext = loadReadingContext();
   const dominantHand = readingContext?.dominant_hand ?? "right";
   const targetName = readingContext?.target_name ?? "";
   const isSelf = readingContext?.is_self ?? true;
