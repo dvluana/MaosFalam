@@ -24,10 +24,10 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 
 - [ ] **UPL-01**: Tela de escolha de metodo (camera ao vivo vs upload da galeria) com 2 botoes claros
 - [x] **UPL-02**: UploadInstructionScreen com instrucao de qual mao + dicas de qualidade + outline SVG
-- [ ] **UPL-03**: File picker aceita JPEG, PNG, WebP, HEIC; rejeita GIF, SVG, BMP, PDF
-- [ ] **UPL-04**: UploadValidationScreen com checks progressivos (formato, qualidade, mao, handedness, palma aberta)
-- [ ] **UPL-05**: UploadConfirmScreen com preview + checklist de validacao + confirmacao
-- [ ] **UPL-06**: Validacao parcial (mao OK mas qualidade ruim) mostra aviso honesto + "Usar mesmo assim"
+- [x] **UPL-03**: File picker aceita JPEG, PNG, WebP, HEIC; rejeita GIF, SVG, BMP, PDF
+- [x] **UPL-04**: UploadValidationScreen com checks progressivos (formato, qualidade, mao, handedness, palma aberta)
+- [x] **UPL-05**: UploadConfirmScreen com preview + checklist de validacao + confirmacao
+- [x] **UPL-06**: Validacao parcial (mao OK mas qualidade ruim) mostra aviso honesto + "Usar mesmo assim"
 
 ### Edge Cases
 
@@ -87,10 +87,10 @@ Requirements for milestone v1.2: Fluxo de Mao Dominante.
 | CAM-06      | Phase 1 | Complete |
 | UPL-01      | Phase 2 | Pending |
 | UPL-02      | Phase 2 | Complete |
-| UPL-03      | Phase 2 | Pending |
-| UPL-04      | Phase 2 | Pending |
-| UPL-05      | Phase 2 | Pending |
-| UPL-06      | Phase 2 | Pending |
+| UPL-03      | Phase 2 | Complete |
+| UPL-04      | Phase 2 | Complete |
+| UPL-05      | Phase 2 | Complete |
+| UPL-06      | Phase 2 | Complete |
 | EDGE-01     | Phase 3 | Pending |
 | EDGE-02     | Phase 3 | Pending |
 | EDGE-03     | Phase 3 | Pending |

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Fluxo de Mao Dominante
 status: Ready to execute
-stopped_at: Completed 02-upload-pipeline-01-PLAN.md
-last_updated: "2026-04-11T17:08:07.900Z"
+stopped_at: Completed 02-upload-pipeline-02-PLAN.md
+last_updated: "2026-04-11T17:10:23.937Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-11)
 ## Current Position
 
 Phase: 02 (upload-pipeline) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -44,6 +44,7 @@ _Updated after each plan completion_
 | Phase 01-camera-ui P01 | 1m | 3 tasks | 3 files |
 | Phase 01-camera-ui P02 | 6m | 3 tasks | 6 files |
 | Phase 02-upload-pipeline P01 | 1 | 1 tasks | 1 files |
+| Phase 02-upload-pipeline P02 | 3m | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,8 @@ _Updated after each plan completion_
 - [Phase 01-camera-ui]: Permission denied auto-redirects to upload after 1.5s with cigana phrase instead of showing permanent error state
 - [Phase 02-upload-pipeline]: Import order: camera components before ui primitives per ESLint import/order rule
 - [Phase 02-upload-pipeline]: UploadInstructionScreen is pure presentation — no internal state, all via props
+- [Phase 02-upload-pipeline]: MediaPipe in IMAGE runningMode inside validate() — not reusing loadHandLandmarker() which uses VIDEO mode
+- [Phase 02-upload-pipeline]: MediaPipe failure gracefully skips checks 3-4-5 with canProceed=true so upload can still proceed
 
 ### Pending Todos
 
@@ -72,6 +75,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T17:08:07.898Z
-Stopped at: Completed 02-upload-pipeline-01-PLAN.md
+Last session: 2026-04-11T17:10:23.934Z
+Stopped at: Completed 02-upload-pipeline-02-PLAN.md
 Resume file: None

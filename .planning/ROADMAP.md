@@ -85,7 +85,7 @@ Plans:
 Plans:
 
 - [x] 02-01-PLAN.md — UploadInstructionScreen: instrucao de qual mao + dicas de qualidade + outline SVG
-- [ ] 02-02-PLAN.md — useUploadValidation hook + UploadValidationScreen + UploadConfirmScreen
+- [x] 02-02-PLAN.md — useUploadValidation hook + UploadValidationScreen + UploadConfirmScreen
 - [ ] 02-03-PLAN.md — Wiring: fluxo multi-step na camera page, substituir UploadPreview
 
 ### Phase 3: Edge Cases + Prompt
@@ -127,6 +127,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase                  | Milestone | Plans Complete | Status      | Completed  |
 | ---------------------- | --------- | -------------- | ----------- | ---------- |
 | 1. Camera UI           | v1.2      | 2/2            | Complete    | 2026-04-11 |
-| 2. Upload Pipeline     | v1.2      | 1/3 | In Progress|  |
+| 2. Upload Pipeline     | v1.2      | 2/3 | In Progress|  |
 | 3. Edge Cases + Prompt | v1.2      | 0/?            | Not started | -          |
 | 4. Outra Pessoa + A11y | v1.2      | 0/?            | Not started | -          |
