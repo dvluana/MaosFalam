@@ -1,40 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import type { ReadingReport, HandElement } from "@/types/reading";
-import { readStoredName } from "@/lib/personalize";
 
 interface Props {
-  element: ReadingReport["element"];
-  fallbackName: string;
+  opening: string;
+  elementIntro: string;
+  elementBody: string;
 }
 
-// Abertura do capítulo: a cigana sentando, começando a falar sério.
-const openings: Record<HandElement, (name: string) => string> = {
-  fire: (n) =>
-    `Senta, ${n}. Eu vou começar pelo começo. Tem muita coisa pra dizer, e a gente não tem pressa.`,
-  water: (n) =>
-    `Senta aí, ${n}. Eu preciso de um tempo pra contar o que vi. E você precisa de tempo pra ouvir.`,
-  earth: (n) =>
-    `Calma, ${n}. Eu vou do começo. Você construiu muita coisa em silêncio. Eu vi tudo.`,
-  air: (n) =>
-    `Respira, ${n}. Eu sei que sua cabeça já tá girando. Deixa eu começar do princípio.`,
-};
-
-export default function ReadingOverview({ element, fallbackName }: Props) {
-  const [name, setName] = useState<string>(fallbackName);
-
-  useEffect(() => {
-    const stored = readStoredName();
-    if (stored) setName(stored);
-  }, []);
-
+export default function ReadingOverview({ opening, elementIntro, elementBody }: Props) {
   // Quebra o body do elemento em parágrafos por pontos finais (aproximado),
   // agrupando em 2-3 sentenças por parágrafo pra respiração visual.
-  const sentences = element.body
-    .split(/(?<=\.)\s+/)
-    .filter((s) => s.trim().length > 0);
+  const sentences = elementBody.split(/(?<=\.)\s+/).filter((s) => s.trim().length > 0);
   const paragraphs: string[] = [];
   const group = 3;
   for (let i = 0; i < sentences.length; i += group) {
@@ -51,8 +28,7 @@ export default function ReadingOverview({ element, fallbackName }: Props) {
       style={{
         background: "#0e0a18",
         border: "1px solid rgba(201,162,74,0.10)",
-        boxShadow:
-          "0 28px 56px -16px rgba(0,0,0,0.85), 0 10px 24px -8px rgba(0,0,0,0.6)",
+        boxShadow: "0 28px 56px -16px rgba(0,0,0,0.85), 0 10px 24px -8px rgba(0,0,0,0.6)",
       }}
     >
       {/* Atmosfera: glow suave no topo */}
@@ -89,7 +65,7 @@ export default function ReadingOverview({ element, fallbackName }: Props) {
 
         {/* Abertura da cigana: frase grande em Cormorant */}
         <p className="font-cormorant italic text-[24px] sm:text-[28px] text-bone leading-[1.3] mb-8 max-w-xl">
-          {openings[element.type](name)}
+          {opening}
         </p>
 
         {/* Separador sutil */}
@@ -100,6 +76,13 @@ export default function ReadingOverview({ element, fallbackName }: Props) {
               "linear-gradient(90deg, rgba(201,162,74,0.35), rgba(201,162,74,0.05) 60%, transparent)",
           }}
         />
+
+        {/* Element intro (if different from opening) */}
+        {elementIntro && (
+          <p className="font-cormorant italic text-[18px] sm:text-[20px] text-bone-dim leading-[1.4] mb-6">
+            {elementIntro}
+          </p>
+        )}
 
         {/* Corpo: parágrafos maiores, mais respiração */}
         <div className="flex flex-col gap-5">
@@ -114,7 +97,6 @@ export default function ReadingOverview({ element, fallbackName }: Props) {
               style={
                 i === 0
                   ? {
-                      // Capitular na primeira letra do primeiro parágrafo
                       fontWeight: 300,
                     }
                   : undefined
@@ -146,10 +128,7 @@ export default function ReadingOverview({ element, fallbackName }: Props) {
         <div className="flex justify-center mt-10">
           <div className="flex items-center gap-2">
             <span className="h-px w-8 bg-gold-dim/40" />
-            <span
-              className="w-1 h-1 rotate-45 bg-gold-dim"
-              aria-hidden
-            />
+            <span className="w-1 h-1 rotate-45 bg-gold-dim" aria-hidden />
             <span className="h-px w-12 bg-gold-dim/60" />
             <span
               className="w-1.5 h-1.5 rotate-45 bg-gold"
@@ -157,10 +136,7 @@ export default function ReadingOverview({ element, fallbackName }: Props) {
               aria-hidden
             />
             <span className="h-px w-12 bg-gold-dim/60" />
-            <span
-              className="w-1 h-1 rotate-45 bg-gold-dim"
-              aria-hidden
-            />
+            <span className="w-1 h-1 rotate-45 bg-gold-dim" aria-hidden />
             <span className="h-px w-8 bg-gold-dim/40" />
           </div>
         </div>

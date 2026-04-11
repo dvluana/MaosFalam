@@ -43,12 +43,7 @@ const ACCENT: Record<
   },
 };
 
-export default function MeasurementBar({
-  value,
-  delay = 0,
-  height = 5,
-  accent = "gold",
-}: Props) {
+export default function MeasurementBar({ value, delay = 0, height = 5, accent = "gold" }: Props) {
   const pct = Math.max(0, Math.min(1, value)) * 100;
   const a = ACCENT[accent];
 
@@ -57,8 +52,7 @@ export default function MeasurementBar({
       className="relative w-full overflow-visible"
       style={{
         height,
-        background:
-          "linear-gradient(90deg, rgba(201,162,74,0.06), rgba(201,162,74,0.02))",
+        background: "linear-gradient(90deg, rgba(201,162,74,0.06), rgba(201,162,74,0.02))",
         borderLeft: "1px solid rgba(201,162,74,0.25)",
         borderRight: "1px solid rgba(201,162,74,0.08)",
       }}

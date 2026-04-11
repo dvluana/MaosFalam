@@ -49,22 +49,12 @@ export default function MarqueeFrases() {
   );
 }
 
-function MarqueeItem({
-  phrase,
-  tone,
-}: {
-  phrase: string;
-  tone: "gold" | "rose";
-}) {
+function MarqueeItem({ phrase, tone }: { phrase: string; tone: "gold" | "rose" }) {
   const color = tone === "gold" ? "text-gold/72" : "text-rose/68";
 
   return (
     <span className="flex shrink-0 items-center gap-6">
-      <span
-        className={`font-cormorant text-[17px] tracking-wide italic ${color}`}
-      >
-        {phrase}
-      </span>
+      <span className={`font-cormorant text-[17px] tracking-wide italic ${color}`}>{phrase}</span>
       <span aria-hidden className="h-1 w-1 rotate-45 bg-gold/40" />
     </span>
   );

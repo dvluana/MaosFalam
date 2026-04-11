@@ -1,11 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { User } from "@/types/reading";
 
 const STORAGE_KEY = "maosfalam_user";
 
-type StoredUser = Pick<User, "id" | "name" | "email">;
+interface StoredUser {
+  id: string;
+  name: string;
+  email: string;
+}
 
 function readStored(): StoredUser | null {
   if (typeof window === "undefined") return null;
@@ -33,14 +36,17 @@ export function useAuth() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setUser(readStored());
-    setHydrated(true);
+    const syncTimer = window.setTimeout(() => {
+      setUser(readStored());
+      setHydrated(true);
+    }, 0);
 
     // Sincroniza entre instâncias do hook na mesma aba via evento custom
     const onSync = () => setUser(readStored());
     window.addEventListener("storage", onSync);
     window.addEventListener("maosfalam:auth", onSync);
     return () => {
+      window.clearTimeout(syncTimer);
       window.removeEventListener("storage", onSync);
       window.removeEventListener("maosfalam:auth", onSync);
     };
@@ -65,19 +71,16 @@ export function useAuth() {
     return true;
   }, []);
 
-  const register = useCallback(
-    (name: string, email: string, password: string): boolean => {
-      if (!name.trim() || !email.includes("@") || password.length < 6) {
-        return false;
-      }
-      const u: StoredUser = { id: genId(), name: name.trim(), email };
-      writeStored(u);
-      setUser(u);
-      emit();
-      return true;
-    },
-    [],
-  );
+  const register = useCallback((name: string, email: string, password: string): boolean => {
+    if (!name.trim() || !email.includes("@") || password.length < 6) {
+      return false;
+    }
+    const u: StoredUser = { id: genId(), name: name.trim(), email };
+    writeStored(u);
+    setUser(u);
+    emit();
+    return true;
+  }, []);
 
   const logout = useCallback((): void => {
     if (typeof window !== "undefined") {

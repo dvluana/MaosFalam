@@ -37,11 +37,7 @@ export default function Depoimentos() {
         >
           <div className="flex items-center gap-[3px]">
             {Array.from({ length: 5 }).map((_, index) => (
-              <svg
-                key={index}
-                viewBox="0 0 24 24"
-                className="h-3.5 w-3.5 fill-gold"
-              >
+              <svg key={index} viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-gold">
                 <path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7.3L12 17.8 5.7 21.5l1.7-7.3L2 9.5l7.1-.6z" />
               </svg>
             ))}

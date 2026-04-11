@@ -24,10 +24,7 @@ interface NavProps {
 
 export default function Nav({ activeId = "home", visible = true }: NavProps) {
   return (
-    <header
-      role="banner"
-      className={`${styles.nav} ${visible ? styles.show : ""}`}
-    >
+    <header role="banner" className={`${styles.nav} ${visible ? styles.show : ""}`}>
       <div className={styles.inner}>
         <div className={styles.logo} aria-label="MãosFalam">
           <svg
@@ -50,11 +47,7 @@ export default function Nav({ activeId = "home", visible = true }: NavProps) {
             />
           </svg>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/vetor-logo.svg"
-            alt="MãosFalam"
-            className={styles.logoMark}
-          />
+          <img src="/vetor-logo.svg" alt="MãosFalam" className={styles.logoMark} />
         </div>
 
         <Menu activeId={activeId} />

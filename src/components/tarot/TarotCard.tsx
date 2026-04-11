@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import styles from "./TarotCard.module.css";
+
 import type { TarotCardData } from "@/types/tarot";
+
+import styles from "./TarotCard.module.css";
 
 /** Símbolo MãosFalam (mão abstrata, wordmark minimal). */
 function BrandSymbol({ className }: { className?: string }) {
@@ -82,11 +84,7 @@ export default function TarotCard({
 
             <BrandSymbol className={styles.backSymbol} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/vetor-logo.svg"
-              alt="MãosFalam"
-              className={styles.backWordmark}
-            />
+            <img src="/vetor-logo.svg" alt="MãosFalam" className={styles.backWordmark} />
           </div>
         </div>
 

@@ -27,13 +27,9 @@ export default function Card({
       className={`relative branded-radius corner-ornaments grain-texture overflow-hidden ${parchment ? "bg-parchment" : "bg-deep"} ${className}`}
     >
       {accentColor && (
-        <div
-          className={`absolute top-0 left-0 right-0 h-[2px] ${accentMap[accentColor]}`}
-        />
+        <div className={`absolute top-0 left-0 right-0 h-[2px] ${accentMap[accentColor]}`} />
       )}
-      <div className="m-[5px] p-5 border border-[rgba(201,162,74,0.04)]">
-        {children}
-      </div>
+      <div className="m-[5px] p-5 border border-[rgba(201,162,74,0.04)]">{children}</div>
     </div>
   );
 }

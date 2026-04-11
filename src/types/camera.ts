@@ -30,10 +30,8 @@ export const CAM_FEEDBACK: Record<CamState, string> = {
   camera_hand_detected: "Abra mais os dedos.",
   camera_stable: "Segure.",
   camera_capturing: "",
-  camera_permission_denied:
-    "Preciso dos seus olhos emprestados. Libera a câmera.",
-  camera_permission_denied_permanent:
-    "Abra nas configurações do celular pra me deixar ver.",
+  camera_permission_denied: "Preciso dos seus olhos emprestados. Libera a câmera.",
+  camera_permission_denied_permanent: "Abra nas configurações do celular pra me deixar ver.",
   camera_fallback_upload: "Me manda um retrato da sua mão então.",
   camera_error_generic: "Algo saiu errado. Tente de novo.",
 };
@@ -62,8 +60,6 @@ export function isErrorState(state: CamState): boolean {
 
 export function isFrameActive(state: CamState): boolean {
   return (
-    state === "camera_hand_detected" ||
-    state === "camera_stable" ||
-    state === "camera_capturing"
+    state === "camera_hand_detected" || state === "camera_stable" || state === "camera_capturing"
   );
 }

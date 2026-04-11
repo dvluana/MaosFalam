@@ -14,9 +14,6 @@ interface SceneVignetteProps {
 
 export default function SceneVignette({ className }: SceneVignetteProps) {
   return (
-    <div
-      aria-hidden="true"
-      className={`${styles.vignette}${className ? ` ${className}` : ""}`}
-    />
+    <div aria-hidden="true" className={`${styles.vignette}${className ? ` ${className}` : ""}`} />
   );
 }

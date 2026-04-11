@@ -1,8 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+
 import Button from "@/components/ui/Button";
 
 export default function Hero() {
@@ -77,8 +78,7 @@ export default function Hero() {
           <div
             className="branded-radius corner-ornaments px-4 py-[7px]"
             style={{
-              background:
-                "linear-gradient(135deg, rgba(201,162,74,0.12), rgba(121,39,55,0.08))",
+              background: "linear-gradient(135deg, rgba(201,162,74,0.12), rgba(121,39,55,0.08))",
               border: "1px solid rgba(201,162,74,0.28)",
               boxShadow: "0 0 24px rgba(201,162,74,0.12)",
             }}
@@ -171,8 +171,8 @@ export default function Hero() {
             </h1>
 
             <p className="mx-auto mt-5 max-w-[348px] px-2 font-raleway text-[15px] leading-[1.7] text-bone/92">
-              Na sua mão eu vejo se ele volta, quem te enrola, onde seu
-              dinheiro trava e a mentira que ainda vai cair no seu colo.
+              Na sua mão eu vejo se ele volta, quem te enrola, onde seu dinheiro trava e a mentira
+              que ainda vai cair no seu colo.
             </p>
           </div>
         </motion.div>
@@ -219,11 +219,7 @@ export default function Hero() {
             <div className="flex flex-col gap-[2px]">
               <div className="flex items-center gap-[2px]">
                 {Array.from({ length: 5 }).map((_, index) => (
-                  <svg
-                    key={index}
-                    viewBox="0 0 24 24"
-                    className="h-[9px] w-[9px] fill-gold"
-                  >
+                  <svg key={index} viewBox="0 0 24 24" className="h-[9px] w-[9px] fill-gold">
                     <path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7.3L12 17.8 5.7 21.5l1.7-7.3L2 9.5l7.1-.6z" />
                   </svg>
                 ))}

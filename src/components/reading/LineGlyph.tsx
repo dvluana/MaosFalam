@@ -1,5 +1,6 @@
-import type { LineName } from "@/types/reading";
 import GlyphShell, { type GlyphTheme } from "./GlyphShell";
+
+type LineName = "heart" | "head" | "life" | "fate";
 
 interface Props {
   line: LineName;
@@ -127,12 +128,7 @@ function pickSymbol(line: LineName, stroke: string) {
           />
         </path>
         <circle cx="40" cy="40" r="1.4" fill={stroke}>
-          <animate
-            attributeName="opacity"
-            values="0.5;1;0.5"
-            dur="2.4s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite" />
         </circle>
       </g>
     );
@@ -142,12 +138,7 @@ function pickSymbol(line: LineName, stroke: string) {
     return (
       <g>
         <g>
-          <path
-            d="M40 56 L40 32"
-            stroke={stroke}
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          />
+          <path d="M40 56 L40 32" stroke={stroke} strokeWidth="1.8" strokeLinecap="round" />
           <path
             d="M40 40 L32 32 M40 36 L48 28 M40 44 L34 40"
             stroke={stroke}
@@ -175,12 +166,7 @@ function pickSymbol(line: LineName, stroke: string) {
   return (
     <g>
       <g>
-        <path
-          d="M40 56 L40 32"
-          stroke={stroke}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
+        <path d="M40 56 L40 32" stroke={stroke} strokeWidth="1.8" strokeLinecap="round" />
         <path
           d="M40 24 L46 32 L40 30 L34 32 Z"
           stroke={stroke}

@@ -15,18 +15,11 @@ const ACCENT_COLOR: Record<NonNullable<Props["accent"]>, string> = {
  * Divisor de seção: linha esquerda · número+label · linha direita.
  * Ex: ────── 01 · Como você ama ──────
  */
-export default function SectionDivider({
-  number,
-  label,
-  accent = "gold",
-}: Props) {
+export default function SectionDivider({ number, label, accent = "gold" }: Props) {
   const color = ACCENT_COLOR[accent];
   return (
     <div className="flex items-center justify-center gap-4 py-8">
-      <span
-        aria-hidden
-        className="block w-1 h-1 rotate-45 bg-[rgba(201,162,74,0.6)]"
-      />
+      <span aria-hidden className="block w-1 h-1 rotate-45 bg-[rgba(201,162,74,0.6)]" />
       <span className="flex-1 max-w-[120px] h-px bg-gradient-to-r from-transparent via-[rgba(201,162,74,0.5)] to-[rgba(201,162,74,0.5)]" />
       <div className="flex items-center gap-2 whitespace-nowrap">
         <span
@@ -44,10 +37,7 @@ export default function SectionDivider({
         </span>
       </div>
       <span className="flex-1 max-w-[120px] h-px bg-gradient-to-l from-transparent via-[rgba(201,162,74,0.5)] to-[rgba(201,162,74,0.5)]" />
-      <span
-        aria-hidden
-        className="block w-1 h-1 rotate-45 bg-[rgba(201,162,74,0.6)]"
-      />
+      <span aria-hidden className="block w-1 h-1 rotate-45 bg-[rgba(201,162,74,0.6)]" />
     </div>
   );
 }

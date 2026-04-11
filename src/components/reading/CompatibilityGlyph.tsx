@@ -39,14 +39,10 @@ export default function CompatibilityGlyph({ pair, size = 76 }: Props) {
       </defs>
 
       {/* Left element */}
-      <g transform="translate(28 40)">
-        {renderSymbol(a, 16)}
-      </g>
+      <g transform="translate(28 40)">{renderSymbol(a, 16)}</g>
 
       {/* Right element */}
-      <g transform="translate(92 40)">
-        {renderSymbol(b, 16)}
-      </g>
+      <g transform="translate(92 40)">{renderSymbol(b, 16)}</g>
 
       {/* Reação central — varia por tipo de encontro */}
       <g transform="translate(60 40)">{renderReaction(kind)}</g>
@@ -141,18 +137,8 @@ function renderReaction(kind: string) {
   // Halo pulsante comum
   const halo = (
     <circle cx="0" cy="0" r="10" fill="url(#cp-core)">
-      <animate
-        attributeName="opacity"
-        values="0.4;0.9;0.4"
-        dur="2.4s"
-        repeatCount="indefinite"
-      />
-      <animate
-        attributeName="r"
-        values="9;13;9"
-        dur="2.4s"
-        repeatCount="indefinite"
-      />
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.4s" repeatCount="indefinite" />
+      <animate attributeName="r" values="9;13;9" dur="2.4s" repeatCount="indefinite" />
     </circle>
   );
 
@@ -269,12 +255,7 @@ function renderReaction(kind: string) {
           fill="rgba(239,130,40,0.4)"
           strokeLinejoin="round"
         >
-          <animate
-            attributeName="opacity"
-            values="0.5;1;0.5"
-            dur="1.6s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite" />
         </path>
         <path
           d="M 0 -8 L 7 5 L -7 5 Z"
@@ -351,12 +332,7 @@ function renderReaction(kind: string) {
           strokeLinecap="round"
         />
         <circle cx="0" cy="-4" r="1.5" fill="url(#cp-grad)">
-          <animate
-            attributeName="r"
-            values="1;2.5;1"
-            dur="2.2s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="r" values="1;2.5;1" dur="2.2s" repeatCount="indefinite" />
         </circle>
       </g>
     );
@@ -400,12 +376,7 @@ function renderReaction(kind: string) {
     <g>
       {halo}
       <circle cx="0" cy="0" r="2" fill="url(#cp-grad)">
-        <animate
-          attributeName="r"
-          values="1.5;3;1.5"
-          dur="2.2s"
-          repeatCount="indefinite"
-        />
+        <animate attributeName="r" values="1.5;3;1.5" dur="2.2s" repeatCount="indefinite" />
       </circle>
     </g>
   );

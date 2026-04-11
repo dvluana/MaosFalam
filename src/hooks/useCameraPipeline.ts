@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import type { CamState } from "@/types/camera";
 
 interface Params {
@@ -13,12 +14,7 @@ interface Params {
  * a transição entre estados é baseada em timers. TODO: substituir por
  * MediaPipe real + detecção de landmarks quando integrar com o backend.
  */
-export default function useCameraPipeline({
-  state,
-  forced,
-  setState,
-  onCaptured,
-}: Params): void {
+export default function useCameraPipeline({ state, forced, setState, onCaptured }: Params): void {
   useEffect(() => {
     if (forced) return;
     if (state !== "loading_mediapipe") return;

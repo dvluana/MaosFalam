@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import Curtains from "@/components/landing/Curtains";
 
 /**
@@ -15,9 +16,7 @@ export default function CurtainsPreview() {
       <Curtains key={key} />
 
       <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
-        <p className="font-cinzel text-3xl tracking-[0.2em] text-gold">
-          REVELADA
-        </p>
+        <p className="font-cinzel text-3xl tracking-[0.2em] text-gold">REVELADA</p>
         <p className="font-cormorant italic text-xl text-bone-dim max-w-md">
           A cortina já abriu. O que você está vendo é o que fica depois.
         </p>

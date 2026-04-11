@@ -49,12 +49,7 @@ function pickSymbol(key: string) {
           strokeLinejoin="round"
           fill="none"
         >
-          <animate
-            attributeName="opacity"
-            values="0.8;1;0.8"
-            dur="4s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="opacity" values="0.8;1;0.8" dur="4s" repeatCount="indefinite" />
         </path>
       </g>
     );
@@ -75,28 +70,12 @@ function pickSymbol(key: string) {
     );
   }
 
-  if (
-    key.includes("apolo") ||
-    key.includes("apollo") ||
-    key.includes("sol")
-  ) {
+  if (key.includes("apolo") || key.includes("apollo") || key.includes("sol")) {
     return (
       <g>
-        <circle
-          cx="40"
-          cy="40"
-          r="8"
-          stroke={GRAD}
-          strokeWidth="1.8"
-          fill="none"
-        />
+        <circle cx="40" cy="40" r="8" stroke={GRAD} strokeWidth="1.8" fill="none" />
         <circle cx="40" cy="40" r="1.8" fill={GRAD}>
-          <animate
-            attributeName="r"
-            values="1.5;2.4;1.5"
-            dur="2.8s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="r" values="1.5;2.4;1.5" dur="2.8s" repeatCount="indefinite" />
         </circle>
       </g>
     );
@@ -112,14 +91,7 @@ function pickSymbol(key: string) {
           strokeLinecap="round"
           fill="none"
         />
-        <circle
-          cx="40"
-          cy="34"
-          r="6"
-          stroke={GRAD}
-          strokeWidth="1.8"
-          fill="none"
-        />
+        <circle cx="40" cy="34" r="6" stroke={GRAD} strokeWidth="1.8" fill="none" />
         <path
           d="M40 40 L40 54 M34 48 L46 48"
           stroke={GRAD}
@@ -134,14 +106,7 @@ function pickSymbol(key: string) {
   if (key.includes("vênus") || key.includes("venus")) {
     return (
       <g>
-        <circle
-          cx="40"
-          cy="34"
-          r="8"
-          stroke={GRAD}
-          strokeWidth="1.8"
-          fill="none"
-        />
+        <circle cx="40" cy="34" r="8" stroke={GRAD} strokeWidth="1.8" fill="none" />
         <path
           d="M40 42 L40 56 M34 50 L46 50"
           stroke={GRAD}
@@ -155,17 +120,8 @@ function pickSymbol(key: string) {
 
   if (key.includes("lua") || key.includes("luna")) {
     return (
-      <path
-        d="M46 26 A18 18 0 1 0 46 54 A13 14 0 1 1 46 26 Z"
-        fill={GRAD}
-        opacity="0.9"
-      >
-        <animate
-          attributeName="opacity"
-          values="0.7;1;0.7"
-          dur="4s"
-          repeatCount="indefinite"
-        />
+      <path d="M46 26 A18 18 0 1 0 46 54 A13 14 0 1 1 46 26 Z" fill={GRAD} opacity="0.9">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite" />
       </path>
     );
   }
@@ -173,14 +129,7 @@ function pickSymbol(key: string) {
   if (key.includes("marte") || key.includes("mars")) {
     return (
       <g>
-        <circle
-          cx="38"
-          cy="42"
-          r="8"
-          stroke={GRAD}
-          strokeWidth="1.8"
-          fill="none"
-        />
+        <circle cx="38" cy="42" r="8" stroke={GRAD} strokeWidth="1.8" fill="none" />
         <path
           d="M44 36 L54 26 M48 26 L54 26 L54 32"
           stroke={GRAD}
@@ -195,12 +144,7 @@ function pickSymbol(key: string) {
 
   return (
     <g>
-      <path
-        d="M40 28 L52 40 L40 52 L28 40 Z"
-        stroke={GRAD}
-        strokeWidth="1.6"
-        fill="none"
-      >
+      <path d="M40 28 L52 40 L40 52 L28 40 Z" stroke={GRAD} strokeWidth="1.6" fill="none">
         <animateTransform
           attributeName="transform"
           type="rotate"

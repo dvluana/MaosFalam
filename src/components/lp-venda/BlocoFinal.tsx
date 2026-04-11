@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
+import Link from "next/link";
+
 import Button from "@/components/ui/Button";
 
 export default function BlocoFinal() {
@@ -49,8 +50,7 @@ export default function BlocoFinal() {
         transition={{ duration: 1 }}
         className="relative overflow-hidden branded-radius corner-ornaments"
         style={{
-          background:
-            "linear-gradient(160deg, rgba(23,18,34,0.9) 0%, rgba(17,12,26,0.98) 100%)",
+          background: "linear-gradient(160deg, rgba(23,18,34,0.9) 0%, rgba(17,12,26,0.98) 100%)",
         }}
       >
         <div className="absolute left-0 right-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-gold/80 to-transparent" />
@@ -68,8 +68,8 @@ export default function BlocoFinal() {
           </p>
 
           <p className="mx-auto mt-6 max-w-[340px] font-raleway text-[15px] leading-[1.68] text-bone/88">
-            Veio puxando desejo, ciúme, medo e confusão. Se você abrir a mão
-            agora, você vê o resto antes que estoure na sua cara.
+            Veio puxando desejo, ciúme, medo e confusão. Se você abrir a mão agora, você vê o resto
+            antes que estoure na sua cara.
           </p>
 
           <motion.div

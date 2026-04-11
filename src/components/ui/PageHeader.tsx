@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+
 import Menu from "@/components/landing/Menu";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -115,8 +116,7 @@ export default function PageHeader() {
       role="banner"
       className="fixed top-0 left-0 right-0 z-50"
       style={{
-        background:
-          "linear-gradient(180deg, rgba(0,0,0,0.82), rgba(0,0,0,0.35) 70%, transparent)",
+        background: "linear-gradient(180deg, rgba(0,0,0,0.82), rgba(0,0,0,0.35) 70%, transparent)",
       }}
     >
       <div className="max-w-xl mx-auto flex items-center justify-between px-5 py-4">

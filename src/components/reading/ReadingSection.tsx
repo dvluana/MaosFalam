@@ -1,88 +1,74 @@
 "use client";
 
-import type { ReadingSection as Section, LineName } from "@/types/reading";
+import type { Accent, ReportSection } from "@/types/report";
 
 import LineGlyph from "./LineGlyph";
-import TechnicalStrip from "./TechnicalStrip";
 
 interface Props {
-  section: Section;
+  section: ReportSection;
 }
 
-const lineMeta: Record<
-  LineName,
+const accentStyles: Record<
+  Accent,
   {
-    num: string;
-    name: string;
     accentGlow: string;
     quoteShadow: string;
     borderColor: string;
     gradientBg: string;
+    measureBg: string;
+    measureBorder: string;
+    measureText: string;
   }
 > = {
-  heart: {
-    num: "Linha 01",
-    name: "Do Coração",
+  rose: {
     accentGlow: "rgba(196,100,122,0.09)",
     quoteShadow: "0 0 20px rgba(196,100,122,0.35), 0 0 40px rgba(196,100,122,0.15)",
     borderColor: "rgba(196,100,122,0.5)",
     gradientBg: "linear-gradient(90deg, rgba(196,100,122,0.08), transparent 80%)",
+    measureBg: "linear-gradient(180deg, rgba(196,100,122,0.035), rgba(196,100,122,0.015))",
+    measureBorder: "rgba(196,100,122,0.16)",
+    measureText: "text-rose",
   },
-  head: {
-    num: "Linha 02",
-    name: "Da Cabeça",
+  violet: {
     accentGlow: "rgba(139,123,191,0.09)",
     quoteShadow: "0 0 20px rgba(139,123,191,0.4), 0 0 40px rgba(139,123,191,0.18)",
     borderColor: "rgba(139,123,191,0.55)",
     gradientBg: "linear-gradient(90deg, rgba(139,123,191,0.08), transparent 80%)",
+    measureBg: "linear-gradient(180deg, rgba(139,123,191,0.035), rgba(139,123,191,0.015))",
+    measureBorder: "rgba(139,123,191,0.16)",
+    measureText: "text-violet",
   },
-  life: {
-    num: "Linha 03",
-    name: "Da Vida",
+  gold: {
     accentGlow: "rgba(201,162,74,0.08)",
     quoteShadow: "0 0 20px rgba(201,162,74,0.35), 0 0 40px rgba(201,162,74,0.15)",
     borderColor: "rgba(201,162,74,0.5)",
     gradientBg: "linear-gradient(90deg, rgba(201,162,74,0.08), transparent 80%)",
+    measureBg: "linear-gradient(180deg, rgba(201,162,74,0.035), rgba(201,162,74,0.015))",
+    measureBorder: "rgba(201,162,74,0.16)",
+    measureText: "text-gold",
   },
-  fate: {
-    num: "Linha 04",
-    name: "Do Destino",
+  bone: {
     accentGlow: "rgba(232,223,208,0.06)",
     quoteShadow: "0 0 20px rgba(232,223,208,0.3), 0 0 40px rgba(232,223,208,0.12)",
     borderColor: "rgba(232,223,208,0.45)",
     gradientBg: "linear-gradient(90deg, rgba(232,223,208,0.07), transparent 80%)",
+    measureBg: "linear-gradient(180deg, rgba(232,223,208,0.035), rgba(232,223,208,0.015))",
+    measureBorder: "rgba(232,223,208,0.16)",
+    measureText: "text-bone-dim",
   },
 };
 
-/**
- * Intercala os cigana_quotes no meio dos parágrafos.
- * Regra: quote i aparece após parágrafo `i+1` (começa a pontuar depois
- * do body principal).
- */
-function buildFlow(body: string, extras: string[], quotes: string[]) {
-  const blocks: Array<{ kind: "p"; text: string } | { kind: "q"; text: string }> = [];
-  blocks.push({ kind: "p", text: body });
-  const merged = [...extras];
-  for (let i = 0; i < merged.length; i += 1) {
-    blocks.push({ kind: "p", text: merged[i]! });
-    if (quotes[i]) {
-      blocks.push({ kind: "q", text: quotes[i]! });
-    }
-  }
-  // quotes sobrando (mais quotes que extras) vão pro fim
-  for (let i = merged.length; i < quotes.length; i += 1) {
-    blocks.push({ kind: "q", text: quotes[i]! });
-  }
-  return blocks;
+// Map section keys to LineGlyph line names. Sections whose key is not one of the
+// 4 main lines simply won't render a glyph.
+type LineName = "heart" | "head" | "life" | "fate";
+const LINE_KEYS = new Set<string>(["heart", "head", "life", "fate"]);
+function isLineName(key: string): key is LineName {
+  return LINE_KEYS.has(key);
 }
 
 export default function ReadingSection({ section }: Props) {
-  const meta = lineMeta[section.line];
-  const extras = section.body_extras ?? [];
-  const quotes = section.cigana_quotes ?? [];
-  const technical = section.technical ?? [];
-  const tagline = section.tagline;
-  const flow = buildFlow(section.body, extras, quotes);
+  const style = accentStyles[section.accent];
+  const hasMeasurement = Object.keys(section.measurement).length > 0;
 
   return (
     <article
@@ -96,7 +82,7 @@ export default function ReadingSection({ section }: Props) {
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse 80% 60% at 70% 20%, ${meta.accentGlow} 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse 80% 60% at 70% 20%, ${style.accentGlow} 0%, transparent 70%)`,
         }}
       />
 
@@ -120,70 +106,130 @@ export default function ReadingSection({ section }: Props) {
       <div className="relative flex flex-col">
         {/* Header: glyph + labels */}
         <div className="flex items-start gap-5 mb-6">
-          <div className="shrink-0 -mt-1">
-            <LineGlyph line={section.line} size={64} />
-          </div>
+          {isLineName(section.key) && (
+            <div className="shrink-0 -mt-1">
+              <LineGlyph line={section.key} size={64} />
+            </div>
+          )}
           <div className="flex flex-col min-w-0 pt-1">
             <span className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold-dim">
-              {meta.num} <span className="opacity-40 mx-1">·</span> {section.symbol}{" "}
-              {section.planet}
+              Cap. {String(section.chapter).padStart(2, "0")}{" "}
+              <span className="opacity-40 mx-1">·</span> {section.label}
             </span>
             <h3 className="font-cinzel text-[18px] sm:text-[19px] font-medium tracking-[0.05em] text-gold mt-2">
-              {meta.name}
+              {section.title}
             </h3>
-            {tagline && (
-              <span className="font-cormorant italic text-sm text-bone-dim mt-1">{tagline}</span>
+            {section.icon && (
+              <span className="font-cormorant italic text-sm text-bone-dim mt-1">
+                {section.icon}
+              </span>
             )}
           </div>
         </div>
 
-        {/* Intro */}
+        {/* Opening (Cormorant italic) */}
         <p className="font-cormorant italic text-[19px] sm:text-[21px] text-bone leading-[1.4] mb-6">
-          {section.intro}
+          {section.opening}
         </p>
 
-        {/* Fluxo: body + extras + cigana quotes intercaladas */}
+        {/* Body: past + present */}
         <div className="flex flex-col gap-5 mb-7">
-          {flow.map((block, i) =>
-            block.kind === "p" ? (
-              <p
-                key={`p-${i}`}
-                className="font-raleway text-[13px] sm:text-[14px] font-light leading-[1.88] text-bone-dim"
-              >
-                {block.text}
-              </p>
-            ) : (
-              <div
-                key={`q-${i}`}
-                className="relative my-1 py-5 px-5 sm:px-7"
-                style={{
-                  borderLeft: `2px solid ${meta.borderColor}`,
-                  background: meta.gradientBg,
-                }}
-              >
-                <p
-                  className="font-cormorant italic text-[18px] sm:text-[21px] leading-[1.45] text-bone"
-                  style={{ textShadow: meta.quoteShadow }}
-                >
-                  {block.text}
-                </p>
-              </div>
-            ),
-          )}
-        </div>
-
-        {/* Impact final */}
-        <div className="pt-6 mb-4 border-t border-gold/12">
-          <p
-            className="font-cormorant italic text-[21px] sm:text-[24px] leading-[1.35] text-bone"
-            style={{ textShadow: meta.quoteShadow }}
-          >
-            {section.impact_phrase}
+          <p className="font-raleway text-[13px] sm:text-[14px] font-light leading-[1.88] text-bone-dim">
+            {section.body_past}
           </p>
+          <p className="font-raleway text-[13px] sm:text-[14px] font-light leading-[1.88] text-bone-dim">
+            {section.body_present}
+          </p>
+
+          {/* Modifiers as blockquote-style items */}
+          {section.modifiers.map((mod, i) => (
+            <div
+              key={i}
+              className="relative my-1 py-5 px-5 sm:px-7"
+              style={{
+                borderLeft: `2px solid ${style.borderColor}`,
+                background: style.gradientBg,
+              }}
+            >
+              <p
+                className="font-cormorant italic text-[18px] sm:text-[21px] leading-[1.45] text-bone"
+                style={{ textShadow: style.quoteShadow }}
+              >
+                {mod}
+              </p>
+            </div>
+          ))}
         </div>
 
-        {/* Strip técnica */}
-        {technical.length > 0 && <TechnicalStrip items={technical} />}
+        {/* Measurement strip */}
+        {hasMeasurement && (
+          <div
+            className="relative mt-2"
+            style={{
+              background: style.measureBg,
+              border: `1px solid ${style.measureBorder}`,
+              padding: "22px 20px 20px",
+            }}
+          >
+            {/* Ornamental corners */}
+            <span
+              aria-hidden
+              className="absolute w-[6px] h-[6px] top-[3px] left-[3px] border-t border-l"
+              style={{ borderColor: style.measureBorder }}
+            />
+            <span
+              aria-hidden
+              className="absolute w-[6px] h-[6px] top-[3px] right-[3px] border-t border-r"
+              style={{ borderColor: style.measureBorder }}
+            />
+            <span
+              aria-hidden
+              className="absolute w-[6px] h-[6px] bottom-[3px] left-[3px] border-b border-l"
+              style={{ borderColor: style.measureBorder }}
+            />
+            <span
+              aria-hidden
+              className="absolute w-[6px] h-[6px] bottom-[3px] right-[3px] border-b border-r"
+              style={{ borderColor: style.measureBorder }}
+            />
+
+            <div className="flex items-center gap-3 mb-6">
+              <span
+                aria-hidden
+                className="h-px flex-1"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${style.borderColor})`,
+                }}
+              />
+              <span
+                className={`font-jetbrains text-[10px] tracking-[2px] uppercase ${style.measureText} whitespace-nowrap`}
+                style={{ fontWeight: 500 }}
+              >
+                Medição da palma
+              </span>
+              <span
+                aria-hidden
+                className="h-px flex-1"
+                style={{
+                  background: `linear-gradient(270deg, transparent, ${style.borderColor})`,
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+              {Object.entries(section.measurement).map(([key, value]) => (
+                <div key={key} className="flex flex-col gap-1">
+                  <span
+                    className={`font-jetbrains text-[9.5px] tracking-[1.5px] uppercase ${style.measureText}`}
+                    style={{ fontWeight: 500 }}
+                  >
+                    {key}
+                  </span>
+                  <p className="font-raleway text-[13.5px] text-bone leading-[1.5]">{value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </article>
   );

@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import HomeLanding from "@/components/landing/HomeLanding";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "MãosFalam",

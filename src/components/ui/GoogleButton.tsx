@@ -30,8 +30,7 @@ export default function GoogleButton({
       style={{
         background: "rgba(232,223,208,0.05)",
         border: "1px solid rgba(201,162,74,0.45)",
-        boxShadow:
-          "0 10px 24px -8px rgba(0,0,0,0.8), 0 0 20px -6px rgba(201,162,74,0.18)",
+        boxShadow: "0 10px 24px -8px rgba(0,0,0,0.8), 0 0 20px -6px rgba(201,162,74,0.18)",
       }}
     >
       {/* Corner accents TL / BR */}
@@ -47,13 +46,7 @@ export default function GoogleButton({
       />
 
       {/* Ícone Google oficial 4-cor */}
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        aria-hidden
-        className="shrink-0"
-      >
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden className="shrink-0">
         <path
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
           fill="#4285F4"

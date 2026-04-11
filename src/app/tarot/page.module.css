@@ -7,16 +7,8 @@
 .page {
   min-height: 100vh;
   background:
-    radial-gradient(
-      ellipse 80% 50% at 50% 0%,
-      rgba(139, 90, 56, 0.1) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 60% 60% at 50% 100%,
-      rgba(139, 123, 191, 0.08) 0%,
-      transparent 70%
-    ),
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139, 90, 56, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 50% 100%, rgba(139, 123, 191, 0.08) 0%, transparent 70%),
     radial-gradient(ellipse at center, #110c1a 0%, #08050e 70%);
   position: relative;
   overflow-x: hidden;
@@ -42,11 +34,7 @@
   transform: translateX(-50%);
   width: 720px;
   height: 720px;
-  background: radial-gradient(
-    circle at center,
-    rgba(201, 162, 74, 0.05) 0%,
-    transparent 45%
-  );
+  background: radial-gradient(circle at center, rgba(201, 162, 74, 0.05) 0%, transparent 45%);
   pointer-events: none;
   z-index: 0;
 }
@@ -99,12 +87,7 @@
 .ornLineLong,
 .ornLineShort {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(175, 150, 235, 0.55),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(175, 150, 235, 0.55), transparent);
   flex-shrink: 0;
 }
 .ornLineLong {
@@ -214,12 +197,7 @@
   z-index: 2;
   width: 15px;
   height: 15px;
-  background: linear-gradient(
-    135deg,
-    #b89de0 0%,
-    #8b6bc5 40%,
-    #6248a0 100%
-  );
+  background: linear-gradient(135deg, #b89de0 0%, #8b6bc5 40%, #6248a0 100%);
   transform: rotate(45deg);
   animation: ornDiamondSpin 5s linear infinite;
   box-shadow:
@@ -234,11 +212,7 @@
   content: "";
   position: absolute;
   inset: 3px;
-  background: linear-gradient(
-    135deg,
-    rgba(210, 190, 255, 0.6),
-    rgba(160, 130, 220, 0.4)
-  );
+  background: linear-gradient(135deg, rgba(210, 190, 255, 0.6), rgba(160, 130, 220, 0.4));
 }
 
 /* Ponto de luz suave no topo */
@@ -600,11 +574,7 @@
   gap: 6px;
   padding: 12px 6px 10px;
   background:
-    radial-gradient(
-      ellipse at 50% 0%,
-      rgba(201, 162, 74, 0.06) 0%,
-      transparent 70%
-    ),
+    radial-gradient(ellipse at 50% 0%, rgba(201, 162, 74, 0.06) 0%, transparent 70%),
     rgba(8, 5, 14, 0.55);
   border: 1px solid rgba(201, 162, 74, 0.2);
   border-radius: 0 5px 0 5px;
@@ -884,7 +854,10 @@
   width: 9px;
   height: 9px;
   border-style: solid;
-  transition: border-color 0.4s ease, width 0.3s ease, height 0.3s ease;
+  transition:
+    border-color 0.4s ease,
+    width 0.3s ease,
+    height 0.3s ease;
 }
 .revealBtn::before {
   top: -1px;
@@ -938,7 +911,8 @@
 }
 
 @keyframes revealBtnPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow:
       0 0 0 1px rgba(201, 162, 74, 0.22),
       0 0 24px rgba(123, 107, 165, 0.18),
@@ -1023,12 +997,7 @@
   content: "";
   flex: 1;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(201, 162, 74, 0.28),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 74, 0.28), transparent);
 }
 .separatorDot {
   width: 5px;
@@ -1159,12 +1128,7 @@
   top: 50%;
   width: 9px;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--accent-soft),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, var(--accent-soft), transparent);
 }
 .colLabel::before {
   left: -3px;
@@ -1284,11 +1248,7 @@
   max-width: 260px;
   position: relative;
   padding: 26px 20px 22px;
-  background: linear-gradient(
-    160deg,
-    rgba(28, 23, 16, 0.85),
-    rgba(18, 14, 10, 0.9)
-  );
+  background: linear-gradient(160deg, rgba(28, 23, 16, 0.85), rgba(18, 14, 10, 0.9));
   border: 1px solid rgba(201, 162, 74, 0.25);
   border-radius: 0 6px 0 6px;
   text-align: center;
@@ -1383,12 +1343,7 @@
   width: 40px;
   height: 1px;
   margin: 10px auto 14px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--accent),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
   opacity: 0.6;
 }
 
@@ -1607,12 +1562,7 @@
 .closingSealLine {
   flex: 1;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(201, 162, 74, 0.4),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 74, 0.4), transparent);
 }
 
 .closingSealMark {
@@ -1664,11 +1614,7 @@
   position: relative;
   padding: 40px 28px 32px;
   background:
-    radial-gradient(
-      ellipse 80% 60% at 50% 0%,
-      rgba(139, 123, 191, 0.12) 0%,
-      transparent 70%
-    ),
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 123, 191, 0.12) 0%, transparent 70%),
     linear-gradient(160deg, #1a1225 0%, #110c1a 50%, #08050e 100%);
   border: 1px solid rgba(201, 162, 74, 0.35);
   border-radius: 0 10px 0 10px;
@@ -1748,12 +1694,7 @@
   content: "";
   width: 24px;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(201, 162, 74, 0.6),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 74, 0.6), transparent);
 }
 
 .inviteTitle {
@@ -1808,7 +1749,9 @@
   box-shadow:
     0 0 0 1px rgba(201, 162, 74, 0.3),
     0 0 32px rgba(123, 107, 165, 0.2);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
   animation: inviteCtaBreath 6s ease-in-out infinite;
 }
 

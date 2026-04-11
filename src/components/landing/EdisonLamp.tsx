@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import styles from "./EdisonLamp.module.css";
 
 /**
@@ -99,15 +100,9 @@ export default function EdisonLamp({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const wrapCls = [styles.wrap, fixtureOn ? styles.on : ""]
-    .filter(Boolean)
-    .join(" ");
-  const haloCls = [styles.halo, haloOn ? styles.on : ""]
-    .filter(Boolean)
-    .join(" ");
-  const coneCls = [styles.cone, coneOn ? styles.on : ""]
-    .filter(Boolean)
-    .join(" ");
+  const wrapCls = [styles.wrap, fixtureOn ? styles.on : ""].filter(Boolean).join(" ");
+  const haloCls = [styles.halo, haloOn ? styles.on : ""].filter(Boolean).join(" ");
+  const coneCls = [styles.cone, coneOn ? styles.on : ""].filter(Boolean).join(" ");
   const bulbCls = [
     styles.bulb,
     bulbPhase === "igniting" ? styles.ignite : "",

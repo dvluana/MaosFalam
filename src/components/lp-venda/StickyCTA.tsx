@@ -1,8 +1,8 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 /**
  * CTA fixo no rodapé.
@@ -24,14 +24,14 @@ export default function StickyCTA() {
       ([entry]) => {
         setPastHero(!entry.isIntersecting);
       },
-      { threshold: 0.18 }
+      { threshold: 0.18 },
     );
 
     const finalObserver = new IntersectionObserver(
       ([entry]) => {
         setNearFinal(entry.isIntersecting);
       },
-      { rootMargin: "0px 0px -35% 0px", threshold: 0.05 }
+      { rootMargin: "0px 0px -35% 0px", threshold: 0.05 },
     );
 
     heroObserver.observe(hero);
@@ -71,8 +71,7 @@ export default function StickyCTA() {
               className="relative block w-full branded-radius corner-ornaments text-bone overflow-hidden"
               aria-label="Começar leitura de mão"
               style={{
-                background:
-                  "linear-gradient(165deg, #4a1f2d 0%, #6b2b3c 45%, #3a1722 100%)",
+                background: "linear-gradient(165deg, #4a1f2d 0%, #6b2b3c 45%, #3a1722 100%)",
                 boxShadow:
                   "inset 0 1px 0 rgba(232,223,208,0.1), inset 0 -1px 0 rgba(0,0,0,0.4), 0 0 0 1px rgba(201,162,74,0.35), 0 2px 0 rgba(0,0,0,0.4), 0 20px 40px -10px rgba(121,39,55,0.5), 0 0 60px rgba(121,39,55,0.18)",
               }}
@@ -86,10 +85,7 @@ export default function StickyCTA() {
                     Começa grátis
                   </span>
                 </div>
-                <span
-                  aria-hidden
-                  className="font-cinzel text-[18px] text-gold leading-none"
-                >
+                <span aria-hidden className="font-cinzel text-[18px] text-gold leading-none">
                   →
                 </span>
               </div>

@@ -1,12 +1,14 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+
 import TarotCard from "@/components/tarot/TarotCard";
 import TarotShareCard from "@/components/tarot/TarotShareCard";
 import cardsData from "@/mocks/tarot-cards.json";
 import type { DrawnCard, SpreadPosition, TarotCardData } from "@/types/tarot";
+
 import styles from "./page.module.css";
 
 type Stage = "picking" | "loading" | "revealing";
@@ -211,12 +213,16 @@ export default function TarotPage() {
                 <div className={styles.stepNum}>01</div>
                 <div className={styles.stepLabel}>Você escolhe</div>
               </div>
-              <div className={styles.stepArrow} aria-hidden="true">→</div>
+              <div className={styles.stepArrow} aria-hidden="true">
+                →
+              </div>
               <div className={styles.step}>
                 <div className={styles.stepNum}>02</div>
                 <div className={styles.stepLabel}>Eu viro</div>
               </div>
-              <div className={styles.stepArrow} aria-hidden="true">→</div>
+              <div className={styles.stepArrow} aria-hidden="true">
+                →
+              </div>
               <div className={styles.step}>
                 <div className={styles.stepNum}>03</div>
                 <div className={styles.stepLabel}>Você lê</div>
@@ -281,16 +287,24 @@ export default function TarotPage() {
                       }}
                       role="button"
                       tabIndex={isSelected || picks.length >= 3 ? -1 : 0}
-                      aria-label={isSelected ? "Carta selecionada" : `Escolher carta ${i + 1} de 22`}
+                      aria-label={
+                        isSelected ? "Carta selecionada" : `Escolher carta ${i + 1} de 22`
+                      }
                       aria-disabled={isSelected}
                       onKeyDown={(e) => {
-                        if ((e.key === "Enter" || e.key === " ") && !isSelected && picks.length < 3) {
+                        if (
+                          (e.key === "Enter" || e.key === " ") &&
+                          !isSelected &&
+                          picks.length < 3
+                        ) {
                           e.preventDefault();
                           handlePick(card);
                         }
                       }}
                     >
-                      <div className={`${styles.deckCardInner} ${isSelected ? styles.deckCardInnerSelected : ""}`}>
+                      <div
+                        className={`${styles.deckCardInner} ${isSelected ? styles.deckCardInnerSelected : ""}`}
+                      >
                         <TarotCard card={card} hideFront highlighted={isSelected} />
                         {isSelected && (
                           <span className={styles.pickBadge} aria-hidden>
@@ -319,7 +333,11 @@ export default function TarotPage() {
                     onClick={handleReveal}
                     disabled={!ready}
                     className={`${styles.revealBtn} ${ready ? styles.revealBtnReady : styles.revealBtnWaiting}`}
-                    aria-label={ready ? "Revelar as cartas" : `Selecione mais ${3 - picks.length} carta${3 - picks.length !== 1 ? "s" : ""}`}
+                    aria-label={
+                      ready
+                        ? "Revelar as cartas"
+                        : `Selecione mais ${3 - picks.length} carta${3 - picks.length !== 1 ? "s" : ""}`
+                    }
                   >
                     <span className={styles.revealBtnText}>Revelar</span>
                     {ready && (
@@ -336,7 +354,9 @@ export default function TarotPage() {
                   </button>
                   {!ready && (
                     <p className={styles.revealHint}>
-                      {3 - picks.length === 1 ? "falta 1 carta" : `faltam ${3 - picks.length} cartas`}
+                      {3 - picks.length === 1
+                        ? "falta 1 carta"
+                        : `faltam ${3 - picks.length} cartas`}
                     </p>
                   )}
                 </motion.div>
@@ -344,11 +364,7 @@ export default function TarotPage() {
             </AnimatePresence>
 
             {picks.length > 0 && (
-              <button
-                type="button"
-                onClick={handleReset}
-                className={styles.resetLink}
-              >
+              <button type="button" onClick={handleReset} className={styles.resetLink}>
                 Embaralhar de novo
               </button>
             )}
@@ -357,10 +373,7 @@ export default function TarotPage() {
 
         {/* ═══ COLUMNS — only during revealing ═══ */}
         {revealing && (
-          <section
-            ref={columnsRef}
-            className={`${styles.columns} ${styles.stacked}`}
-          >
+          <section ref={columnsRef} className={`${styles.columns} ${styles.stacked}`}>
             {POSITIONS.map((pos, posIdx) => {
               const config = POSITION_CONFIG[pos];
               const picked = pickByPosition[pos];
@@ -389,15 +402,9 @@ export default function TarotPage() {
                         damping: 20,
                         delay: posIdx * 0.42,
                       }}
-                      style={
-                        { "--flip-delay": `${flipDelay}s` } as React.CSSProperties
-                      }
+                      style={{ "--flip-delay": `${flipDelay}s` } as React.CSSProperties}
                     >
-                      <TarotCard
-                        card={picked.card}
-                        faceUp={true}
-                        highlighted={true}
-                      />
+                      <TarotCard card={picked.card} faceUp={true} highlighted={true} />
                     </motion.div>
                   )}
 
@@ -413,10 +420,8 @@ export default function TarotPage() {
                       }}
                     >
                       <div className={styles.cardTitle}>
-                        <span className={styles.cardTitleNumeral}>
-                          {picked.card.numeral}
-                        </span>{" "}
-                        · {picked.card.name}
+                        <span className={styles.cardTitleNumeral}>{picked.card.numeral}</span> ·{" "}
+                        {picked.card.name}
                       </div>
                       <div className={styles.keywords}>
                         {picked.card.keywords.map((k) => (
@@ -425,9 +430,7 @@ export default function TarotPage() {
                           </span>
                         ))}
                       </div>
-                      <p className={styles.interpretationBody}>
-                        {picked.card.reading[pos]}
-                      </p>
+                      <p className={styles.interpretationBody}>{picked.card.reading[pos]}</p>
                     </motion.div>
                   )}
                 </div>
@@ -452,13 +455,11 @@ export default function TarotPage() {
 
             <div className={styles.closingLines}>
               <p>
-                As cartas mostraram o que tá{" "}
-                <em className={styles.emAccent}>em volta</em> de você.
+                As cartas mostraram o que tá <em className={styles.emAccent}>em volta</em> de você.
               </p>
               <p>Nenhuma delas tocou a sua mão.</p>
               <p>
-                E é ali dentro que mora{" "}
-                <em className={styles.emBright}>quem você é</em>.
+                E é ali dentro que mora <em className={styles.emBright}>quem você é</em>.
               </p>
             </div>
 
@@ -472,31 +473,23 @@ export default function TarotPage() {
               <div className={styles.inviteEyebrow}>A outra leitura</div>
               <h2 className={styles.inviteTitle}>Me mostra sua mão</h2>
               <p className={styles.inviteBody}>
-                Suas linhas guardam o que nenhum baralho alcança. Uma foto, um
-                minuto, e eu te conto quem você é por dentro.
+                Suas linhas guardam o que nenhum baralho alcança. Uma foto, um minuto, e eu te conto
+                quem você é por dentro.
               </p>
               <Link href="/ler/nome" className={styles.inviteCta}>
                 <span>Começar leitura da mão</span>
-                <span aria-hidden className={styles.inviteArrow}>→</span>
+                <span aria-hidden className={styles.inviteArrow}>
+                  →
+                </span>
               </Link>
-              <div className={styles.inviteMeta}>
-                · leitura personalizada · cerca de 1 minuto ·
-              </div>
+              <div className={styles.inviteMeta}>· leitura personalizada · cerca de 1 minuto ·</div>
             </article>
 
             <div className={styles.secondaryActions}>
-              <button
-                type="button"
-                className={styles.btnGhost}
-                onClick={() => setShareOpen(true)}
-              >
+              <button type="button" className={styles.btnGhost} onClick={() => setShareOpen(true)}>
                 Compartilhar tiragem
               </button>
-              <button
-                type="button"
-                className={styles.btnGhost}
-                onClick={handleReset}
-              >
+              <button type="button" className={styles.btnGhost} onClick={handleReset}>
                 Tirar três cartas de novo
               </button>
             </div>
@@ -505,9 +498,7 @@ export default function TarotPage() {
       </div>
 
       {/* ═══ LOADING OVERLAY ═══ */}
-      <AnimatePresence>
-        {stage === "loading" && <LoadingOverlay />}
-      </AnimatePresence>
+      <AnimatePresence>{stage === "loading" && <LoadingOverlay />}</AnimatePresence>
 
       {/* Share modal */}
       {shareOpen && (
@@ -525,10 +516,7 @@ export default function TarotPage() {
           >
             ✕
           </button>
-          <div
-            className={styles.shareInner}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className={styles.shareInner} onClick={(e) => e.stopPropagation()}>
             <TarotShareCard spread={picks} />
             <p className={styles.sharePicked}>Captura de tela pra compartilhar</p>
           </div>

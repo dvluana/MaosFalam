@@ -60,9 +60,7 @@ export default function ComoFunciona() {
                 <p className="mb-2 font-cormorant text-[23px] leading-[1.22] text-bone italic">
                   {step.voice}
                 </p>
-                <p className="font-raleway text-[14px] leading-[1.65] text-bone/85">
-                  {step.body}
-                </p>
+                <p className="font-raleway text-[14px] leading-[1.65] text-bone/85">{step.body}</p>
               </div>
             </div>
           </motion.li>

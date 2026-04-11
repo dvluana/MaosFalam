@@ -13,10 +13,7 @@ interface UseMockResult<T> {
  * Em produção, chama o realFetcher se existir. Caso contrário, cai no mock.
  * `mockPath` é resolvido dinamicamente a partir de /src/mocks/.
  */
-export function useMock<T>(
-  mockPath: string,
-  realFetcher?: () => Promise<T>,
-): UseMockResult<T> {
+export function useMock<T>(mockPath: string, realFetcher?: () => Promise<T>): UseMockResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);

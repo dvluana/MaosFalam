@@ -14,11 +14,7 @@ interface Props {
  *  - Terra: poeira derivando + sedimentação
  *  - Ar: linhas de vento passando + redemoinho sutil
  */
-export default function ElementAtmosphere({
-  type,
-  width = 560,
-  height = 280,
-}: Props) {
+export default function ElementAtmosphere({ type, width = 560, height = 280 }: Props) {
   return (
     <svg
       width="100%"
@@ -63,13 +59,7 @@ function FireAtmosphere({ width, height }: { width: number; height: number }) {
 
       {/* Brasas subindo */}
       {embers.map((e, i) => (
-        <circle
-          key={i}
-          cx={width * e.x}
-          cy={height - 10}
-          r={e.size}
-          fill={e.hue}
-        >
+        <circle key={i} cx={width * e.x} cy={height - 10} r={e.size} fill={e.hue}>
           <animate
             attributeName="cy"
             values={`${height - 5};${height * 0.1}`}
@@ -213,13 +203,7 @@ function EarthAtmosphere({ width, height }: { width: number; height: number }) {
 
       {/* Poeira derivando */}
       {dust.map((d, i) => (
-        <circle
-          key={i}
-          cx={width * d.x}
-          cy={height * d.y}
-          r={d.size}
-          fill="rgba(201,155,106,0.85)"
-        >
+        <circle key={i} cx={width * d.x} cy={height * d.y} r={d.size} fill="rgba(201,155,106,0.85)">
           <animate
             attributeName="cx"
             values={`${width * d.x};${width * (d.x + 0.04)};${width * d.x}`}
@@ -285,13 +269,7 @@ function AirAtmosphere({ width, height }: { width: number; height: number }) {
 
       {/* Partículas cruzando */}
       {[0.25, 0.4, 0.55, 0.7, 0.85].map((y, i) => (
-        <circle
-          key={i}
-          cx="0"
-          cy={height * y}
-          r="0.8"
-          fill="rgba(244,236,216,0.9)"
-        >
+        <circle key={i} cx="0" cy={height * y} r="0.8" fill="rgba(244,236,216,0.9)">
           <animate
             attributeName="cx"
             values={`-20;${width + 20}`}

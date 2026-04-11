@@ -1,8 +1,9 @@
 "use client";
 
-import { use, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { use, useState } from "react";
+
 import { Button, Card, Input } from "@/components/ui";
 
 type State = "default" | "success" | "token_expired" | "token_invalid";
@@ -16,11 +17,7 @@ export default function RedefinirSenhaPage({ params }: PageProps) {
   const router = useRouter();
 
   const initialState: State =
-    token === "valid"
-      ? "default"
-      : token === "expired"
-        ? "token_expired"
-        : "token_invalid";
+    token === "valid" ? "default" : token === "expired" ? "token_expired" : "token_invalid";
 
   const [state, setState] = useState<State>(initialState);
   const [password, setPassword] = useState("");
@@ -48,9 +45,7 @@ export default function RedefinirSenhaPage({ params }: PageProps) {
         <Card accentColor="violet">
           <div className="flex flex-col gap-6">
             <div className="text-center flex flex-col gap-2">
-              <span className="font-logo text-xl text-gold tracking-wider">
-                MãosFalam
-              </span>
+              <span className="font-logo text-xl text-gold tracking-wider">MãosFalam</span>
             </div>
 
             {state === "default" && (

@@ -65,9 +65,7 @@ export default function Perguntas() {
                 </p>
               </div>
 
-              <p className="font-raleway text-[17px] leading-[1.55] text-bone">
-                {question.line}
-              </p>
+              <p className="font-raleway text-[17px] leading-[1.55] text-bone">{question.line}</p>
             </div>
           </motion.li>
         ))}

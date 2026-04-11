@@ -20,14 +20,7 @@ const CORNERS: ReadonlyArray<readonly [CornerVertical, CornerHorizontal]> = [
   ["bottom", "right"],
 ];
 
-function MethodCard({
-  onClick,
-  glowColor,
-  eyebrow,
-  title,
-  description,
-  illustration,
-}: Props) {
+function MethodCard({ onClick, glowColor, eyebrow, title, description, illustration }: Props) {
   return (
     <button
       type="button"
@@ -35,8 +28,7 @@ function MethodCard({
       className="group relative overflow-hidden card-noise text-left transition-all focus:outline-none"
       style={{
         aspectRatio: "5 / 7",
-        background:
-          "linear-gradient(165deg, #0e0a18 0%, #110c1a 50%, #08050e 100%)",
+        background: "linear-gradient(165deg, #0e0a18 0%, #110c1a 50%, #08050e 100%)",
         border: "1px solid rgba(201,162,74,0.35)",
         boxShadow: `0 28px 56px -16px rgba(0,0,0,0.9), 0 0 40px -12px ${glowColor}`,
       }}

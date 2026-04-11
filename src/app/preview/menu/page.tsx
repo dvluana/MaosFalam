@@ -1,4 +1,4 @@
-import { Menu } from "@/components/landing";
+import Menu from "@/components/landing/Menu";
 
 /**
  * Preview isolado do Menu. Acesse em /preview/menu.

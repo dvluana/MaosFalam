@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
@@ -12,9 +12,7 @@ export default function FAQ() {
         <p className="mb-3 font-jetbrains text-[9px] uppercase tracking-[3px] text-gold/70">
           Antes de você abrir a mão
         </p>
-        <h2 className="font-cinzel text-[22px] text-bone">
-          As dúvidas de sempre
-        </h2>
+        <h2 className="font-cinzel text-[22px] text-bone">As dúvidas de sempre</h2>
       </div>
 
       <ul className="space-y-3">

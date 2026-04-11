@@ -54,9 +54,8 @@ export default function Credibilidade() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mx-auto mt-5 max-w-[360px] px-2 font-raleway text-[14px] leading-[1.65] text-bone/85"
           >
-            Eu olho linha, monte, marca e detalhe da sua palma. Eu cruzo tudo
-            antes de falar. Você entra numa leitura de mão séria. Sem frase
-            pronta pra te enrolar.
+            Eu olho linha, monte, marca e detalhe da sua palma. Eu cruzo tudo antes de falar. Você
+            entra numa leitura de mão séria. Sem frase pronta pra te enrolar.
           </motion.p>
 
           <motion.div
@@ -99,8 +98,7 @@ export default function Credibilidade() {
                   <div
                     className="flex h-10 w-10 shrink-0 items-center justify-center border border-[rgba(201,162,74,0.25)] branded-radius"
                     style={{
-                      background:
-                        "linear-gradient(145deg, rgba(201,162,74,0.08), transparent)",
+                      background: "linear-gradient(145deg, rgba(201,162,74,0.08), transparent)",
                     }}
                   >
                     <span className="font-cinzel text-[16px] leading-none text-gold">
@@ -170,8 +168,4 @@ const PILLARS = [
   },
 ];
 
-const SEALS = [
-  "Leitura de mão",
-  "Olho humano",
-  "Começo grátis",
-];
+const SEALS = ["Leitura de mão", "Olho humano", "Começo grátis"];

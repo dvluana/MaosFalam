@@ -25,9 +25,7 @@ export default function Entrega() {
         >
           Sua leitura completa
           <br />
-          <span className="text-[20px] text-gold-light">
-            não deixa ponta solta
-          </span>
+          <span className="text-[20px] text-gold-light">não deixa ponta solta</span>
         </motion.h2>
       </div>
 
@@ -98,8 +96,7 @@ export default function Entrega() {
         transition={{ duration: 0.8, delay: 0.3 }}
         className="mt-8 px-4 text-center font-raleway text-[14px] leading-[1.65] text-bone/85"
       >
-        Você começa grátis. Se quiser abrir tudo, a leitura completa entra com
-        crédito.
+        Você começa grátis. Se quiser abrir tudo, a leitura completa entra com crédito.
       </motion.p>
     </section>
   );

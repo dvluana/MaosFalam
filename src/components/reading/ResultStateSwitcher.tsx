@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import type { HandElement } from "@/types/reading";
+
+import type { HandElement } from "@/types/report";
 
 interface Props {
   element: HandElement;
@@ -25,11 +26,7 @@ const TIERS: Array<{ value: "free" | "completo"; label: string }> = [
  * Painel dev-only no canto pra trocar entre os 4 elementos e entre
  * free/completo. Só aparece em dev.
  */
-export default function ResultStateSwitcher({
-  element,
-  tier,
-  readingId,
-}: Props) {
+export default function ResultStateSwitcher({ element, tier, readingId }: Props) {
   const router = useRouter();
   const search = useSearchParams();
 
@@ -39,9 +36,7 @@ export default function ResultStateSwitcher({
     const params = new URLSearchParams(search?.toString() ?? "");
     params.set("element", el);
     const base =
-      tier === "completo"
-        ? `/ler/resultado/${readingId}/completo`
-        : `/ler/resultado/${readingId}`;
+      tier === "completo" ? `/ler/resultado/${readingId}/completo` : `/ler/resultado/${readingId}`;
     router.replace(`${base}?${params.toString()}`);
   };
 
@@ -49,9 +44,7 @@ export default function ResultStateSwitcher({
     const params = new URLSearchParams(search?.toString() ?? "");
     params.set("element", element);
     const base =
-      t === "completo"
-        ? `/ler/resultado/${readingId}/completo`
-        : `/ler/resultado/${readingId}`;
+      t === "completo" ? `/ler/resultado/${readingId}/completo` : `/ler/resultado/${readingId}`;
     router.replace(`${base}?${params.toString()}`);
   };
 
@@ -88,10 +81,7 @@ export default function ResultStateSwitcher({
         </div>
       </div>
 
-      <div
-        className="h-px w-full"
-        style={{ background: "rgba(201,162,74,0.14)" }}
-      />
+      <div className="h-px w-full" style={{ background: "rgba(201,162,74,0.14)" }} />
 
       <div className="flex flex-col gap-1">
         <span className="font-jetbrains text-[7px] text-gold-dim uppercase tracking-[3px]">

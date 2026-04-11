@@ -34,14 +34,8 @@ export default function Toast({
         </span>
       )}
       <div className="flex-1">
-        <p className="font-cormorant italic text-base text-bone tracking-[0.02em]">
-          {message}
-        </p>
-        {detail && (
-          <p className="font-jetbrains text-[8px] text-violet mt-1 uppercase">
-            {detail}
-          </p>
-        )}
+        <p className="font-cormorant italic text-base text-bone tracking-[0.02em]">{message}</p>
+        {detail && <p className="font-jetbrains text-[8px] text-violet mt-1 uppercase">{detail}</p>}
       </div>
     </div>
   );

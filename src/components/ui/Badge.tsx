@@ -16,12 +16,7 @@ const map: Record<Variant, string> = {
   bone: "bg-[rgba(232,223,208,0.06)] text-bone-dim",
 };
 
-export default function Badge({
-  variant = "gold",
-  icon,
-  children,
-  className = "",
-}: BadgeProps) {
+export default function Badge({ variant = "gold", icon, children, className = "" }: BadgeProps) {
   return (
     <span
       className={`font-jetbrains text-[8px] uppercase tracking-[1.5px] px-[14px] py-[6px] inline-flex items-center gap-[6px] branded-radius corner-ornaments ${map[variant]} ${className}`}

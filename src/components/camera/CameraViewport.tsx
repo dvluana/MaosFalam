@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+
 import type { CamState } from "@/types/camera";
 import { isFrameActive } from "@/types/camera";
 
@@ -29,8 +30,7 @@ function CameraViewport({ state }: Props) {
         style={{
           width: "min(280px, 75vw)",
           aspectRatio: "3 / 4",
-          background:
-            "linear-gradient(180deg, rgba(14,10,24,0.3), rgba(14,10,24,0.55))",
+          background: "linear-gradient(180deg, rgba(14,10,24,0.3), rgba(14,10,24,0.55))",
           border: frameActive
             ? "1px solid rgba(201,162,74,0.55)"
             : "1px solid rgba(201,162,74,0.18)",
@@ -54,9 +54,7 @@ function CameraViewport({ state }: Props) {
             style={{
               [v]: -1,
               [h]: -1,
-              borderColor: frameActive
-                ? "rgba(201,162,74,0.85)"
-                : "rgba(201,162,74,0.4)",
+              borderColor: frameActive ? "rgba(201,162,74,0.85)" : "rgba(201,162,74,0.4)",
               borderStyle: "solid",
               borderWidth: `${v === "top" ? "2px" : "0"} ${h === "right" ? "2px" : "0"} ${v === "bottom" ? "2px" : "0"} ${h === "left" ? "2px" : "0"}`,
             }}
@@ -72,29 +70,25 @@ function CameraViewport({ state }: Props) {
             <span
               className="absolute left-1/2 top-0 w-px h-16 -translate-x-1/2 -translate-y-full"
               style={{
-                background:
-                  "linear-gradient(180deg, transparent, rgba(201,162,74,0.45))",
+                background: "linear-gradient(180deg, transparent, rgba(201,162,74,0.45))",
               }}
             />
             <span
               className="absolute left-1/2 bottom-0 w-px h-16 -translate-x-1/2 translate-y-full"
               style={{
-                background:
-                  "linear-gradient(0deg, transparent, rgba(201,162,74,0.45))",
+                background: "linear-gradient(0deg, transparent, rgba(201,162,74,0.45))",
               }}
             />
             <span
               className="absolute top-1/2 left-0 h-px w-16 -translate-y-1/2 -translate-x-full"
               style={{
-                background:
-                  "linear-gradient(270deg, transparent, rgba(201,162,74,0.45))",
+                background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.45))",
               }}
             />
             <span
               className="absolute top-1/2 right-0 h-px w-16 -translate-y-1/2 translate-x-full"
               style={{
-                background:
-                  "linear-gradient(90deg, transparent, rgba(201,162,74,0.45))",
+                background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.45))",
               }}
             />
             <motion.span
@@ -120,8 +114,7 @@ function CameraViewport({ state }: Props) {
             animate={{ top: "100%" }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
             style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(201,162,74,0.8), transparent)",
+              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.8), transparent)",
               boxShadow: "0 0 12px rgba(201,162,74,0.7)",
             }}
           />

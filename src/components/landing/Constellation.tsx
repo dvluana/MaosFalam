@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+
 import styles from "./Constellation.module.css";
 
 /**
@@ -28,10 +29,7 @@ interface ConstellationProps {
   connectionDistance?: number;
 }
 
-export default function Constellation({
-  particleCount,
-  connectionDistance,
-}: ConstellationProps) {
+export default function Constellation({ particleCount, connectionDistance }: ConstellationProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {

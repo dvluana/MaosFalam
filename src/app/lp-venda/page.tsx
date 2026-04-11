@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import BlocoFinal from "@/components/lp-venda/BlocoFinal";
 import ComoFunciona from "@/components/lp-venda/ComoFunciona";
 import Credibilidade from "@/components/lp-venda/Credibilidade";
@@ -11,6 +10,8 @@ import MarqueeFrases from "@/components/lp-venda/MarqueeFrases";
 import NumerosQueFalam from "@/components/lp-venda/NumerosQueFalam";
 import Perguntas from "@/components/lp-venda/Perguntas";
 import StickyCTA from "@/components/lp-venda/StickyCTA";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "MãosFalam | A primeira plataforma de leitura de mão do Brasil",

@@ -36,13 +36,9 @@ function MoonSvg({ sector }: { sector: number }) {
 
   let shape: React.ReactNode = null;
   if (sector === 2) {
-    shape = (
-      <path d={`M${CX},${CY - R} A${R},${R} 0 0,1 ${CX},${CY + R} Z`} fill={GOLD} />
-    );
+    shape = <path d={`M${CX},${CY - R} A${R},${R} 0 0,1 ${CX},${CY + R} Z`} fill={GOLD} />;
   } else if (sector === 6) {
-    shape = (
-      <path d={`M${CX},${CY - R} A${R},${R} 0 0,0 ${CX},${CY + R} Z`} fill={GOLD} />
-    );
+    shape = <path d={`M${CX},${CY - R} A${R},${R} 0 0,0 ${CX},${CY + R} Z`} fill={GOLD} />;
   } else if (sector === 1) {
     shape = (
       <>
@@ -104,9 +100,14 @@ export default function LunarClock({ visible = true }: LunarClockProps) {
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
-    setNow(new Date());
+    const frame = window.requestAnimationFrame(() => {
+      setNow(new Date());
+    });
     const id = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(id);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearInterval(id);
+    };
   }, []);
 
   // Enquanto não hidratou, não renderiza nada pra evitar mismatch SSR/CSR.
@@ -129,9 +130,7 @@ export default function LunarClock({ visible = true }: LunarClockProps) {
       ].join(" ")}
     >
       <MoonSvg sector={sector} />
-      <span
-        className="font-jetbrains text-[8px] font-light tracking-[3px] text-gold/45 max-[480px]:tracking-[2px]"
-      >
+      <span className="font-jetbrains text-[8px] font-light tracking-[3px] text-gold/45 max-[480px]:tracking-[2px]">
         {hh}:{mm}
       </span>
     </div>

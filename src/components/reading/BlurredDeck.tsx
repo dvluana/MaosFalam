@@ -3,14 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-import type { LineName } from "@/types/reading";
-
 import BlurredCard from "./BlurredCard";
 
 interface DeckCard {
-  line: LineName;
-  symbol: string;
-  planet: string;
+  label: string;
   teaser: string;
 }
 
@@ -35,6 +31,9 @@ export default function BlurredDeck({ cards }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
 
+  // Use at most 3 cards for the stack visual
+  const stackCards = cards.slice(0, 3);
+
   return (
     <div className="w-full">
       <AnimatePresence mode="wait" initial={false}>
@@ -54,26 +53,26 @@ export default function BlurredDeck({ cards }: Props) {
               onMouseLeave={() => setHovered(false)}
               onFocus={() => setHovered(true)}
               onBlur={() => setHovered(false)}
-              aria-label="Revelar as três linhas seladas"
+              aria-label="Revelar as linhas seladas"
               className="relative block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:rounded-sm group"
               style={{ minHeight: 420 }}
             >
-              {cards.map((card, i) => {
+              {stackCards.map((card, i) => {
                 const pose = hovered ? stackHover[i] : stackResting[i];
                 return (
                   <motion.div
-                    key={card.line}
+                    key={`${card.label}-${i}`}
                     className={i === 0 ? "relative" : "absolute inset-x-0 top-0"}
                     style={{
-                      zIndex: cards.length - i,
+                      zIndex: stackCards.length - i,
                       transformOrigin: "50% 0%",
                       filter: i === 0 ? "none" : `brightness(${1 - i * 0.08})`,
                     }}
                     animate={{
-                      y: pose.y,
-                      x: pose.xOffset,
-                      rotate: pose.rotate,
-                      scale: pose.scale,
+                      y: pose?.y ?? 0,
+                      x: pose?.xOffset ?? 0,
+                      rotate: pose?.rotate ?? 0,
+                      scale: pose?.scale ?? 1,
                     }}
                     transition={{
                       type: "spring",
@@ -82,12 +81,7 @@ export default function BlurredDeck({ cards }: Props) {
                       mass: 0.8,
                     }}
                   >
-                    <BlurredCard
-                      line={card.line}
-                      symbol={card.symbol}
-                      planet={card.planet}
-                      teaser={card.teaser}
-                    />
+                    <BlurredCard label={card.label} teaser={card.teaser} />
                   </motion.div>
                 );
               })}
@@ -101,7 +95,7 @@ export default function BlurredDeck({ cards }: Props) {
               >
                 <span className="h-[1px] w-8 bg-gold-dim/40" />
                 <span className="font-jetbrains text-[10px] tracking-[1.5px] uppercase text-gold-dim whitespace-nowrap">
-                  {hovered ? "toque pra revelar" : "3 seladas"}
+                  {hovered ? "toque pra revelar" : `${cards.length} seladas`}
                 </span>
                 <span className="h-[1px] w-8 bg-gold-dim/40" />
               </motion.div>
@@ -119,7 +113,7 @@ export default function BlurredDeck({ cards }: Props) {
           >
             {cards.map((card, i) => (
               <motion.div
-                key={card.line}
+                key={`${card.label}-${i}`}
                 initial={{ opacity: 0, y: 24, rotate: i === 0 ? -1 : i === 1 ? 1 : 2 }}
                 animate={{ opacity: 1, y: 0, rotate: 0 }}
                 transition={{
@@ -129,12 +123,7 @@ export default function BlurredDeck({ cards }: Props) {
                   damping: 20,
                 }}
               >
-                <BlurredCard
-                  line={card.line}
-                  symbol={card.symbol}
-                  planet={card.planet}
-                  teaser={card.teaser}
-                />
+                <BlurredCard label={card.label} teaser={card.teaser} />
               </motion.div>
             ))}
           </motion.div>

@@ -1,7 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
 import styles from "./VideoHero.module.css";
+
+import type { ReactNode } from "react";
 
 /**
  * VideoHero — container fullscreen do hero da landing MãosFalam.
@@ -59,14 +60,70 @@ export default function VideoHero({
             strokeWidth="0.3"
             transform="rotate(45)"
           />
-          <line x1="-192" y1="0" x2="192" y2="0" stroke="rgba(201,162,74,0.035)" strokeWidth="0.35" />
-          <line x1="0" y1="-192" x2="0" y2="192" stroke="rgba(201,162,74,0.035)" strokeWidth="0.35" />
-          <line x1="-136" y1="-136" x2="136" y2="136" stroke="rgba(201,162,74,0.025)" strokeWidth="0.3" />
-          <line x1="136" y1="-136" x2="-136" y2="136" stroke="rgba(201,162,74,0.025)" strokeWidth="0.3" />
-          <line x1="-96" y1="-166" x2="96" y2="166" stroke="rgba(139,123,191,0.025)" strokeWidth="0.25" />
-          <line x1="96" y1="-166" x2="-96" y2="166" stroke="rgba(139,123,191,0.025)" strokeWidth="0.25" />
-          <line x1="-166" y1="-96" x2="166" y2="96" stroke="rgba(139,123,191,0.025)" strokeWidth="0.25" />
-          <line x1="166" y1="-96" x2="-166" y2="96" stroke="rgba(139,123,191,0.025)" strokeWidth="0.25" />
+          <line
+            x1="-192"
+            y1="0"
+            x2="192"
+            y2="0"
+            stroke="rgba(201,162,74,0.035)"
+            strokeWidth="0.35"
+          />
+          <line
+            x1="0"
+            y1="-192"
+            x2="0"
+            y2="192"
+            stroke="rgba(201,162,74,0.035)"
+            strokeWidth="0.35"
+          />
+          <line
+            x1="-136"
+            y1="-136"
+            x2="136"
+            y2="136"
+            stroke="rgba(201,162,74,0.025)"
+            strokeWidth="0.3"
+          />
+          <line
+            x1="136"
+            y1="-136"
+            x2="-136"
+            y2="136"
+            stroke="rgba(201,162,74,0.025)"
+            strokeWidth="0.3"
+          />
+          <line
+            x1="-96"
+            y1="-166"
+            x2="96"
+            y2="166"
+            stroke="rgba(139,123,191,0.025)"
+            strokeWidth="0.25"
+          />
+          <line
+            x1="96"
+            y1="-166"
+            x2="-96"
+            y2="166"
+            stroke="rgba(139,123,191,0.025)"
+            strokeWidth="0.25"
+          />
+          <line
+            x1="-166"
+            y1="-96"
+            x2="166"
+            y2="96"
+            stroke="rgba(139,123,191,0.025)"
+            strokeWidth="0.25"
+          />
+          <line
+            x1="166"
+            y1="-96"
+            x2="-166"
+            y2="96"
+            stroke="rgba(139,123,191,0.025)"
+            strokeWidth="0.25"
+          />
         </svg>
       </div>
 

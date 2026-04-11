@@ -8,10 +8,7 @@ export default function Separator({ variant = "thin", className = "" }: Separato
     return (
       <div className={`flex items-center gap-2 justify-center ${className}`}>
         <span className="flex-1 max-w-20 h-px bg-gradient-to-r from-transparent to-[rgba(122,104,50,0.6)]" />
-        <span
-          aria-hidden
-          className="w-1 h-1 bg-gold rotate-45"
-        />
+        <span aria-hidden className="w-1 h-1 bg-gold rotate-45" />
         <span className="flex-1 max-w-20 h-px bg-gradient-to-l from-transparent to-[rgba(122,104,50,0.6)]" />
       </div>
     );

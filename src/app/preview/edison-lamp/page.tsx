@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import EdisonLamp from "@/components/landing/EdisonLamp";
 
 /**
@@ -15,12 +16,10 @@ export default function EdisonLampPreview() {
       <EdisonLamp key={key} />
 
       <div className="relative z-[25] flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
-        <p className="font-cinzel text-2xl tracking-[0.2em] text-gold mt-40">
-          A LUZ CHEGOU
-        </p>
+        <p className="font-cinzel text-2xl tracking-[0.2em] text-gold mt-40">A LUZ CHEGOU</p>
         <p className="font-cormorant italic text-xl text-bone-dim max-w-md">
-          Uma lâmpada. Um véu. E o que você chama de escuro,
-          só existia porque ainda não tinha motivo pra ir embora.
+          Uma lâmpada. Um véu. E o que você chama de escuro, só existia porque ainda não tinha
+          motivo pra ir embora.
         </p>
 
         <button

@@ -1,12 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { CompatibilityEntry, HandElement } from "@/types/reading";
-import CompatibilityGlyph from "./CompatibilityGlyph";
+
+import type { ReportCompat } from "@/types/report";
 
 interface Props {
-  entries: CompatibilityEntry[];
-  element: HandElement;
+  items: ReportCompat[];
 }
 
 function wordColor(pair: string): string {
@@ -19,11 +18,10 @@ function wordColor(pair: string): string {
 }
 
 /**
- * Grid de compatibilidade entre elementos da mão.
- * Ex: Fogo + Ar = Faísca. Conversa que vira desejo.
+ * Compatibilidade entre elementos, formato narrativo (full-width cards).
+ * Cada par é uma mini-história com pair label, word, e body.
  */
-export default function CompatibilityGrid({ entries, element: _element }: Props) {
-  void _element;
+export default function CompatibilityGrid({ items }: Props) {
   return (
     <div className="w-full">
       <div className="text-center mb-6">
@@ -41,18 +39,17 @@ export default function CompatibilityGrid({ entries, element: _element }: Props)
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {entries.map((entry, i) => {
+      <div className="flex flex-col gap-6">
+        {items.map((entry, i) => {
           const color = wordColor(entry.pair);
           return (
-            <motion.div
+            <motion.article
               key={`${entry.pair}-${i}`}
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.6, delay: i * 0.08, ease: "easeOut" }}
-              whileHover={{ scale: 1.01 }}
-              className="card-noise relative px-6 py-8 transition-colors duration-300 flex flex-col items-center text-center"
+              className="card-noise relative px-7 py-8 sm:px-9 sm:py-10"
               style={{
                 background: "#0e0a18",
                 border: "1px solid rgba(201,162,74,0.1)",
@@ -71,21 +68,14 @@ export default function CompatibilityGrid({ entries, element: _element }: Props)
                 className="absolute bottom-0 right-0 w-[10px] h-[10px] border-b border-r border-[rgba(201,162,74,0.35)]"
               />
 
-              {/* Glyph da reação */}
-              <div className="mb-4">
-                <CompatibilityGlyph pair={entry.pair} size={80} />
-              </div>
-
-              {/* Pair label */}
-              <div
-                className="font-jetbrains text-[10px] tracking-[1.5px] uppercase text-gold-dim mb-2"
-              >
+              {/* Pair label (JetBrains eyebrow) */}
+              <div className="font-jetbrains text-[10px] tracking-[1.5px] uppercase text-gold-dim mb-3">
                 {entry.pair}
               </div>
 
               {/* Word grande */}
               <div
-                className="italic mb-3"
+                className="italic mb-4"
                 style={{
                   fontFamily: "var(--font-voice)",
                   fontSize: "32px",
@@ -99,21 +89,20 @@ export default function CompatibilityGrid({ entries, element: _element }: Props)
               </div>
 
               {/* Ornamental divider */}
-              <div className="flex items-center gap-2 mb-3">
-                <span className="h-px w-6 bg-gold-dim/40" />
+              <div className="flex items-center gap-2 mb-4">
+                <span className="h-px w-8 bg-gold-dim/40" />
                 <span
                   className="w-1 h-1 rotate-45 bg-gold"
                   style={{ boxShadow: `0 0 6px ${color}` }}
                 />
-                <span className="h-px w-6 bg-gold-dim/40" />
+                <span className="h-px flex-1 bg-gold-dim/20" />
               </div>
 
-              <p
-                className="font-cormorant italic text-[15px] sm:text-[16px] text-bone-dim leading-[1.5]"
-              >
-                {entry.description}
+              {/* Body (Raleway narrative) */}
+              <p className="font-raleway text-[14px] sm:text-[15px] font-light leading-[1.88] text-bone-dim">
+                {entry.body}
               </p>
-            </motion.div>
+            </motion.article>
           );
         })}
       </div>

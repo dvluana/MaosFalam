@@ -1,8 +1,9 @@
 "use client";
 
+import type { DrawnCard, SpreadPosition } from "@/types/tarot";
+
 import TarotCard from "./TarotCard";
 import styles from "./TarotShareCard.module.css";
-import type { DrawnCard, SpreadPosition } from "@/types/tarot";
 
 const POSITION_LABEL: Record<SpreadPosition, string> = {
   past: "Passado",
@@ -40,13 +41,9 @@ interface TarotShareCardProps {
   phrase?: string;
 }
 
-const DEFAULT_PHRASE =
-  "Três cartas. Uma leitura. E eu ainda pensando.";
+const DEFAULT_PHRASE = "Três cartas. Uma leitura. E eu ainda pensando.";
 
-export default function TarotShareCard({
-  spread,
-  phrase = DEFAULT_PHRASE,
-}: TarotShareCardProps) {
+export default function TarotShareCard({ spread, phrase = DEFAULT_PHRASE }: TarotShareCardProps) {
   return (
     <div className={styles.shareCard}>
       {/* Cantos dourados */}
@@ -67,16 +64,11 @@ export default function TarotShareCard({
       {/* Três cartas */}
       <div className={styles.cardsRow}>
         {spread.map((draw) => (
-          <div
-            key={draw.card.id + "-" + draw.position}
-            className={styles.mini}
-          >
+          <div key={draw.card.id + "-" + draw.position} className={styles.mini}>
             <div className={styles.miniCard}>
               <TarotCard card={draw.card} faceUp />
             </div>
-            <div className={styles.miniLabel}>
-              {POSITION_LABEL[draw.position]}
-            </div>
+            <div className={styles.miniLabel}>{POSITION_LABEL[draw.position]}</div>
             <div className={styles.miniName}>
               <span className={styles.miniNumeral}>{draw.card.numeral}</span>
               {draw.card.name}

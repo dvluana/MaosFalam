@@ -27,10 +27,7 @@ export interface CheckoutIntent {
   savedAt: number;
 }
 
-export function saveCheckoutIntent(
-  pacoteId: string,
-  method: "pix" | "card",
-): void {
+export function saveCheckoutIntent(pacoteId: string, method: "pix" | "card"): void {
   if (typeof window === "undefined") return;
   const intent: CheckoutIntent = {
     pacoteId,

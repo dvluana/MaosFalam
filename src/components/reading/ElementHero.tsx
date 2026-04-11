@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 import useStoredName from "@/hooks/useStoredName";
-import type { HandElement, ReadingReport } from "@/types/reading";
+import type { HandElement } from "@/types/report";
 
 import ElementAtmosphere from "./ElementAtmosphere";
 import ElementGlyph from "./ElementGlyph";
@@ -41,11 +41,12 @@ const nameGlow: Record<HandElement, string> = {
 };
 
 interface Props {
-  element: ReadingReport["element"];
+  element: { key: HandElement };
+  impactPhrase: string;
   fallbackName: string;
 }
 
-export default function ElementHero({ element, fallbackName }: Props) {
+export default function ElementHero({ element, impactPhrase, fallbackName }: Props) {
   const name = useStoredName(fallbackName) ?? fallbackName;
 
   return (
@@ -55,7 +56,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
         aria-hidden
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 80% 55% at 50% 42%, ${glowColor[element.type]} 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse 80% 55% at 50% 42%, ${glowColor[element.key]} 0%, transparent 70%)`,
         }}
       />
 
@@ -126,7 +127,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.4, ease: [0.23, 1, 0.32, 1], delay: 0.2 }}
           >
-            <ElementGlyph type={element.type} size={150} />
+            <ElementGlyph type={element.key} size={150} />
           </motion.div>
         </div>
 
@@ -137,7 +138,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
           transition={{ delay: 0.35, duration: 1 }}
           className="font-cormorant italic text-[22px] sm:text-[26px] text-bone leading-[1.38] max-w-md"
         >
-          {ciganaOpening[element.type](name)}
+          {ciganaOpening[element.key](name)}
         </motion.p>
 
         {/* MASSIVE element name — a última palavra da frase dela */}
@@ -159,7 +160,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
                 "radial-gradient(ellipse 70% 55% at 50% 50%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 45%, transparent 85%)",
             }}
           >
-            <ElementAtmosphere type={element.type} />
+            <ElementAtmosphere type={element.key} />
           </div>
 
           <motion.h1
@@ -173,10 +174,10 @@ export default function ElementHero({ element, fallbackName }: Props) {
             className="relative font-cinzel font-medium text-gold leading-[0.95]"
             style={{
               fontSize: "clamp(64px, 18vw, 112px)",
-              textShadow: `0 0 44px ${nameGlow[element.type]}, 0 0 88px ${nameGlow[element.type]}, 0 2px 0 rgba(0,0,0,0.8), 0 0 2px rgba(201,162,74,0.8)`,
+              textShadow: `0 0 44px ${nameGlow[element.key]}, 0 0 88px ${nameGlow[element.key]}, 0 2px 0 rgba(0,0,0,0.8), 0 0 2px rgba(201,162,74,0.8)`,
             }}
           >
-            {elementLabel[element.type]}
+            {elementLabel[element.key]}
           </motion.h1>
         </div>
 
@@ -205,7 +206,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
           />
         </motion.div>
 
-        {/* Impact phrase — ela falando direto, sem citação, sem nome prefixado */}
+        {/* Impact phrase */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -213,7 +214,7 @@ export default function ElementHero({ element, fallbackName }: Props) {
           className="font-cormorant italic text-[22px] sm:text-[28px] text-gold-light leading-[1.35] max-w-md"
           style={{ textShadow: "0 0 24px rgba(201,162,74,0.2)" }}
         >
-          {element.impact}
+          {impactPhrase}
         </motion.p>
       </motion.div>
     </section>

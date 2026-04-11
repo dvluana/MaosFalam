@@ -1,9 +1,10 @@
 "use client";
 
-import type { ChangeEvent } from "react";
 import Button from "@/components/ui/Button";
 import type { CamState } from "@/types/camera";
 import { CAM_FEEDBACK } from "@/types/camera";
+
+import type { ChangeEvent } from "react";
 
 interface Props {
   state: CamState;
@@ -27,12 +28,7 @@ function CameraErrorState({ state, onRetry, onUploadSelected }: Props) {
           }}
         >
           Enviar foto da palma
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={onUploadSelected}
-          />
+          <input type="file" accept="image/*" className="hidden" onChange={onUploadSelected} />
         </label>
       ) : (
         <Button variant="secondary" onClick={onRetry}>

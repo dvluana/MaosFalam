@@ -37,14 +37,7 @@ export default function CrossingGlyph({ size = 68 }: Props) {
       </defs>
 
       {/* Anel externo sutil */}
-      <circle
-        cx="40"
-        cy="40"
-        r="34"
-        stroke="rgba(201,162,74,0.1)"
-        strokeWidth="0.4"
-        fill="none"
-      />
+      <circle cx="40" cy="40" r="34" stroke="rgba(201,162,74,0.1)" strokeWidth="0.4" fill="none" />
       <circle
         cx="40"
         cy="40"
@@ -72,12 +65,7 @@ export default function CrossingGlyph({ size = 68 }: Props) {
         strokeLinecap="round"
         fill="none"
       >
-        <animate
-          attributeName="opacity"
-          values="0.6;1;0.6"
-          dur="3.2s"
-          repeatCount="indefinite"
-        />
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="3.2s" repeatCount="indefinite" />
       </path>
 
       {/* Linha 2 — curva gold (vertical-ish) */}
@@ -99,28 +87,13 @@ export default function CrossingGlyph({ size = 68 }: Props) {
 
       {/* Nó central — halo pulsante */}
       <circle cx="40" cy="40" r="10" fill="url(#cx-core)">
-        <animate
-          attributeName="r"
-          values="8;14;8"
-          dur="2.8s"
-          repeatCount="indefinite"
-        />
-        <animate
-          attributeName="opacity"
-          values="0.5;1;0.5"
-          dur="2.8s"
-          repeatCount="indefinite"
-        />
+        <animate attributeName="r" values="8;14;8" dur="2.8s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;1;0.5" dur="2.8s" repeatCount="indefinite" />
       </circle>
 
       {/* Ponto duro no centro */}
       <circle cx="40" cy="40" r="2.2" fill="#ffe79a">
-        <animate
-          attributeName="r"
-          values="1.8;3;1.8"
-          dur="2s"
-          repeatCount="indefinite"
-        />
+        <animate attributeName="r" values="1.8;3;1.8" dur="2s" repeatCount="indefinite" />
       </circle>
 
       {/* Ticks de medição ao redor do nó */}

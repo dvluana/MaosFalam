@@ -68,14 +68,7 @@ export default function ElementGlyph({ type, size = 140 }: Props) {
           <stop offset="0%" stopColor="rgba(201,155,106,0.35)" />
           <stop offset="100%" stopColor="rgba(58,33,22,0)" />
         </radialGradient>
-        <pattern
-          id="earth-dust"
-          x="0"
-          y="0"
-          width="8"
-          height="8"
-          patternUnits="userSpaceOnUse"
-        >
+        <pattern id="earth-dust" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
           <circle cx="1.5" cy="2.5" r="0.5" fill="rgba(201,155,106,0.6)" />
           <circle cx="5.5" cy="4.5" r="0.4" fill="rgba(139,90,56,0.7)" />
           <circle cx="3" cy="6.5" r="0.35" fill="rgba(201,155,106,0.5)" />
@@ -103,22 +96,8 @@ export default function ElementGlyph({ type, size = 140 }: Props) {
       </defs>
 
       {/* === Anéis de contexto (comuns a todos) === */}
-      <circle
-        cx="70"
-        cy="70"
-        r="64"
-        stroke="rgba(201,162,74,0.14)"
-        strokeWidth="0.4"
-        fill="none"
-      />
-      <circle
-        cx="70"
-        cy="70"
-        r="58"
-        stroke="rgba(201,162,74,0.06)"
-        strokeWidth="0.4"
-        fill="none"
-      />
+      <circle cx="70" cy="70" r="64" stroke="rgba(201,162,74,0.14)" strokeWidth="0.4" fill="none" />
+      <circle cx="70" cy="70" r="58" stroke="rgba(201,162,74,0.06)" strokeWidth="0.4" fill="none" />
 
       {/* === FOGO === */}
       {type === "fire" && (
@@ -152,10 +131,7 @@ export default function ElementGlyph({ type, size = 140 }: Props) {
                 repeatCount="indefinite"
               />
             </path>
-            <path
-              d="M65 108 Q70 85 68 75 Q74 82 78 78 Q75 92 80 104 Z"
-              fill="rgba(255,200,90,0.6)"
-            >
+            <path d="M65 108 Q70 85 68 75 Q74 82 78 78 Q75 92 80 104 Z" fill="rgba(255,200,90,0.6)">
               <animate
                 attributeName="opacity"
                 values="0.6;0.3;0.9;0.5;0.6"
@@ -190,18 +166,8 @@ export default function ElementGlyph({ type, size = 140 }: Props) {
             </path>
             {/* brasas flutuantes */}
             <circle cx="55" cy="70" r="0.8" fill="#ffd27a">
-              <animate
-                attributeName="cy"
-                values="90;30"
-                dur="4s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                values="0;1;0"
-                dur="4s"
-                repeatCount="indefinite"
-              />
+              <animate attributeName="cy" values="90;30" dur="4s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite" />
             </circle>
             <circle cx="82" cy="65" r="0.6" fill="#ffb248">
               <animate
@@ -251,13 +217,7 @@ export default function ElementGlyph({ type, size = 140 }: Props) {
       {type === "water" && (
         <g>
           <g clipPath="url(#clip-down)">
-            <rect
-              x="0"
-              y="0"
-              width="140"
-              height="140"
-              fill="url(#water-core)"
-            />
+            <rect x="0" y="0" width="140" height="140" fill="url(#water-core)" />
             {/* superfície ondulante */}
             <path
               d="M20 50 Q40 46 60 50 T100 50 T140 50 L140 120 L0 120 Z"
@@ -290,35 +250,13 @@ export default function ElementGlyph({ type, size = 140 }: Props) {
               />
             </path>
             {/* shine horizontal */}
-            <rect
-              x="-140"
-              y="40"
-              width="140"
-              height="4"
-              fill="url(#water-shine)"
-              opacity="0.6"
-            >
-              <animate
-                attributeName="x"
-                values="-140;140"
-                dur="6s"
-                repeatCount="indefinite"
-              />
+            <rect x="-140" y="40" width="140" height="4" fill="url(#water-shine)" opacity="0.6">
+              <animate attributeName="x" values="-140;140" dur="6s" repeatCount="indefinite" />
             </rect>
             {/* gotas descendo */}
             <circle cx="50" cy="45" r="1" fill="rgba(220,230,255,0.7)">
-              <animate
-                attributeName="cy"
-                values="45;105"
-                dur="3s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                values="0;1;0"
-                dur="3s"
-                repeatCount="indefinite"
-              />
+              <animate attributeName="cy" values="45;105" dur="3s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" />
             </circle>
             <circle cx="85" cy="40" r="0.8" fill="rgba(220,230,255,0.6)">
               <animate
@@ -351,41 +289,13 @@ export default function ElementGlyph({ type, size = 140 }: Props) {
       {type === "earth" && (
         <g>
           <g clipPath="url(#clip-down)">
-            <rect
-              x="0"
-              y="0"
-              width="140"
-              height="140"
-              fill="url(#earth-core)"
-            />
-            <rect
-              x="0"
-              y="0"
-              width="140"
-              height="140"
-              fill="url(#earth-dust)"
-              opacity="0.5"
-            />
+            <rect x="0" y="0" width="140" height="140" fill="url(#earth-core)" />
+            <rect x="0" y="0" width="140" height="140" fill="url(#earth-dust)" opacity="0.5" />
             {/* poeira flutuando */}
             <circle cx="55" cy="80" r="0.6" fill="rgba(201,155,106,0.8)">
-              <animate
-                attributeName="cy"
-                values="110;60"
-                dur="7s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="cx"
-                values="55;58;55"
-                dur="7s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                values="0;0.8;0"
-                dur="7s"
-                repeatCount="indefinite"
-              />
+              <animate attributeName="cy" values="110;60" dur="7s" repeatCount="indefinite" />
+              <animate attributeName="cx" values="55;58;55" dur="7s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;0.8;0" dur="7s" repeatCount="indefinite" />
             </circle>
             <circle cx="75" cy="85" r="0.5" fill="rgba(201,155,106,0.7)">
               <animate
@@ -515,18 +425,8 @@ export default function ElementGlyph({ type, size = 140 }: Props) {
             </path>
             {/* partículas cruzando horizontalmente */}
             <circle cx="30" cy="75" r="0.6" fill="rgba(244,236,216,0.9)">
-              <animate
-                attributeName="cx"
-                values="20;120"
-                dur="5s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                values="0;1;0"
-                dur="5s"
-                repeatCount="indefinite"
-              />
+              <animate attributeName="cx" values="20;120" dur="5s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;1;0" dur="5s" repeatCount="indefinite" />
             </circle>
             <circle cx="30" cy="92" r="0.5" fill="rgba(244,236,216,0.8)">
               <animate

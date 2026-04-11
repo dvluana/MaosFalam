@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
+import Link from "next/link";
+
 import Button from "@/components/ui/Button";
 
 /**
@@ -60,9 +61,7 @@ export default function CTAFinal() {
           aria-hidden
           className="w-10 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent"
         />
-        <p className="font-logo text-[12px] text-gold/70 tracking-[0.2em]">
-          MãosFalam
-        </p>
+        <p className="font-logo text-[12px] text-gold/70 tracking-[0.2em]">MãosFalam</p>
         <p className="font-jetbrains text-[8px] uppercase tracking-[2px] text-bone-dim/60">
           Leitura de mão · Brasil
         </p>

@@ -19,22 +19,15 @@ export default function NavPreviewPage() {
           fontFamily: "var(--font-cinzel)",
         }}
       >
-        <h1 style={{ color: "var(--color-gold)", marginBottom: 16 }}>
-          Nav Preview
-        </h1>
+        <h1 style={{ color: "var(--color-gold)", marginBottom: 16 }}>Nav Preview</h1>
         <p style={{ opacity: 0.75, lineHeight: 1.6 }}>
-          Corpo fake pra mostrar o posicionamento fixo do Nav. Role a página
-          e o nav deve permanecer colado no topo, com gradiente esmaecendo
-          pra baixo.
+          Corpo fake pra mostrar o posicionamento fixo do Nav. Role a página e o nav deve permanecer
+          colado no topo, com gradiente esmaecendo pra baixo.
         </p>
         {Array.from({ length: 20 }).map((_, i) => (
-          <p
-            key={i}
-            style={{ opacity: 0.4, lineHeight: 1.6, marginTop: 24 }}
-          >
-            Linha {i + 1} — lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua.
+          <p key={i} style={{ opacity: 0.4, lineHeight: 1.6, marginTop: 24 }}>
+            Linha {i + 1} — lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua.
           </p>
         ))}
       </div>

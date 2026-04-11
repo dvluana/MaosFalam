@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+
 import MeasurementBar from "./MeasurementBar";
 
 interface Props {
@@ -108,8 +109,7 @@ export default function TechnicalStrip({ items }: Props) {
     <div
       className="relative mt-2"
       style={{
-        background:
-          "linear-gradient(180deg, rgba(201,162,74,0.035), rgba(201,162,74,0.015))",
+        background: "linear-gradient(180deg, rgba(201,162,74,0.035), rgba(201,162,74,0.015))",
         border: "1px solid rgba(201,162,74,0.16)",
         padding: "22px 20px 20px",
       }}
@@ -142,8 +142,7 @@ export default function TechnicalStrip({ items }: Props) {
           aria-hidden
           className="h-px flex-1"
           style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(201,162,74,0.5))",
+            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.5))",
           }}
         />
         <span
@@ -156,8 +155,7 @@ export default function TechnicalStrip({ items }: Props) {
           aria-hidden
           className="h-px flex-1"
           style={{
-            background:
-              "linear-gradient(270deg, transparent, rgba(201,162,74,0.5))",
+            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.5))",
           }}
         />
       </div>
@@ -177,10 +175,7 @@ export default function TechnicalStrip({ items }: Props) {
             >
               {/* Label + ícone */}
               <div className="flex items-baseline gap-2">
-                <span
-                  className="font-cinzel text-[13px] text-gold leading-none"
-                  aria-hidden
-                >
+                <span className="font-cinzel text-[13px] text-gold leading-none" aria-hidden>
                   {m.icon}
                 </span>
                 <span
@@ -192,7 +187,6 @@ export default function TechnicalStrip({ items }: Props) {
               </div>
 
               <MeasurementBar value={fill} delay={i * 0.06} accent="gold" />
-
 
               {/* Valor */}
               <p

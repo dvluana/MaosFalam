@@ -28,8 +28,8 @@ export default function AtmospherePreviewPage() {
           ATMOSFERA
         </h1>
         <p style={{ opacity: 0.7, lineHeight: 1.6 }}>
-          Observe o fundo: vinheta radial nas bordas e wisps de fumaça
-          derivando lentamente pela cena.
+          Observe o fundo: vinheta radial nas bordas e wisps de fumaça derivando lentamente pela
+          cena.
         </p>
       </div>
     </main>

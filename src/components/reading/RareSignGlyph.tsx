@@ -18,8 +18,7 @@ const RARE_THEME: GlyphTheme = {
   ],
   ringColor: "rgba(201,162,74,0.32)",
   innerRingColor: "rgba(201,162,74,0.14)",
-  shadow:
-    "drop-shadow(0 0 10px rgba(201,162,74,0.55)) drop-shadow(0 0 20px rgba(201,162,74,0.25))",
+  shadow: "drop-shadow(0 0 10px rgba(201,162,74,0.55)) drop-shadow(0 0 20px rgba(201,162,74,0.25))",
 };
 
 const GRAD = "url(#rare-grad)";
@@ -71,18 +70,8 @@ function pickSign(key: string) {
           />
         </path>
         <circle cx="40" cy="40" r="1.5" fill="#fff9e0">
-          <animate
-            attributeName="r"
-            values="1;2.5;1"
-            dur="2s"
-            repeatCount="indefinite"
-          />
-          <animate
-            attributeName="opacity"
-            values="0.4;1;0.4"
-            dur="2s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="r" values="1;2.5;1" dur="2s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite" />
         </circle>
       </g>
     );
@@ -103,12 +92,7 @@ function pickSign(key: string) {
         <circle cx="22" cy="40" r="1.3" fill={GRAD} />
         <circle cx="58" cy="40" r="1.3" fill={GRAD} />
         <path d="M40 36 L44 40 L40 44 L36 40 Z" fill={GRAD}>
-          <animate
-            attributeName="opacity"
-            values="0.5;1;0.5"
-            dur="2.6s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="2.6s" repeatCount="indefinite" />
         </path>
       </g>
     );
@@ -136,12 +120,7 @@ function pickSign(key: string) {
           opacity="0.7"
         />
         <circle cx="24" cy="24" r="1.5" fill="#ffe79a">
-          <animate
-            attributeName="opacity"
-            values="0.3;1;0.3"
-            dur="2.4s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite" />
         </circle>
         <circle cx="56" cy="24" r="1.5" fill="#ffe79a">
           <animate
@@ -175,21 +154,10 @@ function pickSign(key: string) {
   }
 
   // ANEL DE SALOMÃO
-  if (
-    key.includes("salomão") ||
-    key.includes("salomao") ||
-    key.includes("anel")
-  ) {
+  if (key.includes("salomão") || key.includes("salomao") || key.includes("anel")) {
     return (
       <g>
-        <circle
-          cx="40"
-          cy="40"
-          r="16"
-          stroke={GRAD}
-          strokeWidth="2"
-          fill="none"
-        />
+        <circle cx="40" cy="40" r="16" stroke={GRAD} strokeWidth="2" fill="none" />
         <circle
           cx="40"
           cy="40"
@@ -216,14 +184,7 @@ function pickSign(key: string) {
   if (key.includes("sol")) {
     return (
       <g>
-        <circle
-          cx="40"
-          cy="40"
-          r="8"
-          stroke={GRAD}
-          strokeWidth="2"
-          fill="rgba(201,162,74,0.2)"
-        />
+        <circle cx="40" cy="40" r="8" stroke={GRAD} strokeWidth="2" fill="rgba(201,162,74,0.2)" />
         {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
           <line
             key={deg}
@@ -238,12 +199,7 @@ function pickSign(key: string) {
           />
         ))}
         <circle cx="40" cy="40" r="2" fill="#ffe79a">
-          <animate
-            attributeName="r"
-            values="1.5;3;1.5"
-            dur="3s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="r" values="1.5;3;1.5" dur="3s" repeatCount="indefinite" />
         </circle>
       </g>
     );
@@ -261,12 +217,7 @@ function pickSign(key: string) {
           strokeLinecap="round"
         />
         <circle cx="40" cy="30" r="2" fill={GRAD}>
-          <animate
-            attributeName="opacity"
-            values="0.4;1;0.4"
-            dur="2.4s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="opacity" values="0.4;1;0.4" dur="2.4s" repeatCount="indefinite" />
         </circle>
       </g>
     );
