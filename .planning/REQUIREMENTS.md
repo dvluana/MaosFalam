@@ -9,9 +9,9 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 
 ### Database
 
-- [ ] **DB-01**: Schema Prisma com 5 tabelas (leads, user_profiles, readings, credit_packs, payments) alinhado com docs/architecture.md secao 5
-- [ ] **DB-02**: Prisma client singleton com Neon adapter (`@prisma/adapter-neon`) e connection pooling
-- [ ] **DB-03**: DIRECT_URL configurado pra Prisma migrations (conexao direta, nao pooled)
+- [x] **DB-01**: Schema Prisma com 5 tabelas (leads, user_profiles, readings, credit_packs, payments) alinhado com docs/architecture.md secao 5
+- [x] **DB-02**: Prisma client singleton com Neon adapter (`@prisma/adapter-neon`) e connection pooling
+- [x] **DB-03**: DIRECT_URL configurado pra Prisma migrations (conexao direta, nao pooled)
 - [ ] **DB-04**: Migration inicial roda sem erro (`prisma migrate dev --name init`)
 
 ### Auth
@@ -52,13 +52,13 @@ Requirements para esta milestone. Cada um mapeia pra fases do roadmap.
 - [ ] **SEC-04**: Security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, HSTS
 - [ ] **SEC-05**: Nenhuma API route aceita 'tier' como input do client
 - [ ] **SEC-06**: Zod valida input em TODA API route
-- [ ] **SEC-07**: Nenhum dado pessoal (nome, email, CPF) nos logs do Pino
+- [x] **SEC-07**: Nenhum dado pessoal (nome, email, CPF) nos logs do Pino
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Logger Pino configurado com pino-pretty em dev
-- [ ] **INFRA-02**: .env.example com todas as vars necessarias
-- [ ] **INFRA-03**: ESLint no-console: error ativo e funcionando
+- [x] **INFRA-01**: Logger Pino configurado com pino-pretty em dev
+- [x] **INFRA-02**: .env.example com todas as vars necessarias
+- [x] **INFRA-03**: ESLint no-console: error ativo e funcionando
 - [ ] **INFRA-04**: npm run build passa sem erro
 - [ ] **INFRA-05**: npm run type-check passa sem erro
 
@@ -106,46 +106,46 @@ Adiados para milestone futura.
 
 ## Traceability
 
-| Requirement | Phase   | Status  |
-| ----------- | ------- | ------- |
-| DB-01       | Phase 1 | Pending |
-| DB-02       | Phase 1 | Pending |
-| DB-03       | Phase 1 | Pending |
-| DB-04       | Phase 1 | Pending |
-| AUTH-01     | Phase 2 | Pending |
-| AUTH-02     | Phase 2 | Pending |
-| AUTH-03     | Phase 2 | Pending |
-| AUTH-04     | Phase 2 | Pending |
-| AI-01       | Phase 3 | Pending |
-| AI-02       | Phase 3 | Pending |
-| AI-03       | Phase 3 | Pending |
-| AI-04       | Phase 3 | Pending |
-| API-01      | Phase 4 | Pending |
-| API-02      | Phase 4 | Pending |
-| API-03      | Phase 4 | Pending |
-| API-04      | Phase 4 | Pending |
-| API-05      | Phase 5 | Pending |
-| API-06      | Phase 5 | Pending |
-| API-07      | Phase 5 | Pending |
-| API-08      | Phase 5 | Pending |
-| API-09      | Phase 5 | Pending |
-| API-10      | Phase 5 | Pending |
-| SEC-01      | Phase 4 | Pending |
-| SEC-02      | Phase 4 | Pending |
-| SEC-03      | Phase 5 | Pending |
-| SEC-04      | Phase 4 | Pending |
-| SEC-05      | Phase 4 | Pending |
-| SEC-06      | Phase 4 | Pending |
-| SEC-07      | Phase 1 | Pending |
-| INFRA-01    | Phase 1 | Pending |
-| INFRA-02    | Phase 1 | Pending |
-| INFRA-03    | Phase 1 | Pending |
-| INFRA-04    | Phase 6 | Pending |
-| INFRA-05    | Phase 6 | Pending |
-| ADAPT-01    | Phase 6 | Pending |
-| ADAPT-02    | Phase 6 | Pending |
-| ADAPT-03    | Phase 6 | Pending |
-| ADAPT-04    | Phase 6 | Pending |
+| Requirement | Phase   | Status   |
+| ----------- | ------- | -------- |
+| DB-01       | Phase 1 | Complete |
+| DB-02       | Phase 1 | Complete |
+| DB-03       | Phase 1 | Complete |
+| DB-04       | Phase 1 | Pending  |
+| AUTH-01     | Phase 2 | Pending  |
+| AUTH-02     | Phase 2 | Pending  |
+| AUTH-03     | Phase 2 | Pending  |
+| AUTH-04     | Phase 2 | Pending  |
+| AI-01       | Phase 3 | Pending  |
+| AI-02       | Phase 3 | Pending  |
+| AI-03       | Phase 3 | Pending  |
+| AI-04       | Phase 3 | Pending  |
+| API-01      | Phase 4 | Pending  |
+| API-02      | Phase 4 | Pending  |
+| API-03      | Phase 4 | Pending  |
+| API-04      | Phase 4 | Pending  |
+| API-05      | Phase 5 | Pending  |
+| API-06      | Phase 5 | Pending  |
+| API-07      | Phase 5 | Pending  |
+| API-08      | Phase 5 | Pending  |
+| API-09      | Phase 5 | Pending  |
+| API-10      | Phase 5 | Pending  |
+| SEC-01      | Phase 4 | Pending  |
+| SEC-02      | Phase 4 | Pending  |
+| SEC-03      | Phase 5 | Pending  |
+| SEC-04      | Phase 4 | Pending  |
+| SEC-05      | Phase 4 | Pending  |
+| SEC-06      | Phase 4 | Pending  |
+| SEC-07      | Phase 1 | Complete |
+| INFRA-01    | Phase 1 | Complete |
+| INFRA-02    | Phase 1 | Complete |
+| INFRA-03    | Phase 1 | Complete |
+| INFRA-04    | Phase 6 | Pending  |
+| INFRA-05    | Phase 6 | Pending  |
+| ADAPT-01    | Phase 6 | Pending  |
+| ADAPT-02    | Phase 6 | Pending  |
+| ADAPT-03    | Phase 6 | Pending  |
+| ADAPT-04    | Phase 6 | Pending  |
 
 **Coverage:**
 

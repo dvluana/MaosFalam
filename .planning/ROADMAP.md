@@ -38,7 +38,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 
-- [ ] 01-01-PLAN.md — Neon provisioning + fix Prisma schema, prisma.config.ts, Pino logger, and .env.example
+- [x] 01-01-PLAN.md — Neon provisioning + fix Prisma schema, prisma.config.ts, Pino logger, and .env.example
 - [ ] 01-02-PLAN.md — Write logger/prisma unit tests and run prisma migrate dev --name init
 
 ### Phase 2: Auth
@@ -115,7 +115,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase              | Plans Complete | Status      | Completed |
 | ------------------ | -------------- | ----------- | --------- |
-| 1. Foundation      | 0/2            | Not started | -         |
+| 1. Foundation      | 1/2            | In Progress |           |
 | 2. Auth            | 0/TBD          | Not started | -         |
 | 3. AI Pipeline     | 0/TBD          | Not started | -         |
 | 4. Public API      | 0/TBD          | Not started | -         |

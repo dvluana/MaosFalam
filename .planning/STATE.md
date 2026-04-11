@@ -1,3 +1,17 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: Ready to execute
+stopped_at: Completed 01-foundation/01-01-PLAN.md
+last_updated: "2026-04-11T01:01:53.214Z"
+progress:
+  total_phases: 6
+  completed_phases: 0
+  total_plans: 2
+  completed_plans: 1
+---
+
 # Project State
 
 ## Project Reference
@@ -5,16 +19,12 @@
 See: .planning/PROJECT.md (updated 2026-04-10)
 
 **Core value:** Foto da palma entra, leitura personalizada sai. Backend conecta GPT-4o ao motor de leitura e persiste resultados.
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 01 — foundation
 
 ## Current Position
 
-Phase: 1 of 6 (Foundation)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-10 — Roadmap created, ready to plan Phase 1
-
-Progress: [░░░░░░░░░░] 0%
+Phase: 01 (foundation) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -36,6 +46,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 _Updated after each plan completion_
+| Phase 01-foundation P01 | 15 | 4 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -49,6 +60,9 @@ Recent decisions affecting current work:
 - Zod v4: breaking syntax changes from v3 (`z.email()` not `z.string().email()`)
 - Rate limiting: in-memory Map for MVP, known limitation on Vercel multi-instance (document as debt)
 - Payment and email: explicitly deferred to next milestone
+- [Phase 01-foundation]: Two-URL Prisma pattern: DATABASE_URL (pooled PgBouncer) for runtime, DIRECT_URL (direct Neon) for migrations — prevents P1001 timeout on DDL
+- [Phase 01-foundation]: Pino redact covers root and nested (\*.field) PII paths — logger.info({ user: { name } }) also redacts
+- [Phase 01-foundation]: .env.example force-added to git (git add -f): .gitignore .env\* glob catches it but example templates should be tracked
 
 ### Pending Todos
 
@@ -62,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-10
-Stopped at: Roadmap created, STATE.md initialized
+Last session: 2026-04-11T01:01:53.211Z
+Stopped at: Completed 01-foundation/01-01-PLAN.md
 Resume file: None
