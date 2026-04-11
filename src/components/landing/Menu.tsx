@@ -29,41 +29,10 @@ interface MenuItem {
 
 const DEFAULT_ITEMS: MenuItem[] = [
   { id: "home", num: "01", label: "Início", sub: "Você está aqui", href: "/" },
-  {
-    id: "ler",
-    num: "02",
-    label: "Mostre sua mão",
-    sub: "Começar agora",
-    href: "/ler/nome",
-  },
-  {
-    id: "tarot",
-    num: "03",
-    label: "Taro",
-    sub: "Três cartas, de graça",
-    href: "/tarot",
-  },
-  {
-    id: "login",
-    num: "04",
-    label: "Entrar",
-    sub: "Já te conheço",
-    href: "/login",
-  },
-  {
-    id: "registro",
-    num: "05",
-    label: "Criar conta",
-    sub: "Pra você voltar",
-    href: "/registro",
-  },
-  {
-    id: "manifesto",
-    num: "06",
-    label: "Manifesto",
-    sub: "No que eu acredito",
-    href: "/manifesto",
-  },
+  { id: "ler", num: "02", label: "Mostre sua mão", sub: "Começar agora", href: "/ler/nome" },
+  { id: "tarot", num: "03", label: "Tarot Online", sub: "Três cartas, de graça", href: "/tarot" },
+  { id: "login", num: "04", label: "Entrar", sub: "Já te conheço", href: "/login" },
+  { id: "registro", num: "05", label: "Criar conta", sub: "Pra você voltar", href: "/registro" },
 ];
 
 interface MenuProps {

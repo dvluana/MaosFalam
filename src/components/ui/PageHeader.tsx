@@ -13,35 +13,10 @@ import { useAuth } from "@/hooks/useAuth";
  */
 const GUEST_ITEMS = [
   { id: "home", num: "01", label: "Início", sub: "Você está aqui", href: "/" },
-  {
-    id: "ler",
-    num: "02",
-    label: "Mostre sua mão",
-    sub: "Começar agora",
-    href: "/ler/nome",
-  },
-  {
-    id: "tarot",
-    num: "03",
-    label: "Tarot Online",
-    sub: "Três cartas, de graça",
-    href: "/tarot",
-  },
+  { id: "ler", num: "02", label: "Mostre sua mão", sub: "Começar agora", href: "/ler/nome" },
+  { id: "tarot", num: "03", label: "Tarot Online", sub: "Três cartas, de graça", href: "/tarot" },
   { id: "login", num: "04", label: "Entrar", sub: "Já te conheço", href: "/login" },
-  {
-    id: "registro",
-    num: "05",
-    label: "Criar conta",
-    sub: "Pra você voltar",
-    href: "/registro",
-  },
-  {
-    id: "manifesto",
-    num: "06",
-    label: "Manifesto",
-    sub: "No que eu acredito",
-    href: "/manifesto",
-  },
+  { id: "registro", num: "05", label: "Criar conta", sub: "Pra você voltar", href: "/registro" },
 ];
 
 const LOGGED_STATIC = [
@@ -67,20 +42,7 @@ const LOGGED_STATIC = [
     sub: "Três cartas pra distrair a sorte",
     href: "/tarot",
   },
-  {
-    id: "perfil",
-    num: "05",
-    label: "Perfil",
-    sub: "Quem você é pra mim",
-    href: "/conta/perfil",
-  },
-  {
-    id: "manifesto",
-    num: "06",
-    label: "Manifesto",
-    sub: "No que eu acredito",
-    href: "/manifesto",
-  },
+  { id: "perfil", num: "05", label: "Perfil", sub: "Quem você é pra mim", href: "/conta/perfil" },
 ];
 
 /**

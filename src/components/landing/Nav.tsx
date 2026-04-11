@@ -1,28 +1,74 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+
+import { useAuth } from "@/hooks/useAuth";
+
 import Menu from "./Menu";
 import styles from "./Nav.module.css";
 
-/**
- * Nav — barra fixa no topo com logo MãosFalam à esquerda e o trigger
- * do Menu à direita.
- *
- * Porta do `.nav` do landing legado (public/home.html):
- *  - position fixed, z-index 50
- *  - gradiente escuro no topo
- *  - fade-in via `visible` (equivalente ao `nav.classList.add('show')`
- *    disparado pelo preloader em t=6.2s)
- *  - inner column constrangida a 430px, space-between
- */
+const GUEST_ITEMS = [
+  { id: "home", num: "01", label: "Início", sub: "Você está aqui", href: "/" },
+  { id: "ler", num: "02", label: "Mostre sua mão", sub: "Começar agora", href: "/ler/nome" },
+  { id: "tarot", num: "03", label: "Tarot Online", sub: "Três cartas, de graça", href: "/tarot" },
+  { id: "login", num: "04", label: "Entrar", sub: "Já te conheço", href: "/login" },
+  { id: "registro", num: "05", label: "Criar conta", sub: "Pra você voltar", href: "/registro" },
+];
+
+const LOGGED_STATIC = [
+  { id: "home", num: "01", label: "Início", sub: "Você está aqui", href: "/" },
+  {
+    id: "leituras",
+    num: "02",
+    label: "Minhas leituras",
+    sub: "O que suas mãos já disseram",
+    href: "/conta/leituras",
+  },
+  {
+    id: "nova",
+    num: "03",
+    label: "Nova leitura",
+    sub: "Mostre sua mão de novo",
+    href: "/ler/nome",
+  },
+  {
+    id: "tarot",
+    num: "04",
+    label: "Tarot Online",
+    sub: "Três cartas pra distrair a sorte",
+    href: "/tarot",
+  },
+  { id: "perfil", num: "05", label: "Perfil", sub: "Quem você é pra mim", href: "/conta/perfil" },
+];
 
 interface NavProps {
-  /** Qual item do menu aparece marcado como ativo. */
   activeId?: string;
-  /** Controla o fade-in do nav. Default true. */
   visible?: boolean;
 }
 
 export default function Nav({ activeId = "home", visible = true }: NavProps) {
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const menuItems = useMemo(() => {
+    if (!user) return GUEST_ITEMS;
+    return [
+      ...LOGGED_STATIC,
+      {
+        id: "sair",
+        num: "06",
+        label: "Sair",
+        sub: "Até a próxima",
+        href: "/",
+        onClick: () => {
+          logout();
+          router.push("/");
+        },
+      },
+    ];
+  }, [user, logout, router]);
+
   return (
     <header role="banner" className={`${styles.nav} ${visible ? styles.show : ""}`}>
       <div className={styles.inner}>
@@ -50,7 +96,7 @@ export default function Nav({ activeId = "home", visible = true }: NavProps) {
           <img src="/vetor-logo.svg" alt="MãosFalam" className={styles.logoMark} />
         </div>
 
-        <Menu activeId={activeId} />
+        <Menu activeId={activeId} items={menuItems} />
       </div>
     </header>
   );

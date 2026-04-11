@@ -8,13 +8,10 @@ import PageLoading from "@/components/ui/PageLoading";
 
 function LoginInner() {
   return (
-    <main className="min-h-dvh velvet-bg flex items-center justify-center px-6 pt-28 pb-12">
+    <main className="min-h-dvh bg-black flex items-center justify-center px-6 pt-28 pb-12">
       <div className="w-full max-w-sm flex flex-col items-center gap-6">
         <div className="text-center flex flex-col gap-2">
-          <span className="font-logo text-xl text-gold tracking-wider">MaosFalam</span>
-          <p className="font-cormorant italic text-lg text-bone leading-snug">
-            Voltou. Suas maos nao mudaram. Ou mudaram?
-          </p>
+          <span className="font-logo text-xl text-gold tracking-wider">MãosFalam</span>
         </div>
         <SignIn
           appearance={{
@@ -26,7 +23,15 @@ function LoginInner() {
               colorTextSecondary: "#9b9284",
               colorInputBackground: "#171222",
               colorInputText: "#E8DFD0",
-              borderRadius: "0.375rem",
+              borderRadius: "0px 6px 0px 6px",
+            },
+            elements: {
+              card: {
+                backgroundColor: "#110C1A",
+                border: "1px solid rgba(201,162,74,0.1)",
+                borderRadius: "0 6px 0 6px",
+              },
+              rootBox: { width: "100%" },
             },
           }}
           routing="hash"
