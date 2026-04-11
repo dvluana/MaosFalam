@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 04-public-api/04-02-PLAN.md
-last_updated: "2026-04-11T02:23:52.435Z"
+status: Ready to execute
+stopped_at: Completed 05-protected-api/05-01-PLAN.md
+last_updated: "2026-04-11T02:31:49.131Z"
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 12
+  completed_plans: 10
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-10)
 
 **Core value:** Foto da palma entra, leitura personalizada sai. Backend conecta GPT-4o ao motor de leitura e persiste resultados.
-**Current focus:** Phase 04 — public-api
+**Current focus:** Phase 05 — protected-api
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
+Phase: 05 (protected-api) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ _Updated after each plan completion_
 | Phase 03-ai-pipeline P03 | 10 | 2 tasks | 1 files |
 | Phase 04-public-api P01 | 10 | 3 tasks | 3 files |
 | Phase 04-public-api P02 | 6 | 1 tasks | 3 files |
+| Phase 05-protected-api P01 | 7 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,8 @@ Recent decisions affecting current work:
 - [Phase 04-public-api]: UUID validation in reading/[id] returns 404 not 400 — avoids leaking route existence to scanners
 - [Phase 04-public-api]: vi.resetAllMocks() clears factory mock return values — re-apply mocks in beforeEach explicitly
 - [Phase 04-public-api]: Zod v4 uuid() rejects non-standard UUIDs (version digit must be 1-8) — use crypto.randomUUID() for test fixtures
+- [Phase 05-protected-api]: credits/purchase was already fully implemented with AbacatePay — no 501 stub needed; import order fixed instead
+- [Phase 05-protected-api]: import order lint errors in credits/purchase and webhook were auto-fixed (Rule 3) — abacatepay imports must precede auth/logger alphabetically
 
 ### Pending Todos
 
@@ -102,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T02:23:30.588Z
-Stopped at: Completed 04-public-api/04-02-PLAN.md
+Last session: 2026-04-11T02:31:49.128Z
+Stopped at: Completed 05-protected-api/05-01-PLAN.md
 Resume file: None
