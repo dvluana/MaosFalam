@@ -1,33 +1,33 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.3
-milestone_name: Sistema de Creditos Robusto
-status: complete
-stopped_at: v1.3 complete — all 6 phases shipped
-last_updated: "2026-04-14T18:00:00.000Z"
-last_activity: 2026-04-14 — Phase 09 cherry-picked into develop, v1.3 closed
+milestone: v2
+milestone_name: Monetizacao
+status: planning
+stopped_at: Milestone created, ready for /gsd:plan-phase 12
+last_updated: "2026-04-14T19:00:00.000Z"
+last_activity: 2026-04-14 — v2 milestone created with 4 phases (12-15)
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 7
-  completed_plans: 7
+  total_phases: 4
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-13)
+See: .planning/PROJECT.md (updated 2026-04-14)
 
-**Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** v1.3 complete. Next: v2 (AbacatePay integration).
+**Core value:** Foto da palma entra, leitura personalizada sai. Monetizacao via creditos AbacatePay.
+**Current focus:** Phase 12 — AbacatePay v2 Backend
 
 ## Current Position
 
-Phase: All complete
-Plan: All complete
-Status: Milestone v1.3 shipped
-Last activity: 2026-04-14 — Phase 09 fix cherry-picked, v1.3 closed
+Phase: 12 — AbacatePay v2 Backend
+Plan: Not yet planned
+Status: Ready for /gsd:plan-phase 12
+Last activity: 2026-04-14 — v2 milestone created
 
 ## Performance Metrics
 
@@ -70,6 +70,7 @@ _Updated after each plan completion_
 ### Roadmap Evolution
 
 - v1.3 phases 6-11 defined 2026-04-13 from credit system audit
+- v2 phases 12-15 defined 2026-04-14 from AbacatePay v2 audit + code assessment
 
 ### Decisions
 
@@ -137,6 +138,6 @@ None.
 
 ## Session Continuity
 
-Last activity: 2026-04-14 — v1.3 milestone complete
-Stopped at: v1.3 shipped. Next: /gsd:new-milestone for v2
+Last activity: 2026-04-14 — v2 milestone created
+Stopped at: Ready for /gsd:plan-phase 12
 Resume file: None
