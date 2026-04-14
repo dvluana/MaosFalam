@@ -36,8 +36,14 @@ interface WebhookPayload {
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Signature validation (v2: x-webhook-signature header, base64 HMAC-SHA256)
+    // 0. Capture raw body for debugging (temporary — remove after webhook works)
     const rawBody = await req.text();
+    await prisma.$executeRawUnsafe(
+      "INSERT INTO webhook_debug (body) VALUES ($1)",
+      rawBody.slice(0, 2000),
+    );
+
+    // 1. Signature validation (v2: x-webhook-signature header, base64 HMAC-SHA256)
     const signature = req.headers.get("x-webhook-signature") || "";
 
     // Log full payload structure for debugging (no sensitive data — just keys and IDs)

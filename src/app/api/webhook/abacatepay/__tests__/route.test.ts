@@ -24,6 +24,7 @@ vi.mock("@/server/lib/prisma", () => ({
       findUnique: vi.fn(),
     },
     $transaction: vi.fn(),
+    $executeRawUnsafe: vi.fn(),
   },
 }));
 

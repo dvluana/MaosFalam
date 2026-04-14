@@ -74,14 +74,21 @@ function RegistroInner() {
     setError(undefined);
 
     try {
-      await signUp.create({
+      const result = await signUp.create({
         firstName: trimmedName.split(" ")[0],
         lastName: trimmedName.split(" ").slice(1).join(" ") || undefined,
         emailAddress: trimmedEmail,
         password,
       });
 
-      // Send email verification code
+      // If Clerk completed signup without verification (email verification disabled)
+      if (result.status === "complete" && result.createdSessionId) {
+        await setActive({ session: result.createdSessionId });
+        router.push("/conta/leituras");
+        return;
+      }
+
+      // Otherwise, send email verification code
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);
       setLoading(false);
