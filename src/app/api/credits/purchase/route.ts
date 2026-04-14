@@ -63,12 +63,15 @@ export async function POST(req: Request) {
       profile = { ...profile, cpf: data.cpf };
     }
 
-    // Create or recreate AbacatePay customer (recreate when CPF is first provided)
-    let customerId: string | null = profile.abacatepayCustomerId;
+    // AbacatePay customer management:
+    // - No customer yet → create (with CPF if available)
+    // - Customer exists but CPF just provided → recreate with CPF (no update API)
+    // - Customer exists, CPF already saved → reuse existing
+    let customerId = profile.abacatepayCustomerId;
     const cpfValue = data.cpf || profile.cpf || undefined;
-    const needsNewCustomer = !customerId || (data.cpf && !profile.abacatepayCustomerId);
+    const cpfJustProvided = data.cpf && !profile.cpf;
 
-    if (needsNewCustomer) {
+    if (!customerId || cpfJustProvided) {
       step = "create-customer";
       customerId = await createCustomer(user.email, user.name, cpfValue);
       step = "save-customer-id";
@@ -76,10 +79,6 @@ export async function POST(req: Request) {
         where: { clerkUserId: user.id },
         data: { abacatepayCustomerId: customerId },
       });
-    }
-
-    if (!customerId) {
-      throw new Error("Failed to resolve AbacatePay customer ID");
     }
 
     // v2 flow: create Payment FIRST (pending), then checkout with externalId=payment.id
