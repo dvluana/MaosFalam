@@ -3,24 +3,16 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState, type FormEvent } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
-import { Button, Card, Eyebrow, GoogleButton, Input, PageLoading, Toast } from "@/components/ui";
+import { Button, Card, Eyebrow, GoogleButton, PageLoading } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
-import { saveCheckoutIntent, readCheckoutIntent } from "@/lib/checkout-intent";
+import { readCheckoutIntent, saveCheckoutIntent } from "@/lib/checkout-intent";
+import { formatCPF, isValidCPF } from "@/lib/cpf";
+import { initiatePurchase } from "@/lib/payment-client";
+import { getUserProfile } from "@/lib/user-client";
 
-type PageState =
-  | "default"
-  | "pix_selected"
-  | "card_selected"
-  | "processing_payment"
-  | "payment_success"
-  | "payment_failed_pix_expired"
-  | "payment_failed_card_declined"
-  | "payment_failed_generic"
-  | "requires_login";
-
-type PaymentMethod = "pix" | "card";
+type PageState = "default" | "processing_payment" | "payment_failed_generic" | "requires_login";
 
 interface Pacote {
   id: string;
@@ -39,20 +31,20 @@ const PACOTES: readonly Pacote[] = [
     nome: "Avulsa",
     creditos: 1,
     preco: 14.9,
-    paraQuem: "Pra você. Sozinha.",
-    tagline: "Uma mão. Uma voz. Uma verdade.",
+    paraQuem: "Pra voce. Sozinha.",
+    tagline: "Uma mao. Uma voz. Uma verdade.",
     story:
-      "A primeira vez que eu te leio. Você me estende a palma, eu devolvo o que vi. Simples assim. Não precisa mostrar pra ninguém. Fica entre nós.",
+      "A primeira vez que eu te leio. Voce me estende a palma, eu devolvo o que vi. Simples assim. Nao precisa mostrar pra ninguem. Fica entre nos.",
   },
   {
     id: "dupla",
     nome: "Dupla",
     creditos: 2,
     preco: 24.9,
-    paraQuem: "Pra você e pra quem te importa.",
-    tagline: "Duas mãos, lado a lado.",
+    paraQuem: "Pra voce e pra quem te importa.",
+    tagline: "Duas maos, lado a lado.",
     story:
-      "A sua e a dele. Ou a sua e a da sua melhor amiga. Ou a sua e a da sua mãe. Uma leitura pra você entender quem você é, outra pra entender quem caminha do seu lado.",
+      "A sua e a dele. Ou a sua e a da sua melhor amiga. Ou a sua e a da sua mae. Uma leitura pra voce entender quem voce e, outra pra entender quem caminha do seu lado.",
   },
   {
     id: "roda",
@@ -60,24 +52,22 @@ const PACOTES: readonly Pacote[] = [
     creditos: 5,
     preco: 49.9,
     popular: true,
-    paraQuem: "Pra fechar o círculo.",
-    tagline: "Cinco mãos. Cinco histórias.",
+    paraQuem: "Pra fechar o circulo.",
+    tagline: "Cinco maos. Cinco historias.",
     story:
-      "A roda é onde as ciganas se sentam no chão e cada uma mostra a palma. Você lê a sua e escolhe mais quatro. A família, as amigas da infância, o grupo que te conhece de verdade. Todo mundo sai sabendo.",
+      "A roda e onde as ciganas se sentam no chao e cada uma mostra a palma. Voce le a sua e escolhe mais quatro. A familia, as amigas da infancia, o grupo que te conhece de verdade. Todo mundo sai sabendo.",
   },
   {
     id: "tsara",
     nome: "Tsara",
     creditos: 10,
     preco: 79.9,
-    paraQuem: "Pra quando é festa.",
-    tagline: "Dez mãos. A casa inteira.",
+    paraQuem: "Pra quando e festa.",
+    tagline: "Dez maos. A casa inteira.",
     story:
-      "Tsara é nome que as ciganas davam pro encontro grande, quando todo mundo falava de todo mundo e a noite não acabava. Dez leituras, pra você espalhar pela sua gente. Cada uma sai com algo pra carregar.",
+      "Tsara e nome que as ciganas davam pro encontro grande, quando todo mundo falava de todo mundo e a noite nao acabava. Dez leituras, pra voce espalhar pela sua gente. Cada uma sai com algo pra carregar.",
   },
 ];
-
-const PIX_CODE = "00020126580014br.gov.bcb.pix0136a629534e-7693-4846-b028-2c3e7a8e5204";
 
 function formatBRL(v: number): string {
   return v.toLocaleString("pt-BR", {
@@ -88,12 +78,6 @@ function formatBRL(v: number): string {
 
 function formatPorLeitura(v: number, c: number): string {
   return formatBRL(v / c);
-}
-
-function formatTimer(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 }
 
 export default function CreditosPage() {
@@ -111,8 +95,7 @@ function CreditosInner() {
 
   const [pageState, setPageState] = useState<PageState>("default");
 
-  // Deck: a carta atual é a "selecionada". Default inicia em Roda (index 2),
-  // mas pode ser sobrescrita pelo ?pacote= ou pelo intent salvo no checkout.
+  // Deck state
   const initialIdx = (() => {
     const fromUrl = params?.get("pacote");
     if (fromUrl) {
@@ -140,25 +123,43 @@ function CreditosInner() {
     const el = document.getElementById("pagamento");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  const [method, setMethod] = useState<PaymentMethod>("pix");
-  const [timer, setTimer] = useState<number>(15 * 60);
-  const [copied, setCopied] = useState<boolean>(false);
 
-  const [cardNumber, setCardNumber] = useState<string>("");
-  const [cardExpiry, setCardExpiry] = useState<string>("");
-  const [cardCvv, setCardCvv] = useState<string>("");
-  const [cardName, setCardName] = useState<string>("");
+  // CPF state
+  const [cpf, setCpf] = useState<string>("");
+  const [cpfError, setCpfError] = useState<string | null>(null);
+  const [hasCpf, setHasCpf] = useState<boolean | null>(null);
+
+  // Purchase state
+  const [purchasing, setPurchasing] = useState<boolean>(false);
+  const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
   const [loginLoading] = useState<boolean>(false);
+
+  // Reading ID from upsell flow
+  const readingId = params?.get("reading") ?? undefined;
 
   const pacote = useMemo(
     () => PACOTES.find((p) => p.id === selectedPacote) ?? null,
     [selectedPacote],
   );
 
-  // Ao montar com user logado: se há intent salvo, restaura pacote/método
-  // e rola direto pra seção de pagamento (o login deu certo, a pessoa volta
-  // exatamente onde estava).
+  // On mount with logged-in user: check if CPF exists on profile
+  useEffect(() => {
+    if (!user) {
+      setHasCpf(null);
+      return;
+    }
+    void getUserProfile()
+      .then((profile) => {
+        setHasCpf(profile.cpf !== null);
+      })
+      .catch(() => {
+        // If profile fetch fails, assume no CPF (will be collected)
+        setHasCpf(false);
+      });
+  }, [user]);
+
+  // On mount with logged-in user: restore checkout intent
   useEffect(() => {
     if (!user) return;
     const intent = readCheckoutIntent();
@@ -167,8 +168,6 @@ function CreditosInner() {
     const frame = window.requestAnimationFrame(() => {
       if (idx < 0) return;
       setDeckIdx(idx);
-      setMethod(intent.method);
-      // scroll suave pra seção de pagamento
       window.setTimeout(() => {
         const el = document.getElementById("pagamento");
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -177,68 +176,46 @@ function CreditosInner() {
     return () => window.cancelAnimationFrame(frame);
   }, [user]);
 
-  // Timer PIX
-  useEffect(() => {
-    if (pageState !== "pix_selected") return;
-    const id = window.setInterval(() => {
-      setTimer((t) => {
-        if (t <= 1) {
-          window.clearInterval(id);
-          setPageState("payment_failed_pix_expired");
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => window.clearInterval(id);
-  }, [pageState]);
-
-  // Auto-redirect success
-  useEffect(() => {
-    if (pageState !== "payment_success") return;
-    const id = window.setTimeout(() => {
-      router.push("/conta/leituras");
-    }, 1500);
-    return () => window.clearTimeout(id);
-  }, [pageState, router]);
-
-  // Processing -> success
-  useEffect(() => {
-    if (pageState !== "processing_payment") return;
-    const id = window.setTimeout(() => {
-      setPageState("payment_success");
-    }, 2000);
-    return () => window.clearTimeout(id);
-  }, [pageState]);
-
-  function handlePagar(): void {
+  const handlePagar = useCallback(async () => {
     if (!pacote) return;
+
+    // Not logged in: save intent and show login modal
     if (!user) {
-      // Salva intenção pra preservar contexto se a usuária sair pra login
-      saveCheckoutIntent(pacote.id, method);
+      saveCheckoutIntent(pacote.id, "pix");
       setPageState("requires_login");
       return;
     }
-    if (method === "pix") {
-      setTimer(15 * 60);
-      setPageState("pix_selected");
-    } else {
-      setPageState("card_selected");
+
+    // CPF validation for first-time buyers
+    if (hasCpf === false) {
+      const rawCpf = cpf.replace(/\D/g, "");
+      if (!isValidCPF(rawCpf)) {
+        setCpfError("CPF invalido.");
+        return;
+      }
     }
-  }
 
-  function handleCopyPix(): void {
-    if (typeof navigator === "undefined" || !navigator.clipboard) return;
-    void navigator.clipboard.writeText(PIX_CODE).then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    });
-  }
-
-  function handleCardSubmit(e: FormEvent<HTMLFormElement>): void {
-    e.preventDefault();
+    // Initiate purchase
     setPageState("processing_payment");
-  }
+    setPurchasing(true);
+    setPurchaseError(null);
+
+    try {
+      const cpfToSend = hasCpf === false ? cpf.replace(/\D/g, "") : undefined;
+      const result = await initiatePurchase(pacote.id, cpfToSend, readingId);
+      // Redirect to AbacatePay hosted checkout
+      window.location.href = result.checkout_url;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Erro desconhecido";
+      const is429 = message.startsWith("429");
+      setPurchaseError(
+        is429 ? "Devagar. Tenta de novo daqui a pouco." : "Algo saiu do caminho. Tente de novo.",
+      );
+      setPageState("payment_failed_generic");
+    } finally {
+      setPurchasing(false);
+    }
+  }, [pacote, user, hasCpf, cpf, readingId]);
 
   function handleGoogleLogin(): void {
     router.push("/login?return=/creditos");
@@ -246,7 +223,7 @@ function CreditosInner() {
 
   function handleRetry(): void {
     setPageState("default");
-    setTimer(15 * 60);
+    setPurchaseError(null);
   }
 
   return (
@@ -260,13 +237,13 @@ function CreditosInner() {
             Escolha o que faz sentido.
           </h1>
           <p className="font-cormorant italic text-[18px] sm:text-[22px] text-bone-dim leading-[1.4] max-w-md mx-auto">
-            Uma leitura é diferente de cinco. E cinco é diferente de dez. Cada pacote é um jeito de
-            fazer isso. Você escolhe quantas mãos vão passar por aqui.
+            Uma leitura e diferente de cinco. E cinco e diferente de dez. Cada pacote e um jeito de
+            fazer isso. Voce escolhe quantas maos vao passar por aqui.
           </p>
         </header>
 
         {/* Deck de tarot: 1 carta por vez com setas laterais */}
-        <section className="relative mb-10" aria-label="Pacotes de créditos">
+        <section className="relative mb-10" aria-label="Pacotes de creditos">
           {/* Container do deck */}
           <div className="relative flex items-center justify-center">
             {/* Seta esquerda */}
@@ -283,13 +260,13 @@ function CreditosInner() {
               }}
             >
               <span className="font-cinzel text-[22px] text-gold leading-none" aria-hidden>
-                ‹
+                &#8249;
               </span>
             </button>
 
             {/* Carta central + peeks laterais */}
             <div className="relative mx-auto" style={{ width: "min(100%, 440px)" }}>
-              {/* Peek da carta anterior — escondida atrás à esquerda */}
+              {/* Peek da carta anterior */}
               <div
                 aria-hidden
                 className="absolute inset-y-4 -left-3 w-8 pointer-events-none hidden sm:block"
@@ -301,7 +278,7 @@ function CreditosInner() {
                   zIndex: 1,
                 }}
               />
-              {/* Peek da carta seguinte — escondida atrás à direita */}
+              {/* Peek da carta seguinte */}
               <div
                 aria-hidden
                 className="absolute inset-y-4 -right-3 w-8 pointer-events-none hidden sm:block"
@@ -367,7 +344,7 @@ function CreditosInner() {
                               "0 30px 60px -16px rgba(0,0,0,0.9), 0 0 56px -8px rgba(201,162,74,0.25), 0 0 1px rgba(201,162,74,0.3)",
                           }}
                         >
-                          {/* Radial glow gold — carta ativa */}
+                          {/* Radial glow gold */}
                           <div
                             aria-hidden
                             className="pointer-events-none absolute inset-0"
@@ -377,7 +354,7 @@ function CreditosInner() {
                             }}
                           />
 
-                          {/* Corner accents — 4 cantos pra dar cara de carta */}
+                          {/* Corner accents */}
                           <span
                             aria-hidden
                             className="absolute w-[14px] h-[14px] top-2 left-2 border-t border-l"
@@ -430,7 +407,7 @@ function CreditosInner() {
                           )}
 
                           <div className="relative flex flex-col">
-                            {/* Header: número + nome */}
+                            {/* Header: numero + nome */}
                             <div className="flex items-baseline gap-3 mb-1">
                               <span
                                 className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold-dim"
@@ -478,7 +455,7 @@ function CreditosInner() {
                               }}
                             />
 
-                            {/* Footer: créditos + preço */}
+                            {/* Footer: creditos + preco */}
                             <div className="flex items-end justify-between gap-4">
                               <div className="flex flex-col">
                                 <span
@@ -518,7 +495,7 @@ function CreditosInner() {
                                 <span className="w-1 h-1 rotate-45 bg-gold-dim" />
                                 Toque pra escolher esse
                                 <span aria-hidden className="text-gold text-[12px]">
-                                  ↓
+                                  &#8595;
                                 </span>
                                 <span className="w-1 h-1 rotate-45 bg-gold-dim" />
                               </span>
@@ -536,7 +513,7 @@ function CreditosInner() {
             <button
               type="button"
               onClick={goNext}
-              aria-label="Próximo pacote"
+              aria-label="Proximo pacote"
               className="absolute right-0 sm:right-[-12px] z-20 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center focus:outline-none transition-all hover:scale-110"
               style={{
                 background: "rgba(14,10,24,0.9)",
@@ -546,12 +523,12 @@ function CreditosInner() {
               }}
             >
               <span className="font-cinzel text-[22px] text-gold leading-none" aria-hidden>
-                ›
+                &#8250;
               </span>
             </button>
           </div>
 
-          {/* Indicador de posição (dots tarot) */}
+          {/* Indicador de posicao (dots tarot) */}
           <div className="flex items-center justify-center gap-3 mt-8">
             <span
               className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim"
@@ -580,9 +557,8 @@ function CreditosInner() {
           </div>
         </section>
 
-        {/* Seção de pagamento destacada */}
+        {/* Secao de pagamento */}
         <section id="pagamento" className="scroll-mt-28 mb-12">
-          {/* Eyebrow */}
           <Eyebrow label="Fechar a conta" className="justify-center mb-6" />
 
           <article
@@ -613,7 +589,7 @@ function CreditosInner() {
                       className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim mb-1"
                       style={{ fontWeight: 500 }}
                     >
-                      Você escolheu
+                      Voce escolheu
                     </span>
                     <span className="font-cinzel text-[22px] sm:text-[26px] text-gold leading-none">
                       {pacote.nome}
@@ -634,223 +610,85 @@ function CreditosInner() {
                 </div>
               ) : (
                 <p className="font-cormorant italic text-[18px] text-bone-dim text-center">
-                  Escolhe um pacote lá em cima primeiro.
+                  Escolhe um pacote la em cima primeiro.
                 </p>
               )}
 
-              {/* Método de pagamento */}
-              <div className="flex flex-col gap-3">
-                <span
-                  className="font-jetbrains text-[9.5px] tracking-[1.5px] uppercase text-gold-dim"
-                  style={{ fontWeight: 500 }}
-                >
-                  Como você quer pagar
-                </span>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setMethod("pix")}
-                    className="relative px-4 py-4 text-center transition-all focus:outline-none"
-                    style={{
-                      background: method === "pix" ? "rgba(201,162,74,0.08)" : "transparent",
-                      border:
-                        method === "pix"
-                          ? "1px solid rgba(201,162,74,0.55)"
-                          : "1px solid rgba(201,162,74,0.12)",
-                    }}
-                  >
-                    <span
-                      className="font-cinzel text-[14px] tracking-[0.06em]"
-                      style={{
-                        color: method === "pix" ? "#c9a24a" : "#9b9284",
+              {/* CPF field — only for first-time buyers */}
+              {user && hasCpf === false && (
+                <div className="flex flex-col gap-2">
+                  <label className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
+                    Seu CPF
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={cpf}
+                      onChange={(e) => {
+                        setCpf(formatCPF(e.target.value));
+                        if (cpfError) setCpfError(null);
                       }}
-                    >
-                      Pix
-                    </span>
-                    <span className="block font-cormorant italic text-[12px] text-bone-dim mt-1">
-                      instantâneo
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMethod("card")}
-                    className="relative px-4 py-4 text-center transition-all focus:outline-none"
-                    style={{
-                      background: method === "card" ? "rgba(201,162,74,0.08)" : "transparent",
-                      border:
-                        method === "card"
-                          ? "1px solid rgba(201,162,74,0.55)"
-                          : "1px solid rgba(201,162,74,0.12)",
-                    }}
-                  >
-                    <span
-                      className="font-cinzel text-[14px] tracking-[0.06em]"
-                      style={{
-                        color: method === "card" ? "#c9a24a" : "#9b9284",
+                      onBlur={() => {
+                        const raw = cpf.replace(/\D/g, "");
+                        if (raw.length > 0 && !isValidCPF(raw)) {
+                          setCpfError("CPF invalido.");
+                        }
                       }}
-                    >
-                      Cartão
-                    </span>
-                    <span className="block font-cormorant italic text-[12px] text-bone-dim mt-1">
-                      crédito ou débito
-                    </span>
-                  </button>
+                      placeholder="000.000.000-00"
+                      className="w-full bg-transparent border-b text-bone font-raleway text-[15px] py-3 outline-none placeholder:font-cormorant placeholder:italic placeholder:text-violet-dim transition-colors"
+                      style={{
+                        borderBottomColor: cpfError
+                          ? "rgba(196,100,122,0.6)"
+                          : "rgba(123,107,165,0.1)",
+                      }}
+                    />
+                    {/* Focus accent line */}
+                    <span
+                      className="absolute bottom-0 left-0 h-px transition-all duration-400"
+                      style={{
+                        background: "linear-gradient(90deg, #C4647A, #7B6BA5)",
+                        width: "0%",
+                      }}
+                    />
+                  </div>
+                  {cpfError && (
+                    <span className="font-jetbrains text-[11px] text-rose mt-1">{cpfError}</span>
+                  )}
                 </div>
-              </div>
+              )}
 
               {/* CTA pagar */}
               <div className="flex flex-col items-center gap-3 pt-2">
                 <Button
                   variant="primary"
                   size="lg"
-                  disabled={!pacote}
-                  onClick={handlePagar}
+                  disabled={!pacote || purchasing}
+                  onClick={() => void handlePagar()}
                   className="w-full"
                 >
-                  Pagar {pacote ? formatBRL(pacote.preco) : ""}
+                  {purchasing
+                    ? "Redirecionando..."
+                    : `Pagar ${pacote ? formatBRL(pacote.preco) : ""}`}
                 </Button>
                 <p className="font-cormorant italic text-[13px] text-bone-dim text-center">
-                  O preço do que você vai descobrir é barato pelo que vale.
+                  O preco do que voce vai descobrir e barato pelo que vale.
                 </p>
               </div>
             </div>
           </article>
         </section>
 
-        {/* Estados dinâmicos */}
-        {pageState === "pix_selected" && pacote && (
-          <Card accentColor="gold">
-            <h3 className="font-cinzel text-sm text-gold uppercase tracking-[0.04em] mb-4">
-              Pix gerado
-            </h3>
-            <p className="font-cormorant italic text-base text-bone-dim mb-5">
-              Abra o app do banco e escaneie. Você tem {formatTimer(timer)}.
-            </p>
-            <div
-              aria-label="QR Code Pix"
-              className="mx-auto mb-5 w-48 h-48 branded-radius"
-              style={{
-                background: "repeating-conic-gradient(#08050e 0 25%, #e8dfd0 0 50%)",
-                backgroundSize: "16px 16px",
-              }}
-            />
-            <p className="font-jetbrains text-[10px] text-violet uppercase tracking-[1.5px] mb-2">
-              Código Pix
-            </p>
-            <p className="font-jetbrains text-[11px] text-bone-dim break-all mb-4 p-3 border border-[rgba(201,162,74,0.08)] branded-radius">
-              {PIX_CODE}
-            </p>
-            <div className="flex gap-3 flex-wrap">
-              <Button variant="secondary" size="sm" onClick={handleCopyPix}>
-                {copied ? "\u2713 Copiado" : "Copiar código Pix"}
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => setPageState("processing_payment")}>
-                Já paguei
-              </Button>
-            </div>
-          </Card>
-        )}
-
-        {pageState === "card_selected" && pacote && (
-          <Card accentColor="violet">
-            <h3 className="font-cinzel text-sm text-gold uppercase tracking-[0.04em] mb-5">
-              Dados do cartão
-            </h3>
-            <form onSubmit={handleCardSubmit} className="space-y-5">
-              <Input
-                label="Número do cartão"
-                placeholder="0000 0000 0000 0000"
-                inputMode="numeric"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-                required
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  label="Validade"
-                  placeholder="MM/AA"
-                  value={cardExpiry}
-                  onChange={(e) => setCardExpiry(e.target.value)}
-                  required
-                />
-                <Input
-                  label="CVV"
-                  placeholder="000"
-                  inputMode="numeric"
-                  value={cardCvv}
-                  onChange={(e) => setCardCvv(e.target.value)}
-                  required
-                />
-              </div>
-              <Input
-                label="Nome no cartão"
-                placeholder="como está impresso"
-                value={cardName}
-                onChange={(e) => setCardName(e.target.value)}
-                required
-              />
-              <div className="pt-2">
-                <Button variant="primary" size="lg" type="submit">
-                  Pagar {formatBRL(pacote.preco)}
-                </Button>
-              </div>
-            </form>
-          </Card>
-        )}
-
+        {/* Dynamic states */}
         {pageState === "processing_payment" && (
           <Card accentColor="violet">
             <div className="py-6 text-center">
               <p className="font-cormorant italic text-xl text-bone leading-relaxed mb-4">
-                O preço do que você vai descobrir é barato pelo que vale.
+                O preco do que voce vai descobrir e barato pelo que vale.
               </p>
               <p className="font-jetbrains text-[10px] text-violet uppercase tracking-[1.5px]">
-                Processando
+                Redirecionando...
               </p>
-            </div>
-          </Card>
-        )}
-
-        {pageState === "payment_success" && (
-          <Toast
-            variant="rose"
-            icon="♀"
-            message="Suas linhas completas estão esperando."
-            detail="pagamento confirmado"
-          />
-        )}
-
-        {pageState === "payment_failed_pix_expired" && (
-          <Card accentColor="rose">
-            <p className="font-cormorant italic text-lg text-bone mb-4">
-              O código Pix expirou. Gere um novo.
-            </p>
-            <Button variant="primary" size="sm" onClick={handleRetry}>
-              Gerar novo
-            </Button>
-          </Card>
-        )}
-
-        {pageState === "payment_failed_card_declined" && (
-          <Card accentColor="rose">
-            <p className="font-cormorant italic text-lg text-bone mb-4">
-              O cartão não passou. Tente outro ou use Pix.
-            </p>
-            <div className="flex gap-3 flex-wrap">
-              <Button variant="primary" size="sm" onClick={() => setPageState("card_selected")}>
-                Outro cartão
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  setMethod("pix");
-                  setTimer(15 * 60);
-                  setPageState("pix_selected");
-                }}
-              >
-                Usar Pix
-              </Button>
             </div>
           </Card>
         )}
@@ -858,7 +696,7 @@ function CreditosInner() {
         {pageState === "payment_failed_generic" && (
           <Card accentColor="rose">
             <p className="font-cormorant italic text-lg text-bone mb-4">
-              Algo deu errado no pagamento. Tente novamente.
+              {purchaseError ?? "Algo saiu do caminho. Tente de novo."}
             </p>
             <Button variant="primary" size="sm" onClick={handleRetry}>
               Tentar de novo
@@ -866,6 +704,7 @@ function CreditosInner() {
           </Card>
         )}
 
+        {/* Login modal */}
         {pageState === "requires_login" && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -877,7 +716,7 @@ function CreditosInner() {
             aria-labelledby="login-title"
             onClick={() => !loginLoading && setPageState("default")}
           >
-            {/* Backdrop escuro com blur */}
+            {/* Backdrop */}
             <div
               aria-hidden
               className="absolute inset-0"
@@ -904,7 +743,7 @@ function CreditosInner() {
                   "0 40px 80px -20px rgba(0,0,0,0.95), 0 0 80px -8px rgba(201,162,74,0.22), 0 0 1px rgba(201,162,74,0.5)",
               }}
             >
-              {/* Radial glow interno */}
+              {/* Radial glow */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0"
@@ -939,7 +778,7 @@ function CreditosInner() {
                 />
               ))}
 
-              {/* Close X no topo-direita */}
+              {/* Close X */}
               <button
                 type="button"
                 onClick={() => !loginLoading && setPageState("default")}
@@ -948,7 +787,7 @@ function CreditosInner() {
                 className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center text-bone-dim hover:text-gold transition-colors focus:outline-none disabled:opacity-30"
               >
                 <span className="font-cinzel text-[22px] leading-none" aria-hidden>
-                  ×
+                  &#215;
                 </span>
               </button>
 
@@ -973,28 +812,28 @@ function CreditosInner() {
                   Antes de guardar
                 </span>
 
-                {/* Título */}
+                {/* Titulo */}
                 <h3
                   id="login-title"
                   className="font-cinzel text-[22px] sm:text-[26px] text-bone leading-[1.15] mb-3 max-w-[280px]"
                 >
-                  Eu preciso saber quem você é.
+                  Eu preciso saber quem voce e.
                 </h3>
 
                 {/* Cigana voice */}
                 <p className="font-cormorant italic text-[17px] sm:text-[19px] text-bone-dim leading-[1.35] mb-8 max-w-[300px]">
-                  Pra eu guardar seus créditos e te chamar pelo nome quando você voltar.
+                  Pra eu guardar seus creditos e te chamar pelo nome quando voce voltar.
                 </p>
 
-                {/* Botão Google (componente unificado) */}
+                {/* Botao Google */}
                 <GoogleButton onClick={handleGoogleLogin} loading={loginLoading} />
 
-                {/* Hint rodapé */}
+                {/* Hint rodape */}
                 <p className="font-cormorant italic text-[13px] text-bone-dim mt-6 max-w-[280px]">
-                  Um clique. Sem senha. Sem complicação.
+                  Um clique. Sem senha. Sem complicacao.
                 </p>
 
-                {/* Divisor + "já tenho conta" */}
+                {/* Divisor + "ja tenho conta" */}
                 <div className="flex items-center gap-3 mt-6 w-full">
                   <span
                     className="h-px flex-1"
@@ -1016,10 +855,10 @@ function CreditosInner() {
                   className="mt-4 font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold hover:text-gold-light transition-colors"
                   style={{ fontWeight: 500 }}
                 >
-                  Já tenho conta · Entrar
+                  Ja tenho conta · Entrar
                 </Link>
 
-                {/* Deco rodapé */}
+                {/* Deco rodape */}
                 <div className="flex items-center gap-2 mt-6">
                   <span className="h-px w-12 bg-gold-dim/30" />
                   <span className="w-1 h-1 rotate-45 bg-gold-dim" />
