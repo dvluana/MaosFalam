@@ -45,9 +45,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Assinatura invalida" }, { status: 401 });
     }
 
-    // 2. Log full payload for diagnosis (temporary — remove after confirming webhook works)
-    logger.info({ rawBody: rawBody.slice(0, 500) }, "Webhook raw body");
-
     const body = JSON.parse(rawBody) as WebhookPayload;
 
     if (body.devMode) {
@@ -83,7 +80,18 @@ export async function POST(req: NextRequest) {
 
     if (!payment) {
       logger.warn({ externalId, checkoutId }, "Payment not found for webhook");
-      return NextResponse.json({ error: "Payment not found" }, { status: 404 });
+      return NextResponse.json(
+        {
+          error: "Payment not found",
+          debug: {
+            externalId,
+            checkoutId,
+            event: body.event,
+            dataKeys: Object.keys(body.data || {}),
+          },
+        },
+        { status: 404 },
+      );
     }
 
     // 4. Idempotency: skip if already paid
