@@ -118,7 +118,13 @@ export async function POST(req: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Dados invalidos" }, { status: 400 });
     }
-    logger.error({ error, route: "/api/reading/capture" }, "Erro na rota");
+    logger.error(
+      {
+        err: error instanceof Error ? error.message : String(error),
+        route: "/api/reading/capture",
+      },
+      "Erro na rota",
+    );
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

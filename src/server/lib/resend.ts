@@ -29,16 +29,12 @@ async function sendEmail(to: string, subject: string, html: string) {
 
     logger.info({ to_hash: hashEmail(to), subject }, "Email sent");
   } catch (err) {
-    logger.error({ err }, "Resend fetch failed");
+    logger.error({ err: err instanceof Error ? err.message : String(err) }, "Resend fetch failed");
     // Email falhando NUNCA derruba o fluxo principal.
   }
 }
 
-export async function sendPaymentConfirmed(
-  to: string,
-  name: string,
-  readingUrl: string,
-) {
+export async function sendPaymentConfirmed(to: string, name: string, readingUrl: string) {
   await sendEmail(
     to,
     `Sua leitura completa ta pronta, ${name}`,
@@ -70,11 +66,7 @@ export async function sendWelcome(to: string, name: string) {
   );
 }
 
-export async function sendLeadReading(
-  to: string,
-  name: string,
-  readingUrl: string,
-) {
+export async function sendLeadReading(to: string, name: string, readingUrl: string) {
   await sendEmail(
     to,
     `Suas maos ja falaram, ${name}`,

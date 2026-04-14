@@ -40,7 +40,10 @@ export async function GET(_req: NextRequest, context: { params: Promise<unknown>
       },
     });
   } catch (error) {
-    logger.error({ error, route: "/api/reading/[id]" }, "Erro na rota");
+    logger.error(
+      { err: error instanceof Error ? error.message : String(error), route: "/api/reading/[id]" },
+      "Erro na rota",
+    );
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

@@ -133,7 +133,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    logger.error({ error, route: "/api/webhook/abacatepay" }, "Webhook error");
+    logger.error(
+      {
+        err: error instanceof Error ? error.message : String(error),
+        route: "/api/webhook/abacatepay",
+      },
+      "Webhook error",
+    );
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }
