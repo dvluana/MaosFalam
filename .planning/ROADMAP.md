@@ -124,6 +124,12 @@ Plans:
 **Goal**: Bugs pendentes de UX resolvidos.
 **Depends on**: Nothing (independent)
 **Requirements**: BUG-01, BUG-02, BUG-03
+**Plans:** 1 plan
+
+Plans:
+
+- [ ] 15-01-PLAN.md — Manifesto accents + camera handedness mirroring fix + revelacao responsive card
+
 **Success Criteria** (what must be TRUE):
 
 1. Manifesto: 63 palavras sem acento corrigidas
@@ -140,4 +146,4 @@ Phase 12 → 13 → 14 (parallel to 15) → 15
 | 12. AbacatePay v2 Backend | v2        | 2/2            | Complete    | 2026-04-14 |
 | 13. Frontend Payment Flow | v2        | 2/2            | Complete    | 2026-04-14 |
 | 14. Email & Hardening     | v2        | 1/1            | Complete    | 2026-04-14 |
-| 15. Bug Fixes             | v2        | 0/?            | Not started | -          |
+| 15. Bug Fixes             | v2        | 0/1            | Not started | -          |
