@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/Button";
+import Eyebrow from "@/components/ui/Eyebrow";
 import { loadReadingContext } from "@/lib/reading-context";
+import { STORAGE_KEYS } from "@/lib/storage-keys";
 
 function personalize(phrase: string, name: string | null): string {
   if (!name) return phrase;
@@ -27,8 +29,8 @@ export default function RevelacaoPage() {
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       const ctx = loadReadingContext();
-      const name = ctx?.target_name ?? sessionStorage.getItem("maosfalam_name");
-      const stored = sessionStorage.getItem("maosfalam_impact_phrase");
+      const name = ctx?.target_name ?? sessionStorage.getItem(STORAGE_KEYS.name);
+      const stored = sessionStorage.getItem(STORAGE_KEYS.impact_phrase);
       const raw = stored ?? "Você carrega mais do que mostra. E isso te protege e te prende.";
       setPhrase(personalize(raw, name));
     });
@@ -63,12 +65,12 @@ export default function RevelacaoPage() {
 
   const onContinue = () => {
     setFadingOut(true);
-    const readingId = sessionStorage.getItem("maosfalam_reading_id");
+    const readingId = sessionStorage.getItem(STORAGE_KEYS.reading_id);
     if (!readingId) {
       setTimeout(() => router.replace("/ler/nome"), 500);
       return;
     }
-    const tier = sessionStorage.getItem("maosfalam_reading_tier");
+    const tier = sessionStorage.getItem(STORAGE_KEYS.reading_tier);
     const isPremium = tier === "premium";
     const path = isPremium ? `/ler/resultado/${readingId}/completo` : `/ler/resultado/${readingId}`;
     setTimeout(() => router.push(path), 500);
@@ -135,26 +137,9 @@ export default function RevelacaoPage() {
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative flex items-center gap-3"
+        className="relative"
       >
-        <span
-          className="h-px w-10"
-          style={{
-            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
-          }}
-        />
-        <span
-          className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold whitespace-nowrap"
-          style={{ fontWeight: 500 }}
-        >
-          A primeira verdade
-        </span>
-        <span
-          className="h-px w-10"
-          style={{
-            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
-          }}
-        />
+        <Eyebrow label="A primeira verdade" />
       </motion.div>
 
       {/* === CARTA DE TAROT === */}

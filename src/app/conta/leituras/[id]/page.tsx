@@ -12,6 +12,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Separator from "@/components/ui/Separator";
 import { getReading } from "@/lib/reading-client";
+import { buildShareUrl } from "@/lib/share-url";
 import type { Reading } from "@/types/report";
 
 interface PageProps {
@@ -21,10 +22,7 @@ interface PageProps {
 type State = "free_saved" | "premium_saved" | "share_options";
 
 function ShareOptions({ readingId }: { readingId: string }) {
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/compartilhar/${readingId}`
-      : `/compartilhar/${readingId}`;
+  const shareUrl = buildShareUrl(readingId);
   const waMessage = encodeURIComponent(`Olha o que suas mãos disseram: ${shareUrl}`);
   const copy = async () => {
     try {

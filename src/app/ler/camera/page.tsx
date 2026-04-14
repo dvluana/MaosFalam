@@ -21,6 +21,7 @@ import { useLandscapeGuard } from "@/hooks/useLandscapeGuard";
 import { useUploadValidation } from "@/hooks/useUploadValidation";
 import { clearPhotoStore, setPhoto } from "@/lib/photo-store";
 import { loadReadingContext } from "@/lib/reading-context";
+import { STORAGE_KEYS } from "@/lib/storage-keys";
 import { CAM_EYEBROW, CAM_FEEDBACK, isErrorState, type CamState } from "@/types/camera";
 
 function CameraPageInner() {
@@ -56,7 +57,7 @@ function CameraPageInner() {
   // Guard: sem nome no sessionStorage, volta pro /ler/nome
   // Clear stale photo from previous reading to avoid sending old photo
   useEffect(() => {
-    if (!sessionStorage.getItem("maosfalam_name_fresh")) {
+    if (!sessionStorage.getItem(STORAGE_KEYS.name_fresh)) {
       router.replace("/ler/nome");
       return;
     }

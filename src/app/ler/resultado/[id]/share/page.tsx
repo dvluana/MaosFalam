@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import PageLoading from "@/components/ui/PageLoading";
 import { getReading } from "@/lib/reading-client";
+import { buildShareUrl } from "@/lib/share-url";
 import type { HandElement, Reading } from "@/types/report";
 
 const ELEMENT_LABEL: Record<HandElement, string> = {
@@ -225,12 +226,7 @@ export default function SharePage({ params }: PageProps) {
       });
   }, [id]);
 
-  const shareUrl =
-    data !== null
-      ? typeof window !== "undefined"
-        ? `${window.location.origin}/compartilhar/${data.id}`
-        : `/compartilhar/${data.id}`
-      : "";
+  const shareUrl = data !== null ? buildShareUrl(data.id) : "";
 
   const impactPhrase = data?.report.impact_phrase ?? "";
   const elementTitle = data ? ELEMENT_LABEL[data.report.element.key] : "";

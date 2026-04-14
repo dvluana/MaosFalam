@@ -4,11 +4,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 
+import Eyebrow from "@/components/ui/Eyebrow";
 import PageLoading from "@/components/ui/PageLoading";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { clearPhotoStore, getElementHint, getPhoto } from "@/lib/photo-store";
 import { captureReading } from "@/lib/reading-client";
 import { loadReadingContext } from "@/lib/reading-context";
+import { STORAGE_KEYS } from "@/lib/storage-keys";
 import { generateUUID } from "@/lib/uuid";
 import type { ReportJSON } from "@/types/report";
 
@@ -51,14 +53,14 @@ function ScanInner() {
     const elementHint = getElementHint();
     clearPhotoStore(); // free memory immediately
 
-    const leadId = sessionStorage.getItem("maosfalam_lead_id") ?? undefined;
+    const leadId = sessionStorage.getItem(STORAGE_KEYS.lead_id) ?? undefined;
     const ctx = loadReadingContext();
     const sessionId =
-      ctx?.session_id ?? sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
-    const targetName = ctx?.target_name ?? sessionStorage.getItem("maosfalam_name") ?? "voce";
+      ctx?.session_id ?? sessionStorage.getItem(STORAGE_KEYS.session_id) ?? generateUUID();
+    const targetName = ctx?.target_name ?? sessionStorage.getItem(STORAGE_KEYS.name) ?? "voce";
     const targetGender =
       ctx?.target_gender ??
-      (sessionStorage.getItem("maosfalam_target_gender") as "female" | "male") ??
+      (sessionStorage.getItem(STORAGE_KEYS.target_gender) as "female" | "male") ??
       "female";
     const isSelf = ctx?.is_self ?? true;
     const dominantHand = ctx?.dominant_hand ?? "right";
@@ -74,7 +76,7 @@ function ScanInner() {
       element_hint: elementHint,
     })
       .then(({ reading_id, report, tier }) => {
-        sessionStorage.setItem("maosfalam_reading_tier", tier ?? "free");
+        sessionStorage.setItem(STORAGE_KEYS.reading_tier, tier ?? "free");
         setApiResult({ ok: true, reading_id, impact_phrase: extractImpactPhrase(report) });
       })
       .catch((err: unknown) => {
@@ -133,8 +135,8 @@ function ScanInner() {
       return;
     }
 
-    sessionStorage.setItem("maosfalam_reading_id", apiResult.reading_id);
-    sessionStorage.setItem("maosfalam_impact_phrase", apiResult.impact_phrase);
+    sessionStorage.setItem(STORAGE_KEYS.reading_id, apiResult.reading_id);
+    sessionStorage.setItem(STORAGE_KEYS.impact_phrase, apiResult.impact_phrase);
     setTimeout(() => {
       setProgress(100);
       router.push("/ler/revelacao");
@@ -162,26 +164,9 @@ function ScanInner() {
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative flex items-center gap-3"
+        className="relative"
       >
-        <span
-          className="h-px w-10"
-          style={{
-            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
-          }}
-        />
-        <span
-          className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold whitespace-nowrap"
-          style={{ fontWeight: 500 }}
-        >
-          Eu tô lendo
-        </span>
-        <span
-          className="h-px w-10"
-          style={{
-            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
-          }}
-        />
+        <Eyebrow label="Eu tô lendo" />
       </motion.div>
 
       <div className="relative h-24 flex items-center">

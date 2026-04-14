@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import Eyebrow from "@/components/ui/Eyebrow";
+
 const HOLD_DURATION = 2400; // ms até completar o carregamento
 
 export default function TouchPage() {
@@ -102,26 +104,9 @@ export default function TouchPage() {
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: phase === "gone" ? 0 : 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative flex items-center gap-3"
+        className="relative"
       >
-        <span
-          className="h-px w-10"
-          style={{
-            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
-          }}
-        />
-        <span
-          className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold whitespace-nowrap"
-          style={{ fontWeight: 500 }}
-        >
-          O ritual
-        </span>
-        <span
-          className="h-px w-10"
-          style={{
-            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
-          }}
-        />
+        <Eyebrow label="O ritual" />
       </motion.div>
 
       {/* Instrução principal */}

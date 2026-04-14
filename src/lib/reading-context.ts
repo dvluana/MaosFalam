@@ -1,6 +1,7 @@
+import { STORAGE_KEYS } from "@/lib/storage-keys";
 import type { ReadingContext } from "@/types/reading-context";
 
-const STORAGE_KEY = "maosfalam_reading_context";
+const STORAGE_KEY = STORAGE_KEYS.reading_context;
 
 export function saveReadingContext(ctx: ReadingContext): void {
   if (typeof window === "undefined") return;

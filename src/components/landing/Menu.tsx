@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import type { MenuItem } from "@/data/menu-items";
+import { GUEST_ITEMS } from "@/data/menu-items";
+
 import styles from "./Menu.module.css";
 
 /**
@@ -17,24 +20,6 @@ import styles from "./Menu.module.css";
  *  - Trava o scroll do body enquanto aberto
  */
 
-interface MenuItem {
-  num: string;
-  label: string;
-  sub: string;
-  href: string;
-  id: string;
-  /** Se presente, dispara em vez de navegar (ex: logout). */
-  onClick?: () => void;
-}
-
-const DEFAULT_ITEMS: MenuItem[] = [
-  { id: "home", num: "01", label: "Início", sub: "Você está aqui", href: "/" },
-  { id: "ler", num: "02", label: "Mostre sua mão", sub: "Começar agora", href: "/ler/nome" },
-  { id: "tarot", num: "03", label: "Tarot Online", sub: "Três cartas, de graça", href: "/tarot" },
-  { id: "login", num: "04", label: "Entrar", sub: "Já te conheço", href: "/login" },
-  { id: "registro", num: "05", label: "Criar conta", sub: "Pra você voltar", href: "/registro" },
-];
-
 interface MenuProps {
   /** Qual item aparece marcado como ativo. */
   activeId?: string;
@@ -42,7 +27,7 @@ interface MenuProps {
   items?: MenuItem[];
 }
 
-export default function Menu({ activeId = "home", items = DEFAULT_ITEMS }: MenuProps) {
+export default function Menu({ activeId = "home", items = GUEST_ITEMS }: MenuProps) {
   const [open, setOpen] = useState(false);
   const [activeState, setActiveState] = useState(activeId);
 
