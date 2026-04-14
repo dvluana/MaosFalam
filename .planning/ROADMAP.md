@@ -136,7 +136,11 @@ Plans:
 1. Em producao (LOG_LEVEL=info), logs de debug nao aparecem; em dev (LOG_LEVEL=debug), aparecem
 2. pino-pretty esta presente apenas como devDependency e o transport condicional nao o importa em producao
 3. Audit de todos os loggers confirma: sem nome, email, CPF, foto base64, ou session_id nos logs
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 10-01-PLAN.md — pino-pretty to devDep, sanitize logger.error calls, audit PII in all log statements
 
 ### Phase 11: Codebase Cleanup
 
@@ -162,5 +166,5 @@ Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 →
 | 7. Credit Infrastructure Cleanup | v1.3      | 1/1            | Complete    | 2026-04-14 |
 | 8. Auth & Navigation Fixes       | v1.3      | 1/1            | Complete    | 2026-04-14 |
 | 9. Reading Flow Fixes            | v1.3      | 0/1            | Not started | -          |
-| 10. Logging Hardening            | v1.3      | 0/?            | Not started | -          |
+| 10. Logging Hardening            | v1.3      | 1/1            | Planned     | -          |
 | 11. Codebase Cleanup             | v1.3      | 0/?            | Not started | -          |
