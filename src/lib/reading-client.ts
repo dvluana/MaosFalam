@@ -44,22 +44,6 @@ export async function captureReading(data: {
   return res.json() as Promise<{ reading_id: string; report: ReportJSON; tier?: string }>;
 }
 
-export async function upgradeReading(
-  readingId: string,
-): Promise<{ tier: string; credits_remaining: number; already_premium?: boolean }> {
-  const res = await fetch(`/api/reading/${readingId}/upgrade`, { method: "PATCH" });
-  if (!res.ok) {
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
-    const status = res.status;
-    throw new Error(`${status}: ${body.error ?? "Erro ao desbloquear"}`);
-  }
-  return res.json() as Promise<{
-    tier: string;
-    credits_remaining: number;
-    already_premium?: boolean;
-  }>;
-}
-
 export async function getReading(id: string): Promise<Reading | null> {
   const res = await fetch(`/api/reading/${id}`, {
     method: "GET",

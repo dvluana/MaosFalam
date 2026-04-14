@@ -1,12 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
 import { useAuth } from "@/hooks/useAuth";
-import { upgradeReading } from "@/lib/reading-client";
 
 interface UpsellSectionProps {
   readingId: string;
@@ -15,32 +13,16 @@ interface UpsellSectionProps {
 export default function UpsellSection({ readingId }: UpsellSectionProps) {
   const router = useRouter();
   const { user } = useAuth();
-  const [upgrading, setUpgrading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (!user) {
       router.push("/login");
       return;
     }
 
-    setUpgrading(true);
-    setError(null);
-
-    try {
-      await upgradeReading(readingId);
-      router.push(`/ler/resultado/${readingId}/completo`);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "";
-      if (msg.startsWith("401") || msg.toLowerCase().includes("autenticado")) {
-        router.push("/login");
-      } else if (msg.startsWith("402") || msg.toLowerCase().includes("credito")) {
-        router.push(`/creditos?reading=${readingId}`);
-      } else {
-        setError("Algo saiu do caminho. Tente de novo.");
-        setUpgrading(false);
-      }
-    }
+    // Redirect to credits page — upgrade happens via purchase flow
+    // (buy credit -> webhook credits -> user revisits reading)
+    router.push(`/creditos?reading=${readingId}`);
   };
 
   return (
@@ -51,9 +33,8 @@ export default function UpsellSection({ readingId }: UpsellSectionProps) {
         Você leu o coração. Faltam três linhas, oito montes, e os sinais que quase ninguém tem. Eu
         vi todos na sua mão.
       </p>
-      {error && <p className="font-raleway text-[13px] text-rose mb-4">{error}</p>}
-      <Button variant="primary" size="lg" onClick={handleClick} disabled={upgrading}>
-        {upgrading ? "Desbloqueando..." : "Desbloquear tudo"}
+      <Button variant="primary" size="lg" onClick={handleClick}>
+        Desbloquear tudo
       </Button>
     </div>
   );
