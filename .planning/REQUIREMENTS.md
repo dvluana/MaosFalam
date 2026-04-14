@@ -1,118 +1,96 @@
-# Requirements: MaosFalam
+# Requirements: MaosFalam v1.3
 
-**Defined:** 2026-04-11
-**Core Value:** Foto da palma entra, leitura personalizada sai.
+**Defined:** 2026-04-13
+**Core Value:** A foto da palma entra, a leitura personalizada sai.
 
-## v1.0 + v1.1 Requirements (Complete)
+## v1.3 Requirements
 
-All shipped. See `.planning/archive/` for history.
+Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 
-## v1.2 Requirements
+### Credit — Debito Atomico e Seguranca
 
-Requirements for milestone v1.2: Fluxo de Mao Dominante.
+- [ ] **CREDIT-01**: Debito de credito e criacao de reading acontecem na mesma transacao Prisma atomica (eliminar credit_used do client)
+- [ ] **CREDIT-02**: Constraint CHECK(remaining >= 0) no banco via migration
+- [ ] **CREDIT-03**: Debit via raw SQL UPDATE SET remaining = remaining - 1 WHERE remaining > 0 (eliminar race condition)
+- [ ] **CREDIT-04**: Eliminar /api/reading/new (debito move pra /api/reading/capture)
+- [ ] **CREDIT-05**: Eliminar /api/dev/seed-credits e auto-seed no useAuth
+- [ ] **CREDIT-06**: /api/user/credits responde 200 corretamente (fix 404)
+- [ ] **CREDIT-07**: reading_count nao inflaciona com leituras anonimas claimadas
 
-### Camera UI
+### Flow — Correcao de Fluxos
 
-- [x] **CAM-01**: HandInstructionOverlay aparece ANTES do viewfinder com frase da cigana e outline SVG espelhado conforme dominancia
-- [x] **CAM-02**: HandExpectedBadge mostra "MAO DIREITA" ou "MAO ESQUERDA" no viewfinder (descartavel com botao x)
-- [x] **CAM-03**: WrongHandFeedback toast aparece por 3s quando MediaPipe detecta mao errada (aviso, nao bloqueio)
-- [x] **CAM-04**: Outline SVG de palma aberta no viewfinder espelhado conforme dominant_hand
-- [x] **CAM-05**: Camera traseira como default (facingMode: "environment"), botao pra trocar pra frontal
-- [x] **CAM-06**: Permissao de camera negada redireciona pra upload com frase da cigana
+- [ ] **FLOW-01**: Nome correto em leitura pra outra pessoa (legacy sessionStorage keys sincronizadas)
+- [ ] **FLOW-02**: Revelacao redireciona pra /completo quando leitura e premium
+- [ ] **FLOW-03**: Fluxo logado pra mim e pra outra pessoa navega corretamente
+- [ ] **FLOW-04**: Login Google funcional (SSO callback sem CAPTCHA loop)
+- [ ] **FLOW-05**: Login e registro preservam checkout intent e ?return= param
+- [ ] **FLOW-06**: Genero configuravel no fluxo pra mim logado (hoje sempre female)
 
-### Upload Pipeline
+### Log — Logging e Seguranca
 
-- [x] **UPL-01**: Tela de escolha de metodo (camera ao vivo vs upload da galeria) com 2 botoes claros
-- [x] **UPL-02**: UploadInstructionScreen com instrucao de qual mao + dicas de qualidade + outline SVG
-- [x] **UPL-03**: File picker aceita JPEG, PNG, WebP, HEIC; rejeita GIF, SVG, BMP, PDF
-- [x] **UPL-04**: UploadValidationScreen com checks progressivos (formato, qualidade, mao, handedness, palma aberta)
-- [x] **UPL-05**: UploadConfirmScreen com preview + checklist de validacao + confirmacao
-- [x] **UPL-06**: Validacao parcial (mao OK mas qualidade ruim) mostra aviso honesto + "Usar mesmo assim"
+- [ ] **LOG-01**: LOG_LEVEL configurado por environment (production=info, dev=debug)
+- [ ] **LOG-02**: pino-pretty so carrega em dev (transport condicional)
+- [ ] **LOG-03**: Zero dados sensiveis nos logs (audit e correcao)
 
-### Edge Cases
+### Clean — Limpeza de Codigo
 
-- [x] **EDGE-01**: HEIC conversion via heic2any antes de qualquer processamento
-- [x] **EDGE-02**: EXIF rotation corrigida antes de processar no canvas
-- [x] **EDGE-03**: Compressao client-side (max 1280px, JPEG 0.85) antes de enviar
-- [x] **EDGE-04**: Orientacao landscape detectada com aviso "Vira o celular pra vertical"
-- [x] **EDGE-05**: Retry logic: apos 3 falhas, sugerir trocar metodo (camera <> upload)
-- [x] **EDGE-06**: Deteccao de screenshot (dimensoes atipicas) com aviso da cigana
+- [ ] **CLEAN-01**: Remover CreditGate modal do /ler/nome (desnecessario com transacao atomica)
+- [ ] **CLEAN-02**: Remover credit_used de ReadingContext, scan, capture schema
+- [ ] **CLEAN-03**: Remover dead code (login/register stubs, purchaseCredits, consumeCheckoutIntent, sendWelcome, maosfalam_email)
+- [ ] **CLEAN-04**: Migrar login/registro de @clerk/nextjs/legacy pra @clerk/nextjs
+- [ ] **CLEAN-05**: Limpar sessionStorage keys orfas (pending_reading nunca setado, email nunca lido)
 
-### GPT-4o Prompt
+## Future Requirements (v2)
 
-- [x] **PROMPT-01**: Prompt do GPT-4o inclui contexto de qual mao dominante esta sendo analisada
-- [x] **PROMPT-02**: Prompt instrui a ignorar tatuagens, henna, nail art, aneis, pulseiras
-
-### Outra Pessoa
-
-- [x] **OTHER-01**: Camera mostra instrucao e badge com nome e mao da outra pessoa ("MAO DIREITA . CARLOS")
-- [x] **OTHER-02**: Feedback de mao errada usa pronome da outra pessoa ("dele"/"dela")
-- [x] **OTHER-03**: Upload instrucao e confirmacao usam nome da outra pessoa
-
-### Acessibilidade
-
-- [x] **A11Y-01**: aria-labels nos botoes Destra/Canhota, trocar camera, descartavel badge
-- [x] **A11Y-02**: aria-live nos feedbacks (WrongHandFeedback assertive, HandExpectedBadge polite)
-- [x] **A11Y-03**: role="img" + aria-label nos outlines SVG de mao
-
-## v2 Requirements
-
-### Payment
-
-- **PAY-01 through PAY-04**: AbacatePay integration (deferred)
-
-### Email
-
-- **EMAIL-01 through EMAIL-04**: Resend integration (deferred)
+- **PAY-01**: Integracao real AbacatePay (PIX + cartao)
+- **PAY-02**: Webhook billing.paid funcional
+- **EMAIL-01**: Emails transacionais via Resend
+- **ACCT-01**: Reset de senha funcional
+- **ACCT-02**: Exclusao de conta
 
 ## Out of Scope
 
-| Feature                                     | Reason                                       |
-| ------------------------------------------- | -------------------------------------------- |
-| Leitura da mao nao-dominante                | MVP le apenas dominante                      |
-| Deteccao de dorso da mao                    | Complexo, baixa prioridade, deixar como TODO |
-| Upload sem MediaPipe: validacao server-only | Fallback funciona via GPT-4o confidence      |
-| Blocos de texto novos                       | Conteudo atual suficiente                    |
-| Compatibilidade entre maos                  | v2 do produto                                |
+| Feature                             | Razao                                     |
+| ----------------------------------- | ----------------------------------------- |
+| Pagamento real (AbacatePay)         | Webhook v2 nao documentado, adiado pra v2 |
+| Email transacional (Resend)         | Depende de dominio verificado             |
+| App nativo                          | Web-first                                 |
+| Assinatura mensal                   | Modelo e creditos avulsos                 |
+| Rate limiting distribuido (Upstash) | Suficiente pra staging, resolver em v2    |
 
 ## Traceability
 
-| Requirement | Phase   | Status  |
-| ----------- | ------- | ------- |
-| CAM-01      | Phase 1 | Complete |
-| CAM-02      | Phase 1 | Complete |
-| CAM-03      | Phase 1 | Complete |
-| CAM-04      | Phase 1 | Complete |
-| CAM-05      | Phase 1 | Complete |
-| CAM-06      | Phase 1 | Complete |
-| UPL-01      | Phase 2 | Complete |
-| UPL-02      | Phase 2 | Complete |
-| UPL-03      | Phase 2 | Complete |
-| UPL-04      | Phase 2 | Complete |
-| UPL-05      | Phase 2 | Complete |
-| UPL-06      | Phase 2 | Complete |
-| EDGE-01     | Phase 3 | Complete |
-| EDGE-02     | Phase 3 | Complete |
-| EDGE-03     | Phase 3 | Complete |
-| EDGE-04     | Phase 3 | Complete |
-| EDGE-05     | Phase 3 | Complete |
-| EDGE-06     | Phase 3 | Complete |
-| PROMPT-01   | Phase 3 | Complete |
-| PROMPT-02   | Phase 3 | Complete |
-| OTHER-01    | Phase 4 | Complete |
-| OTHER-02    | Phase 4 | Complete |
-| OTHER-03    | Phase 4 | Complete |
-| A11Y-01     | Phase 4 | Complete |
-| A11Y-02     | Phase 4 | Complete |
-| A11Y-03     | Phase 4 | Complete |
+| Requirement | Phase | Status  |
+| ----------- | ----- | ------- |
+| CREDIT-01   | —     | Pending |
+| CREDIT-02   | —     | Pending |
+| CREDIT-03   | —     | Pending |
+| CREDIT-04   | —     | Pending |
+| CREDIT-05   | —     | Pending |
+| CREDIT-06   | —     | Pending |
+| CREDIT-07   | —     | Pending |
+| FLOW-01     | —     | Pending |
+| FLOW-02     | —     | Pending |
+| FLOW-03     | —     | Pending |
+| FLOW-04     | —     | Pending |
+| FLOW-05     | —     | Pending |
+| FLOW-06     | —     | Pending |
+| LOG-01      | —     | Pending |
+| LOG-02      | —     | Pending |
+| LOG-03      | —     | Pending |
+| CLEAN-01    | —     | Pending |
+| CLEAN-02    | —     | Pending |
+| CLEAN-03    | —     | Pending |
+| CLEAN-04    | —     | Pending |
+| CLEAN-05    | —     | Pending |
 
 **Coverage:**
 
-- v1.2 requirements: 26 total
-- Mapped to phases: 26
-- Unmapped: 0
+- v1.3 requirements: 21 total
+- Mapped to phases: 0
+- Unmapped: 21
 
 ---
 
-_Requirements defined: 2026-04-11_
-_Last updated: 2026-04-11 after roadmap v1.2 created_
+_Requirements defined: 2026-04-13_
+_Last updated: 2026-04-13 after initial definition_
