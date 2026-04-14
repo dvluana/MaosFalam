@@ -104,7 +104,11 @@ Plans:
 2. Usuario que acessa /creditos sem estar logado, faz login, e redirecionado de volta ao /creditos (nao para /conta/leituras)
 3. ?return= param na URL de login e lido e respeitado apos autenticacao bem-sucedida
 4. No fluxo "pra mim" logado, usuario ve toggle de genero e pode escolher ela/ele antes de ir pra camera
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 08-01-PLAN.md — ?return= param, consumeCheckoutIntent, gender toggle pra mim
 
 ### Phase 9: Reading Flow Fixes
 
@@ -152,7 +156,7 @@ Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 →
 | -------------------------------- | --------- | -------------- | ----------- | ---------- |
 | 6. Atomic Credit Transaction     | v1.3      | 2/2            | Complete    | 2026-04-14 |
 | 7. Credit Infrastructure Cleanup | v1.3      | 1/1            | Complete    | 2026-04-14 |
-| 8. Auth & Navigation Fixes       | v1.3      | 0/?            | Not started | -          |
+| 8. Auth & Navigation Fixes       | v1.3      | 0/1            | Not started | -          |
 | 9. Reading Flow Fixes            | v1.3      | 0/?            | Not started | -          |
 | 10. Logging Hardening            | v1.3      | 0/?            | Not started | -          |
 | 11. Codebase Cleanup             | v1.3      | 0/?            | Not started | -          |
