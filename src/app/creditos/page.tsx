@@ -237,30 +237,7 @@ function CreditosInner() {
 
             {/* Carta central + peeks laterais */}
             <div className="relative mx-auto" style={{ width: "min(100%, 440px)" }}>
-              {/* Peek da carta anterior */}
-              <div
-                aria-hidden
-                className="absolute inset-y-4 -left-3 w-8 pointer-events-none hidden sm:block"
-                style={{
-                  background: "#0e0a18",
-                  border: "1px solid rgba(201,162,74,0.12)",
-                  transform: "rotate(-3deg)",
-                  opacity: 0.5,
-                  zIndex: 1,
-                }}
-              />
-              {/* Peek da carta seguinte */}
-              <div
-                aria-hidden
-                className="absolute inset-y-4 -right-3 w-8 pointer-events-none hidden sm:block"
-                style={{
-                  background: "#0e0a18",
-                  border: "1px solid rgba(201,162,74,0.12)",
-                  transform: "rotate(3deg)",
-                  opacity: 0.5,
-                  zIndex: 1,
-                }}
-              />
+              {/* Peek cards removidos — causavam retângulos fantasma ao trocar de carta */}
 
               {/* Carta ativa */}
               <div
