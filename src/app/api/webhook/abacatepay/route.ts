@@ -18,11 +18,14 @@ interface WebhookPayload {
   apiVersion: number;
   devMode: boolean;
   data: {
-    id: string;
-    externalId: string;
-    amount: number;
-    status: string;
-    customerId: string;
+    // AbacatePay v2 nests checkout data inside data.checkout (not data directly)
+    checkout: {
+      id: string;
+      externalId: string;
+      amount: number;
+      status: string;
+      customerId: string;
+    };
     payerInformation?: {
       method?: string;
     };
@@ -83,8 +86,10 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Payment lookup: try externalId first, fallback to checkout ID
-    const externalId = body.data?.externalId;
-    const checkoutId = body.data?.id;
+    // AbacatePay v2 nests checkout data inside data.checkout
+    const checkout = body.data?.checkout;
+    const externalId = checkout?.externalId;
+    const checkoutId = checkout?.id;
 
     logger.info(
       { event: body.event, checkoutId, externalId: externalId || "empty", devMode: body.devMode },
@@ -113,17 +118,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Fallback 2: lookup most recent pending payment by amount (last resort)
-    if (!payment && body.data?.amount) {
+    if (!payment && checkout?.amount) {
       payment = await prisma.payment.findFirst({
         where: {
           status: "pending",
-          amountCents: body.data.amount,
+          amountCents: checkout?.amount ?? 0,
         },
         orderBy: { createdAt: "desc" },
       });
       if (payment) {
         logger.warn(
-          { method: "amount-fallback", paymentId: payment.id, amount: body.data.amount },
+          { method: "amount-fallback", paymentId: payment.id, amount: checkout?.amount ?? 0 },
           "Payment found via amount fallback — externalId/checkoutId lookup failed",
         );
       }
@@ -160,7 +165,7 @@ export async function POST(req: NextRequest) {
     const pack = CREDIT_PACKS[payment.packType as keyof typeof CREDIT_PACKS];
 
     // 6. Extract payment method from payerInformation (v2 path)
-    const method = body.data.payerInformation?.method || "pix";
+    const method = body.data?.payerInformation?.method || "pix";
 
     // 7. Atomic transaction: mark paid + create credits + upgrade tier + convert lead
     await prisma.$transaction(async (tx) => {
@@ -219,7 +224,7 @@ export async function POST(req: NextRequest) {
     logger.info(
       {
         paymentId: payment.id,
-        checkoutId: body.data.id,
+        checkoutId: checkout?.id,
         packType: payment.packType,
       },
       "Payment processed",

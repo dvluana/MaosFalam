@@ -69,11 +69,13 @@ function makeWebhookPayload(overrides: Record<string, unknown> = {}) {
     apiVersion: 2,
     devMode: false,
     data: {
-      id: "chk_test456",
-      externalId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      amount: 1490,
-      status: "PAID",
-      customerId: "cus_test789",
+      checkout: {
+        id: "chk_test456",
+        externalId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        amount: 1490,
+        status: "PAID",
+        customerId: "cus_test789",
+      },
       payerInformation: {
         method: "PIX",
       },
