@@ -48,7 +48,9 @@ interface Props {
 
 export default function ElementHero({ element, impactPhrase, targetName }: Props) {
   const storedName = useStoredName();
-  const name = storedName ?? targetName ?? "Você";
+  // Prefer the reading's target_name (from API) over sessionStorage to avoid
+  // stale names from a previous /ler/nome flow overriding the current reading.
+  const name = targetName ?? storedName ?? "Você";
 
   return (
     <section className="relative overflow-hidden pt-28 pb-20 px-6">
