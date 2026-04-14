@@ -56,19 +56,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
-    // 3. Payment lookup by externalId (= our payment.id UUID)
+    // 3. Payment lookup: try externalId first, fallback to checkout ID
     const externalId = body.data?.externalId;
-    if (!externalId) {
-      logger.warn({ checkoutId: body.data?.id }, "Webhook missing externalId");
-      return NextResponse.json({ error: "Missing externalId" }, { status: 400 });
+    const checkoutId = body.data?.id;
+
+    logger.info(
+      { event: body.event, checkoutId, externalId: externalId || "empty", devMode: body.devMode },
+      "Webhook payload received",
+    );
+
+    let payment = externalId
+      ? await prisma.payment.findUnique({ where: { id: externalId } })
+      : null;
+
+    // Fallback: lookup by abacatepayCheckoutId if externalId missing or not found
+    if (!payment && checkoutId) {
+      payment = await prisma.payment.findFirst({
+        where: { abacatepayCheckoutId: checkoutId },
+      });
     }
 
-    const payment = await prisma.payment.findUnique({
-      where: { id: externalId },
-    });
-
     if (!payment) {
-      logger.warn({ externalId }, "Payment not found for webhook");
+      logger.warn({ externalId, checkoutId }, "Payment not found for webhook");
       return NextResponse.json({ error: "Payment not found" }, { status: 404 });
     }
 
