@@ -69,15 +69,61 @@ function LoginInner() {
       if (result.status === "complete" && result.createdSessionId) {
         await setActive({ session: result.createdSessionId });
         router.push(getRedirectUrl());
-      } else {
-        setError("Algo deu errado. Tenta de novo.");
-        setLoading(false);
+        return;
       }
+
+      // Handle intermediate states: Clerk may require additional verification
+      if (result.status === "needs_first_factor" || result.status === "needs_second_factor") {
+        // Attempt password factor if first factor is still needed
+        const factor = result.supportedFirstFactors?.find((f) => f.strategy === "password");
+        if (factor) {
+          const secondAttempt = await signIn.attemptFirstFactor({
+            strategy: "password",
+            password,
+          });
+          if (secondAttempt.status === "complete" && secondAttempt.createdSessionId) {
+            await setActive({ session: secondAttempt.createdSessionId });
+            router.push(getRedirectUrl());
+            return;
+          }
+        }
+
+        // If email verification is pending, inform the user
+        const emailFactor = result.supportedFirstFactors?.find(
+          (f) => f.strategy === "email_code" || f.strategy === "email_link",
+        );
+        if (emailFactor) {
+          setError("Verifique seu email antes de entrar. Clerk enviou um link de verificação.");
+          setLoading(false);
+          return;
+        }
+
+        setError("Login precisa de verificação adicional. Tente entrar com Google.");
+        setLoading(false);
+        return;
+      }
+
+      setError("Algo deu errado. Tenta de novo.");
+      setLoading(false);
     } catch (err) {
       setLoading(false);
-      const msg = err instanceof Error ? err.message : "";
-      if (msg.includes("identifier") || msg.includes("password") || msg.includes("Invalid")) {
+      const clerkErr = err as { errors?: Array<{ code?: string; message?: string }> };
+      const firstCode = clerkErr.errors?.[0]?.code ?? "";
+      const firstMsg = clerkErr.errors?.[0]?.message ?? "";
+      const fallbackMsg = err instanceof Error ? err.message : "";
+      const combined = `${firstCode} ${firstMsg} ${fallbackMsg}`;
+
+      if (
+        combined.includes("identifier") ||
+        combined.includes("password") ||
+        combined.includes("Invalid") ||
+        combined.includes("invalid") ||
+        combined.includes("form_password_incorrect") ||
+        combined.includes("form_identifier_not_found")
+      ) {
         setError("Email ou senha incorretos.");
+      } else if (combined.includes("too_many") || combined.includes("rate")) {
+        setError("Muitas tentativas. Espera um pouco e tenta de novo.");
       } else {
         setError("Algo deu errado. Tenta de novo.");
       }
