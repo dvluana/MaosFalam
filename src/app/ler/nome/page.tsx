@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import CreditGate from "@/components/reading/CreditGate";
 import Button from "@/components/ui/Button";
+import Eyebrow from "@/components/ui/Eyebrow";
 import Input from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { registerLead } from "@/lib/reading-client";
 import { saveReadingContext } from "@/lib/reading-context";
+import { STORAGE_KEYS } from "@/lib/storage-keys";
 import { generateUUID } from "@/lib/uuid";
 import type { ReadingContext } from "@/types/reading-context";
 
@@ -68,8 +69,6 @@ export default function NomePage() {
 
   // Submission state
   const [submitting, setSubmitting] = useState(false);
-  const [confirming, setConfirming] = useState(false);
-  const [showCreditGate, setShowCreditGate] = useState(false);
 
   // When logged in, pre-fill name from account on mount
   useEffect(() => {
@@ -119,14 +118,14 @@ export default function NomePage() {
 
     // Persist legacy session keys for downstream consumers
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("maosfalam_name", trimmedName);
-      sessionStorage.setItem("maosfalam_email", trimmedEmail);
-      sessionStorage.setItem("maosfalam_name_fresh", "1");
-      sessionStorage.setItem("maosfalam_target_gender", gender);
+      sessionStorage.setItem(STORAGE_KEYS.name, trimmedName);
+      sessionStorage.setItem(STORAGE_KEYS.email, trimmedEmail);
+      sessionStorage.setItem(STORAGE_KEYS.name_fresh, "1");
+      sessionStorage.setItem(STORAGE_KEYS.target_gender, gender);
     }
 
-    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
-    sessionStorage.setItem("maosfalam_session_id", sessionId);
+    const sessionId = sessionStorage.getItem(STORAGE_KEYS.session_id) ?? generateUUID();
+    sessionStorage.setItem(STORAGE_KEYS.session_id, sessionId);
 
     // Await lead registration to detect existing account (CTX-09)
     // Failure is non-blocking: if it throws, we proceed to the funnel anyway
@@ -147,7 +146,7 @@ export default function NomePage() {
       }
 
       if (result.lead_id) {
-        sessionStorage.setItem("maosfalam_lead_id", result.lead_id);
+        sessionStorage.setItem(STORAGE_KEYS.lead_id, result.lead_id);
       }
     } catch {
       // Lead registration failure is non-blocking — proceed anyway
@@ -174,13 +173,13 @@ export default function NomePage() {
 
     // First reading is always free (CTX-06)
     if (reading_count === 0) {
-      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
-      sessionStorage.setItem("maosfalam_session_id", sessionId);
+      const sessionId = sessionStorage.getItem(STORAGE_KEYS.session_id) ?? generateUUID();
+      sessionStorage.setItem(STORAGE_KEYS.session_id, sessionId);
 
       // Legacy keys for toque/camera guards and revelacao personalization
-      sessionStorage.setItem("maosfalam_name", trimmedName);
-      sessionStorage.setItem("maosfalam_name_fresh", "1");
-      sessionStorage.setItem("maosfalam_target_gender", gender);
+      sessionStorage.setItem(STORAGE_KEYS.name, trimmedName);
+      sessionStorage.setItem(STORAGE_KEYS.name_fresh, "1");
+      sessionStorage.setItem(STORAGE_KEYS.target_gender, gender);
 
       const ctx: ReadingContext = {
         target_name: trimmedName,
@@ -200,25 +199,12 @@ export default function NomePage() {
       return;
     }
 
-    // Has credits: show confirmation modal (CTX-05)
-    setShowCreditGate(true);
-  };
-
-  // ============================================================
-  // CREDIT GATE CONFIRM
-  // ============================================================
-  const handleCreditConfirm = () => {
-    const trimmedName = name.trim();
-    setConfirming(true);
-
-    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
-    sessionStorage.setItem("maosfalam_session_id", sessionId);
-
-    // Legacy keys for toque/camera guards and revelacao personalization
-    sessionStorage.setItem("maosfalam_name", trimmedName);
-    sessionStorage.setItem("maosfalam_name_fresh", "1");
-    sessionStorage.setItem("maosfalam_target_gender", gender);
-
+    // Has credits: navigate directly — credit debit is atomic on server (Phase 06)
+    const sessionId = sessionStorage.getItem(STORAGE_KEYS.session_id) ?? generateUUID();
+    sessionStorage.setItem(STORAGE_KEYS.session_id, sessionId);
+    sessionStorage.setItem(STORAGE_KEYS.name, trimmedName);
+    sessionStorage.setItem(STORAGE_KEYS.name_fresh, "1");
+    sessionStorage.setItem(STORAGE_KEYS.target_gender, gender);
     const ctx: ReadingContext = {
       target_name: trimmedName,
       target_gender: gender,
@@ -269,26 +255,9 @@ export default function NomePage() {
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative flex items-center gap-3"
+        className="relative"
       >
-        <span
-          className="h-px w-10"
-          style={{
-            background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
-          }}
-        />
-        <span
-          className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold whitespace-nowrap"
-          style={{ fontWeight: 500 }}
-        >
-          Antes de eu ler
-        </span>
-        <span
-          className="h-px w-10"
-          style={{
-            background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
-          }}
-        />
+        <Eyebrow label="Antes de eu ler" />
       </motion.div>
 
       {/* ── VISITOR FLOW ── */}
@@ -614,17 +583,6 @@ export default function NomePage() {
             Continuar
           </Button>
         </form>
-      )}
-
-      {/* CreditGate modal */}
-      {showCreditGate && (
-        <CreditGate
-          balance={balance}
-          targetName={name.trim()}
-          onConfirm={() => void handleCreditConfirm()}
-          onCancel={() => setShowCreditGate(false)}
-          confirming={confirming}
-        />
       )}
     </main>
   );
