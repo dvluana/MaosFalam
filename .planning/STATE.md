@@ -2,14 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Sistema de Creditos Robusto
-status: Ready to plan
-stopped_at: null
-last_updated: "2026-04-13"
+status: planning
+stopped_at: Completed 06-atomic-credit-transaction-01-PLAN.md
+last_updated: "2026-04-14T03:08:41.804Z"
+last_activity: 2026-04-13 — Roadmap defined for v1.3
 progress:
   total_phases: 6
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -56,6 +57,7 @@ _Updated after each plan completion_
 | Phase 05 P02 | 2m | 2 tasks | 5 files |
 | Phase 05-pipeline-refactor P01 | 3m | 2 tasks | 4 files |
 | Phase 05-pipeline-refactor P03 | 4m | 2 tasks | 4 files |
+| Phase 06-atomic-credit-transaction P01 | 3m | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -97,6 +99,8 @@ _Updated after each plan completion_
 - [Phase 05-pipeline-refactor]: captureFrame quality param defaults to 0.82 (from 0.92), reducing live-camera JPEG payload ~40%
 - [Phase 05-pipeline-refactor]: scan_slow triggered at render-time rising-edge not useEffect — avoids react-hooks/set-state-in-effect lint violation
 - [Phase 05-pipeline-refactor]: clearPhotoStore called immediately after getPhoto in scan — frees memory before long API call
+- [Phase 06-atomic-credit-transaction]: Raw SQL with WHERE remaining > 0 for atomic credit debit — Prisma Read Committed cannot prevent read-then-write race
+- [Phase 06-atomic-credit-transaction]: reading_count from /api/user/credits uses clerkUserId filter — excludes email-matched anonymous readings to prevent credit gate inflation
 
 ### Pending Todos
 
@@ -116,5 +120,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-13 - Roadmap v1.3 defined
-Stopped at: Roadmap complete, ready to plan Phase 6
+Stopped at: Completed 06-atomic-credit-transaction-01-PLAN.md
 Resume file: None

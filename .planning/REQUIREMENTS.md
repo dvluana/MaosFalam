@@ -10,12 +10,12 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 ### Credit — Debito Atomico e Seguranca
 
 - [ ] **CREDIT-01**: Debito de credito e criacao de reading acontecem na mesma transacao Prisma atomica (eliminar credit_used do client)
-- [ ] **CREDIT-02**: Constraint CHECK(remaining >= 0) no banco via migration
-- [ ] **CREDIT-03**: Debit via raw SQL UPDATE SET remaining = remaining - 1 WHERE remaining > 0 (eliminar race condition)
+- [x] **CREDIT-02**: Constraint CHECK(remaining >= 0) no banco via migration
+- [x] **CREDIT-03**: Debit via raw SQL UPDATE SET remaining = remaining - 1 WHERE remaining > 0 (eliminar race condition)
 - [ ] **CREDIT-04**: Eliminar /api/reading/new (debito move pra /api/reading/capture)
 - [ ] **CREDIT-05**: Eliminar /api/dev/seed-credits e auto-seed no useAuth
-- [ ] **CREDIT-06**: /api/user/credits responde 200 corretamente (fix 404)
-- [ ] **CREDIT-07**: reading_count nao inflaciona com leituras anonimas claimadas
+- [x] **CREDIT-06**: /api/user/credits responde 200 corretamente (fix 404)
+- [x] **CREDIT-07**: reading_count nao inflaciona com leituras anonimas claimadas
 
 ### Flow — Correcao de Fluxos
 
@@ -60,29 +60,29 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 
 ## Traceability
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| CREDIT-01   | Phase 6  | Pending |
-| CREDIT-02   | Phase 6  | Pending |
-| CREDIT-03   | Phase 6  | Pending |
-| CREDIT-04   | Phase 7  | Pending |
-| CREDIT-05   | Phase 7  | Pending |
-| CREDIT-06   | Phase 6  | Pending |
-| CREDIT-07   | Phase 6  | Pending |
-| FLOW-01     | Phase 9  | Pending |
-| FLOW-02     | Phase 9  | Pending |
-| FLOW-03     | Phase 9  | Pending |
-| FLOW-04     | Phase 8  | Pending |
-| FLOW-05     | Phase 8  | Pending |
-| FLOW-06     | Phase 8  | Pending |
-| LOG-01      | Phase 10 | Pending |
-| LOG-02      | Phase 10 | Pending |
-| LOG-03      | Phase 10 | Pending |
-| CLEAN-01    | Phase 11 | Pending |
-| CLEAN-02    | Phase 11 | Pending |
-| CLEAN-03    | Phase 11 | Pending |
-| CLEAN-04    | Phase 11 | Pending |
-| CLEAN-05    | Phase 11 | Pending |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| CREDIT-01   | Phase 6  | Pending  |
+| CREDIT-02   | Phase 6  | Complete |
+| CREDIT-03   | Phase 6  | Complete |
+| CREDIT-04   | Phase 7  | Pending  |
+| CREDIT-05   | Phase 7  | Pending  |
+| CREDIT-06   | Phase 6  | Complete |
+| CREDIT-07   | Phase 6  | Complete |
+| FLOW-01     | Phase 9  | Pending  |
+| FLOW-02     | Phase 9  | Pending  |
+| FLOW-03     | Phase 9  | Pending  |
+| FLOW-04     | Phase 8  | Pending  |
+| FLOW-05     | Phase 8  | Pending  |
+| FLOW-06     | Phase 8  | Pending  |
+| LOG-01      | Phase 10 | Pending  |
+| LOG-02      | Phase 10 | Pending  |
+| LOG-03      | Phase 10 | Pending  |
+| CLEAN-01    | Phase 11 | Pending  |
+| CLEAN-02    | Phase 11 | Pending  |
+| CLEAN-03    | Phase 11 | Pending  |
+| CLEAN-04    | Phase 11 | Pending  |
+| CLEAN-05    | Phase 11 | Pending  |
 
 **Coverage:**
 
