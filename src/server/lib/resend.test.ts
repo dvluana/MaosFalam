@@ -18,7 +18,7 @@ describe("resend.ts", () => {
       ok: true,
       status: 200,
     });
-    global.fetch = fetchSpy;
+    global.fetch = fetchSpy as typeof global.fetch;
   });
 
   afterEach(() => {
