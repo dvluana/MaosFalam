@@ -41,11 +41,14 @@ export default function NomePage() {
   // Submission state
   const [submitting, setSubmitting] = useState(false);
 
+  // Detect whether the Clerk account has a usable name
+  const clerkHasName = Boolean(user?.name && user.name.trim().length >= 2);
+
   // When logged in, pre-fill name from account on mount
   useEffect(() => {
     if (!user) return;
     const frame = window.requestAnimationFrame(() => {
-      if (isSelf) {
+      if (isSelf && clerkHasName) {
         setName(user.name);
       }
     });
@@ -53,12 +56,12 @@ export default function NomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // When toggling "Pra mim", restore account name
+  // When toggling "Pra mim", restore account name (or clear for manual input)
   const handleIsSelfToggle = (value: boolean) => {
     setIsSelf(value);
-    if (value && user) {
+    if (value && user && clerkHasName) {
       setName(user.name);
-    } else if (!value) {
+    } else if (!value || !clerkHasName) {
       setName("");
     }
   };
@@ -458,13 +461,13 @@ export default function NomePage() {
               </ToggleButton>
             </div>
 
-            {/* When reading for another person: show name field */}
-            {!isSelf && (
+            {/* Show name field when reading for another person OR when "Pra mim" but Clerk has no name */}
+            {(!isSelf || (isSelf && !clerkHasName)) && (
               <Input
-                label="Nome da pessoa"
+                label={isSelf ? "Seu nome" : "Nome da pessoa"}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Como eu a chamo?"
+                placeholder={isSelf ? "Como eu te chamo?" : "Como eu a chamo?"}
                 autoFocus
               />
             )}
