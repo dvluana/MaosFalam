@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
@@ -32,10 +33,15 @@ vi.mock("@/server/lib/select-blocks", () => ({
   selectBlocks: vi.fn().mockReturnValue({ element: "fire", sections: [] }),
 }));
 
-vi.mock("@clerk/nextjs/server", () => ({
-  auth: () => Promise.resolve({ userId: null }),
+vi.mock("@/server/lib/debit-credit", () => ({
+  debitCreditFIFO: vi.fn().mockResolvedValue({ debited: false }),
 }));
 
+vi.mock("@clerk/nextjs/server", () => ({
+  auth: vi.fn().mockResolvedValue({ userId: null }),
+}));
+
+import { debitCreditFIFO } from "@/server/lib/debit-credit";
 import { analyzeHand } from "@/server/lib/openai";
 import { prisma } from "@/server/lib/prisma";
 import { rateLimit } from "@/server/lib/rate-limit";
@@ -131,6 +137,8 @@ describe("POST /api/reading/capture", () => {
     vi.mocked(selectBlocks).mockReturnValue({ element: "fire", sections: [] } as never);
     vi.mocked(prisma.reading.create).mockResolvedValue(validReading as never);
     vi.mocked(prisma.lead.findUnique).mockResolvedValue(validLead as never);
+    vi.mocked(auth).mockResolvedValue({ userId: null } as never);
+    vi.mocked(debitCreditFIFO).mockResolvedValue({ debited: false });
   });
 
   it("API-02: valid body with confident GPT-4o response returns 200 with reading_id and report", async () => {
@@ -201,5 +209,65 @@ describe("POST /api/reading/capture", () => {
     const { element_hint: _, ...bodyWithout } = validBody;
     await POST(makeRequest(bodyWithout));
     expect(analyzeHand).toHaveBeenCalledWith(validBody.photo_base64, "right", undefined);
+  });
+
+  // New atomic debit tests
+
+  it("CREDIT-01: unauthenticated request creates reading with tier='free', debitCreditFIFO NOT called", async () => {
+    vi.mocked(auth).mockResolvedValue({ userId: null } as never);
+
+    await POST(makeRequest(validBody));
+
+    expect(debitCreditFIFO).not.toHaveBeenCalled();
+    const createCall = vi.mocked(prisma.reading.create).mock.calls[0];
+    expect(createCall[0].data.tier).toBe("free");
+  });
+
+  it("CREDIT-02: authenticated user with credits creates reading with tier='premium'", async () => {
+    vi.mocked(auth).mockResolvedValue({ userId: "user_abc123" } as never);
+    vi.mocked(debitCreditFIFO).mockResolvedValue({ debited: true, packId: "pack_xyz" });
+    vi.mocked(prisma.reading.create).mockResolvedValue({
+      ...validReading,
+      tier: "premium",
+    } as never);
+
+    const res = await POST(makeRequest(validBody));
+    const json = await res.json();
+
+    expect(debitCreditFIFO).toHaveBeenCalledWith("user_abc123");
+    const createCall = vi.mocked(prisma.reading.create).mock.calls[0];
+    expect(createCall[0].data.tier).toBe("premium");
+    expect(json.tier).toBe("premium");
+  });
+
+  it("CREDIT-03: authenticated user with zero credits creates reading with tier='free'", async () => {
+    vi.mocked(auth).mockResolvedValue({ userId: "user_abc123" } as never);
+    vi.mocked(debitCreditFIFO).mockResolvedValue({ debited: false });
+
+    await POST(makeRequest(validBody));
+
+    expect(debitCreditFIFO).toHaveBeenCalledWith("user_abc123");
+    const createCall = vi.mocked(prisma.reading.create).mock.calls[0];
+    expect(createCall[0].data.tier).toBe("free");
+  });
+
+  it("CREDIT-04: body with credit_used field is ignored — does not affect tier", async () => {
+    vi.mocked(auth).mockResolvedValue({ userId: null } as never);
+    // Sending credit_used: true should be irrelevant — unauthenticated = free
+    const bodyWithCreditUsed = { ...validBody, credit_used: true };
+
+    await POST(makeRequest(bodyWithCreditUsed));
+
+    expect(debitCreditFIFO).not.toHaveBeenCalled();
+    const createCall = vi.mocked(prisma.reading.create).mock.calls[0];
+    expect(createCall[0].data.tier).toBe("free");
+  });
+
+  it("CREDIT-05: response includes tier field", async () => {
+    const res = await POST(makeRequest(validBody));
+    const json = await res.json();
+
+    expect(json.tier).toBeDefined();
+    expect(["free", "premium"]).toContain(json.tier);
   });
 });

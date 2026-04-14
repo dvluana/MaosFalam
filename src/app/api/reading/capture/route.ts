@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { debitCreditFIFO } from "@/server/lib/debit-credit";
 import { logger } from "@/server/lib/logger";
 import { analyzeHand } from "@/server/lib/openai";
 import { prisma } from "@/server/lib/prisma";
@@ -23,7 +24,6 @@ const schema = z.object({
   is_self: z.boolean(),
   dominant_hand: z.enum(["right", "left"]).default("right"),
   element_hint: z.enum(["fire", "water", "earth", "air"]).optional(),
-  credit_used: z.boolean().default(false),
 });
 
 export async function POST(req: NextRequest) {
@@ -61,9 +61,17 @@ export async function POST(req: NextRequest) {
     // 3. Select blocks
     const report = selectBlocks(attributes, data.target_name, data.target_gender);
 
-    // 4. Determine tier: if user is authenticated and already debited a credit, create as premium
+    // 4. Determine tier server-side via atomic credit debit.
+    //    The client cannot influence this — credit_used is not in the schema.
     const { userId: clerkUserId } = await auth();
-    const tier = clerkUserId && data.credit_used ? "premium" : "free";
+
+    let tier: "free" | "premium" = "free";
+    if (clerkUserId) {
+      const debit = await debitCreditFIFO(clerkUserId);
+      if (debit.debited) {
+        tier = "premium";
+      }
+    }
 
     // 5. Save reading
     const reading = await prisma.reading.create({
@@ -104,6 +112,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       reading_id: reading.id,
       report,
+      tier,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
