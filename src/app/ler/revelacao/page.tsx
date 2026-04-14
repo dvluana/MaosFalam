@@ -80,7 +80,7 @@ export default function RevelacaoPage() {
     <motion.main
       animate={{ opacity: fadingOut ? 0 : 1 }}
       transition={{ duration: 0.5 }}
-      className="relative min-h-dvh bg-black flex flex-col items-center justify-center px-6 pt-28 pb-16 gap-10 overflow-hidden"
+      className="relative min-h-dvh bg-black flex flex-col items-center justify-center px-6 pt-16 sm:pt-28 pb-8 sm:pb-16 gap-6 sm:gap-10 overflow-y-auto overflow-x-hidden"
       style={{ perspective: "1200px" }}
     >
       {/* Atmosfera — radial gold pulsante atrás do card */}
@@ -161,9 +161,10 @@ export default function RevelacaoPage() {
         }}
       >
         <article
-          className="card-noise relative overflow-hidden"
+          className="card-noise relative overflow-hidden min-h-[280px]"
           style={{
             aspectRatio: "5 / 7",
+            maxHeight: "min(476px, 55dvh)",
             background: "linear-gradient(165deg, #0e0a18 0%, #110c1a 50%, #08050e 100%)",
             border: "1px solid rgba(201,162,74,0.55)",
             boxShadow:
