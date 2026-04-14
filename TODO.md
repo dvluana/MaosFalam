@@ -39,6 +39,11 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 - [ ] Share image real (canvas/OG dinamica)
 - [ ] Compatibilidade entre maos (esquerda vs direita)
 
+## DONE (sessao 2026-04-14 — CPF removal + webhook investigation)
+
+- [x] 2026-04-14 — Remove CPF modal from /creditos (AbacatePay coleta CPF no checkout)
+- [x] 2026-04-14 — Investigar webhook 404: sem webhooks pendentes, 4 checkouts abandonados (user_3CMZ), 6 pagamentos do user_3CEM todos processados (32 creditos)
+
 ## DONE (sessao 2026-04-14 — v2 Monetizacao + bug sweep)
 
 - [x] 2026-04-14 — v2 Phase 12: AbacatePay v2 Backend (wrapper, produtos, webhook, testes)

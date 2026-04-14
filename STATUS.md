@@ -1,11 +1,11 @@
 # STATUS
 
-Ultima atualizacao: 2026-04-14 (milestone v2 em progresso — pagamento funcional, bugs corrigidos)
+Ultima atualizacao: 2026-04-14 (CPF modal removido, webhook investigado)
 
 ## Estado atual
 
 Branch: develop (trabalho ativo)
-Build: green (type-check + lint + build + 161 tests)
+Build: green (type-check + lint + build + 160 tests)
 Banco: Neon develop branch com 5 tabelas + CHECK constraint remaining >= 0
 Auth: Clerk v7 (Google OAuth + email/senha, telas custom com useSignIn/useSignUp legacy)
 Deploy: staging.maosfalam.com (Vercel preview, branch develop)
@@ -34,7 +34,7 @@ Email: Resend templates prontos (aguardando RESEND_API_KEY + dominio verificado)
 ### v2 Monetizacao (4 fases, 19 reqs) — em finalizacao
 
 - AbacatePay v2: wrapper migrado, 4 produtos criados, checkout hosted, webhook checkout.completed
-- Frontend: /creditos com API real, redirect pro AbacatePay, CPF validation, UpsellSection funcional
+- Frontend: /creditos com API real, redirect pro AbacatePay, UpsellSection funcional (CPF removido, AbacatePay coleta)
 - Email: templates redesenhados (pagamento confirmado, boas-vindas, leitura pronta), retry, opt-in check
 - Bug fixes: acentuacao (40+ fixes), camera handedness, revelacao responsiva, manifesto contraste, login error handling
 
@@ -71,7 +71,7 @@ Email: Resend templates prontos (aguardando RESEND_API_KEY + dominio verificado)
 - [2026-04-14] Produtos como entidades no AbacatePay, referenciados por externalId com cache lazy
 - [2026-04-14] Webhook signature: chave publica fixa HMAC-SHA256 base64 (nao env var)
 - [2026-04-14] Payment criado FIRST (pending), checkout com externalId=payment.id
-- [2026-04-14] CPF so no primeiro pagamento, gravado em user_profiles
+- [2026-04-14] CPF removido do nosso fluxo — AbacatePay coleta CPF no checkout hosted
 - [2026-04-14] Emails: API key guard + 1x retry, fire-and-forget, nunca bloqueia fluxo
 - [2026-04-14] Clerk webhook user.created pra email de boas-vindas (svix signature)
 - [2026-04-14] Proxy.ts: API routes sem auth retornam 401 JSON, page routes redirect pro Clerk
