@@ -50,10 +50,13 @@ async function fetchCredits(): Promise<void> {
       fetch("/api/user/readings"),
     ]);
     const credits = (await creditsRes.json()) as { balance: number };
-    const readings = (await readingsRes.json()) as { readings: Array<{ id: string }> };
+    const readings = (await readingsRes.json()) as {
+      readings: Array<{ id: string }>;
+      reading_count: number;
+    };
     store.state = {
       balance: credits.balance,
-      reading_count: readings.readings.length,
+      reading_count: readings.reading_count,
       loading: false,
     };
   } catch {
