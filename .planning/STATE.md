@@ -1,30 +1,32 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: Fluxo de Mao Dominante
-status: Milestone complete
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-04-11T19:47:19.482Z"
+milestone: v1.3
+milestone_name: Sistema de Creditos Robusto
+status: Defining requirements
+stopped_at: null
+last_updated: "2026-04-13"
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-11)
+See: .planning/PROJECT.md (updated 2026-04-13)
 
 **Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** Phase 05 — pipeline-refactor
+**Current focus:** Defining requirements for v1.3
 
 ## Current Position
 
-Phase: 05
-Plan: Not started
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-13 — Milestone v1.3 started
 
 ## Performance Metrics
 

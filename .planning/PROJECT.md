@@ -8,18 +8,22 @@ Webapp de quiromancia com IA. Mobile-first. Foto da palma entra, leitura persona
 
 A foto da palma entra, a leitura personalizada sai. O backend conecta GPT-4o ao motor de leitura (`selectBlocks`) e persiste os resultados no Neon.
 
-## Current Milestone: v1.2 Fluxo de Mao Dominante
+## Current Milestone: v1.3 Sistema de Creditos Robusto
 
-**Goal:** Completar o fluxo de mao dominante end-to-end: instrucoes visuais na camera, upload pipeline com validacao client-side, edge cases, e prompt GPT-4o com contexto de dominancia.
+**Goal:** Refactor do sistema de creditos com seguranca, correcao de bugs criticos, e maturidade de logging. Nao e feature nova — e correcao e hardening.
 
 **Target features:**
 
-- Camera UI: HandInstructionOverlay, HandExpectedBadge, WrongHandFeedback, outline SVG espelhado
-- Upload pipeline completo: instrucao → file picker → validacao → confirmacao
-- Edge cases: HEIC conversion, EXIF rotation, compressao, orientacao, retry logic
-- GPT-4o prompt: contexto de mao dominante + ignorar tatuagens/acessorios
-- "Pra outra pessoa" refinements: camera adapta nome+mao da outra pessoa
-- A11y basica: aria-labels, aria-live nos feedbacks
+- Transacao atomica: debito de credito + criacao de reading na mesma transacao Prisma (eliminar credit_used client-side)
+- Fix /api/user/credits 404 que bloqueia fluxo logado
+- Fix nome errado em leitura pra outra pessoa (sessionStorage legacy keys)
+- Fix revelacao sempre redirecionando pra view free
+- Fix login Google (CAPTCHA loop no SSO callback)
+- CHECK constraint remaining >= 0 no banco (migration)
+- Audit Pino: LOG_LEVEL por env, zero dados sensiveis, pino-pretty so em dev
+- Remover auto-seed de creditos e /api/dev/seed-credits
+- Eliminar /api/reading/new (debito move pra capture)
+- Rollback de gambiarras acumuladas nessa sessao
 
 ## Requirements
 
@@ -56,11 +60,11 @@ A foto da palma entra, a leitura personalizada sai. O backend conecta GPT-4o ao 
 
 - v1.0 Backend MVP completo (7 fases)
 - v1.1 Alinhamento Arquitetural completo (5 fases)
-- MediaPipe real ja funciona: detecta mao, valida landmarks, auto-captura
-- Destra/Canhota ja coletado em /ler/nome (ReadingContext.dominant_hand)
-- Handedness validation ja existe em mediapipe.ts (detectHandedness)
-- Falta: instrucoes visuais, upload pipeline, edge cases, prompt GPT-4o
-- Prompt completo em docs/maodominante.md
+- v1.2 Fluxo de Mao Dominante completo (5 fases)
+- Sistema de creditos existe mas com vulnerabilidades criticas
+- Codigo de creditos adicionado incrementalmente por subagents sem TDD nem visao do todo
+- Login/registro custom (Clerk hooks) substituiu componentes prontos do Clerk
+- Linking de leituras anonimas a contas implementado mas com bugs
 
 ## Constraints
 
@@ -107,4 +111,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-11 after milestone v1.2 start_
+_Last updated: 2026-04-13 after milestone v1.3 start_
