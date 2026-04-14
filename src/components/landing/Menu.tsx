@@ -164,7 +164,7 @@ export default function Menu({ activeId = "home", items = GUEST_ITEMS }: MenuPro
                 <div className={styles.ornDot} />
               </div>
               <p className={styles.tagline}>Me mostre sua mão e eu te conto quem você é</p>
-              <p className={styles.version}>© 2025 · MãosFalam</p>
+              <p className={styles.version}>© 2026 · MãosFalam</p>
             </div>
           </div>
         </div>

@@ -739,7 +739,7 @@ export default function ManifestoPage() {
           className="font-jetbrains text-[7px] tracking-[3px] uppercase"
           style={{ color: "rgba(201,162,74,0.25)" }}
         >
-          2025 . MaosFalam . Todos os direitos reservados
+          2026 . MaosFalam . Todos os direitos reservados
         </p>
       </footer>
 
