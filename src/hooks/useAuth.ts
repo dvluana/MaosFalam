@@ -47,18 +47,11 @@ export function useAuth() {
     }
   }, [isLoaded, isSignedIn]);
 
-  const login = useCallback((_email: string, _password: string): boolean => false, []);
-
-  const register = useCallback(
-    (_name: string, _email: string, _password: string): boolean => false,
-    [],
-  );
-
   const logout = useCallback((): void => {
     // Clear claim flag on logout so next login re-checks
     localStorage.removeItem(CLAIMED_KEY);
     void signOut();
   }, [signOut]);
 
-  return { user, hydrated: isLoaded, login, register, logout };
+  return { user, hydrated: isLoaded, logout };
 }

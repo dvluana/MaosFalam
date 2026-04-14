@@ -51,21 +51,6 @@ export async function sendPaymentConfirmed(to: string, name: string, readingUrl:
   );
 }
 
-export async function sendWelcome(to: string, name: string) {
-  await sendEmail(
-    to,
-    `Bem-vinda, ${name}`,
-    `
-    <div style="font-family: Georgia, serif; color: #E8DFD0; background: #110C1A; padding: 40px; max-width: 480px;">
-      <p>${name}.</p>
-      <p>Agora eu sei quem voce e. E suas maos sabem que eu sei.</p>
-      <p>Sua conta ta criada. Suas leituras ficam salvas. Quando quiser, volta aqui.</p>
-      <p style="color: #7A6832; font-size: 12px; margin-top: 40px;">MaosFalam</p>
-    </div>
-  `,
-  );
-}
-
 export async function sendLeadReading(to: string, name: string, readingUrl: string) {
   await sendEmail(
     to,
