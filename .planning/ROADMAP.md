@@ -5,7 +5,7 @@
 - ✅ **v1.0 Backend MVP** - Phases 1-7 (shipped 2026-04-11)
 - ✅ **v1.1 Alinhamento Arquitetural** - Phases 1-5 (shipped 2026-04-11)
 - ✅ **v1.2 Fluxo de Mao Dominante** - Phases 1-5 (shipped 2026-04-11)
-- 🚧 **v1.3 Sistema de Creditos Robusto** - Phases 6-11 (in progress)
+- ✅ **v1.3 Sistema de Creditos Robusto** - Phases 6-11 (shipped 2026-04-14)
 
 <details>
 <summary>✅ v1.0 Backend MVP (Phases 1-7) - SHIPPED 2026-04-11</summary>
@@ -36,7 +36,7 @@ All 13 plans completed. See `.planning/archive/v1.2/` for history.
 
 ---
 
-### 🚧 v1.3 Sistema de Creditos Robusto (In Progress)
+### ✅ v1.3 Sistema de Creditos Robusto (Shipped 2026-04-14)
 
 **Milestone Goal:** Refactor do sistema de creditos com seguranca, correcao de bugs criticos, e maturidade de logging. Transacao atomica elimina credit_used client-side. Bugs de fluxo corrigidos. Logging auditado. Dead code removido.
 
@@ -52,7 +52,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Atomic Credit Transaction** - Debito atomico com raw SQL, CHECK constraint, fix /api/user/credits 404, fix reading_count inflation (completed 2026-04-14)
 - [x] **Phase 7: Credit Infrastructure Cleanup** - Eliminar /api/reading/new e /api/dev/seed-credits, remover auto-seed do useAuth (completed 2026-04-14)
 - [x] **Phase 8: Auth & Navigation Fixes** - Login Google sem CAPTCHA loop, ?return= param, genero configuravel no fluxo pra mim (completed 2026-04-14)
-- [ ] **Phase 9: Reading Flow Fixes** - Nome correto em leitura pra outra pessoa, revelacao redireciona pro caminho certo, fluxo logado end-to-end
+- [x] **Phase 9: Reading Flow Fixes** - Nome correto em leitura pra outra pessoa, revelacao redireciona pro caminho certo, fluxo logado end-to-end (completed 2026-04-14)
 - [x] **Phase 10: Logging Hardening** - LOG_LEVEL por environment, pino-pretty so em dev, zero dados sensiveis nos logs (completed 2026-04-14)
 - [x] **Phase 11: Codebase Cleanup** - Remover CreditGate, eliminar credit_used de ReadingContext, dead code, Clerk legacy migration, sessionStorage orphans (completed 2026-04-14)
 
@@ -124,7 +124,7 @@ Plans:
 
 Plans:
 
-- [ ] 09-01-PLAN.md — Fix useCredits reading_count inflation, verify target_name correctness
+- [x] 09-01-PLAN.md — Fix useCredits reading_count inflation, verify target_name correctness
 
 ### Phase 10: Logging Hardening
 
@@ -165,11 +165,11 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 → 10 (parallel to any) → 11
 
-| Phase                            | Milestone | Plans Complete | Status      | Completed  |
-| -------------------------------- | --------- | -------------- | ----------- | ---------- |
-| 6. Atomic Credit Transaction     | v1.3      | 2/2            | Complete    | 2026-04-14 |
-| 7. Credit Infrastructure Cleanup | v1.3      | 1/1            | Complete    | 2026-04-14 |
-| 8. Auth & Navigation Fixes       | v1.3      | 1/1            | Complete    | 2026-04-14 |
-| 9. Reading Flow Fixes            | v1.3      | 0/1            | Not started | -          |
-| 10. Logging Hardening            | v1.3      | 1/1            | Complete    | 2026-04-14 |
-| 11. Codebase Cleanup             | v1.3      | 1/1            | Complete    | 2026-04-14 |
+| Phase                            | Milestone | Plans Complete | Status   | Completed  |
+| -------------------------------- | --------- | -------------- | -------- | ---------- |
+| 6. Atomic Credit Transaction     | v1.3      | 2/2            | Complete | 2026-04-14 |
+| 7. Credit Infrastructure Cleanup | v1.3      | 1/1            | Complete | 2026-04-14 |
+| 8. Auth & Navigation Fixes       | v1.3      | 1/1            | Complete | 2026-04-14 |
+| 9. Reading Flow Fixes            | v1.3      | 1/1            | Complete | 2026-04-14 |
+| 10. Logging Hardening            | v1.3      | 1/1            | Complete | 2026-04-14 |
+| 11. Codebase Cleanup             | v1.3      | 1/1            | Complete | 2026-04-14 |
