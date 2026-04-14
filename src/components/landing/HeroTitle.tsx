@@ -29,7 +29,7 @@ export default function HeroTitle({
   subtitle = "Uma foto. 30 segundos. E eu te conto o que você esconde de todo mundo.",
   typeSpeed = 52,
   typeVariance = 48,
-  startDelay = 8300,
+  startDelay = 600,
   lineBreakDelay = 480,
   cursorDoneDelay = 1100,
   subtitleDelay = 80,
