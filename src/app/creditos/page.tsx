@@ -7,7 +7,7 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Eyebrow, GoogleButton, PageLoading } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
-import { readCheckoutIntent, saveCheckoutIntent } from "@/lib/checkout-intent";
+import { saveCheckoutIntent } from "@/lib/checkout-intent";
 import { formatCPF, isValidCPF } from "@/lib/cpf";
 import { initiatePurchase } from "@/lib/payment-client";
 import { getUserProfile } from "@/lib/user-client";
@@ -106,7 +106,6 @@ function CreditosInner() {
   })();
   const [deckIdx, setDeckIdx] = useState<number>(initialIdx);
   const [direction, setDirection] = useState<1 | -1>(1);
-  const selectedPacote = PACOTES[deckIdx]?.id ?? "roda";
 
   const goTo = (idx: number) => {
     const total = PACOTES.length;
@@ -117,12 +116,6 @@ function CreditosInner() {
 
   const goPrev = () => goTo(deckIdx - 1);
   const goNext = () => goTo(deckIdx + 1);
-
-  const scrollToPagamento = () => {
-    if (typeof window === "undefined") return;
-    const el = document.getElementById("pagamento");
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
 
   // CPF state
   const [cpf, setCpf] = useState<string>("");
@@ -138,10 +131,7 @@ function CreditosInner() {
   // Reading ID from upsell flow
   const readingId = params?.get("reading") ?? undefined;
 
-  const pacote = useMemo(
-    () => PACOTES.find((p) => p.id === selectedPacote) ?? null,
-    [selectedPacote],
-  );
+  const pacote = useMemo(() => PACOTES[deckIdx] ?? null, [deckIdx]);
 
   // On mount with logged-in user: check if CPF exists on profile
   useEffect(() => {
@@ -154,29 +144,11 @@ function CreditosInner() {
         setHasCpf(profile.cpf !== null);
       })
       .catch(() => {
-        // If profile fetch fails, assume no CPF (will be collected)
         setHasCpf(false);
       });
   }, [user]);
 
-  // On mount with logged-in user: restore checkout intent
-  useEffect(() => {
-    if (!user) return;
-    const intent = readCheckoutIntent();
-    if (!intent) return;
-    const idx = PACOTES.findIndex((p) => p.id === intent.pacoteId);
-    const frame = window.requestAnimationFrame(() => {
-      if (idx < 0) return;
-      setDeckIdx(idx);
-      window.setTimeout(() => {
-        const el = document.getElementById("pagamento");
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 400);
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [user]);
-
-  const handlePagar = useCallback(async () => {
+  const handleEscolher = useCallback(async () => {
     if (!pacote) return;
 
     // Not logged in: save intent and show login modal
@@ -203,7 +175,6 @@ function CreditosInner() {
     try {
       const cpfToSend = hasCpf === false ? cpf.replace(/\D/g, "") : undefined;
       const result = await initiatePurchase(pacote.id, cpfToSend, readingId);
-      // Redirect to AbacatePay hosted checkout
       window.location.href = result.checkout_url;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Erro desconhecido";
@@ -304,8 +275,7 @@ function CreditosInner() {
                     const p = PACOTES[deckIdx]!;
                     const num = String(deckIdx + 1).padStart(2, "0");
                     return (
-                      <motion.button
-                        type="button"
+                      <motion.div
                         key={p.id}
                         custom={direction}
                         initial={{
@@ -331,9 +301,7 @@ function CreditosInner() {
                           if (info.offset.x < -60) goNext();
                           else if (info.offset.x > 60) goPrev();
                         }}
-                        onClick={scrollToPagamento}
-                        className="block w-full text-left focus:outline-none cursor-pointer"
-                        aria-label={`Pacote ${p.nome}`}
+                        className="block w-full text-left"
                       >
                         <article
                           className="card-noise relative overflow-hidden px-6 py-8 sm:px-9 sm:py-10"
@@ -456,7 +424,7 @@ function CreditosInner() {
                             />
 
                             {/* Footer: creditos + preco */}
-                            <div className="flex items-end justify-between gap-4">
+                            <div className="flex items-end justify-between gap-4 mb-6">
                               <div className="flex flex-col">
                                 <span
                                   className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim mb-1"
@@ -481,28 +449,70 @@ function CreditosInner() {
                               </div>
                             </div>
 
-                            {/* Hint de toque pra ir pro pagamento */}
-                            <div
-                              className="mt-5 pt-4 flex items-center justify-center"
-                              style={{
-                                borderTop: "1px solid rgba(201,162,74,0.2)",
-                              }}
+                            {/* CPF field — only for logged-in first-time buyers */}
+                            {user && hasCpf === false && (
+                              <div className="flex flex-col gap-2 mb-5">
+                                <label className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
+                                  Seu CPF
+                                </label>
+                                <div className="relative">
+                                  <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    value={cpf}
+                                    onChange={(e) => {
+                                      setCpf(formatCPF(e.target.value));
+                                      if (cpfError) setCpfError(null);
+                                    }}
+                                    onBlur={() => {
+                                      const raw = cpf.replace(/\D/g, "");
+                                      if (raw.length > 0 && !isValidCPF(raw)) {
+                                        setCpfError("CPF invalido.");
+                                      }
+                                    }}
+                                    placeholder="000.000.000-00"
+                                    className="w-full bg-transparent border-b text-bone font-raleway text-[15px] py-3 outline-none placeholder:font-cormorant placeholder:italic placeholder:text-violet-dim transition-colors"
+                                    style={{
+                                      borderBottomColor: cpfError
+                                        ? "rgba(196,100,122,0.6)"
+                                        : "rgba(123,107,165,0.1)",
+                                    }}
+                                  />
+                                  <span
+                                    className="absolute bottom-0 left-0 h-px transition-all duration-400"
+                                    style={{
+                                      background: "linear-gradient(90deg, #C4647A, #7B6BA5)",
+                                      width: "0%",
+                                    }}
+                                  />
+                                </div>
+                                {cpfError && (
+                                  <span className="font-jetbrains text-[11px] text-rose mt-1">
+                                    {cpfError}
+                                  </span>
+                                )}
+                              </div>
+                            )}
+
+                            {/* CTA: Escolher */}
+                            <Button
+                              variant="primary"
+                              size="lg"
+                              disabled={purchasing}
+                              onClick={() => void handleEscolher()}
+                              className="w-full"
                             >
-                              <span
-                                className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim flex items-center gap-2"
-                                style={{ fontWeight: 500 }}
-                              >
-                                <span className="w-1 h-1 rotate-45 bg-gold-dim" />
-                                Toque pra escolher esse
-                                <span aria-hidden className="text-gold text-[12px]">
-                                  &#8595;
-                                </span>
-                                <span className="w-1 h-1 rotate-45 bg-gold-dim" />
-                              </span>
-                            </div>
+                              {purchasing
+                                ? "Redirecionando..."
+                                : `Escolher · ${formatBRL(p.preco)}`}
+                            </Button>
+
+                            <p className="font-cormorant italic text-[12px] text-bone-dim text-center mt-3">
+                              O preco do que voce vai descobrir e barato pelo que vale.
+                            </p>
                           </div>
                         </article>
-                      </motion.button>
+                      </motion.div>
                     );
                   })()}
                 </AnimatePresence>
@@ -555,128 +565,6 @@ function CreditosInner() {
               />
             ))}
           </div>
-        </section>
-
-        {/* Secao de pagamento */}
-        <section id="pagamento" className="scroll-mt-28 mb-12">
-          <Eyebrow label="Fechar a conta" className="justify-center mb-6" />
-
-          <article
-            className="card-noise relative overflow-hidden px-6 py-8 sm:px-9 sm:py-10"
-            style={{
-              background: "#0e0a18",
-              border: "1px solid rgba(201,162,74,0.18)",
-              boxShadow: "0 24px 48px -16px rgba(0,0,0,0.85), 0 0 40px -12px rgba(201,162,74,0.15)",
-            }}
-          >
-            <span
-              aria-hidden
-              className="absolute w-[10px] h-[10px] top-2 left-2 border-t border-l"
-              style={{ borderColor: "rgba(201,162,74,0.5)" }}
-            />
-            <span
-              aria-hidden
-              className="absolute w-[10px] h-[10px] bottom-2 right-2 border-b border-r"
-              style={{ borderColor: "rgba(201,162,74,0.5)" }}
-            />
-
-            <div className="relative flex flex-col gap-6">
-              {/* Resumo do pacote selecionado */}
-              {pacote ? (
-                <div className="flex items-start justify-between gap-4 pb-5 border-b border-[rgba(201,162,74,0.14)]">
-                  <div className="flex flex-col">
-                    <span
-                      className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim mb-1"
-                      style={{ fontWeight: 500 }}
-                    >
-                      Voce escolheu
-                    </span>
-                    <span className="font-cinzel text-[22px] sm:text-[26px] text-gold leading-none">
-                      {pacote.nome}
-                    </span>
-                    <span className="font-cormorant italic text-[14px] text-bone-dim mt-1">
-                      {pacote.creditos} {pacote.creditos === 1 ? "leitura" : "leituras"} ·{" "}
-                      {formatPorLeitura(pacote.preco, pacote.creditos)} cada
-                    </span>
-                  </div>
-                  <span
-                    className="font-cinzel text-[26px] sm:text-[30px] text-gold leading-none"
-                    style={{
-                      textShadow: "0 0 20px rgba(201,162,74,0.45), 0 0 40px rgba(201,162,74,0.2)",
-                    }}
-                  >
-                    {formatBRL(pacote.preco)}
-                  </span>
-                </div>
-              ) : (
-                <p className="font-cormorant italic text-[18px] text-bone-dim text-center">
-                  Escolhe um pacote la em cima primeiro.
-                </p>
-              )}
-
-              {/* CPF field — only for first-time buyers */}
-              {user && hasCpf === false && (
-                <div className="flex flex-col gap-2">
-                  <label className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                    Seu CPF
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={cpf}
-                      onChange={(e) => {
-                        setCpf(formatCPF(e.target.value));
-                        if (cpfError) setCpfError(null);
-                      }}
-                      onBlur={() => {
-                        const raw = cpf.replace(/\D/g, "");
-                        if (raw.length > 0 && !isValidCPF(raw)) {
-                          setCpfError("CPF invalido.");
-                        }
-                      }}
-                      placeholder="000.000.000-00"
-                      className="w-full bg-transparent border-b text-bone font-raleway text-[15px] py-3 outline-none placeholder:font-cormorant placeholder:italic placeholder:text-violet-dim transition-colors"
-                      style={{
-                        borderBottomColor: cpfError
-                          ? "rgba(196,100,122,0.6)"
-                          : "rgba(123,107,165,0.1)",
-                      }}
-                    />
-                    {/* Focus accent line */}
-                    <span
-                      className="absolute bottom-0 left-0 h-px transition-all duration-400"
-                      style={{
-                        background: "linear-gradient(90deg, #C4647A, #7B6BA5)",
-                        width: "0%",
-                      }}
-                    />
-                  </div>
-                  {cpfError && (
-                    <span className="font-jetbrains text-[11px] text-rose mt-1">{cpfError}</span>
-                  )}
-                </div>
-              )}
-
-              {/* CTA pagar */}
-              <div className="flex flex-col items-center gap-3 pt-2">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  disabled={!pacote || purchasing}
-                  onClick={() => void handlePagar()}
-                  className="w-full"
-                >
-                  {purchasing
-                    ? "Redirecionando..."
-                    : `Pagar ${pacote ? formatBRL(pacote.preco) : ""}`}
-                </Button>
-                <p className="font-cormorant italic text-[13px] text-bone-dim text-center">
-                  O preco do que voce vai descobrir e barato pelo que vale.
-                </p>
-              </div>
-            </div>
-          </article>
         </section>
 
         {/* Dynamic states */}
