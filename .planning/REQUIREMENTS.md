@@ -9,12 +9,12 @@ Pagamento real end-to-end, email transacional, bug fixes pendentes.
 
 ### PAY — AbacatePay v2 Integration
 
-- [ ] **PAY-01**: abacatepay.ts migrado pra API v2 — endpoints /v2/checkouts/create, /v2/customers/create; produtos referenciados por ID (nao inline)
-- [ ] **PAY-02**: 4 produtos criados no AbacatePay (mf_avulsa, mf_dupla, mf_roda, mf_tsara) com externalId mapeado ao CREDIT_PACKS
-- [ ] **PAY-03**: POST /api/credits/purchase chama createCheckout() v2 e retorna checkout_url do AbacatePay
+- [x] **PAY-01**: abacatepay.ts migrado pra API v2 — endpoints /v2/checkouts/create, /v2/customers/create; produtos referenciados por ID (nao inline)
+- [x] **PAY-02**: 4 produtos criados no AbacatePay (mf_avulsa, mf_dupla, mf_roda, mf_tsara) com externalId mapeado ao CREDIT_PACKS
+- [x] **PAY-03**: POST /api/credits/purchase chama createCheckout() v2 e retorna checkout_url do AbacatePay
 - [ ] **PAY-04**: Webhook handler processa evento checkout.completed (nao billing.paid); valida signature com chave publica fixa do AbacatePay via HMAC-SHA256
 - [ ] **PAY-05**: Webhook atomico: marca paid → cria credit_pack → debita 1 credito FIFO (se reading_id) → upgrade tier → marca lead converted
-- [ ] **PAY-06**: methods: ["PIX", "CARD"] no checkout (nao so PIX)
+- [x] **PAY-06**: methods: ["PIX", "CARD"] no checkout (nao so PIX)
 - [ ] **PAY-07**: CPF validacao real no primeiro pagamento (formato XXX.XXX.XXX-XX ou 11 digitos)
 
 ### FRONT — Frontend Payment Flow
@@ -54,12 +54,12 @@ BUG-01, BUG-02, BUG-03 — independentes
 
 | Requirement | Phase    | Status  |
 | ----------- | -------- | ------- |
-| PAY-01      | Phase 12 | Pending |
-| PAY-02      | Phase 12 | Pending |
-| PAY-03      | Phase 12 | Pending |
+| PAY-01      | Phase 12 | Done    |
+| PAY-02      | Phase 12 | Done    |
+| PAY-03      | Phase 12 | Done    |
 | PAY-04      | Phase 12 | Pending |
 | PAY-05      | Phase 12 | Pending |
-| PAY-06      | Phase 12 | Pending |
+| PAY-06      | Phase 12 | Done    |
 | PAY-07      | Phase 13 | Pending |
 | FRONT-01    | Phase 13 | Pending |
 | FRONT-02    | Phase 13 | Pending |

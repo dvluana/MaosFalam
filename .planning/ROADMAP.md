@@ -68,7 +68,7 @@ All 7 plans completed. See `.planning/archive/v1.3/` for history.
 
 Plans:
 
-- [ ] 12-01-PLAN.md — v2 wrapper rewrite + purchase route + schema migration + product setup
+- [x] 12-01-PLAN.md — v2 wrapper rewrite + purchase route + schema migration + product setup
 - [ ] 12-02-PLAN.md — Webhook handler rewrite + comprehensive tests
 
 **Success Criteria** (what must be TRUE):
@@ -124,7 +124,7 @@ Phase 12 → 13 → 14 (parallel to 15) → 15
 
 | Phase                     | Milestone | Plans Complete | Status      | Completed |
 | ------------------------- | --------- | -------------- | ----------- | --------- |
-| 12. AbacatePay v2 Backend | v2        | 0/2            | Planned     | -         |
+| 12. AbacatePay v2 Backend | v2        | 1/2            | In Progress | -         |
 | 13. Frontend Payment Flow | v2        | 0/?            | Not started | -         |
 | 14. Email & Hardening     | v2        | 0/?            | Not started | -         |
 | 15. Bug Fixes             | v2        | 0/?            | Not started | -         |

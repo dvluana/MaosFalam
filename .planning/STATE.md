@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2
 milestone_name: Monetizacao
-status: planning
-stopped_at: Milestone created, ready for /gsd:plan-phase 12
-last_updated: "2026-04-14T19:00:00.000Z"
-last_activity: 2026-04-14 — v2 milestone created with 4 phases (12-15)
+status: executing
+stopped_at: Completed 12-01-PLAN.md
+last_updated: "2026-04-14T16:14:00.000Z"
+last_activity: 2026-04-14 — Completed plan 12-01 (AbacatePay v2 wrapper + purchase route)
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 ## Current Position
 
 Phase: 12 — AbacatePay v2 Backend
-Plan: Not yet planned
-Status: Ready for /gsd:plan-phase 12
-Last activity: 2026-04-14 — v2 milestone created
+Plan: 2 of 2
+Status: Plan 12-01 complete, 12-02 next
+Last activity: 2026-04-14 — Completed plan 12-01
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ _Updated after each plan completion_
 | Phase 09-reading-flow-fixes P01 | 2m | 2 tasks | 2 files |
 | Phase 10-logging-hardening P01 | 3m | 3 tasks | 13 files |
 | Phase 11-codebase-cleanup P01 | 8m | 3 tasks | 7 files |
+| Phase 12-abacatepay-v2-backend P01 | 5m | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,10 @@ _Updated after each plan completion_
 - [Phase 10-logging-hardening]: Raw Error objects replaced with error.message strings in all logger.error calls to prevent Prisma query params and stack traces from leaking to log output
 - [Phase 11-01]: CreditGate modal removed: credit debit is atomic on server (Phase 06), no client confirmation needed
 - [Phase 11-01]: Clerk legacy migration deferred: @clerk/nextjs main useSignIn returns new signal API incompatible with current login/registro flow
+- [Phase 12-01]: Lazy-fetch resolveProductId with Map cache — no hardcoded prod_xxx IDs, works across dev/prod
+- [Phase 12-01]: Customer creation email-only in v2 — CPF gate removed from purchase route
+- [Phase 12-01]: Payment created FIRST (pending), then checkout with externalId=payment.id
+- [Phase 12-01]: verifyWebhookSignature uses fixed public key constant with base64 digest
 
 ### Pending Todos
 
@@ -138,6 +143,6 @@ None.
 
 ## Session Continuity
 
-Last activity: 2026-04-14 — v2 milestone created
-Stopped at: Ready for /gsd:plan-phase 12
+Last activity: 2026-04-14 — Completed plan 12-01
+Stopped at: Completed 12-01-PLAN.md
 Resume file: None
