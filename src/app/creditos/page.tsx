@@ -12,7 +12,12 @@ import { formatCPF, isValidCPF } from "@/lib/cpf";
 import { initiatePurchase } from "@/lib/payment-client";
 import { getUserProfile } from "@/lib/user-client";
 
-type PageState = "default" | "processing_payment" | "payment_failed_generic" | "requires_login";
+type PageState =
+  | "default"
+  | "processing_payment"
+  | "payment_failed_generic"
+  | "requires_login"
+  | "requires_cpf";
 
 interface Pacote {
   id: string;
@@ -158,11 +163,18 @@ function CreditosInner() {
       return;
     }
 
-    // CPF validation for first-time buyers
+    // CPF collection for first-time buyers — show modal
+    if (hasCpf === false && !cpf.replace(/\D/g, "")) {
+      setPageState("requires_cpf");
+      return;
+    }
+
+    // CPF validation (if just collected via modal)
     if (hasCpf === false) {
       const rawCpf = cpf.replace(/\D/g, "");
       if (!isValidCPF(rawCpf)) {
         setCpfError("CPF inválido.");
+        setPageState("requires_cpf");
         return;
       }
     }
@@ -426,51 +438,6 @@ function CreditosInner() {
                               </div>
                             </div>
 
-                            {/* CPF field — only for logged-in first-time buyers */}
-                            {user && hasCpf === false && (
-                              <div className="flex flex-col gap-2 mb-5">
-                                <label className="font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em]">
-                                  Seu CPF
-                                </label>
-                                <div className="relative">
-                                  <input
-                                    type="text"
-                                    inputMode="numeric"
-                                    value={cpf}
-                                    onChange={(e) => {
-                                      setCpf(formatCPF(e.target.value));
-                                      if (cpfError) setCpfError(null);
-                                    }}
-                                    onBlur={() => {
-                                      const raw = cpf.replace(/\D/g, "");
-                                      if (raw.length > 0 && !isValidCPF(raw)) {
-                                        setCpfError("CPF inválido.");
-                                      }
-                                    }}
-                                    placeholder="000.000.000-00"
-                                    className="w-full bg-transparent border-b text-bone font-raleway text-[15px] py-3 outline-none placeholder:font-cormorant placeholder:italic placeholder:text-violet-dim transition-colors"
-                                    style={{
-                                      borderBottomColor: cpfError
-                                        ? "rgba(196,100,122,0.6)"
-                                        : "rgba(123,107,165,0.1)",
-                                    }}
-                                  />
-                                  <span
-                                    className="absolute bottom-0 left-0 h-px transition-all duration-400"
-                                    style={{
-                                      background: "linear-gradient(90deg, #C4647A, #7B6BA5)",
-                                      width: "0%",
-                                    }}
-                                  />
-                                </div>
-                                {cpfError && (
-                                  <span className="font-jetbrains text-[11px] text-rose mt-1">
-                                    {cpfError}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-
                             {/* CTA: Escolher */}
                             <Button
                               variant="primary"
@@ -573,6 +540,177 @@ function CreditosInner() {
         )}
 
         {/* Login modal */}
+        {/* CPF modal */}
+        {pageState === "requires_cpf" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-5"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cpf-title"
+            onClick={() => {
+              setPageState("default");
+              setCpfError(null);
+            }}
+          >
+            <div
+              aria-hidden
+              className="absolute inset-0"
+              style={{
+                background: "rgba(4,2,8,0.82)",
+                backdropFilter: "blur(10px)",
+                WebkitBackdropFilter: "blur(10px)",
+              }}
+            />
+
+            <motion.article
+              initial={{ opacity: 0, y: 20, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="card-noise relative overflow-hidden w-full max-w-md"
+              style={{
+                background: "#0e0a18",
+                border: "1px solid rgba(201,162,74,0.35)",
+                padding: "40px 28px 32px",
+                boxShadow:
+                  "0 40px 80px -20px rgba(0,0,0,0.95), 0 0 80px -8px rgba(201,162,74,0.22), 0 0 1px rgba(201,162,74,0.5)",
+              }}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(201,162,74,0.12), transparent 70%)",
+                }}
+              />
+
+              {(
+                [
+                  ["top", "left"],
+                  ["top", "right"],
+                  ["bottom", "left"],
+                  ["bottom", "right"],
+                ] as const
+              ).map(([v, h]) => (
+                <span
+                  key={`cpf-${v}-${h}`}
+                  aria-hidden
+                  className="absolute"
+                  style={{
+                    [v]: 4,
+                    [h]: 4,
+                    width: 14,
+                    height: 14,
+                    borderStyle: "solid",
+                    borderColor: "rgba(201,162,74,0.6)",
+                    borderWidth: `${v === "top" ? "2px" : "0"} ${h === "right" ? "2px" : "0"} ${v === "bottom" ? "2px" : "0"} ${h === "left" ? "2px" : "0"}`,
+                  }}
+                />
+              ))}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setPageState("default");
+                  setCpfError(null);
+                }}
+                aria-label="Fechar"
+                className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center text-bone-dim hover:text-gold transition-colors focus:outline-none"
+              >
+                <span className="font-cinzel text-[22px] leading-none" aria-hidden>
+                  &#215;
+                </span>
+              </button>
+
+              <div className="relative flex flex-col items-center text-center">
+                <div className="flex items-center gap-2 mb-5">
+                  <span className="h-px w-8 bg-gold-dim/50" />
+                  <span
+                    className="w-1.5 h-1.5 rotate-45 bg-gold"
+                    style={{ boxShadow: "0 0 8px rgba(201,162,74,0.7)" }}
+                  />
+                  <span className="h-px w-8 bg-gold-dim/50" />
+                </div>
+
+                <span
+                  className="font-jetbrains text-[9.5px] tracking-[1.8px] uppercase text-gold mb-3"
+                  style={{ fontWeight: 500 }}
+                >
+                  Primeira vez
+                </span>
+
+                <h3
+                  id="cpf-title"
+                  className="font-cinzel text-[22px] sm:text-[26px] text-bone leading-[1.15] mb-3 max-w-[280px]"
+                >
+                  Preciso do seu CPF.
+                </h3>
+
+                <p className="font-cormorant italic text-[17px] sm:text-[19px] text-bone-dim leading-[1.35] mb-8 max-w-[300px]">
+                  Só pra emitir o pagamento. Guardo uma vez e não peço de novo.
+                </p>
+
+                <div className="w-full max-w-[300px] mb-6">
+                  <label className="block font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em] mb-2 text-left">
+                    Seu CPF
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      autoFocus
+                      value={cpf}
+                      onChange={(e) => {
+                        setCpf(formatCPF(e.target.value));
+                        if (cpfError) setCpfError(null);
+                      }}
+                      placeholder="000.000.000-00"
+                      className="w-full bg-transparent border-b text-bone font-raleway text-[15px] py-3 outline-none placeholder:font-cormorant placeholder:italic placeholder:text-violet-dim transition-colors"
+                      style={{
+                        borderBottomColor: cpfError
+                          ? "rgba(196,100,122,0.6)"
+                          : "rgba(123,107,165,0.15)",
+                      }}
+                    />
+                    <span
+                      className="absolute bottom-0 left-0 h-px transition-all duration-500"
+                      style={{
+                        background: "linear-gradient(90deg, #C4647A, #7B6BA5)",
+                        width: cpf.length > 0 ? "100%" : "0%",
+                      }}
+                    />
+                  </div>
+                  {cpfError && (
+                    <span className="block font-jetbrains text-[11px] text-rose mt-2 text-left">
+                      {cpfError}
+                    </span>
+                  )}
+                </div>
+
+                <Button
+                  variant="primary"
+                  disabled={cpf.replace(/\D/g, "").length < 11}
+                  onClick={() => void handleEscolher()}
+                  className="w-full max-w-[300px]"
+                >
+                  Continuar
+                </Button>
+
+                <div className="flex items-center gap-2 mt-8">
+                  <span className="h-px w-12 bg-gold-dim/30" />
+                  <span className="w-1 h-1 rotate-45 bg-gold-dim" />
+                  <span className="h-px w-12 bg-gold-dim/30" />
+                </div>
+              </div>
+            </motion.article>
+          </motion.div>
+        )}
+
         {pageState === "requires_login" && (
           <motion.div
             initial={{ opacity: 0 }}
