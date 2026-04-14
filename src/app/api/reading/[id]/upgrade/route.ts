@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getClerkUserId } from "@/server/lib/auth";
+import { debitCreditFIFO } from "@/server/lib/debit-credit";
 import { logger } from "@/server/lib/logger";
 import { prisma } from "@/server/lib/prisma";
 
@@ -31,51 +32,39 @@ export async function PATCH(_req: Request, context: { params: Promise<{ id: stri
       return NextResponse.json({ ok: true, already_premium: true, credits_remaining });
     }
 
-    // Debit 1 credit FIFO + upgrade tier in atomic transaction
-    const result = await prisma.$transaction(async (tx) => {
-      const pack = await tx.creditPack.findFirst({
-        where: { clerkUserId, remaining: { gt: 0 } },
-        orderBy: { createdAt: "asc" },
-      });
+    // Debit 1 credit (race-safe raw SQL, FIFO) then upgrade reading tier.
+    // These two operations are intentionally not wrapped in a $transaction because
+    // the raw SQL debit is already atomic. If the reading update fails after a
+    // successful debit, the user can retry — the upgrade route is idempotent via
+    // the already_premium check above.
+    const debit = await debitCreditFIFO(clerkUserId);
 
-      if (!pack) {
-        return { ok: false as const };
-      }
-
-      await tx.creditPack.update({
-        where: { id: pack.id },
-        data: { remaining: pack.remaining - 1 },
-      });
-
-      await tx.reading.update({
-        where: { id },
-        data: { tier: "premium" },
-      });
-
-      const packs = await tx.creditPack.findMany({
-        where: { clerkUserId, remaining: { gt: 0 } },
-      });
-      const credits_remaining = packs.reduce(
-        (sum: number, p: { remaining: number }) => sum + p.remaining,
-        0,
-      );
-
-      return { ok: true as const, credits_remaining };
-    });
-
-    if (!result.ok) {
+    if (!debit.debited) {
       return NextResponse.json({ error: "Sem creditos" }, { status: 402 });
     }
 
+    await prisma.reading.update({
+      where: { id },
+      data: { tier: "premium" },
+    });
+
+    const packs = await prisma.creditPack.findMany({
+      where: { clerkUserId, remaining: { gt: 0 } },
+    });
+    const credits_remaining = packs.reduce(
+      (sum: number, p: { remaining: number }) => sum + p.remaining,
+      0,
+    );
+
     logger.info(
-      { readingId: id, clerkUserId, credits_remaining: result.credits_remaining },
+      { readingId: id, clerkUserId, packId: debit.packId, credits_remaining },
       "Reading upgraded to premium",
     );
 
     return NextResponse.json({
       ok: true,
       tier: "premium",
-      credits_remaining: result.credits_remaining,
+      credits_remaining,
     });
   } catch (error) {
     if (error instanceof Error && error.message === "Not authenticated") {
