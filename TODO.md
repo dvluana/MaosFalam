@@ -4,76 +4,74 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ## AGORA
 
-### Home layout refinamento
+### Clerk Dashboard (manual)
 
-- [ ] Testar vídeo + lâmpada em múltiplos tamanhos de tela (verificar sobreposição)
-- [ ] Cortinas: confirmar clareamento progressivo no mobile
-- [ ] Video blend: testar mask-image em Safari/iOS
+- [ ] Mudar nome da app de "PariTech" pra "MaosFalam"
+- [ ] Remover Facebook OAuth, deixar so Google
+- [ ] Criar webhook user.created → staging.maosfalam.com/api/webhook/clerk
+- [ ] Copiar Signing Secret e adicionar como CLERK_WEBHOOK_SECRET no Vercel preview
 
-### Manifesto acentos
+### Resend (manual)
 
-- [ ] Corrigir 63 palavras sem acento no manifesto page
+- [ ] Verificar dominio maosfalam.com.br no Resend Dashboard
+- [ ] Adicionar RESEND_API_KEY no Vercel preview
 
-### Clerk OAuth inline
+### Share card
 
-- [ ] Login Google direto no modal (sem redirect pra tela Clerk separada)
+- [ ] Redesenhar share card (atualmente vazio/minimo)
 
-## DEPOIS (v2 milestone)
-
-### AbacatePay (pagamento real)
-
-- [ ] Documentacao webhook AbacatePay v2
-- [ ] /creditos: chamar purchaseCredits() real
-- [ ] /creditos: coletar CPF (primeiro pagamento)
-- [ ] /creditos: PIX real via AbacatePay
-- [ ] Testar webhook billing.paid end-to-end
-
-### Resend (email transacional)
-
-- [ ] Configurar dominio maosfalam.com.br no Resend
-- [ ] Migrar resend.ts pra SDK com idempotency keys
-- [ ] Emails: pagamento confirmado, boas-vindas, leitura pronta
+## DEPOIS
 
 ### Scaling
 
 - [ ] Migrar rate limit de Map in-memory pra @upstash/ratelimit
 
+### Tech debt
+
+- [ ] Clerk legacy migration (@clerk/nextjs/legacy → @clerk/nextjs, API signal incompativel)
+- [ ] Reativar cortinas, lampada Edison, cursor cristal quando design estiver pronto
+
 ## BACKLOG
 
-- [ ] Testes E2E Playwright dos fluxos criticos
+- [ ] Testes E2E Playwright automatizados (CI)
 - [ ] Auditoria de a11y (contraste, breakpoints >=1024px)
 - [ ] Bundle analysis + lazy load componentes pesados
-- [ ] Share image real (canvas/OG dinâmica)
-- [ ] Compatibilidade entre mãos (esquerda vs direita)
+- [ ] Share image real (canvas/OG dinamica)
+- [ ] Compatibilidade entre maos (esquerda vs direita)
 
-## DONE (sessão 2026-04-11 — milestones v1.1 + v1.2 + UI polish)
+## DONE (sessao 2026-04-14 — v2 Monetizacao + bug sweep)
 
-- [x] 2026-04-11 — v1.1 Phase 1: Auditoria (share_token, expires_at, NextAuth, R2, mocks limpos)
-- [x] 2026-04-11 — v1.1 Phase 2: ReadingContext + CreditGate + /ler/nome dual flow
-- [x] 2026-04-11 — v1.1 Phase 3: MediaPipe real (Hand Landmarker, auto-captura, handedness)
-- [x] 2026-04-11 — v1.1 Phase 4: Clerk cleanup (esqueci/redefinir-senha, UserProfile)
-- [x] 2026-04-11 — v1.1 Phase 5: Docs sync (architecture.md, CLAUDE.md alinhados)
-- [x] 2026-04-11 — v1.2 Phase 1: Camera UI (badge, feedback, landmarks real-time, camera switch)
-- [x] 2026-04-11 — v1.2 Phase 2: Upload pipeline (instrução, validação, confirmação)
-- [x] 2026-04-11 — v1.2 Phase 3: Edge cases + Prompt (HEIC, EXIF, compressão, GPT-4o dominant hand)
-- [x] 2026-04-11 — v1.2 Phase 4: Outra Pessoa + A11y (camera/upload adaptam nome, aria-labels)
-- [x] 2026-04-11 — v1.2 Phase 5: Pipeline Refactor (photo-store, race condition, element pre-hint)
-- [x] 2026-04-11 — Infra: Git branching (main+develop), Neon branching, Vercel staging+prod
-- [x] 2026-04-11 — Fix: photo stale (mesmo resultado repetido), race condition scan, camera permission
-- [x] 2026-04-11 — Fix: useCredits infinite loop (50+ req/s), typewriter chars perdidos
-- [x] 2026-04-11 — Fix: hydration mismatch, landscape guard PC, crypto.randomUUID HTTP
-- [x] 2026-04-11 — UI: Clerk dark mode, camera loading state, /ler/nome modal card, input redesign
-- [x] 2026-04-11 — UI: Menu auth detection, Tarot Online label, login page cleanup
-- [x] 2026-04-11 — UI: Hero mobile-first refactor, CTA fixed, video blend, cortinas timing
-- [x] 2026-04-11 — UI: PWA manifest dinâmico, theme-color, acentos corrigidos
-- [x] 2026-04-11 — 82 → 98 testes (16 novos)
+- [x] 2026-04-14 — v2 Phase 12: AbacatePay v2 Backend (wrapper, produtos, webhook, testes)
+- [x] 2026-04-14 — v2 Phase 13: Frontend Payment Flow (creditos real, initiatePurchase, CPF, UpsellSection)
+- [x] 2026-04-14 — v2 Phase 14: Email & Hardening (Resend templates, Clerk webhook, opt-in)
+- [x] 2026-04-14 — v2 Phase 15: Bug Fixes (manifesto acentos, camera handedness, revelacao responsiva)
+- [x] 2026-04-14 — Fix: env vars Vercel com \\n (causava 500 no AbacatePay)
+- [x] 2026-04-14 — Fix: proxy.ts API routes 401 JSON em vez de 307 redirect
+- [x] 2026-04-14 — Fix: /creditos UX simplificado (botao direto no card)
+- [x] 2026-04-14 — Fix: email templates redesenhados (visual da marca)
+- [x] 2026-04-14 — Fix: acentuacao em 10 arquivos (40+ fixes)
+- [x] 2026-04-14 — Fix: upsell redirect pra /creditos (era API 403)
+- [x] 2026-04-14 — Fix: nome vazio "Pra mim" (validacao + fallback)
+- [x] 2026-04-14 — Fix: gender markers no template
+- [x] 2026-04-14 — Fix: menu numbering 04→05
+- [x] 2026-04-14 — Fix: copyright 2025→2026
+- [x] 2026-04-14 — Fix: sessionStorage name override (API prioritario)
+- [x] 2026-04-14 — Fix: card pula posicao (spinner sem mudar texto)
+- [x] 2026-04-14 — Fix: manifesto contraste (z-index vignette)
+- [x] 2026-04-14 — Fix: login email/senha (handle needs_first_factor)
+- [x] 2026-04-14 — Desativar cortinas, lampada Edison, cursor cristal
+- [x] 2026-04-14 — Limpar dados orfaos no banco (9 payments, 5 credit_packs)
+- [x] 2026-04-14 — 22 testes E2E staging (seguranca, webhook, creditos, data integrity)
 
-## DONE (sessão 2026-04-11 — backend v1.0)
+## DONE (sessao 2026-04-13 — UI refactor + componentizacao)
 
-- [x] 2026-04-11 — 7 fases backend: Neon, Clerk, GPT-4o, APIs, adapters, wiring
-- [x] 2026-04-11 — GSD project: PROJECT.md, REQUIREMENTS.md, ROADMAP.md, research
-- [x] 2026-04-11 — Codebase map: 7 documentos em .planning/codebase/
+- [x] 2026-04-13 — Remover StateSwitcher de todas as paginas (7 arquivos)
+- [x] 2026-04-13 — Home: fundo preto puro, video 40% maior, texto+CTA fixos na base
+- [x] 2026-04-13 — Componentizacao: BrandIcon, StatusIcon, ToggleButton, Checkbox, Eyebrow
+- [x] 2026-04-13 — Centralizacao: menu-items.ts, storage-keys.ts, share-url.ts
+- [x] 2026-04-13 — Vercel: staging.maosfalam.com → develop, coming soon via env var
 
-## DONE (sessão 2026-04-10 — blocos v2)
+## DONE (sessao 2026-04-11)
 
-- [x] 2026-04-10 — Motor de leitura v2: tipos, blocos, selectBlocks, mocks, front adapt
+- [x] 2026-04-11 — v1.0-v1.2 completas (17 fases)
+- [x] 2026-04-11 — Infra: Git branching, Neon branching, Vercel staging+prod
