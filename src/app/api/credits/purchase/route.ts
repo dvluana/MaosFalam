@@ -53,10 +53,20 @@ export async function POST(req: Request) {
       });
     }
 
+    // Save CPF immediately when provided (independent of customer creation)
+    if (data.cpf && !profile.cpf) {
+      step = "save-cpf";
+      await prisma.userProfile.update({
+        where: { clerkUserId: user.id },
+        data: { cpf: data.cpf },
+      });
+      profile = { ...profile, cpf: data.cpf };
+    }
+
     // Create or recreate AbacatePay customer (recreate when CPF is first provided)
     let customerId: string | null = profile.abacatepayCustomerId;
     const cpfValue = data.cpf || profile.cpf || undefined;
-    const needsNewCustomer = !customerId || (cpfValue && !profile.cpf && data.cpf);
+    const needsNewCustomer = !customerId || (data.cpf && !profile.abacatepayCustomerId);
 
     if (needsNewCustomer) {
       step = "create-customer";
@@ -64,10 +74,7 @@ export async function POST(req: Request) {
       step = "save-customer-id";
       await prisma.userProfile.update({
         where: { clerkUserId: user.id },
-        data: {
-          abacatepayCustomerId: customerId,
-          ...(data.cpf && { cpf: data.cpf }),
-        },
+        data: { abacatepayCustomerId: customerId },
       });
     }
 

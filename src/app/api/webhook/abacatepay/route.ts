@@ -40,6 +40,27 @@ export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const signature = req.headers.get("x-webhook-signature") || "";
 
+    // Log full payload structure for debugging (no sensitive data — just keys and IDs)
+    let parsedForLog: Record<string, unknown> = {};
+    try {
+      parsedForLog = JSON.parse(rawBody) as Record<string, unknown>;
+    } catch {
+      // If parse fails, log raw body length only
+    }
+    logger.info(
+      {
+        hasSignature: !!signature,
+        bodyLength: rawBody.length,
+        topLevelKeys: Object.keys(parsedForLog),
+        event: parsedForLog.event,
+        dataKeys: parsedForLog.data ? Object.keys(parsedForLog.data as object) : [],
+        dataId: (parsedForLog.data as Record<string, unknown>)?.id,
+        dataExternalId: (parsedForLog.data as Record<string, unknown>)?.externalId,
+        dataStatus: (parsedForLog.data as Record<string, unknown>)?.status,
+      },
+      "Webhook raw payload structure",
+    );
+
     if (!verifyWebhookSignature(rawBody, signature)) {
       logger.warn("Invalid webhook signature");
       return NextResponse.json({ error: "Assinatura invalida" }, { status: 401 });
@@ -71,11 +92,35 @@ export async function POST(req: NextRequest) {
         ? await prisma.payment.findUnique({ where: { id: externalId } })
         : null;
 
-    // Fallback: lookup by abacatepayCheckoutId if externalId missing or not found
+    if (payment) {
+      logger.info({ method: "externalId", paymentId: payment.id }, "Payment found");
+    }
+
+    // Fallback 1: lookup by abacatepayCheckoutId if externalId missing or not found
     if (!payment && checkoutId) {
       payment = await prisma.payment.findFirst({
         where: { abacatepayCheckoutId: checkoutId },
       });
+      if (payment) {
+        logger.info({ method: "checkoutId", paymentId: payment.id }, "Payment found via fallback");
+      }
+    }
+
+    // Fallback 2: lookup most recent pending payment by amount (last resort)
+    if (!payment && body.data?.amount) {
+      payment = await prisma.payment.findFirst({
+        where: {
+          status: "pending",
+          amountCents: body.data.amount,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      if (payment) {
+        logger.warn(
+          { method: "amount-fallback", paymentId: payment.id, amount: body.data.amount },
+          "Payment found via amount fallback — externalId/checkoutId lookup failed",
+        );
+      }
     }
 
     if (!payment) {

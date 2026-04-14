@@ -367,17 +367,18 @@ function LeiturasContent() {
   const { showToast } = useToast();
   const purchaseToastShown = useRef(false);
 
-  // Handle ?purchased=1 return from AbacatePay
+  // Handle ?purchased=1 return from AbacatePay — show toast once and clean URL
   useEffect(() => {
     if (searchParams.get("purchased") === "1" && !purchaseToastShown.current) {
       purchaseToastShown.current = true;
+      // Remove query param immediately via History API (no re-render, no race condition)
+      window.history.replaceState(null, "", "/conta/leituras");
       showToast({
         variant: "gold",
         message: "Seus créditos estão esperando. Usa com sabedoria.",
       });
-      router.replace("/conta/leituras");
     }
-  }, [searchParams, showToast, router]);
+  }, [searchParams, showToast]);
 
   useEffect(() => {
     Promise.all([getUserProfile(), getUserReadings(), getCredits()])

@@ -53,7 +53,7 @@ const cinzelDecorative = Cinzel_Decorative({
   display: "swap",
 });
 
-const siteTitle = ENV_LABEL ? `${ENV_LABEL} · MãosFalam` : "MãosFalam";
+const siteTitle = ENV_LABEL ? `${ENV_LABEL} - MF` : "MãosFalam";
 const faviconPath = ENV_LABEL ? "/icons/favicon-staging.svg" : "/favicon.ico";
 
 export const metadata: Metadata = {
