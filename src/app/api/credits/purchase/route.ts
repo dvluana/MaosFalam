@@ -53,12 +53,14 @@ export async function POST(req: Request) {
       });
     }
 
-    // Create AbacatePay customer if needed (v2: only email required, no CPF gate)
-    let customerId = profile.abacatepayCustomerId;
-    if (!customerId) {
+    // Create or recreate AbacatePay customer (recreate when CPF is first provided)
+    let customerId: string | null = profile.abacatepayCustomerId;
+    const cpfValue = data.cpf || profile.cpf || undefined;
+    const needsNewCustomer = !customerId || (cpfValue && !profile.cpf && data.cpf);
+
+    if (needsNewCustomer) {
       step = "create-customer";
-      const cpfForCustomer = data.cpf || profile.cpf || undefined;
-      customerId = await createCustomer(user.email, user.name, cpfForCustomer);
+      customerId = await createCustomer(user.email, user.name, cpfValue);
       step = "save-customer-id";
       await prisma.userProfile.update({
         where: { clerkUserId: user.id },
@@ -67,6 +69,10 @@ export async function POST(req: Request) {
           ...(data.cpf && { cpf: data.cpf }),
         },
       });
+    }
+
+    if (!customerId) {
+      throw new Error("Failed to resolve AbacatePay customer ID");
     }
 
     // v2 flow: create Payment FIRST (pending), then checkout with externalId=payment.id
