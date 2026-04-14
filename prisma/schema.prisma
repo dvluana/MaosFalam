@@ -85,7 +85,7 @@ model Payment {
   id                  String    @id @default(uuid()) @db.Uuid
   clerkUserId         String    @map("clerk_user_id") @db.VarChar(100)
   readingId           String?   @unique @map("reading_id") @db.Uuid
-  abacatepayBillingId String?   @map("abacatepay_billing_id") @db.VarChar(100)
+  abacatepayCheckoutId String?   @map("abacatepay_checkout_id") @db.VarChar(100)
   packType            String    @map("pack_type") @db.VarChar(20)
   amountCents         Int       @map("amount_cents")
   method              String?   @db.VarChar(10)
@@ -98,6 +98,6 @@ model Payment {
   reading     Reading?    @relation(fields: [readingId], references: [id])
   creditPack  CreditPack?
 
-  @@index([abacatepayBillingId])
+  @@index([abacatepayCheckoutId])
   @@map("payments")
 }
