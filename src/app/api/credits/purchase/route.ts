@@ -16,16 +16,21 @@ const schema = z.object({
 });
 
 export async function POST(req: Request) {
+  let step = "init";
   try {
+    step = "auth";
     const user = await getClerkUser();
 
+    step = "rate-limit";
     if (!rateLimit(`purchase:${user.id}`, 5)) {
       return NextResponse.json({ error: "Muitas tentativas. Tente mais tarde." }, { status: 429 });
     }
 
+    step = "parse-body";
     const body = await req.json();
     const data = schema.parse(body);
 
+    step = "validate-pack";
     if (!isValidPackType(data.pack_type)) {
       return NextResponse.json({ error: "Pacote invalido" }, { status: 400 });
     }
@@ -33,11 +38,13 @@ export async function POST(req: Request) {
     const pack = CREDIT_PACKS[data.pack_type];
 
     // Ensure user profile exists
+    step = "find-profile";
     let profile = await prisma.userProfile.findUnique({
       where: { clerkUserId: user.id },
     });
 
     if (!profile) {
+      step = "create-profile";
       profile = await prisma.userProfile.create({
         data: {
           clerkUserId: user.id,
@@ -49,7 +56,9 @@ export async function POST(req: Request) {
     // Create AbacatePay customer if needed (v2: only email required, no CPF gate)
     let customerId = profile.abacatepayCustomerId;
     if (!customerId) {
+      step = "create-customer";
       customerId = await createCustomer(user.email, user.name);
+      step = "save-customer-id";
       await prisma.userProfile.update({
         where: { clerkUserId: user.id },
         data: {
@@ -60,6 +69,7 @@ export async function POST(req: Request) {
     }
 
     // v2 flow: create Payment FIRST (pending), then checkout with externalId=payment.id
+    step = "create-payment";
     const payment = await prisma.payment.create({
       data: {
         clerkUserId: user.id,
@@ -70,9 +80,14 @@ export async function POST(req: Request) {
       },
     });
 
+    step = "resolve-product";
     const productId = await resolveProductId(data.pack_type as PackType);
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      throw new Error("NEXT_PUBLIC_BASE_URL is not configured");
+    }
 
+    step = "create-checkout";
     const checkout = await createCheckout({
       productId,
       customerId,
@@ -84,6 +99,7 @@ export async function POST(req: Request) {
     });
 
     // Update Payment with checkout ID for reference
+    step = "update-payment";
     await prisma.payment.update({
       where: { id: payment.id },
       data: { abacatepayCheckoutId: checkout.id },
@@ -111,10 +127,11 @@ export async function POST(req: Request) {
     logger.error(
       {
         err: errMsg,
+        step,
         route: "/api/credits/purchase",
       },
-      `purchase error: ${errMsg}`,
+      `purchase error at [${step}]: ${errMsg}`,
     );
-    return NextResponse.json({ error: "Erro interno", detail: errMsg }, { status: 500 });
+    return NextResponse.json({ error: "Erro interno", detail: errMsg, step }, { status: 500 });
   }
 }

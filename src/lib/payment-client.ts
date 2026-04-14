@@ -14,8 +14,17 @@ export async function initiatePurchase(
   });
 
   if (!res.ok) {
-    const parsed = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(`${res.status}: ${parsed.error ?? "Erro ao iniciar pagamento"}`);
+    const parsed = (await res.json().catch(() => ({}))) as {
+      error?: string;
+      detail?: string;
+      step?: string;
+    };
+    const parts = [String(res.status)];
+    if (parsed.error) parts.push(parsed.error);
+    if (parsed.step) parts.push(`[${parsed.step}]`);
+    if (parsed.detail) parts.push(parsed.detail);
+    if (parts.length === 1) parts.push("Erro ao iniciar pagamento");
+    throw new Error(parts.join(": "));
   }
 
   return res.json() as Promise<{ checkout_url: string }>;

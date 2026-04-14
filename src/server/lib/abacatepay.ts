@@ -34,11 +34,20 @@ interface AbacateResponse<T> {
 // Internal HTTP helpers
 // ============================================================
 
+function requireApiKey(): string {
+  const key = process.env.ABACATEPAY_API_KEY;
+  if (!key) {
+    throw new Error("ABACATEPAY_API_KEY is not configured");
+  }
+  return key;
+}
+
 async function abacatePost<T>(path: string, body: unknown): Promise<AbacateResponse<T>> {
+  const apiKey = requireApiKey();
   const res = await fetch(`${BASE_URL}${path}`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${process.env.ABACATEPAY_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
@@ -62,10 +71,11 @@ async function abacateGet<T>(
     url.searchParams.set(key, value);
   }
 
+  const apiKey = requireApiKey();
   const res = await fetch(url.toString(), {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${process.env.ABACATEPAY_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
   });
 
