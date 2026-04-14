@@ -547,40 +547,39 @@ export default function NomePage() {
               </ToggleButton>
             </div>
 
-            {/* When reading for another person: show name + gender */}
+            {/* When reading for another person: show name field */}
             {!isSelf && (
-              <>
-                <Input
-                  label="Nome da pessoa"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Como eu a chamo?"
-                  autoFocus
-                />
-
-                <div className="flex flex-col gap-2">
-                  <span className="font-raleway text-[13px] text-bone tracking-[0.02em]">
-                    Essa leitura é para
-                  </span>
-                  <div className="flex gap-3">
-                    <ToggleButton
-                      selected={gender === "female"}
-                      onClick={() => setGender("female")}
-                      ariaLabel="Leitura para ela (feminino)"
-                    >
-                      Ela
-                    </ToggleButton>
-                    <ToggleButton
-                      selected={gender === "male"}
-                      onClick={() => setGender("male")}
-                      ariaLabel="Leitura para ele (masculino)"
-                    >
-                      Ele
-                    </ToggleButton>
-                  </div>
-                </div>
-              </>
+              <Input
+                label="Nome da pessoa"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Como eu a chamo?"
+                autoFocus
+              />
             )}
+
+            {/* Gender toggle — always visible (pra mim or outra pessoa) */}
+            <div className="flex flex-col gap-2">
+              <span className="font-raleway text-[13px] text-bone tracking-[0.02em]">
+                Essa leitura é para
+              </span>
+              <div className="flex gap-3">
+                <ToggleButton
+                  selected={gender === "female"}
+                  onClick={() => setGender("female")}
+                  ariaLabel="Leitura para ela (feminino)"
+                >
+                  Ela
+                </ToggleButton>
+                <ToggleButton
+                  selected={gender === "male"}
+                  onClick={() => setGender("male")}
+                  ariaLabel="Leitura para ele (masculino)"
+                >
+                  Ele
+                </ToggleButton>
+              </div>
+            </div>
 
             {/* Dominant hand toggle (always visible for logged-in) */}
             <div className="flex flex-col gap-2">
