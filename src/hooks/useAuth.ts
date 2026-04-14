@@ -45,11 +45,6 @@ export function useAuth() {
         })
         .catch(() => undefined);
     }
-
-    // Staging only: seed test credits (endpoint is idempotent — skips if user already has packs)
-    if (process.env.NEXT_PUBLIC_ENV_LABEL === "Testes") {
-      void fetch("/api/dev/seed-credits", { method: "POST" }).catch(() => undefined);
-    }
   }, [isLoaded, isSignedIn]);
 
   const login = useCallback((_email: string, _password: string): boolean => false, []);

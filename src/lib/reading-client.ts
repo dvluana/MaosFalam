@@ -44,23 +44,6 @@ export async function captureReading(data: {
   return res.json() as Promise<{ reading_id: string; report: ReportJSON; tier?: string }>;
 }
 
-export async function requestNewReading(data: {
-  target_name: string;
-  target_gender: "female" | "male";
-  is_self: boolean;
-}): Promise<{ ok: boolean; credits_remaining: number }> {
-  const res = await fetch("/api/reading/new", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(body.error ?? "Erro ao criar leitura");
-  }
-  return res.json() as Promise<{ ok: boolean; credits_remaining: number }>;
-}
-
 export async function upgradeReading(
   readingId: string,
 ): Promise<{ tier: string; credits_remaining: number; already_premium?: boolean }> {

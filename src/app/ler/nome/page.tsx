@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
-import { registerLead, requestNewReading } from "@/lib/reading-client";
+import { registerLead } from "@/lib/reading-client";
 import { saveReadingContext } from "@/lib/reading-context";
 import { generateUUID } from "@/lib/uuid";
 import type { ReadingContext } from "@/types/reading-context";
@@ -207,43 +207,27 @@ export default function NomePage() {
   // ============================================================
   // CREDIT GATE CONFIRM
   // ============================================================
-  const handleCreditConfirm = async () => {
+  const handleCreditConfirm = () => {
     const trimmedName = name.trim();
     setConfirming(true);
-    try {
-      await requestNewReading({
-        target_name: trimmedName,
-        target_gender: gender,
-        is_self: isSelf,
-      });
 
-      const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
-      sessionStorage.setItem("maosfalam_session_id", sessionId);
+    const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
+    sessionStorage.setItem("maosfalam_session_id", sessionId);
 
-      // Legacy keys for toque/camera guards and revelacao personalization
-      sessionStorage.setItem("maosfalam_name", trimmedName);
-      sessionStorage.setItem("maosfalam_name_fresh", "1");
-      sessionStorage.setItem("maosfalam_target_gender", gender);
+    // Legacy keys for toque/camera guards and revelacao personalization
+    sessionStorage.setItem("maosfalam_name", trimmedName);
+    sessionStorage.setItem("maosfalam_name_fresh", "1");
+    sessionStorage.setItem("maosfalam_target_gender", gender);
 
-      const ctx: ReadingContext = {
-        target_name: trimmedName,
-        target_gender: gender,
-        dominant_hand: dominantHand,
-        is_self: isSelf,
-        session_id: sessionId,
-      };
-      saveReadingContext(ctx);
-      router.push("/ler/toque");
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "";
-      // 402 = insufficient credits → redirect to /creditos
-      if (message.includes("402") || message.toLowerCase().includes("credito")) {
-        router.push("/creditos");
-      } else {
-        setConfirming(false);
-        setShowCreditGate(false);
-      }
-    }
+    const ctx: ReadingContext = {
+      target_name: trimmedName,
+      target_gender: gender,
+      dominant_hand: dominantHand,
+      is_self: isSelf,
+      session_id: sessionId,
+    };
+    saveReadingContext(ctx);
+    router.push("/ler/toque");
   };
 
   // ============================================================
