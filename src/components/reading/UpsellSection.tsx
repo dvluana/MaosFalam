@@ -8,26 +8,17 @@ import Separator from "@/components/ui/Separator";
 import { useAuth } from "@/hooks/useAuth";
 import { upgradeReading } from "@/lib/reading-client";
 
-export default function UpsellSection() {
+interface UpsellSectionProps {
+  readingId: string;
+}
+
+export default function UpsellSection({ readingId }: UpsellSectionProps) {
   const router = useRouter();
   const { user } = useAuth();
   const [upgrading, setUpgrading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleClick = async () => {
-    if (typeof window === "undefined") return;
-
-    // Extract reading id from pathname: /ler/resultado/{id} or /conta/leituras/{id}
-    const match =
-      window.location.pathname.match(/\/ler\/resultado\/([^/]+)/) ??
-      window.location.pathname.match(/\/conta\/leituras\/([^/]+)/);
-    const readingId = match?.[1];
-
-    if (!readingId) {
-      router.push("/creditos");
-      return;
-    }
-
     if (!user) {
       router.push("/login");
       return;
@@ -44,7 +35,7 @@ export default function UpsellSection() {
       if (msg.startsWith("401") || msg.toLowerCase().includes("autenticado")) {
         router.push("/login");
       } else if (msg.startsWith("402") || msg.toLowerCase().includes("credito")) {
-        router.push("/creditos");
+        router.push(`/creditos?reading=${readingId}`);
       } else {
         setError("Algo saiu do caminho. Tente de novo.");
         setUpgrading(false);

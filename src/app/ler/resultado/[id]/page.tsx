@@ -143,7 +143,7 @@ function ResultadoInner({ id }: { id: string }) {
         <BlurredDeck cards={PAYWALL_TEASERS} />
 
         <div className="flex flex-col gap-6 mt-4">
-          <UpsellSection />
+          <UpsellSection readingId={id} />
           <div className="flex justify-center">
             <ShareButton readingId={id} />
           </div>
