@@ -27,10 +27,10 @@ Pagamento real end-to-end, email transacional, bug fixes pendentes.
 
 ### EMAIL — Resend Integration
 
-- [ ] **EMAIL-01**: Resend envia email de pagamento confirmado apos webhook (template com voz da cigana, link pro resultado)
-- [ ] **EMAIL-02**: Resend envia email de boas-vindas apos primeira conta criada
-- [ ] **EMAIL-03**: Emails so enviados se lead.email_opt_in === true (exceto transacionais de pagamento)
-- [ ] **EMAIL-04**: Resend com retry (1x) em falha transiente; falha nao bloqueia fluxo principal
+- [x] **EMAIL-01**: Resend envia email de pagamento confirmado apos webhook (template com voz da cigana, link pro resultado)
+- [x] **EMAIL-02**: Resend envia email de boas-vindas apos primeira conta criada
+- [x] **EMAIL-03**: Emails so enviados se lead.email_opt_in === true (exceto transacionais de pagamento)
+- [x] **EMAIL-04**: Resend com retry (1x) em falha transiente; falha nao bloqueia fluxo principal
 
 ### BUG — Bug Fixes Pendentes
 
@@ -66,10 +66,10 @@ BUG-01, BUG-02, BUG-03 — independentes
 | FRONT-03    | Phase 13 | Complete |
 | FRONT-04    | Phase 13 | Complete |
 | FRONT-05    | Phase 13 | Complete |
-| EMAIL-01    | Phase 14 | Pending  |
-| EMAIL-02    | Phase 14 | Pending  |
-| EMAIL-03    | Phase 14 | Pending  |
-| EMAIL-04    | Phase 14 | Pending  |
+| EMAIL-01    | Phase 14 | Complete |
+| EMAIL-02    | Phase 14 | Complete |
+| EMAIL-03    | Phase 14 | Complete |
+| EMAIL-04    | Phase 14 | Complete |
 | BUG-01      | Phase 15 | Pending  |
 | BUG-02      | Phase 15 | Pending  |
 | BUG-03      | Phase 15 | Pending  |

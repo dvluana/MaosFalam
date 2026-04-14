@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 13-02-PLAN.md
-last_updated: "2026-04-14T18:14:39.276Z"
+stopped_at: Completed 14-01-PLAN.md
+last_updated: "2026-04-14T18:31:05.154Z"
 last_activity: 2026-04-14
 progress:
   total_phases: 4
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State
@@ -68,6 +68,7 @@ _Updated after each plan completion_
 | Phase 12 P02 | 4m | 2 tasks | 3 files |
 | Phase 13-frontend-payment-flow P01 | 4m | 2 tasks | 5 files |
 | Phase 13-frontend-payment-flow P02 | 2m | 3 tasks | 3 files |
+| Phase 14 P01 | 4m | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -134,6 +135,9 @@ _Updated after each plan completion_
 - [Phase 13-01]: Removed ~300 lines fake payment UI (PIX QR, card form, method toggle)
 - [Phase 13-01]: readingId passed via ?reading= URL param, not checkout-intent
 - [Phase 13]: UpsellSection readingId via prop not window.location regex; webhook retry once after 3s on ?paid=1
+- [Phase 14]: Opt-in gating at call sites, not inside resend.ts — pure email sender pattern
+- [Phase 14]: Payment email unconditional (transactional, EMAIL-03 exception)
+- [Phase 14]: svix used via transitive dependency from @clerk/nextjs — no new install
 
 ### Pending Todos
 
@@ -153,5 +157,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-14 — Completed plan 12-01
-Stopped at: Completed 13-02-PLAN.md
+Stopped at: Completed 14-01-PLAN.md
 Resume file: None

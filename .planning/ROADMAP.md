@@ -54,7 +54,7 @@ All 7 plans completed. See `.planning/archive/v1.3/` for history.
 
 - [x] **Phase 12: AbacatePay v2 Backend** - Migrar wrapper pra API v2, criar produtos, atualizar webhook, testes (completed 2026-04-14)
 - [x] **Phase 13: Frontend Payment Flow** - /creditos real, initiatePurchase, checkout intent, UpsellSection, CPF (completed 2026-04-14)
-- [ ] **Phase 14: Email & Hardening** - Resend emails transacionais, CPF validation, error handling, stale cleanup
+- [x] **Phase 14: Email & Hardening** - Resend emails transacionais, CPF validation, error handling, stale cleanup (completed 2026-04-14)
 - [ ] **Phase 15: Bug Fixes** - Manifesto acentos, camera handedness, revelacao corta
 
 ## Phase Details
@@ -106,11 +106,11 @@ Plans:
 **Goal**: Emails transacionais enviados via Resend apos eventos chave. Hardening de seguranca e cleanup.
 **Depends on**: Phase 12 (webhook trigger)
 **Requirements**: EMAIL-01, EMAIL-02, EMAIL-03, EMAIL-04
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 
-- [ ] 14-01-PLAN.md — Harden resend.ts (retry, API key guard), sendWelcome, Clerk webhook, opt-in gating
+- [x] 14-01-PLAN.md — Harden resend.ts (retry, API key guard), sendWelcome, Clerk webhook, opt-in gating
 
 **Success Criteria** (what must be TRUE):
 
@@ -139,5 +139,5 @@ Phase 12 → 13 → 14 (parallel to 15) → 15
 | ------------------------- | --------- | -------------- | ----------- | ---------- |
 | 12. AbacatePay v2 Backend | v2        | 2/2            | Complete    | 2026-04-14 |
 | 13. Frontend Payment Flow | v2        | 2/2            | Complete    | 2026-04-14 |
-| 14. Email & Hardening     | v2        | 0/1            | Not started | -          |
+| 14. Email & Hardening     | v2        | 1/1            | Complete    | 2026-04-14 |
 | 15. Bug Fixes             | v2        | 0/?            | Not started | -          |
