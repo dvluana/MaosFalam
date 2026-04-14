@@ -502,9 +502,12 @@ function CreditosInner() {
                               onClick={() => void handleEscolher()}
                               className="w-full"
                             >
-                              {purchasing
-                                ? "Redirecionando..."
-                                : `Escolher · ${formatBRL(p.preco)}`}
+                              <span className="inline-flex items-center justify-center gap-2">
+                                {purchasing && (
+                                  <span className="block w-3.5 h-3.5 rounded-full border-2 border-bone/20 border-t-bone animate-spin shrink-0" />
+                                )}
+                                {`Escolher · ${formatBRL(p.preco)}`}
+                              </span>
                             </Button>
 
                             <p className="font-cormorant italic text-[12px] text-bone-dim text-center mt-3">
