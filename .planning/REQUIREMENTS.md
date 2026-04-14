@@ -12,8 +12,8 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 - [x] **CREDIT-01**: Debito de credito e criacao de reading acontecem na mesma transacao Prisma atomica (eliminar credit_used do client)
 - [x] **CREDIT-02**: Constraint CHECK(remaining >= 0) no banco via migration
 - [x] **CREDIT-03**: Debit via raw SQL UPDATE SET remaining = remaining - 1 WHERE remaining > 0 (eliminar race condition)
-- [ ] **CREDIT-04**: Eliminar /api/reading/new (debito move pra /api/reading/capture)
-- [ ] **CREDIT-05**: Eliminar /api/dev/seed-credits e auto-seed no useAuth
+- [x] **CREDIT-04**: Eliminar /api/reading/new (debito move pra /api/reading/capture)
+- [x] **CREDIT-05**: Eliminar /api/dev/seed-credits e auto-seed no useAuth
 - [x] **CREDIT-06**: /api/user/credits responde 200 corretamente (fix 404)
 - [x] **CREDIT-07**: reading_count nao inflaciona com leituras anonimas claimadas
 
@@ -65,8 +65,8 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 | CREDIT-01   | Phase 6  | Complete |
 | CREDIT-02   | Phase 6  | Complete |
 | CREDIT-03   | Phase 6  | Complete |
-| CREDIT-04   | Phase 7  | Pending  |
-| CREDIT-05   | Phase 7  | Pending  |
+| CREDIT-04   | Phase 7  | Complete |
+| CREDIT-05   | Phase 7  | Complete |
 | CREDIT-06   | Phase 6  | Complete |
 | CREDIT-07   | Phase 6  | Complete |
 | FLOW-01     | Phase 9  | Pending  |

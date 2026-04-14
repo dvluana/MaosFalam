@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Sistema de Creditos Robusto
 status: planning
-stopped_at: Completed 06-atomic-credit-transaction-02-PLAN.md
-last_updated: "2026-04-14T03:18:08.393Z"
+stopped_at: Completed 07-credit-infrastructure-cleanup-01-PLAN.md
+last_updated: "2026-04-14T03:24:25.163Z"
 last_activity: 2026-04-13 — Roadmap defined for v1.3
 progress:
   total_phases: 6
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 3
+  completed_plans: 3
 ---
 
 # Project State
@@ -59,6 +59,7 @@ _Updated after each plan completion_
 | Phase 05-pipeline-refactor P03 | 4m | 2 tasks | 4 files |
 | Phase 06-atomic-credit-transaction P01 | 3m | 2 tasks | 7 files |
 | Phase 06-atomic-credit-transaction P02 | 7m | 2 tasks | 8 files |
+| Phase 07-credit-infrastructure-cleanup P01 | 2m | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,8 @@ _Updated after each plan completion_
 - [Phase 06-atomic-credit-transaction]: reading_count from /api/user/credits uses clerkUserId filter — excludes email-matched anonymous readings to prevent credit gate inflation
 - [Phase 06-atomic-credit-transaction]: Server determines tier via debitCreditFIFO in capture route — client credit_used boolean removed to close security hole
 - [Phase 06-atomic-credit-transaction]: scan/page.tsx stores maosfalam_reading_tier from API response; revelacao reads it instead of ReadingContext.credit_used
+- [Phase 07-01]: handleCreditConfirm made synchronous — no async call, navigates directly to /ler/toque
+- [Phase 07-01]: seed-credits auto-call removed from useAuth; staging credits must be seeded manually via DB
 
 ### Pending Todos
 
@@ -123,5 +126,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-13 - Roadmap v1.3 defined
-Stopped at: Completed 06-atomic-credit-transaction-02-PLAN.md
+Stopped at: Completed 07-credit-infrastructure-cleanup-01-PLAN.md
 Resume file: None
