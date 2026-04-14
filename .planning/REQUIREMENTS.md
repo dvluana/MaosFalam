@@ -22,8 +22,8 @@ Pagamento real end-to-end, email transacional, bug fixes pendentes.
 - [x] **FRONT-01**: /creditos page chama POST /api/credits/purchase e redireciona pra checkout_url do AbacatePay (sem PIX hardcoded, sem form de cartao local)
 - [x] **FRONT-02**: payment-client.ts exporta initiatePurchase(packType, cpf?, readingId?) que retorna checkout_url
 - [x] **FRONT-03**: checkout-intent wired: se usuario nao logado em /creditos, salva intent antes de redirect pra /login; apos login, consome intent e retorna pra /creditos com pack pre-selecionado
-- [ ] **FRONT-04**: UpsellSection.upgradeReading() funcional — chama initiatePurchase ou redirect pra /creditos se sem creditos
-- [ ] **FRONT-05**: completionUrl do checkout redireciona pra /ler/resultado/[id]/completo (se veio do upsell) ou /conta/leituras?purchased=1 (se compra avulsa)
+- [x] **FRONT-04**: UpsellSection.upgradeReading() funcional — chama initiatePurchase ou redirect pra /creditos se sem creditos
+- [x] **FRONT-05**: completionUrl do checkout redireciona pra /ler/resultado/[id]/completo (se veio do upsell) ou /conta/leituras?purchased=1 (se compra avulsa)
 
 ### EMAIL — Resend Integration
 
@@ -64,8 +64,8 @@ BUG-01, BUG-02, BUG-03 — independentes
 | FRONT-01    | Phase 13 | Complete |
 | FRONT-02    | Phase 13 | Complete |
 | FRONT-03    | Phase 13 | Complete |
-| FRONT-04    | Phase 13 | Pending  |
-| FRONT-05    | Phase 13 | Pending  |
+| FRONT-04    | Phase 13 | Complete |
+| FRONT-05    | Phase 13 | Complete |
 | EMAIL-01    | Phase 14 | Pending  |
 | EMAIL-02    | Phase 14 | Pending  |
 | EMAIL-03    | Phase 14 | Pending  |
