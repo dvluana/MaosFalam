@@ -53,7 +53,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7: Credit Infrastructure Cleanup** - Eliminar /api/reading/new e /api/dev/seed-credits, remover auto-seed do useAuth (completed 2026-04-14)
 - [x] **Phase 8: Auth & Navigation Fixes** - Login Google sem CAPTCHA loop, ?return= param, genero configuravel no fluxo pra mim (completed 2026-04-14)
 - [ ] **Phase 9: Reading Flow Fixes** - Nome correto em leitura pra outra pessoa, revelacao redireciona pro caminho certo, fluxo logado end-to-end
-- [ ] **Phase 10: Logging Hardening** - LOG_LEVEL por environment, pino-pretty so em dev, zero dados sensiveis nos logs
+- [x] **Phase 10: Logging Hardening** - LOG_LEVEL por environment, pino-pretty so em dev, zero dados sensiveis nos logs (completed 2026-04-14)
 - [ ] **Phase 11: Codebase Cleanup** - Remover CreditGate, eliminar credit_used de ReadingContext, dead code, Clerk legacy migration, sessionStorage orphans
 
 ## Phase Details
@@ -140,7 +140,7 @@ Plans:
 
 Plans:
 
-- [ ] 10-01-PLAN.md — pino-pretty to devDep, sanitize logger.error calls, audit PII in all log statements
+- [x] 10-01-PLAN.md — pino-pretty to devDep, sanitize logger.error calls, audit PII in all log statements
 
 ### Phase 11: Codebase Cleanup
 
@@ -166,5 +166,5 @@ Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 →
 | 7. Credit Infrastructure Cleanup | v1.3      | 1/1            | Complete    | 2026-04-14 |
 | 8. Auth & Navigation Fixes       | v1.3      | 1/1            | Complete    | 2026-04-14 |
 | 9. Reading Flow Fixes            | v1.3      | 0/1            | Not started | -          |
-| 10. Logging Hardening            | v1.3      | 1/1            | Planned     | -          |
+| 10. Logging Hardening            | v1.3      | 1/1            | Complete    | 2026-04-14 |
 | 11. Codebase Cleanup             | v1.3      | 0/?            | Not started | -          |
