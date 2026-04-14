@@ -211,14 +211,14 @@ export default function ManifestoPage() {
           <h1 className="font-cormorant italic font-light text-bone leading-[1.1] tracking-[-0.01em] mb-7 text-[clamp(38px,8vw,72px)]">
             Cinco mil anos
             <br />
-            de <em className="text-gold not-italic">silencio</em>
+            de <em className="text-gold not-italic">silêncio</em>
             <br />
             acabaram.
           </h1>
           <p className="font-raleway font-light text-bone-dim leading-[1.9] max-w-[480px] text-[clamp(13px,2.2vw,16px)]">
-            Sua mao tem um mapa. Esse mapa ta falando desde o dia que voce nasceu.
+            Sua mão tem um mapa. Esse mapa tá falando desde o dia que você nasceu.
             <br />
-            Voce so nunca parou pra ouvir.
+            Você só nunca parou pra ouvir.
           </p>
           <DiamondOrnament className="w-20 mt-12" />
         </div>
@@ -258,28 +258,28 @@ export default function ManifestoPage() {
                 background: "linear-gradient(180deg, transparent, var(--color-gold), transparent)",
               }}
             />
-            Fecha os olhos. Abre a mao.
+            Fecha os olhos. Abre a mão.
           </h2>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)]">
-            Passa o dedo pela palma. Devagar. Sente as linhas? Umas sao fundas. Outras sao finas,
-            quase invisiveis. Tem umas que se cruzam. Tem umas que param no meio.
+            Passa o dedo pela palma. Devagar. Sente as linhas? Umas são fundas. Outras são finas,
+            quase invisíveis. Tem umas que se cruzam. Tem umas que param no meio.
           </p>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-7">
             Agora abre os olhos e olha.
           </p>
           <Pullquote
-            text="Essa mao que voce usa pra destrancar o celular, pra segurar o cafe, pra tocar quem voce ama. Essa mao tem um mapa."
-            attr="E esse mapa ta falando desde o dia que voce nasceu"
+            text="Essa mão que você usa pra destrancar o celular, pra segurar o café, pra tocar quem você ama. Essa mão tem um mapa."
+            attr="E esse mapa tá falando desde o dia que você nasceu"
           />
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)]">
-            Voce so nunca parou pra ouvir.
+            Você só nunca parou pra ouvir.
           </p>
         </FadeUp>
 
         {/* Historia */}
         <FadeUp className="py-25" style={{ borderTop: "1px solid rgba(201,162,74,0.06)" }}>
           <span className="block font-jetbrains text-[7px] tracking-[5px] uppercase text-gold-dim mb-5">
-            01 . A historia que ninguem te contou
+            01 . A história que ninguém te contou
           </span>
           <h2 className="font-cinzel text-bone font-normal tracking-[0.04em] mb-12 pl-5 relative text-[clamp(18px,3.5vw,26px)]">
             <span
@@ -288,44 +288,44 @@ export default function ManifestoPage() {
                 background: "linear-gradient(180deg, transparent, var(--color-gold), transparent)",
               }}
             />
-            Cinco mil anos atras
+            Cinco mil anos atrás
           </h2>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)]">
-            Antes de existir escrita, antes de existir religiao organizada, antes de alguem pensar
-            em inventar horoscopo. Uma mulher olhou pra palma da mao de outra mulher e disse:{" "}
+            Antes de existir escrita, antes de existir religião organizada, antes de alguém pensar
+            em inventar horóscopo. Uma mulher olhou pra palma da mão de outra mulher e disse:{" "}
             <em className="font-cormorant italic text-gold text-[1.08em]">
-              eu sei o que vai acontecer com voce.
+              eu sei o que vai acontecer com você.
             </em>
           </p>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-7">
-            Nao tinha bola de cristal. Nao tinha carta. Nao tinha app. Tinha a mao aberta e alguem
+            Não tinha bola de cristal. Não tinha carta. Não tinha app. Tinha a mão aberta e alguém
             que sabia ler.
           </p>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-7">
-            Na India, chamavam de <strong className="text-bone font-normal">Jyotish Shastra</strong>
+            Na Índia, chamavam de <strong className="text-bone font-normal">Jyotish Shastra</strong>
             . Na China, era parte da medicina. Os gregos deram o nome que ficou:{" "}
             <em className="font-cormorant italic text-gold text-[1.08em]">quiromancia</em>. Quiro,
-            mao. Mancia, adivinhacao. Hipocrates usava pra diagnosticar. Julio Cesar lia as maos dos
+            mão. Mancia, adivinhação. Hipócrates usava pra diagnosticar. Júlio César lia as mãos dos
             soldados antes de mandar pra guerra.
           </p>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-7">
-            Nao era misticismo. Era a forma mais antiga de olhar pra uma pessoa e dizer:{" "}
-            <em className="font-cormorant italic text-gold text-[1.08em]">eu vejo voce.</em>
+            Não era misticismo. Era a forma mais antiga de olhar pra uma pessoa e dizer:{" "}
+            <em className="font-cormorant italic text-gold text-[1.08em]">eu vejo você.</em>
           </p>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-7">
-            E ai vieram os seculos. A igreja baniu. A ciencia riu. A quiromancia foi empurrada pras
+            E aí vieram os séculos. A igreja baniu. A ciência riu. A quiromancia foi empurrada pras
             tendas de feira, pros becos, pros acampamentos. Virou &ldquo;coisa de cigana&rdquo;.
           </p>
           <Pullquote text="Mas a cigana nunca parou de ler." />
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)]">
-            Ela sabia que as linhas mudam. Que a mao que voce tem aos 15 nao e a mesma aos 30. Que a
-            linha do coracao fica mais funda quando voce ama de verdade e mais fina quando voce se
+            Ela sabia que as linhas mudam. Que a mão que você tem aos 15 não é a mesma aos 30. Que a
+            linha do coração fica mais funda quando você ama de verdade e mais fina quando você se
             protege demais.
           </p>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-7">
-            A cigana sabia que a mao nao preve o futuro.{" "}
+            A cigana sabia que a mão não prevê o futuro.{" "}
             <strong className="text-bone font-normal">
-              A mao conta quem voce e. E quem voce e determina pra onde voce vai.
+              A mão conta quem você é. E quem você é determina pra onde você vai.
             </strong>
           </p>
         </FadeUp>
@@ -333,7 +333,7 @@ export default function ManifestoPage() {
         {/* As quatro linhas */}
         <FadeUp className="py-25" style={{ borderTop: "1px solid rgba(201,162,74,0.06)" }}>
           <span className="block font-jetbrains text-[7px] tracking-[5px] uppercase text-gold-dim mb-5">
-            02 . O que a sua mao diz
+            02 . O que a sua mão diz
           </span>
           <h2 className="font-cinzel text-bone font-normal tracking-[0.04em] mb-12 pl-5 relative text-[clamp(18px,3.5vw,26px)]">
             <span
@@ -342,48 +342,48 @@ export default function ManifestoPage() {
                 background: "linear-gradient(180deg, transparent, var(--color-gold), transparent)",
               }}
             />
-            As quatro linhas. Quatro capitulos.
+            As quatro linhas. Quatro capítulos.
           </h2>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mb-10">
-            Sua mao tem quatro linhas principais. Cada uma e um capitulo da pessoa que voce e. Nao
-            da pessoa que voce finge ser.
+            Sua mão tem quatro linhas principais. Cada uma é um capítulo da pessoa que você é. Não
+            da pessoa que você finge ser.
           </p>
 
           <div className="grid grid-cols-1 min-[520px]:grid-cols-2 gap-0.5 my-12">
             <LineCard
               num="Linha 01"
-              name="Do Coracao"
-              desc="Como voce ama. Nao como voce <em class='font-cormorant italic text-gold text-[1.08em]'>acha</em> que ama. O que voce esconde. O que voce entrega rapido demais. O que voce segura ate nao aguentar mais."
+              name="Do Coração"
+              desc="Como você ama. Não como você <em class='font-cormorant italic text-gold text-[1.08em]'>acha</em> que ama. O que você esconde. O que você entrega rápido demais. O que você segura até não aguentar mais."
             />
             <LineCard
               num="Linha 02"
-              name="Da Cabeca"
-              desc="Como sua mente funciona. Se voce pensa reto ou torto. Se voce decide rapido ou fica girando no mesmo pensamento as 3 da manha."
+              name="Da Cabeça"
+              desc="Como sua mente funciona. Se você pensa reto ou torto. Se você decide rápido ou fica girando no mesmo pensamento às 3 da manhã."
             />
             <LineCard
               num="Linha 03"
               name="Da Vida"
-              desc="Ela nao diz quando voce vai morrer. Ela diz como voce vive. Com que intensidade. Onde voce quebrou e como levantou."
+              desc="Ela não diz quando você vai morrer. Ela diz como você vive. Com que intensidade. Onde você quebrou e como levantou."
             />
             <LineCard
               num="Linha 04"
               name="Do Destino"
-              desc="Nem todo mundo tem. Se voce tem, ela mostra o caminho que voce ta trilhando. Se ela so aparece na mao direita, voce inventou esse caminho sozinha."
+              desc="Nem todo mundo tem. Se você tem, ela mostra o caminho que você tá trilhando. Se ela só aparece na mão direita, você inventou esse caminho sozinha."
             />
           </div>
 
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-4">
-            Alem das linhas, tem os montes. Sete elevacoes na palma, cada uma ligada a um planeta.
-            Jupiter e ambicao. Saturno e destino. Sol e sucesso. Mercurio e comunicacao. Venus e
-            amor. Marte e coragem.{" "}
-            <strong className="text-bone font-normal">Ninguem tem a mesma mao.</strong>
+            Além das linhas, tem os montes. Sete elevações na palma, cada uma ligada a um planeta.
+            Júpiter é ambição. Saturno é destino. Sol é sucesso. Mercúrio é comunicação. Vênus é
+            amor. Marte é coragem.{" "}
+            <strong className="text-bone font-normal">Ninguém tem a mesma mão.</strong>
           </p>
         </FadeUp>
 
         {/* Mao esquerda vs direita */}
         <FadeUp className="py-25" style={{ borderTop: "1px solid rgba(201,162,74,0.06)" }}>
           <span className="block font-jetbrains text-[7px] tracking-[5px] uppercase text-gold-dim mb-5">
-            03 . Duas maos. Duas historias.
+            03 . Duas mãos. Duas histórias.
           </span>
           <h2 className="font-cinzel text-bone font-normal tracking-[0.04em] mb-12 pl-5 relative text-[clamp(18px,3.5vw,26px)]">
             <span
@@ -395,7 +395,7 @@ export default function ManifestoPage() {
             A esquerda e a direita
           </h2>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mb-9">
-            Coloca as duas lado a lado. Olha. Elas nao sao iguais.
+            Coloca as duas lado a lado. Olha. Elas não são iguais.
           </p>
 
           <FadeUp>
@@ -416,25 +416,25 @@ export default function ManifestoPage() {
               />
               <div>
                 <span className="block font-jetbrains text-[8px] tracking-[4px] uppercase text-violet mb-4">
-                  Mao Esquerda
+                  Mão Esquerda
                 </span>
                 <div className="font-cinzel text-bone font-normal tracking-[0.04em] mb-3.5 text-[clamp(15px,2.5vw,19px)]">
-                  Quem voce nasceu
+                  Quem você nasceu
                 </div>
                 <p className="font-raleway text-[14px] font-light leading-[1.9] text-bone-dim">
-                  A programacao original. O que veio com voce. A promessa que foi feita antes de
-                  voce escolher qualquer coisa.
+                  A programação original. O que veio com você. A promessa que foi feita antes de
+                  você escolher qualquer coisa.
                 </p>
               </div>
               <div>
                 <span className="block font-jetbrains text-[8px] tracking-[4px] uppercase text-violet mb-4">
-                  Mao Direita
+                  Mão Direita
                 </span>
                 <div className="font-cinzel text-bone font-normal tracking-[0.04em] mb-3.5 text-[clamp(15px,2.5vw,19px)]">
-                  Quem voce virou
+                  Quem você virou
                 </div>
                 <p className="font-raleway text-[14px] font-light leading-[1.9] text-bone-dim">
-                  O que a vida fez. As decisoes, os traumas, os amores, as fugas. As diferencas
+                  O que a vida fez. As decisões, os traumas, os amores, as fugas. As diferenças
                   entre uma e outra contam tudo o que aconteceu no meio.
                 </p>
               </div>
@@ -442,9 +442,9 @@ export default function ManifestoPage() {
           </FadeUp>
 
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)]">
-            Se a linha do coracao da esquerda e mais profunda que a da direita, voce nasceu com uma
-            intensidade que a vida te ensinou a esconder. Se a da direita e mais profunda, voce
-            aprendeu a amar com mais forca do que veio programada pra sentir.
+            Se a linha do coração da esquerda é mais profunda que a da direita, você nasceu com uma
+            intensidade que a vida te ensinou a esconder. Se a da direita é mais profunda, você
+            aprendeu a amar com mais força do que veio programada pra sentir.
           </p>
           <Pullquote text="Uma e promessa. A outra e escolha." />
         </FadeUp>
@@ -461,7 +461,7 @@ export default function ManifestoPage() {
                 background: "linear-gradient(180deg, transparent, var(--color-gold), transparent)",
               }}
             />
-            Nao e generico. Nunca e generico.
+            Não é genérico. Nunca é genérico.
           </h2>
 
           <FadeUp>
@@ -481,32 +481,32 @@ export default function ManifestoPage() {
                 }}
               />
               <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] relative z-[1]">
-                Pega tudo isso. Os cinco mil anos. As quatro linhas. Os sete montes. A mao esquerda
-                e a direita. Cada cruzamento, cada bifurcacao, cada marca que apareceu nos ultimos
+                Pega tudo isso. Os cinco mil anos. As quatro linhas. Os sete montes. A mão esquerda
+                e a direita. Cada cruzamento, cada bifurcação, cada marca que apareceu nos últimos
                 anos.
               </p>
               <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] relative z-[1] mt-6">
-                E <em className="font-cormorant italic text-gold text-[1.08em]">le</em>.
+                E <em className="font-cormorant italic text-gold text-[1.08em]">lê</em>.
               </p>
               <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] relative z-[1] mt-6">
-                Nao e &ldquo;voce e uma pessoa sensivel que as vezes se fecha&rdquo;. Isso qualquer
-                um fala. MaosFalam te conta como voce ama, por que se protege, o que te derrubou e
-                como voce levantou.{" "}
+                Não é &ldquo;você é uma pessoa sensível que às vezes se fecha&rdquo;. Isso qualquer
+                um fala. MaosFalam te conta como você ama, por que se protege, o que te derrubou e
+                como você levantou.{" "}
                 <strong className="text-bone font-normal">
-                  Com nome. Com detalhe. Com a precisao de quem ta olhando pra sua palma e vendo o
-                  que voce nao ve.
+                  Com nome. Com detalhe. Com a precisão de quem tá olhando pra sua palma e vendo o
+                  que você não vê.
                 </strong>
               </p>
             </div>
           </FadeUp>
 
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-10">
-            A leitura e construida cruzando mais de dez mil referencias de quiromancia profissional.
-            Cada linha da sua mao e comparada, medida, interpretada. Nao por achismo. Por um sistema
-            que estudou o que as melhores leitoras de mao do mundo levam decadas pra aprender.
+            A leitura é construída cruzando mais de dez mil referências de quiromancia profissional.
+            Cada linha da sua mão é comparada, medida, interpretada. Não por achismo. Por um sistema
+            que estudou o que as melhores leitoras de mão do mundo levam décadas pra aprender.
           </p>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-7">
-            A diferenca e que agora isso cabe na tela do seu celular. E demora 30 segundos.
+            A diferença é que agora isso cabe na tela do seu celular. E demora 30 segundos.
           </p>
         </FadeUp>
 
@@ -522,14 +522,14 @@ export default function ManifestoPage() {
                 background: "linear-gradient(180deg, transparent, var(--color-gold), transparent)",
               }}
             />
-            Depois de ler, voce nao olha do mesmo jeito.
+            Depois de ler, você não olha do mesmo jeito.
           </h2>
 
           <div className="grid grid-cols-1 min-[520px]:grid-cols-3 gap-0.5 my-12">
             {[
-              { quote: "Tem gente que le e chora.", sub: "Reconhecimento" },
-              { quote: "Tem gente que le e manda pro ex.", sub: "Revelacao" },
-              { quote: "Tem gente que le e fica quieta por horas.", sub: "Silencio necessario" },
+              { quote: "Tem gente que lê e chora.", sub: "Reconhecimento" },
+              { quote: "Tem gente que lê e manda pro ex.", sub: "Revelação" },
+              { quote: "Tem gente que lê e fica quieta por horas.", sub: "Silêncio necessário" },
             ].map((item) => (
               <FadeUp
                 key={item.sub}
@@ -550,15 +550,15 @@ export default function ManifestoPage() {
           </div>
 
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)]">
-            Eu nao sei o que voce vai fazer. Mas eu sei que depois de ler, voce nao vai olhar pra
-            sua mao do mesmo jeito.
+            Eu não sei o que você vai fazer. Mas eu sei que depois de ler, você não vai olhar pra
+            sua mão do mesmo jeito.
           </p>
         </FadeUp>
 
         {/* Leitura gratis */}
         <FadeUp className="py-25" style={{ borderTop: "1px solid rgba(201,162,74,0.06)" }}>
           <span className="block font-jetbrains text-[7px] tracking-[5px] uppercase text-gold-dim mb-5">
-            06 . Por onde comecar
+            06 . Por onde começar
           </span>
           <h2 className="font-cinzel text-bone font-normal tracking-[0.04em] mb-12 pl-5 relative text-[clamp(18px,3.5vw,26px)]">
             <span
@@ -567,10 +567,10 @@ export default function ManifestoPage() {
                 background: "linear-gradient(180deg, transparent, var(--color-gold), transparent)",
               }}
             />
-            A Linha do Coracao e gratis. Sempre.
+            A Linha do Coração é grátis. Sempre.
           </h2>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mb-9">
-            Porque eu quero que voce sinta o que e ser lida de verdade antes de decidir qualquer
+            Porque eu quero que você sinta o que é ser lida de verdade antes de decidir qualquer
             coisa.
           </p>
 
@@ -587,20 +587,20 @@ export default function ManifestoPage() {
                   Gratuito
                 </span>
                 <span className="font-cinzel text-[11px] tracking-[0.06em] text-gold">
-                  Linha do Coracao
+                  Linha do Coração
                 </span>
               </div>
               <div className="p-7 min-[520px]:p-10">
                 <div className="font-cinzel text-bone font-normal mb-4 text-[clamp(15px,2.8vw,20px)]">
-                  O que voce descobre de graca
+                  O que você descobre de graça
                 </div>
                 <ul className="flex flex-col gap-2.5 list-none">
                   {[
-                    "Como voce ama de verdade",
-                    "O que voce esconde de quem te ama",
-                    "Seu padrao quando confia em alguem",
-                    "Por que voce se protege tanto",
-                    "Uma frase sobre voce que vai doer um pouco",
+                    "Como você ama de verdade",
+                    "O que você esconde de quem te ama",
+                    "Seu padrão quando confia em alguém",
+                    "Por que você se protege tanto",
+                    "Uma frase sobre você que vai doer um pouco",
                   ].map((item) => (
                     <li
                       key={item}
@@ -616,7 +616,7 @@ export default function ManifestoPage() {
           </FadeUp>
 
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)]">
-            So a Linha do Coracao. Mas ja e o suficiente pra voce ficar em silencio.
+            Só a Linha do Coração. Mas já é o suficiente pra você ficar em silêncio.
           </p>
         </FadeUp>
 
@@ -632,10 +632,10 @@ export default function ManifestoPage() {
                 background: "linear-gradient(180deg, transparent, var(--color-gold), transparent)",
               }}
             />
-            Sua mao nao tem so uma linha.
+            Sua mão não tem só uma linha.
           </h2>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mb-8">
-            A Linha do Coracao e so a porta. O que ta la dentro e outra coisa.
+            A Linha do Coração é só a porta. O que tá lá dentro é outra coisa.
           </p>
 
           <FadeUp>
@@ -644,14 +644,14 @@ export default function ManifestoPage() {
               style={{ border: "1px solid rgba(201,162,74,0.07)" }}
             >
               {[
-                { num: "01", text: "Linha do Coracao. Como voce ama, o que esconde quando ama" },
-                { num: "02", text: "Linha da Cabeca. Como sua mente funciona, por que nao para" },
-                { num: "03", text: "Linha da Vida. O que te derrubou, como voce levantou" },
-                { num: "04", text: "Linha do Destino. Pra onde voce ta indo, mesmo sem saber" },
-                { num: "05", text: "Seis montes mapeados . tipo de mao . elemento" },
+                { num: "01", text: "Linha do Coração. Como você ama, o que esconde quando ama" },
+                { num: "02", text: "Linha da Cabeça. Como sua mente funciona, por que não para" },
+                { num: "03", text: "Linha da Vida. O que te derrubou, como você levantou" },
+                { num: "04", text: "Linha do Destino. Pra onde você tá indo, mesmo sem saber" },
+                { num: "05", text: "Seis montes mapeados . tipo de mão . elemento" },
                 { num: "06", text: "Compatibilidade . amor, sexo e intimidade" },
-                { num: "07", text: "Sinais raros e marcas de protecao" },
-                { num: "08", text: "Mao esquerda versus mao direita. Promessa e escolha" },
+                { num: "07", text: "Sinais raros e marcas de proteção" },
+                { num: "08", text: "Mão esquerda versus mão direita. Promessa e escolha" },
               ].map((item, i, arr) => (
                 <li
                   key={item.num}
@@ -670,13 +670,13 @@ export default function ManifestoPage() {
           </FadeUp>
 
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-8">
-            Resultado com seu nome. So seu. So pra voce. Nenhuma leitura e generica. A sua e so sua.
+            Resultado com seu nome. Só seu. Só pra você. Nenhuma leitura é genérica. A sua é só sua.
           </p>
           <p className="font-raleway font-light text-bone-dim leading-[2] max-w-[600px] text-[clamp(15px,2.4vw,18px)] mt-7">
-            O sistema nao chuta. Ele{" "}
-            <em className="font-cormorant italic text-gold text-[1.08em]">le</em>. Mede a
-            profundidade de cada linha. Identifica bifurcacoes. Mapeia os sete montes. Compara a
-            esquerda com a direita. Encontra padroes que a olho nu passam despercebidos.
+            O sistema não chuta. Ele{" "}
+            <em className="font-cormorant italic text-gold text-[1.08em]">lê</em>. Mede a
+            profundidade de cada linha. Identifica bifurcações. Mapeia os sete montes. Compara a
+            esquerda com a direita. Encontra padrões que a olho nu passam despercebidos.
           </p>
         </FadeUp>
       </div>
@@ -691,14 +691,14 @@ export default function ManifestoPage() {
         />
         <DiamondOrnament className="w-15 mx-auto mb-5" />
         <p className="font-cormorant italic font-light text-bone leading-[1.25] tracking-[0.01em] mb-6 text-[clamp(26px,5.5vw,46px)]">
-          Ta tudo ai.
+          Tá tudo aí.
           <br />
           Sempre esteve.
         </p>
         <p className="font-raleway text-[13px] font-light text-bone-dim tracking-[0.02em] leading-[1.9] mb-12">
-          Voce so nunca parou pra ver.
+          Você só nunca parou pra ver.
           <br />
-          Me mostre sua mao e eu te conto quem voce e.
+          Me mostre sua mão e eu te conto quem você é.
         </p>
         <Link
           href="/"
