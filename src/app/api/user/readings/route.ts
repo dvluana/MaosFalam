@@ -61,6 +61,9 @@ export async function GET() {
           created_at: r.createdAt,
         }),
       ),
+      // CREDIT-07: only count readings made with this Clerk account,
+      // not unclaimed anonymous readings matched by email
+      reading_count: claimedReadings.length,
     });
   } catch (error) {
     if (error instanceof Error && error.message === "Not authenticated") {

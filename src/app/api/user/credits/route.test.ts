@@ -9,6 +9,9 @@ vi.mock("@/server/lib/prisma", () => ({
     creditPack: {
       findMany: vi.fn(),
     },
+    reading: {
+      count: vi.fn(),
+    },
   },
 }));
 
@@ -28,6 +31,8 @@ describe("GET /api/user/credits", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(getClerkUserId).mockResolvedValue("user_test_123");
+    // Default: 0 own readings
+    vi.mocked(prisma.reading.count).mockResolvedValue(0);
   });
 
   it("API-06: 2 packs (remaining=3, remaining=2) returns balance=5 and packs array length=2", async () => {
@@ -122,5 +127,43 @@ describe("GET /api/user/credits", () => {
 
     expect(res.status).toBe(401);
     expect(json.error).toBe("Nao autenticado");
+  });
+
+  it("CREDIT-07: response includes reading_count field", async () => {
+    vi.mocked(prisma.creditPack.findMany).mockResolvedValue([] as never);
+    vi.mocked(prisma.reading.count).mockResolvedValue(3);
+
+    const res = await GET();
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json.reading_count).toBeDefined();
+    expect(typeof json.reading_count).toBe("number");
+  });
+
+  it("CREDIT-07: reading_count equals count from prisma.reading.count (own readings only)", async () => {
+    vi.mocked(prisma.creditPack.findMany).mockResolvedValue([] as never);
+    vi.mocked(prisma.reading.count).mockResolvedValue(4);
+
+    const res = await GET();
+    const json = await res.json();
+
+    expect(json.reading_count).toBe(4);
+    // Verify the count was called with clerkUserId filter (not inflated by email match)
+    expect(prisma.reading.count).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ clerkUserId: "user_test_123" }),
+      }),
+    );
+  });
+
+  it("CREDIT-07: reading_count=0 for new user with no logged-in readings", async () => {
+    vi.mocked(prisma.creditPack.findMany).mockResolvedValue([] as never);
+    vi.mocked(prisma.reading.count).mockResolvedValue(0);
+
+    const res = await GET();
+    const json = await res.json();
+
+    expect(json.reading_count).toBe(0);
   });
 });
