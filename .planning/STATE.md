@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Sistema de Creditos Robusto
 status: planning
-stopped_at: Completed 08-auth-navigation-fixes-01-PLAN.md
-last_updated: "2026-04-14T03:33:44.190Z"
-last_activity: 2026-04-13 — Roadmap defined for v1.3
+stopped_at: Completed 09-reading-flow-fixes-01-PLAN.md
+last_updated: "2026-04-14T00:42:00Z"
+last_activity: 2026-04-14 — Phase 09 Plan 01 complete
 progress:
   total_phases: 6
   completed_phases: 3
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-04-13)
 
 ## Current Position
 
-Phase: 6 — Atomic Credit Transaction (not started)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-04-13 — Roadmap defined for v1.3
+Phase: 9 — Reading Flow Fixes
+Plan: 01 (completed)
+Status: In progress
+Last activity: 2026-04-14 — Phase 09 Plan 01 complete
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ _Updated after each plan completion_
 | Phase 06-atomic-credit-transaction P02 | 7m | 2 tasks | 8 files |
 | Phase 07-credit-infrastructure-cleanup P01 | 2m | 2 tasks | 7 files |
 | Phase 08-auth-navigation-fixes P01 | 5m | 2 tasks | 3 files |
+| Phase 09-reading-flow-fixes P01 | 2m | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,8 @@ _Updated after each plan completion_
 - [Phase 07-01]: seed-credits auto-call removed from useAuth; staging credits must be seeded manually via DB
 - [Phase 08-auth-navigation-fixes]: consumeCheckoutIntent called separately for OAuth (before redirect) vs email/password (after setActive)
 - [Phase 08-auth-navigation-fixes]: CAPTCHA loop is Clerk Dashboard config, not code — clerk-captcha div already present
+- [Phase 09-reading-flow-fixes]: reading_count from /api/user/readings response field (not array length) — excludes anonymous email-matched readings
+- [Phase 09-reading-flow-fixes]: maosfalam_name sessionStorage set in all three submit paths (visitor, logged-in first, credit confirm)
 
 ### Pending Todos
 
@@ -128,6 +131,6 @@ None.
 
 ## Session Continuity
 
-Last activity: 2026-04-13 - Roadmap v1.3 defined
-Stopped at: Completed 08-auth-navigation-fixes-01-PLAN.md
+Last activity: 2026-04-14 - Phase 09 Plan 01 complete
+Stopped at: Completed 09-reading-flow-fixes-01-PLAN.md
 Resume file: None
