@@ -4,7 +4,8 @@
 
 - ✅ **v1.0 Backend MVP** - Phases 1-7 (shipped 2026-04-11)
 - ✅ **v1.1 Alinhamento Arquitetural** - Phases 1-5 (shipped 2026-04-11)
-- 🚧 **v1.2 Fluxo de Mao Dominante** - Phases 1-4 (in progress)
+- ✅ **v1.2 Fluxo de Mao Dominante** - Phases 1-5 (shipped 2026-04-11)
+- 🚧 **v1.3 Sistema de Creditos Robusto** - Phases 6-11 (in progress)
 
 <details>
 <summary>✅ v1.0 Backend MVP (Phases 1-7) - SHIPPED 2026-04-11</summary>
@@ -24,133 +25,125 @@ All 9 plans completed. See `.planning/archive/v1.1/` for history.
 
 </details>
 
-### Phase 5: Pipeline Refactor — eliminar sessionStorage pra foto, corrigir race condition scan/API, pre-hint MediaPipe pro GPT-4o
+<details>
+<summary>✅ v1.2 Fluxo de Mao Dominante (Phases 1-5) - SHIPPED 2026-04-11</summary>
 
-**Goal:** Substituir sessionStorage por module-level singleton pra transferir foto entre paginas, corrigir race condition no scan onde a navegacao acontece antes da API resolver, e enviar pre-hint de elemento (calculado dos landmarks MediaPipe) pro GPT-4o
-**Requirements**: PIPE-01, PIPE-02, PIPE-03, PIPE-04
-**Depends on:** Phase 4
-**Plans:** 3/3 plans complete
+Phase 1: Camera UI | Phase 2: Upload Pipeline | Phase 3: Edge Cases + Prompt | Phase 4: Outra Pessoa + A11y | Phase 5: Pipeline Refactor
 
-Plans:
+All 13 plans completed. See `.planning/archive/v1.2/` for history.
 
-- [x] 05-01-PLAN.md — Foundation: photo-store module + computeElementHint + captureFrame quality 0.82
-- [x] 05-02-PLAN.md — Server-side: analyzeHand elementHint param + capture route schema + reading-client
-- [x] 05-03-PLAN.md — Wiring: camera/scan pages use photo-store, scan race condition fix (3-effect gate)
+</details>
 
 ---
 
-### 🚧 v1.2 Fluxo de Mao Dominante (In Progress)
+### 🚧 v1.3 Sistema de Creditos Robusto (In Progress)
 
-**Milestone Goal:** Completar o fluxo de mao dominante end-to-end: instrucoes visuais na camera, upload pipeline com validacao client-side, edge cases de imagem, prompt GPT-4o com contexto de dominancia, e suporte a leitura pra outra pessoa.
+**Milestone Goal:** Refactor do sistema de creditos com seguranca, correcao de bugs criticos, e maturidade de logging. Transacao atomica elimina credit_used client-side. Bugs de fluxo corrigidos. Logging auditado. Dead code removido.
 
 ## Phases
 
 **Phase Numbering:**
 
-- Integer phases (1, 2, 3): Planned milestone work
-- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+- Integer phases (6, 7, 8...): Planned milestone work for v1.3
+- Decimal phases (6.1, 6.2): Urgent insertions (marked with INSERTED)
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [x] **Phase 1: Camera UI** - Instrucoes visuais, badge de mao esperada, feedback de mao errada, outline SVG, camera traseira default (completed 2026-04-11)
-- [x] **Phase 2: Upload Pipeline** - Tela de escolha de metodo, instrucoes de upload, validacao de arquivo, confirmacao com preview (completed 2026-04-11)
-- [x] **Phase 3: Edge Cases + Prompt** - HEIC, EXIF, compressao, orientacao, retry logic, deteccao de screenshot, prompt GPT-4o atualizado (completed 2026-04-11)
-- [x] **Phase 4: Outra Pessoa + A11y** - Camera e upload adaptados ao contexto de outra pessoa, aria-labels, aria-live, role=img (completed 2026-04-11)
+- [ ] **Phase 6: Atomic Credit Transaction** - Debito atomico com raw SQL, CHECK constraint, fix /api/user/credits 404, fix reading_count inflation
+- [ ] **Phase 7: Credit Infrastructure Cleanup** - Eliminar /api/reading/new e /api/dev/seed-credits, remover auto-seed do useAuth
+- [ ] **Phase 8: Auth & Navigation Fixes** - Login Google sem CAPTCHA loop, ?return= param, genero configuravel no fluxo pra mim
+- [ ] **Phase 9: Reading Flow Fixes** - Nome correto em leitura pra outra pessoa, revelacao redireciona pro caminho certo, fluxo logado end-to-end
+- [ ] **Phase 10: Logging Hardening** - LOG_LEVEL por environment, pino-pretty so em dev, zero dados sensiveis nos logs
+- [ ] **Phase 11: Codebase Cleanup** - Remover CreditGate, eliminar credit_used de ReadingContext, dead code, Clerk legacy migration, sessionStorage orphans
 
 ## Phase Details
 
-### Phase 1: Camera UI
+### Phase 6: Atomic Credit Transaction
 
-**Goal**: Usuario ve instrucoes claras antes de abrir a camera, sabe qual mao posicionar, recebe aviso quando usa a mao errada, e a camera abre na traseira por padrao
-**Depends on**: Nothing (first phase)
-**Requirements**: CAM-01, CAM-02, CAM-03, CAM-04, CAM-05, CAM-06
+**Goal**: Debito de credito e criacao de reading acontecem atomicamente no servidor; o banco impede saldo negativo; o endpoint de saldo responde corretamente; reading_count nao inflaciona com leituras anonimas
+**Depends on**: Nothing (first phase of v1.3)
+**Requirements**: CREDIT-01, CREDIT-02, CREDIT-03, CREDIT-06, CREDIT-07
 **Success Criteria** (what must be TRUE):
 
-1. Antes de ver o viewfinder, usuario ve overlay com frase da cigana e outline SVG mostrando qual mao posicionar (direita ou esquerda conforme dominancia)
-2. Durante a captura, badge no viewfinder exibe "MAO DIREITA" ou "MAO ESQUERDA" e pode ser descartado com botao x
-3. Quando MediaPipe detecta a mao errada, toast aparece por 3s com aviso — sem bloquear a captura
-4. Outline SVG no viewfinder esta espelhado conforme a mao dominante escolhida
-5. Camera abre na traseira (facingMode: environment) com botao para trocar pra frontal; permissao negada redireciona para upload com frase da cigana
-   **Plans**: 2 plans
-   **UI hint**: yes
+1. Uma leitura premium e criada e o credito e debitado na mesma transacao SQL — se a criacao da reading falhar, o credito nao e debitado
+2. Um UPDATE concorrente com remaining = 0 retorna 0 rows affected sem erro, sem saldo negativo no banco
+3. GET /api/user/credits retorna 200 com balance numerico para usuario logado (sem 404)
+4. reading_count em /conta/leituras reflete apenas leituras feitas com a conta logada, nao leituras anonimas claimadas
+   **Plans**: TBD
 
-Plans:
+### Phase 7: Credit Infrastructure Cleanup
 
-- [x] 01-01-PLAN.md — Componentes visuais: HandOutlineSVG, HandInstructionOverlay, HandExpectedBadge
-- [x] 01-02-PLAN.md — Wiring: WrongHandFeedback, camera switch, permission redirect, integracao na pagina
-
-### Phase 2: Upload Pipeline
-
-**Goal**: Usuario que nao usa a camera ao vivo consegue enviar foto da palma com instrucoes claras, validacao de formato e qualidade, e confirmacao antes do envio
-**Depends on**: Phase 1
-**Requirements**: UPL-01, UPL-02, UPL-03, UPL-04, UPL-05, UPL-06
+**Goal**: /api/reading/new e removido; /api/dev/seed-credits e removido; staging nao cria creditos automaticamente no primeiro login
+**Depends on**: Phase 6
+**Requirements**: CREDIT-04, CREDIT-05
 **Success Criteria** (what must be TRUE):
 
-1. Usuario ve tela de escolha com dois caminhos claros: camera ao vivo ou upload da galeria
-2. Ao escolher upload, ve instrucao de qual mao fotografar, dicas de qualidade, e outline SVG do esperado
-3. File picker aceita JPEG, PNG, WebP, HEIC e rejeita outros formatos antes de qualquer processamento
-4. Validacao exibe checks progressivos (formato, qualidade, mao detectada, handedness, palma aberta) com feedback visual
-5. Tela de confirmacao mostra preview da foto com checklist de validacao e botao de confirmar antes de enviar
-6. Quando qualidade e ruim mas mao esta OK, usuario ve aviso honesto com opcao "Usar mesmo assim"
-   **Plans**: 3 plans
-   **UI hint**: yes
+1. POST /api/reading/new retorna 404 — a rota nao existe mais
+2. POST /api/dev/seed-credits retorna 404 — a rota nao existe mais
+3. Ao fazer primeiro login no staging, nenhum credit_pack e criado automaticamente
+4. O fluxo de leitura logado continua funcionando sem chamar /api/reading/new
+   **Plans**: TBD
 
-Plans:
+### Phase 8: Auth & Navigation Fixes
 
-- [x] 02-01-PLAN.md — UploadInstructionScreen: instrucao de qual mao + dicas de qualidade + outline SVG
-- [x] 02-02-PLAN.md — useUploadValidation hook + UploadValidationScreen + UploadConfirmScreen
-- [x] 02-03-PLAN.md — Wiring: fluxo multi-step na camera page, substituir UploadPreview
-
-### Phase 3: Edge Cases + Prompt
-
-**Goal**: Imagens de iPhone (HEIC), fotos com rotacao EXIF incorreta, arquivos grandes, celular em landscape, capturas repetidas, e screenshots sao tratados sem erro; o prompt do GPT-4o inclui contexto da mao dominante e ignora decoracoes
-**Depends on**: Phase 2
-**Requirements**: EDGE-01, EDGE-02, EDGE-03, EDGE-04, EDGE-05, EDGE-06, PROMPT-01, PROMPT-02
+**Goal**: Login com Google funciona sem loop de CAPTCHA; login e registro preservam o destino e retornam o usuario ao lugar certo; usuario logado pode configurar genero no fluxo "pra mim"
+**Depends on**: Nothing (independent of credit model)
+**Requirements**: FLOW-04, FLOW-05, FLOW-06
 **Success Criteria** (what must be TRUE):
 
-1. Foto tirada no iPhone em formato HEIC e convertida automaticamente antes de qualquer processamento, sem erro ou mensagem tecnica
-2. Foto com rotacao EXIF incorreta e exibida e processada na orientacao correta
-3. Imagem grande e comprimida para max 1280px e JPEG 0.85 no client antes de ser enviada ao servidor
-4. Celular em modo landscape exibe aviso "Vira o celular pra vertical" sem prosseguir
-5. Apos 3 falhas, usuario ve sugestao de trocar de metodo (camera para upload ou vice-versa)
-6. Screenshot detectado por dimensoes atipicas exibe aviso da cigana pedindo foto real; prompt GPT-4o inclui qual mao dominante esta sendo analisada e instrui a ignorar tatuagens, henna, nail art, aneis e pulseiras
-   **Plans**: 3 plans
+1. Login com Google completa o fluxo OAuth sem loop de CAPTCHA no sso-callback
+2. Usuario que acessa /creditos sem estar logado, faz login, e redirecionado de volta ao /creditos (nao para /conta/leituras)
+3. ?return= param na URL de login e lido e respeitado apos autenticacao bem-sucedida
+4. No fluxo "pra mim" logado, usuario ve toggle de genero e pode escolher ela/ele antes de ir pra camera
+   **Plans**: TBD
 
-Plans:
+### Phase 9: Reading Flow Fixes
 
-- [x] 03-01-PLAN.md — normalizeImage(): HEIC conversion + EXIF correction + compression; wire into useUploadValidation
-- [x] 03-02-PLAN.md — Landscape warning + retry-suggest logic + screenshot detection
-- [x] 03-03-PLAN.md — GPT-4o prompt: dominant_hand context + ignore accessories
-
-### Phase 4: Outra Pessoa + A11y
-
-**Goal**: Quando a leitura e para outra pessoa, camera e upload refletem o nome e mao dessa pessoa em todos os textos; botoes e feedbacks sao acessiveis com leitores de tela
-**Depends on**: Phase 3
-**Requirements**: OTHER-01, OTHER-02, OTHER-03, A11Y-01, A11Y-02, A11Y-03
+**Goal**: Nome e genero da outra pessoa aparecem corretamente na leitura; revelacao redireciona para o resultado certo (free ou completo); fluxo logado de ponta a ponta funciona sem surpresas
+**Depends on**: Phase 6
+**Requirements**: FLOW-01, FLOW-02, FLOW-03
 **Success Criteria** (what must be TRUE):
 
-1. Badge no viewfinder e instrucao de upload exibem nome e mao da outra pessoa ("MAO DIREITA . CARLOS") quando is_self=false
-2. Toast de mao errada usa o pronome correto da outra pessoa ("dele" ou "dela") conforme genero escolhido
-3. Tela de instrucao e confirmacao de upload mencionam o nome da outra pessoa
-4. Botoes Destra/Canhota, trocar camera, e badge descartavel tem aria-labels descritivos para leitores de tela
-5. WrongHandFeedback e anunciado como assertive e HandExpectedBadge como polite via aria-live
-6. Outlines SVG de mao tem role="img" e aria-label descrevendo a mao esperada
-   **Plans**: 2 plans
-   **UI hint**: yes
+1. Leitura feita para "Carlos" mostra "Carlos" — nao o nome do usuario logado — em todo o resultado
+2. Apos uma leitura premium (credito usado), revelacao redireciona para /ler/resultado/{id}/completo; apos leitura free, redireciona para /ler/resultado/{id}
+3. Usuario logado com credito completa o funil nome -> toque -> camera -> scan -> revelacao -> resultado sem erro ou redirecionamento inesperado
+   **Plans**: TBD
 
-Plans:
+### Phase 10: Logging Hardening
 
-- [x] 04-01-PLAN.md — Camera context: HandInstructionOverlay + HandExpectedBadge + WrongHandFeedback com targetName/isSelf/targetGender
-- [x] 04-02-PLAN.md — Upload context: UploadInstructionScreen + UploadConfirmScreen com targetName; A11Y-01 aria-labels em ToggleButton
+**Goal**: Logs sao controlados por LOG_LEVEL por environment; pino-pretty nao carrega em producao; nenhum dado pessoal aparece em log algum
+**Depends on**: Nothing (independent)
+**Requirements**: LOG-01, LOG-02, LOG-03
+**Success Criteria** (what must be TRUE):
+
+1. Em producao (LOG_LEVEL=info), logs de debug nao aparecem; em dev (LOG_LEVEL=debug), aparecem
+2. pino-pretty esta presente apenas como devDependency e o transport condicional nao o importa em producao
+3. Audit de todos os loggers confirma: sem nome, email, CPF, foto base64, ou session_id nos logs
+   **Plans**: TBD
+
+### Phase 11: Codebase Cleanup
+
+**Goal**: CreditGate e credit_used sao removidos do fluxo; dead code que nao e chamado por ninguem e deletado; login e registro usam @clerk/nextjs correto; sessionStorage keys orfas sao limpas
+**Depends on**: Phase 6, Phase 7, Phase 8
+**Requirements**: CLEAN-01, CLEAN-02, CLEAN-03, CLEAN-04, CLEAN-05
+**Success Criteria** (what must be TRUE):
+
+1. /ler/nome nao exibe mais o modal CreditGate — o fluxo vai direto pra camera sem interrupcao
+2. ReadingContext nao tem mais o campo credit_used; /api/reading/capture nao aceita nem usa credit_used no body
+3. npm run build e npm run type-check passam sem erros apos a remocao do dead code
+4. login e registro importam de @clerk/nextjs (nao @clerk/nextjs/legacy) e funcionam identicamente
+5. sessionStorage nao escreve mais maosfalam_email nem maosfalam_pending_reading; clearReadingContext() e chamada nos pontos corretos
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 → 10 (parallel to any) → 11
 
-| Phase                  | Milestone | Plans Complete | Status   | Completed  |
-| ---------------------- | --------- | -------------- | -------- | ---------- |
-| 1. Camera UI           | v1.2      | 2/2            | Complete | 2026-04-11 |
-| 2. Upload Pipeline     | v1.2      | 3/3            | Complete | 2026-04-11 |
-| 3. Edge Cases + Prompt | v1.2      | 3/3            | Complete | 2026-04-11 |
-| 4. Outra Pessoa + A11y | v1.2      | 2/2            | Complete | 2026-04-11 |
+| Phase                            | Milestone | Plans Complete | Status      | Completed |
+| -------------------------------- | --------- | -------------- | ----------- | --------- |
+| 6. Atomic Credit Transaction     | v1.3      | 0/?            | Not started | -         |
+| 7. Credit Infrastructure Cleanup | v1.3      | 0/?            | Not started | -         |
+| 8. Auth & Navigation Fixes       | v1.3      | 0/?            | Not started | -         |
+| 9. Reading Flow Fixes            | v1.3      | 0/?            | Not started | -         |
+| 10. Logging Hardening            | v1.3      | 0/?            | Not started | -         |
+| 11. Codebase Cleanup             | v1.3      | 0/?            | Not started | -         |

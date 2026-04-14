@@ -60,37 +60,37 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 
 ## Traceability
 
-| Requirement | Phase | Status  |
-| ----------- | ----- | ------- |
-| CREDIT-01   | —     | Pending |
-| CREDIT-02   | —     | Pending |
-| CREDIT-03   | —     | Pending |
-| CREDIT-04   | —     | Pending |
-| CREDIT-05   | —     | Pending |
-| CREDIT-06   | —     | Pending |
-| CREDIT-07   | —     | Pending |
-| FLOW-01     | —     | Pending |
-| FLOW-02     | —     | Pending |
-| FLOW-03     | —     | Pending |
-| FLOW-04     | —     | Pending |
-| FLOW-05     | —     | Pending |
-| FLOW-06     | —     | Pending |
-| LOG-01      | —     | Pending |
-| LOG-02      | —     | Pending |
-| LOG-03      | —     | Pending |
-| CLEAN-01    | —     | Pending |
-| CLEAN-02    | —     | Pending |
-| CLEAN-03    | —     | Pending |
-| CLEAN-04    | —     | Pending |
-| CLEAN-05    | —     | Pending |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| CREDIT-01   | Phase 6  | Pending |
+| CREDIT-02   | Phase 6  | Pending |
+| CREDIT-03   | Phase 6  | Pending |
+| CREDIT-04   | Phase 7  | Pending |
+| CREDIT-05   | Phase 7  | Pending |
+| CREDIT-06   | Phase 6  | Pending |
+| CREDIT-07   | Phase 6  | Pending |
+| FLOW-01     | Phase 9  | Pending |
+| FLOW-02     | Phase 9  | Pending |
+| FLOW-03     | Phase 9  | Pending |
+| FLOW-04     | Phase 8  | Pending |
+| FLOW-05     | Phase 8  | Pending |
+| FLOW-06     | Phase 8  | Pending |
+| LOG-01      | Phase 10 | Pending |
+| LOG-02      | Phase 10 | Pending |
+| LOG-03      | Phase 10 | Pending |
+| CLEAN-01    | Phase 11 | Pending |
+| CLEAN-02    | Phase 11 | Pending |
+| CLEAN-03    | Phase 11 | Pending |
+| CLEAN-04    | Phase 11 | Pending |
+| CLEAN-05    | Phase 11 | Pending |
 
 **Coverage:**
 
 - v1.3 requirements: 21 total
-- Mapped to phases: 0
-- Unmapped: 21
+- Mapped to phases: 21
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-04-13_
-_Last updated: 2026-04-13 after initial definition_
+_Last updated: 2026-04-13 after roadmap definition_

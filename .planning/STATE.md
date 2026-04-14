@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Sistema de Creditos Robusto
-status: Defining requirements
+status: Ready to plan
 stopped_at: null
 last_updated: "2026-04-13"
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-13)
 
 **Core value:** Foto da palma entra, leitura personalizada sai.
-**Current focus:** Defining requirements for v1.3
+**Current focus:** Phase 6 — Atomic Credit Transaction
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 6 — Atomic Credit Transaction (not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-13 — Milestone v1.3 started
+Status: Ready to plan
+Last activity: 2026-04-13 — Roadmap defined for v1.3
 
 ## Performance Metrics
 
@@ -61,7 +61,7 @@ _Updated after each plan completion_
 
 ### Roadmap Evolution
 
-- Phase 5 added: Pipeline Refactor — eliminar sessionStorage pra foto, corrigir race condition scan/API, pre-hint MediaPipe pro GPT-4o
+- v1.3 phases 6-11 defined 2026-04-13 from credit system audit
 
 ### Decisions
 
@@ -94,18 +94,17 @@ _Updated after each plan completion_
 - [Phase 05]: elementHint injected as text in user message (not system prompt) to keep OpenAI caching intact
 - [Phase 05]: element_hint optional in Zod schema with no default — purely forwarded if client provides it
 - [Phase 05-pipeline-refactor]: photo-store uses module-level singleton — survives Next.js App Router soft navigation, type-safe, no browser storage API needed
-- [Phase 05-pipeline-refactor]: photo-store uses module-level singleton — survives Next.js App Router soft navigation, type-safe, no browser storage API needed
 - [Phase 05-pipeline-refactor]: captureFrame quality param defaults to 0.82 (from 0.92), reducing live-camera JPEG payload ~40%
 - [Phase 05-pipeline-refactor]: scan_slow triggered at render-time rising-edge not useEffect — avoids react-hooks/set-state-in-effect lint violation
 - [Phase 05-pipeline-refactor]: clearPhotoStore called immediately after getPhoto in scan — frees memory before long API call
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-None yet.
+None.
 
 ### Quick Tasks Completed
 
@@ -116,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last activity: 2026-04-11 - Completed quick task 260411-qgu: fluxo premium completo staging
-Stopped at: Quick task complete
+Last activity: 2026-04-13 - Roadmap v1.3 defined
+Stopped at: Roadmap complete, ready to plan Phase 6
 Resume file: None
