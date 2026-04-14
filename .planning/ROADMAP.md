@@ -52,7 +52,7 @@ All 7 plans completed. See `.planning/archive/v1.3/` for history.
 
 ## Phases
 
-- [ ] **Phase 12: AbacatePay v2 Backend** - Migrar wrapper pra API v2, criar produtos, atualizar webhook, testes
+- [x] **Phase 12: AbacatePay v2 Backend** - Migrar wrapper pra API v2, criar produtos, atualizar webhook, testes (completed 2026-04-14)
 - [ ] **Phase 13: Frontend Payment Flow** - /creditos real, initiatePurchase, checkout intent, UpsellSection, CPF
 - [ ] **Phase 14: Email & Hardening** - Resend emails transacionais, CPF validation, error handling, stale cleanup
 - [ ] **Phase 15: Bug Fixes** - Manifesto acentos, camera handedness, revelacao corta
@@ -64,12 +64,12 @@ All 7 plans completed. See `.planning/archive/v1.3/` for history.
 **Goal**: Backend de pagamento migrado pra AbacatePay API v2. Checkout hosted funciona end-to-end: cria checkout → usuario paga no AbacatePay → webhook credita.
 **Depends on**: Nothing (first phase of v2)
 **Requirements**: PAY-01, PAY-02, PAY-03, PAY-04, PAY-05, PAY-06
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 
 - [x] 12-01-PLAN.md — v2 wrapper rewrite + purchase route + schema migration + product setup
-- [ ] 12-02-PLAN.md — Webhook handler rewrite + comprehensive tests
+- [x] 12-02-PLAN.md — Webhook handler rewrite + comprehensive tests
 
 **Success Criteria** (what must be TRUE):
 
@@ -122,9 +122,9 @@ Plans:
 **Execution Order:**
 Phase 12 → 13 → 14 (parallel to 15) → 15
 
-| Phase                     | Milestone | Plans Complete | Status      | Completed |
-| ------------------------- | --------- | -------------- | ----------- | --------- |
-| 12. AbacatePay v2 Backend | v2        | 1/2            | In Progress | -         |
-| 13. Frontend Payment Flow | v2        | 0/?            | Not started | -         |
-| 14. Email & Hardening     | v2        | 0/?            | Not started | -         |
-| 15. Bug Fixes             | v2        | 0/?            | Not started | -         |
+| Phase                     | Milestone | Plans Complete | Status      | Completed  |
+| ------------------------- | --------- | -------------- | ----------- | ---------- |
+| 12. AbacatePay v2 Backend | v2        | 2/2            | Complete    | 2026-04-14 |
+| 13. Frontend Payment Flow | v2        | 0/?            | Not started | -          |
+| 14. Email & Hardening     | v2        | 0/?            | Not started | -          |
+| 15. Bug Fixes             | v2        | 0/?            | Not started | -          |

@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v2
-milestone_name: Monetizacao
-status: executing
-stopped_at: Completed 12-01-PLAN.md
-last_updated: "2026-04-14T16:14:00.000Z"
-last_activity: 2026-04-14 — Completed plan 12-01 (AbacatePay v2 wrapper + purchase route)
+milestone: v1.0
+milestone_name: milestone
+status: completed
+stopped_at: Completed 12-02-PLAN.md
+last_updated: "2026-04-14T16:22:01.674Z"
+last_activity: 2026-04-14
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 Phase: 12 — AbacatePay v2 Backend
 Plan: 2 of 2
 Status: Plan 12-01 complete, 12-02 next
-Last activity: 2026-04-14 — Completed plan 12-01
+Last activity: 2026-04-14
 
 ## Performance Metrics
 
@@ -65,6 +65,7 @@ _Updated after each plan completion_
 | Phase 10-logging-hardening P01 | 3m | 3 tasks | 13 files |
 | Phase 11-codebase-cleanup P01 | 8m | 3 tasks | 7 files |
 | Phase 12-abacatepay-v2-backend P01 | 5m | 2 tasks | 7 files |
+| Phase 12 P02 | 4m | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -125,6 +126,8 @@ _Updated after each plan completion_
 - [Phase 12-01]: Customer creation email-only in v2 — CPF gate removed from purchase route
 - [Phase 12-01]: Payment created FIRST (pending), then checkout with externalId=payment.id
 - [Phase 12-01]: verifyWebhookSignature uses fixed public key constant with base64 digest
+- [Phase 12]: Webhook payload loosely typed (no Zod) per AbacatePay docs — fields may change
+- [Phase 12]: Payment found by findUnique(id: externalId) since externalId equals payment.id primary key
 
 ### Pending Todos
 
@@ -144,5 +147,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-14 — Completed plan 12-01
-Stopped at: Completed 12-01-PLAN.md
+Stopped at: Completed 12-02-PLAN.md
 Resume file: None
