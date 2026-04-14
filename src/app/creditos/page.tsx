@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
-import { Button, Card, Eyebrow, GoogleButton, PageLoading } from "@/components/ui";
+import { Button, Eyebrow, GoogleButton, PageLoading } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 import { saveCheckoutIntent } from "@/lib/checkout-intent";
 import { formatCPF, isValidCPF } from "@/lib/cpf";
@@ -179,8 +179,8 @@ function CreditosInner() {
       }
     }
 
-    // Initiate purchase
-    setPageState("processing_payment");
+    // Initiate purchase — button shows spinner, no separate state card
+    setPageState("default");
     setPurchasing(true);
     setPurchaseError(null);
 
@@ -283,10 +283,12 @@ function CreditosInner() {
                           stiffness: 180,
                           damping: 22,
                         }}
-                        drag="x"
+                        drag={purchasing ? false : "x"}
                         dragConstraints={{ left: 0, right: 0 }}
+                        dragSnapToOrigin
                         dragElastic={0.3}
                         onDragEnd={(_, info) => {
+                          if (purchasing) return;
                           if (info.offset.x < -60) goNext();
                           else if (info.offset.x > 60) goPrev();
                         }}
@@ -514,29 +516,16 @@ function CreditosInner() {
           </div>
         </section>
 
-        {/* Dynamic states */}
-        {pageState === "processing_payment" && (
-          <Card accentColor="violet">
-            <div className="py-6 text-center">
-              <p className="font-cormorant italic text-xl text-bone leading-relaxed mb-4">
-                O preço do que você vai descobrir é barato pelo que vale.
-              </p>
-              <p className="font-jetbrains text-[10px] text-violet uppercase tracking-[1.5px]">
-                Redirecionando...
-              </p>
-            </div>
-          </Card>
-        )}
-
+        {/* Error state — inline toast style, no separate card */}
         {pageState === "payment_failed_generic" && (
-          <Card accentColor="rose">
+          <div className="text-center py-6">
             <p className="font-cormorant italic text-lg text-bone mb-4">
               {purchaseError ?? "Algo saiu do caminho. Tente de novo."}
             </p>
-            <Button variant="primary" size="sm" onClick={handleRetry}>
+            <Button variant="secondary" size="sm" onClick={handleRetry}>
               Tentar de novo
             </Button>
-          </Card>
+          </div>
         )}
 
         {/* Login modal */}
