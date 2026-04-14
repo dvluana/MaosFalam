@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { CREDIT_PACKS, isValidPackType } from "@/data/credit-packs";
-import { validateWebhookSignature } from "@/server/lib/abacatepay";
+import { verifyWebhookSignature } from "@/server/lib/abacatepay";
 import { logger } from "@/server/lib/logger";
 import { prisma } from "@/server/lib/prisma";
 import { sendPaymentConfirmed } from "@/server/lib/resend";
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const signature = req.headers.get("x-abacatepay-signature") || "";
 
-    if (!validateWebhookSignature(rawBody, signature)) {
+    if (!verifyWebhookSignature(rawBody, signature)) {
       logger.warn("Invalid webhook signature");
       return NextResponse.json({ error: "Assinatura invalida" }, { status: 401 });
     }
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     // Find payment by billing ID
     const payment = await prisma.payment.findFirst({
-      where: { abacatepayBillingId: billingId },
+      where: { abacatepayCheckoutId: billingId },
     });
 
     if (!payment) {

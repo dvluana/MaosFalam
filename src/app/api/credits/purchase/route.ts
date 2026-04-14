@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import type { PackType } from "@/data/credit-packs";
 import { CREDIT_PACKS, isValidPackType } from "@/data/credit-packs";
-import { createBilling, createCustomer } from "@/server/lib/abacatepay";
+import { createCheckout, createCustomer, resolveProductId } from "@/server/lib/abacatepay";
 import { getClerkUser } from "@/server/lib/auth";
 import { logger } from "@/server/lib/logger";
 import { prisma } from "@/server/lib/prisma";
@@ -45,52 +46,60 @@ export async function POST(req: Request) {
       });
     }
 
-    // Create AbacatePay customer if needed
+    // Create AbacatePay customer if needed (v2: only email required, no CPF gate)
     let customerId = profile.abacatepayCustomerId;
-    if (!customerId && data.cpf) {
-      const customer = await createCustomer(user.name, user.email, data.cpf);
-      customerId = customer.id;
+    if (!customerId) {
+      customerId = await createCustomer(user.email, user.name);
       await prisma.userProfile.update({
         where: { clerkUserId: user.id },
         data: {
           abacatepayCustomerId: customerId,
-          cpf: data.cpf,
+          ...(data.cpf && { cpf: data.cpf }),
         },
       });
     }
 
-    if (!customerId) {
-      return NextResponse.json(
-        { error: "CPF necessario para primeiro pagamento" },
-        { status: 400 },
-      );
-    }
-
-    // Create billing
-    const billing = await createBilling(customerId, data.pack_type, pack, data.reading_id);
-
-    // Save pending payment
-    await prisma.payment.create({
+    // v2 flow: create Payment FIRST (pending), then checkout with externalId=payment.id
+    const payment = await prisma.payment.create({
       data: {
         clerkUserId: user.id,
         readingId: data.reading_id,
-        abacatepayBillingId: billing.id,
         packType: data.pack_type,
         amountCents: pack.price_cents,
         status: "pending",
       },
     });
 
+    const productId = await resolveProductId(data.pack_type as PackType);
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+    const checkout = await createCheckout({
+      productId,
+      customerId,
+      externalId: payment.id,
+      returnUrl: `${baseUrl}/creditos`,
+      completionUrl: data.reading_id
+        ? `${baseUrl}/ler/resultado/${data.reading_id}?paid=1`
+        : `${baseUrl}/conta/leituras?purchased=1`,
+    });
+
+    // Update Payment with checkout ID for reference
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: { abacatepayCheckoutId: checkout.id },
+    });
+
     logger.info(
       {
         clerkUserId: user.id,
         packType: data.pack_type,
-        billingId: billing.id,
+        checkoutId: checkout.id,
+        paymentId: payment.id,
       },
-      "Billing created",
+      "Checkout created",
     );
 
-    return NextResponse.json({ checkout_url: billing.url });
+    return NextResponse.json({ checkout_url: checkout.url });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Dados invalidos" }, { status: 400 });
