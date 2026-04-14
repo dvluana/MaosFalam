@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense, use, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, use, useCallback, useEffect, useState } from "react";
 
 import BlurredDeck from "@/components/reading/BlurredDeck";
 import ElementHero from "@/components/reading/ElementHero";
@@ -77,11 +78,57 @@ function ServerError() {
   );
 }
 
+function PaymentConfirming({ message }: { message: string }) {
+  return (
+    <main className="min-h-dvh bg-black flex items-center justify-center px-6">
+      <div className="text-center max-w-sm flex flex-col items-center gap-4">
+        <span className="block w-6 h-6 rounded-full border-2 border-gold/20 border-t-gold animate-spin" />
+        <p className="font-cormorant italic text-[22px] text-bone leading-snug">{message}</p>
+      </div>
+    </main>
+  );
+}
+
 function ResultadoInner({ id }: { id: string }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isPaidReturn = searchParams.get("paid") === "1";
+
   const [reading, setReading] = useState<Reading | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [serverError, setServerError] = useState(false);
+  const [paymentPending, setPaymentPending] = useState(isPaidReturn);
+  const [retried, setRetried] = useState(false);
+
+  const handlePaymentReturn = useCallback(
+    (r: Reading) => {
+      if (r.tier === "premium") {
+        router.replace(`/ler/resultado/${id}/completo`);
+      } else if (!retried) {
+        // Webhook may not have processed yet; retry once after 3s
+        const timer = setTimeout(() => {
+          setRetried(true);
+          getReading(id)
+            .then((refetched) => {
+              if (refetched?.tier === "premium") {
+                router.replace(`/ler/resultado/${id}/completo`);
+              } else {
+                // Still free after retry — show normal page
+                setPaymentPending(false);
+              }
+            })
+            .catch(() => {
+              setPaymentPending(false);
+            });
+        }, 3000);
+        return () => clearTimeout(timer);
+      } else {
+        setPaymentPending(false);
+      }
+    },
+    [id, retried, router],
+  );
 
   useEffect(() => {
     getReading(id)
@@ -93,14 +140,29 @@ function ResultadoInner({ id }: { id: string }) {
         }
         setReading(r);
         setLoading(false);
+
+        if (isPaidReturn) {
+          handlePaymentReturn(r);
+        }
       })
       .catch(() => {
         setServerError(true);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, isPaidReturn, handlePaymentReturn]);
 
   if (loading) return <PageLoading />;
+  if (paymentPending) {
+    return (
+      <PaymentConfirming
+        message={
+          retried
+            ? "Seu pagamento esta sendo confirmado. Recarregue em alguns instantes."
+            : "Confirmando seu pagamento..."
+        }
+      />
+    );
+  }
   if (serverError) return <ServerError />;
   if (notFound || !reading) return <InvalidReading />;
 
