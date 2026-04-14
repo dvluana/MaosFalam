@@ -118,10 +118,10 @@ Cinzel Decorative: LOGO ONLY. Cormorant Garamond italic: voz da cigana. Cinzel: 
 
 ### Env vars de controle por environment
 
-| Env var | Production | Preview | Efeito |
-|---------|-----------|---------|--------|
-| `NEXT_PUBLIC_COMING_SOON` | `true` | — | Mostra pagina "em breve" em vez do app |
-| `NEXT_PUBLIC_ENV_LABEL` | — | `Testes` | Prefixo no titulo da aba + favicon laranja |
+| Env var                   | Production | Preview  | Efeito                                     |
+| ------------------------- | ---------- | -------- | ------------------------------------------ |
+| `NEXT_PUBLIC_COMING_SOON` | `true`     | —        | Mostra pagina "em breve" em vez do app     |
+| `NEXT_PUBLIC_ENV_LABEL`   | —          | `Testes` | Prefixo no titulo da aba + favicon laranja |
 
 **Pra desativar "em breve":** remover `NEXT_PUBLIC_COMING_SOON` no Vercel Dashboard (Settings > Environment Variables) ou via CLI: `vercel env rm NEXT_PUBLIC_COMING_SOON production -y`. Redeploy automatico apos push ou `vercel deploy --prod`.
 
@@ -133,6 +133,7 @@ Cinzel Decorative: LOGO ONLY. Cormorant Garamond italic: voz da cigana. Cinzel: 
 - Quando terminar: rode `npm run build`.
 - Agrupe tarefas. Nao peca confirmacao a cada passo.
 - ANTES de editar arquivo existente: leia ele primeiro.
+- APOS `git push`: verifique o deploy com `vercel list` (ou `vercel inspect <url>` se erro). Se status = Error, investigue o build log e corrija antes de seguir. Nao assuma que o deploy deu certo.
 
 <!-- GSD:project-start source:PROJECT.md -->
 
