@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState, type FormEvent } from "react";
 
-import { Button, Card, GoogleButton, Input, PageLoading, Toast } from "@/components/ui";
+import { Button, Card, Eyebrow, GoogleButton, Input, PageLoading, Toast } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 import { saveCheckoutIntent, readCheckoutIntent } from "@/lib/checkout-intent";
 
@@ -197,19 +197,7 @@ function CreditosInner() {
   useEffect(() => {
     if (pageState !== "payment_success") return;
     const id = window.setTimeout(() => {
-      // Se havia uma leitura pendente (usuária clicou em "Desbloquear tudo"
-      // num resultado free), volta exatamente pra essa leitura em modo
-      // completo. Senão, cai na lista de leituras.
-      const pending =
-        typeof window !== "undefined"
-          ? window.sessionStorage.getItem("maosfalam_pending_reading")
-          : null;
-      if (pending) {
-        window.sessionStorage.removeItem("maosfalam_pending_reading");
-        router.push(`/ler/resultado/${pending}/completo`);
-      } else {
-        router.push("/conta/leituras");
-      }
+      router.push("/conta/leituras");
     }, 1500);
     return () => window.clearTimeout(id);
   }, [pageState, router]);
@@ -265,26 +253,7 @@ function CreditosInner() {
     <main className="min-h-screen velvet-bg text-bone font-raleway">
       <div className="mx-auto max-w-2xl px-5 pt-28 pb-16">
         {/* Eyebrow */}
-        <div className="flex items-center gap-3 justify-center mb-6">
-          <span
-            className="h-px w-10"
-            style={{
-              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
-            }}
-          />
-          <span
-            className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold whitespace-nowrap"
-            style={{ fontWeight: 500 }}
-          >
-            A minha tabela
-          </span>
-          <span
-            className="h-px w-10"
-            style={{
-              background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
-            }}
-          />
-        </div>
+        <Eyebrow label="A minha tabela" className="justify-center mb-6" />
 
         <header className="text-center mb-12">
           <h1 className="font-cinzel text-[28px] sm:text-[34px] text-bone leading-tight mb-4">
@@ -614,26 +583,7 @@ function CreditosInner() {
         {/* Seção de pagamento destacada */}
         <section id="pagamento" className="scroll-mt-28 mb-12">
           {/* Eyebrow */}
-          <div className="flex items-center gap-3 justify-center mb-6">
-            <span
-              className="h-px w-10"
-              style={{
-                background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
-              }}
-            />
-            <span
-              className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold whitespace-nowrap"
-              style={{ fontWeight: 500 }}
-            >
-              Fechar a conta
-            </span>
-            <span
-              className="h-px w-10"
-              style={{
-                background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
-              }}
-            />
-          </div>
+          <Eyebrow label="Fechar a conta" className="justify-center mb-6" />
 
           <article
             className="card-noise relative overflow-hidden px-6 py-8 sm:px-9 sm:py-10"

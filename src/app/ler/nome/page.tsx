@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import Button from "@/components/ui/Button";
+import Checkbox from "@/components/ui/Checkbox";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Input from "@/components/ui/Input";
+import ToggleButton from "@/components/ui/ToggleButton";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { registerLead } from "@/lib/reading-client";
@@ -14,37 +16,6 @@ import { saveReadingContext } from "@/lib/reading-context";
 import { STORAGE_KEYS } from "@/lib/storage-keys";
 import { generateUUID } from "@/lib/uuid";
 import type { ReadingContext } from "@/types/reading-context";
-
-// ============================================================
-// Toggle button helper — keeps DS styling DRY
-// ============================================================
-
-interface ToggleButtonProps {
-  selected: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  ariaLabel?: string;
-}
-
-function ToggleButton({ selected, onClick, children, ariaLabel }: ToggleButtonProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={ariaLabel}
-      aria-pressed={selected}
-      className="flex-1 py-3 font-raleway text-[10px] uppercase tracking-[0.06em] transition-all duration-300"
-      style={{
-        background: selected ? "linear-gradient(160deg, #1e1838, #2a2150, #1e1838)" : "transparent",
-        color: selected ? "#E8DFD0" : "#9b9284",
-        border: selected ? "1px solid rgba(201,162,74,0.2)" : "1px solid rgba(201,162,74,0.08)",
-        borderRadius: "0 6px 0 6px",
-      }}
-    >
-      {children}
-    </button>
-  );
-}
 
 // ============================================================
 // Page
@@ -119,7 +90,6 @@ export default function NomePage() {
     // Persist legacy session keys for downstream consumers
     if (typeof window !== "undefined") {
       sessionStorage.setItem(STORAGE_KEYS.name, trimmedName);
-      sessionStorage.setItem(STORAGE_KEYS.email, trimmedEmail);
       sessionStorage.setItem(STORAGE_KEYS.name_fresh, "1");
       sessionStorage.setItem(STORAGE_KEYS.target_gender, gender);
     }
@@ -416,39 +386,11 @@ export default function NomePage() {
                 </div>
 
                 {/* LGPD opt-in — styled checkbox */}
-                <label className="flex items-center gap-3 cursor-pointer group">
-                  <span
-                    className="relative flex shrink-0 items-center justify-center w-[18px] h-[18px] transition-all duration-200"
-                    style={{
-                      borderRadius: "0 4px 0 4px",
-                      border: emailOptIn
-                        ? "1px solid rgba(201,162,74,0.5)"
-                        : "1px solid rgba(123,107,165,0.25)",
-                      background: emailOptIn ? "rgba(201,162,74,0.15)" : "transparent",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={emailOptIn}
-                      onChange={(e) => setEmailOptIn(e.target.checked)}
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                    />
-                    {emailOptIn && (
-                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                        <path
-                          d="M1 4L3.5 6.5L9 1"
-                          stroke="#C9A24A"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </span>
-                  <span className="font-raleway text-[12px] text-bone leading-[1.4]">
-                    Aceito receber novidades e leituras por email.
-                  </span>
-                </label>
+                <Checkbox
+                  checked={emailOptIn}
+                  onChange={setEmailOptIn}
+                  label="Aceito receber novidades e leituras por email."
+                />
               </div>
             </div>
 
