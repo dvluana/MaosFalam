@@ -120,7 +120,11 @@ Plans:
 1. Leitura feita para "Carlos" mostra "Carlos" — nao o nome do usuario logado — em todo o resultado
 2. Apos uma leitura premium (credito usado), revelacao redireciona para /ler/resultado/{id}/completo; apos leitura free, redireciona para /ler/resultado/{id}
 3. Usuario logado com credito completa o funil nome -> toque -> camera -> scan -> revelacao -> resultado sem erro ou redirecionamento inesperado
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 09-01-PLAN.md — Fix useCredits reading_count inflation, verify target_name correctness
 
 ### Phase 10: Logging Hardening
 
@@ -157,6 +161,6 @@ Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 →
 | 6. Atomic Credit Transaction     | v1.3      | 2/2            | Complete    | 2026-04-14 |
 | 7. Credit Infrastructure Cleanup | v1.3      | 1/1            | Complete    | 2026-04-14 |
 | 8. Auth & Navigation Fixes       | v1.3      | 1/1            | Complete    | 2026-04-14 |
-| 9. Reading Flow Fixes            | v1.3      | 0/?            | Not started | -          |
+| 9. Reading Flow Fixes            | v1.3      | 0/1            | Not started | -          |
 | 10. Logging Hardening            | v1.3      | 0/?            | Not started | -          |
 | 11. Codebase Cleanup             | v1.3      | 0/?            | Not started | -          |
