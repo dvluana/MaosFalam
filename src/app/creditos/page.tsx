@@ -3,21 +3,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useMemo, useState } from "react";
 
 import { Button, Eyebrow, GoogleButton, PageLoading } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
 import { saveCheckoutIntent } from "@/lib/checkout-intent";
-import { formatCPF, isValidCPF } from "@/lib/cpf";
 import { initiatePurchase } from "@/lib/payment-client";
-import { getUserProfile } from "@/lib/user-client";
 
-type PageState =
-  | "default"
-  | "processing_payment"
-  | "payment_failed_generic"
-  | "requires_login"
-  | "requires_cpf";
+type PageState = "default" | "processing_payment" | "payment_failed_generic" | "requires_login";
 
 interface Pacote {
   id: string;
@@ -122,11 +115,6 @@ function CreditosInner() {
   const goPrev = () => goTo(deckIdx - 1);
   const goNext = () => goTo(deckIdx + 1);
 
-  // CPF state
-  const [cpf, setCpf] = useState<string>("");
-  const [cpfError, setCpfError] = useState<string | null>(null);
-  const [hasCpf, setHasCpf] = useState<boolean | null>(null);
-
   // Purchase state
   const [purchasing, setPurchasing] = useState<boolean>(false);
   const [purchaseError, setPurchaseError] = useState<string | null>(null);
@@ -138,21 +126,6 @@ function CreditosInner() {
 
   const pacote = useMemo(() => PACOTES[deckIdx] ?? null, [deckIdx]);
 
-  // On mount with logged-in user: check if CPF exists on profile
-  useEffect(() => {
-    if (!user) {
-      setHasCpf(null);
-      return;
-    }
-    void getUserProfile()
-      .then((profile) => {
-        setHasCpf(profile.cpf !== null);
-      })
-      .catch(() => {
-        setHasCpf(false);
-      });
-  }, [user]);
-
   const handleEscolher = useCallback(async () => {
     if (!pacote) return;
 
@@ -163,30 +136,13 @@ function CreditosInner() {
       return;
     }
 
-    // CPF collection for first-time buyers — show modal
-    if (hasCpf === false && !cpf.replace(/\D/g, "")) {
-      setPageState("requires_cpf");
-      return;
-    }
-
-    // CPF validation (if just collected via modal)
-    if (hasCpf === false) {
-      const rawCpf = cpf.replace(/\D/g, "");
-      if (!isValidCPF(rawCpf)) {
-        setCpfError("CPF inválido.");
-        setPageState("requires_cpf");
-        return;
-      }
-    }
-
     // Initiate purchase — button shows spinner, no separate state card
     setPageState("default");
     setPurchasing(true);
     setPurchaseError(null);
 
     try {
-      const cpfToSend = hasCpf === false ? cpf.replace(/\D/g, "") : undefined;
-      const result = await initiatePurchase(pacote.id, cpfToSend, readingId);
+      const result = await initiatePurchase(pacote.id, readingId);
       window.location.href = result.checkout_url;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Erro desconhecido";
@@ -198,7 +154,7 @@ function CreditosInner() {
     } finally {
       setPurchasing(false);
     }
-  }, [pacote, user, hasCpf, cpf, readingId]);
+  }, [pacote, user, readingId]);
 
   function handleGoogleLogin(): void {
     router.push("/login?return=/creditos");
@@ -529,177 +485,6 @@ function CreditosInner() {
         )}
 
         {/* Login modal */}
-        {/* CPF modal */}
-        {pageState === "requires_cpf" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-5"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="cpf-title"
-            onClick={() => {
-              setPageState("default");
-              setCpfError(null);
-            }}
-          >
-            <div
-              aria-hidden
-              className="absolute inset-0"
-              style={{
-                background: "rgba(4,2,8,0.82)",
-                backdropFilter: "blur(10px)",
-                WebkitBackdropFilter: "blur(10px)",
-              }}
-            />
-
-            <motion.article
-              initial={{ opacity: 0, y: 20, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="card-noise relative overflow-hidden w-full max-w-md"
-              style={{
-                background: "#0e0a18",
-                border: "1px solid rgba(201,162,74,0.35)",
-                padding: "40px 28px 32px",
-                boxShadow:
-                  "0 40px 80px -20px rgba(0,0,0,0.95), 0 0 80px -8px rgba(201,162,74,0.22), 0 0 1px rgba(201,162,74,0.5)",
-              }}
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(201,162,74,0.12), transparent 70%)",
-                }}
-              />
-
-              {(
-                [
-                  ["top", "left"],
-                  ["top", "right"],
-                  ["bottom", "left"],
-                  ["bottom", "right"],
-                ] as const
-              ).map(([v, h]) => (
-                <span
-                  key={`cpf-${v}-${h}`}
-                  aria-hidden
-                  className="absolute"
-                  style={{
-                    [v]: 4,
-                    [h]: 4,
-                    width: 14,
-                    height: 14,
-                    borderStyle: "solid",
-                    borderColor: "rgba(201,162,74,0.6)",
-                    borderWidth: `${v === "top" ? "2px" : "0"} ${h === "right" ? "2px" : "0"} ${v === "bottom" ? "2px" : "0"} ${h === "left" ? "2px" : "0"}`,
-                  }}
-                />
-              ))}
-
-              <button
-                type="button"
-                onClick={() => {
-                  setPageState("default");
-                  setCpfError(null);
-                }}
-                aria-label="Fechar"
-                className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center text-bone-dim hover:text-gold transition-colors focus:outline-none"
-              >
-                <span className="font-cinzel text-[22px] leading-none" aria-hidden>
-                  &#215;
-                </span>
-              </button>
-
-              <div className="relative flex flex-col items-center text-center">
-                <div className="flex items-center gap-2 mb-5">
-                  <span className="h-px w-8 bg-gold-dim/50" />
-                  <span
-                    className="w-1.5 h-1.5 rotate-45 bg-gold"
-                    style={{ boxShadow: "0 0 8px rgba(201,162,74,0.7)" }}
-                  />
-                  <span className="h-px w-8 bg-gold-dim/50" />
-                </div>
-
-                <span
-                  className="font-jetbrains text-[9.5px] tracking-[1.8px] uppercase text-gold mb-3"
-                  style={{ fontWeight: 500 }}
-                >
-                  Primeira vez
-                </span>
-
-                <h3
-                  id="cpf-title"
-                  className="font-cinzel text-[22px] sm:text-[26px] text-bone leading-[1.15] mb-3 max-w-[280px]"
-                >
-                  Preciso do seu CPF.
-                </h3>
-
-                <p className="font-cormorant italic text-[17px] sm:text-[19px] text-bone-dim leading-[1.35] mb-8 max-w-[300px]">
-                  Só pra emitir o pagamento. Guardo uma vez e não peço de novo.
-                </p>
-
-                <div className="w-full max-w-[300px] mb-6">
-                  <label className="block font-cormorant italic text-[14px] text-bone-dim tracking-[0.02em] mb-2 text-left">
-                    Seu CPF
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      autoFocus
-                      value={cpf}
-                      onChange={(e) => {
-                        setCpf(formatCPF(e.target.value));
-                        if (cpfError) setCpfError(null);
-                      }}
-                      placeholder="000.000.000-00"
-                      className="w-full bg-transparent border-b text-bone font-raleway text-[15px] py-3 outline-none placeholder:font-cormorant placeholder:italic placeholder:text-violet-dim transition-colors"
-                      style={{
-                        borderBottomColor: cpfError
-                          ? "rgba(196,100,122,0.6)"
-                          : "rgba(123,107,165,0.15)",
-                      }}
-                    />
-                    <span
-                      className="absolute bottom-0 left-0 h-px transition-all duration-500"
-                      style={{
-                        background: "linear-gradient(90deg, #C4647A, #7B6BA5)",
-                        width: cpf.length > 0 ? "100%" : "0%",
-                      }}
-                    />
-                  </div>
-                  {cpfError && (
-                    <span className="block font-jetbrains text-[11px] text-rose mt-2 text-left">
-                      {cpfError}
-                    </span>
-                  )}
-                </div>
-
-                <Button
-                  variant="primary"
-                  disabled={cpf.replace(/\D/g, "").length < 11}
-                  onClick={() => void handleEscolher()}
-                  className="w-full max-w-[300px]"
-                >
-                  Continuar
-                </Button>
-
-                <div className="flex items-center gap-2 mt-8">
-                  <span className="h-px w-12 bg-gold-dim/30" />
-                  <span className="w-1 h-1 rotate-45 bg-gold-dim" />
-                  <span className="h-px w-12 bg-gold-dim/30" />
-                </div>
-              </div>
-            </motion.article>
-          </motion.div>
-        )}
-
         {pageState === "requires_login" && (
           <motion.div
             initial={{ opacity: 0 }}

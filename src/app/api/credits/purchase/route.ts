@@ -11,7 +11,6 @@ import { rateLimit } from "@/server/lib/rate-limit";
 
 const schema = z.object({
   pack_type: z.string(),
-  cpf: z.string().min(11).max(14).optional(),
   reading_id: z.string().uuid().optional(),
 });
 
@@ -46,34 +45,16 @@ export async function POST(req: Request) {
     if (!profile) {
       step = "create-profile";
       profile = await prisma.userProfile.create({
-        data: {
-          clerkUserId: user.id,
-          cpf: data.cpf,
-        },
+        data: { clerkUserId: user.id },
       });
     }
 
-    // Save CPF immediately when provided (independent of customer creation)
-    if (data.cpf && !profile.cpf) {
-      step = "save-cpf";
-      await prisma.userProfile.update({
-        where: { clerkUserId: user.id },
-        data: { cpf: data.cpf },
-      });
-      profile = { ...profile, cpf: data.cpf };
-    }
-
-    // AbacatePay customer management:
-    // - No customer yet → create (with CPF if available)
-    // - Customer exists but CPF just provided → recreate with CPF (no update API)
-    // - Customer exists, CPF already saved → reuse existing
+    // AbacatePay customer: create if missing, else reuse
     let customerId = profile.abacatepayCustomerId;
-    const cpfValue = data.cpf || profile.cpf || undefined;
-    const cpfJustProvided = data.cpf && !profile.cpf;
 
-    if (!customerId || cpfJustProvided) {
+    if (!customerId) {
       step = "create-customer";
-      customerId = await createCustomer(user.email, user.name, cpfValue);
+      customerId = await createCustomer(user.email, user.name);
       step = "save-customer-id";
       await prisma.userProfile.update({
         where: { clerkUserId: user.id },

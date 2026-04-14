@@ -1,10 +1,8 @@
 export async function initiatePurchase(
   packType: string,
-  cpf?: string,
   readingId?: string,
 ): Promise<{ checkout_url: string }> {
   const body: Record<string, string> = { pack_type: packType };
-  if (cpf) body.cpf = cpf;
   if (readingId) body.reading_id = readingId;
 
   const res = await fetch("/api/credits/purchase", {

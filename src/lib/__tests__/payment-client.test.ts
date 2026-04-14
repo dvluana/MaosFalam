@@ -39,32 +39,18 @@ describe("initiatePurchase", () => {
     });
   });
 
-  it("includes cpf when provided", async () => {
-    vi.mocked(globalThis.fetch).mockResolvedValueOnce(
-      new Response(JSON.stringify({ checkout_url: "https://example.com" }), { status: 200 }),
-    );
-
-    await initiatePurchase("avulsa", "12345678909");
-
-    const callBody = JSON.parse(
-      (vi.mocked(globalThis.fetch).mock.calls[0]![1] as RequestInit).body as string,
-    ) as Record<string, unknown>;
-    expect(callBody.cpf).toBe("12345678909");
-    expect(callBody.pack_type).toBe("avulsa");
-  });
-
   it("includes reading_id when provided", async () => {
     vi.mocked(globalThis.fetch).mockResolvedValueOnce(
       new Response(JSON.stringify({ checkout_url: "https://example.com" }), { status: 200 }),
     );
 
-    await initiatePurchase("roda", undefined, "uuid-123");
+    await initiatePurchase("roda", "uuid-123");
 
     const callBody = JSON.parse(
       (vi.mocked(globalThis.fetch).mock.calls[0]![1] as RequestInit).body as string,
     ) as Record<string, unknown>;
     expect(callBody.reading_id).toBe("uuid-123");
-    expect(callBody).not.toHaveProperty("cpf");
+    expect(callBody.pack_type).toBe("roda");
   });
 
   it("throws error with status prefix on failure", async () => {
