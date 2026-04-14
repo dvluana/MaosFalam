@@ -18,6 +18,7 @@ vi.mock("@/server/lib/prisma", () => ({
   prisma: {
     payment: {
       findUnique: vi.fn(),
+      findFirst: vi.fn(),
     },
     userProfile: {
       findUnique: vi.fn(),
@@ -142,17 +143,15 @@ describe("POST /api/webhook/abacatepay", () => {
     expect(prisma.payment.findUnique).not.toHaveBeenCalled();
   });
 
-  it("returns 404 when payment not found by externalId", async () => {
+  it("returns 404 when payment not found by externalId or checkoutId", async () => {
     (prisma.payment.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+    (prisma.payment.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
     const payload = JSON.stringify(makeWebhookPayload());
     const sig = makeSignature(payload);
     const req = makeWebhookRequest(payload, sig);
 
     const res = await POST(req as unknown as NextRequest);
     expect(res.status).toBe(404);
-    expect(prisma.payment.findUnique).toHaveBeenCalledWith({
-      where: { id: "payment-uuid-123" },
-    });
   });
 
   it("returns 200 without reprocessing for duplicate webhook (already paid)", async () => {
