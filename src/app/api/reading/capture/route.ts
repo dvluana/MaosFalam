@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
       const lead = await prisma.lead.findUnique({
         where: { id: data.lead_id },
       });
-      if (lead?.email) {
+      if (lead?.email && lead.emailOptIn === true) {
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
         sendLeadReading(lead.email, lead.name, `${baseUrl}/ler/resultado/${reading.id}`);
       }

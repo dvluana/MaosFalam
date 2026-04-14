@@ -45,6 +45,7 @@ import { debitCreditFIFO } from "@/server/lib/debit-credit";
 import { analyzeHand } from "@/server/lib/openai";
 import { prisma } from "@/server/lib/prisma";
 import { rateLimit } from "@/server/lib/rate-limit";
+import { sendLeadReading } from "@/server/lib/resend";
 import { selectBlocks } from "@/server/lib/select-blocks";
 import type { HandAttributes } from "@/types/hand-attributes";
 
@@ -269,5 +270,45 @@ describe("POST /api/reading/capture", () => {
 
     expect(json.tier).toBeDefined();
     expect(["free", "premium"]).toContain(json.tier);
+  });
+
+  // Email opt-in tests (EMAIL-03)
+
+  it("EMAIL-03: sendLeadReading NOT called when lead.emailOptIn is false", async () => {
+    vi.mocked(prisma.lead.findUnique).mockResolvedValue({
+      ...validLead,
+      emailOptIn: false,
+    } as never);
+
+    await POST(makeRequest(validBody));
+
+    expect(sendLeadReading).not.toHaveBeenCalled();
+  });
+
+  it("EMAIL-03: sendLeadReading called when lead.emailOptIn is true", async () => {
+    process.env.NEXT_PUBLIC_BASE_URL = "https://maosfalam.com";
+    vi.mocked(prisma.lead.findUnique).mockResolvedValue({
+      ...validLead,
+      emailOptIn: true,
+    } as never);
+
+    await POST(makeRequest(validBody));
+
+    expect(sendLeadReading).toHaveBeenCalledWith(
+      "ana@test.com",
+      "Ana",
+      `https://maosfalam.com/ler/resultado/${READING_UUID}`,
+    );
+  });
+
+  it("EMAIL-03: sendLeadReading NOT called when lead.emailOptIn is null", async () => {
+    vi.mocked(prisma.lead.findUnique).mockResolvedValue({
+      ...validLead,
+      emailOptIn: null,
+    } as never);
+
+    await POST(makeRequest(validBody));
+
+    expect(sendLeadReading).not.toHaveBeenCalled();
   });
 });

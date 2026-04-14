@@ -226,7 +226,8 @@ describe("POST /api/webhook/abacatepay", () => {
     expect(capturedMethodUpdate).toBe("CARD");
   });
 
-  it("sends payment confirmation email after processing", async () => {
+  // EMAIL-03: Payment email is transactional — no opt-in gate required
+  it("sends payment confirmation email after processing (no opt-in check)", async () => {
     process.env.NEXT_PUBLIC_BASE_URL = "https://maosfalam.com";
 
     (prisma.payment.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(MOCK_PAYMENT);
