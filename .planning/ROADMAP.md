@@ -154,6 +154,11 @@ Plans:
 3. npm run build e npm run type-check passam sem erros apos a remocao do dead code
 4. login e registro importam de @clerk/nextjs (nao @clerk/nextjs/legacy) e funcionam identicamente
 5. sessionStorage nao escreve mais maosfalam_email nem maosfalam_pending_reading; clearReadingContext() e chamada nos pontos corretos
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 11-01-PLAN.md — Remove CreditGate, dead code cleanup, Clerk legacy migration, sessionStorage orphans
 
 ## Progress
 
@@ -167,4 +172,4 @@ Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 →
 | 8. Auth & Navigation Fixes       | v1.3      | 1/1            | Complete    | 2026-04-14 |
 | 9. Reading Flow Fixes            | v1.3      | 0/1            | Not started | -          |
 | 10. Logging Hardening            | v1.3      | 1/1            | Complete    | 2026-04-14 |
-| 11. Codebase Cleanup             | v1.3      | 0/?            | Not started | -          |
+| 11. Codebase Cleanup             | v1.3      | 0/1            | Not started | -          |
