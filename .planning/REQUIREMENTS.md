@@ -34,9 +34,9 @@ Pagamento real end-to-end, email transacional, bug fixes pendentes.
 
 ### BUG — Bug Fixes Pendentes
 
-- [ ] **BUG-01**: Manifesto — corrigir 63 palavras sem acento
-- [ ] **BUG-02**: Camera handedness — espelhamento so aplica em camera frontal/selfie, nao em upload nem camera traseira
-- [ ] **BUG-03**: Revelacao — carta nao corta em telas pequenas (min-height ou scroll)
+- [x] **BUG-01**: Manifesto — corrigir 63 palavras sem acento
+- [x] **BUG-02**: Camera handedness — espelhamento so aplica em camera frontal/selfie, nao em upload nem camera traseira
+- [x] **BUG-03**: Revelacao — carta nao corta em telas pequenas (min-height ou scroll)
 
 ## Dependency Map
 
@@ -70,9 +70,9 @@ BUG-01, BUG-02, BUG-03 — independentes
 | EMAIL-02    | Phase 14 | Complete |
 | EMAIL-03    | Phase 14 | Complete |
 | EMAIL-04    | Phase 14 | Complete |
-| BUG-01      | Phase 15 | Pending  |
-| BUG-02      | Phase 15 | Pending  |
-| BUG-03      | Phase 15 | Pending  |
+| BUG-01      | Phase 15 | Complete |
+| BUG-02      | Phase 15 | Complete |
+| BUG-03      | Phase 15 | Complete |
 
 **Coverage:**
 

@@ -55,7 +55,7 @@ All 7 plans completed. See `.planning/archive/v1.3/` for history.
 - [x] **Phase 12: AbacatePay v2 Backend** - Migrar wrapper pra API v2, criar produtos, atualizar webhook, testes (completed 2026-04-14)
 - [x] **Phase 13: Frontend Payment Flow** - /creditos real, initiatePurchase, checkout intent, UpsellSection, CPF (completed 2026-04-14)
 - [x] **Phase 14: Email & Hardening** - Resend emails transacionais, CPF validation, error handling, stale cleanup (completed 2026-04-14)
-- [ ] **Phase 15: Bug Fixes** - Manifesto acentos, camera handedness, revelacao corta
+- [x] **Phase 15: Bug Fixes** - Manifesto acentos, camera handedness, revelacao corta (completed 2026-04-14)
 
 ## Phase Details
 
@@ -124,11 +124,11 @@ Plans:
 **Goal**: Bugs pendentes de UX resolvidos.
 **Depends on**: Nothing (independent)
 **Requirements**: BUG-01, BUG-02, BUG-03
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 
-- [ ] 15-01-PLAN.md — Manifesto accents + camera handedness mirroring fix + revelacao responsive card
+- [x] 15-01-PLAN.md — Manifesto accents + camera handedness mirroring fix + revelacao responsive card
 
 **Success Criteria** (what must be TRUE):
 
@@ -141,9 +141,9 @@ Plans:
 **Execution Order:**
 Phase 12 → 13 → 14 (parallel to 15) → 15
 
-| Phase                     | Milestone | Plans Complete | Status      | Completed  |
-| ------------------------- | --------- | -------------- | ----------- | ---------- |
-| 12. AbacatePay v2 Backend | v2        | 2/2            | Complete    | 2026-04-14 |
-| 13. Frontend Payment Flow | v2        | 2/2            | Complete    | 2026-04-14 |
-| 14. Email & Hardening     | v2        | 1/1            | Complete    | 2026-04-14 |
-| 15. Bug Fixes             | v2        | 0/1            | Not started | -          |
+| Phase                     | Milestone | Plans Complete | Status   | Completed  |
+| ------------------------- | --------- | -------------- | -------- | ---------- |
+| 12. AbacatePay v2 Backend | v2        | 2/2            | Complete | 2026-04-14 |
+| 13. Frontend Payment Flow | v2        | 2/2            | Complete | 2026-04-14 |
+| 14. Email & Hardening     | v2        | 1/1            | Complete | 2026-04-14 |
+| 15. Bug Fixes             | v2        | 1/1            | Complete | 2026-04-14 |
