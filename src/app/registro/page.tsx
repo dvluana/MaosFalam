@@ -2,16 +2,19 @@
 
 import { useSignUp } from "@clerk/nextjs/legacy";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import PageLoading from "@/components/ui/PageLoading";
+import { consumeCheckoutIntent } from "@/lib/checkout-intent";
 
 function RegistroInner() {
   const { signUp, isLoaded, setActive } = useSignUp();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get("return") ?? null;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,14 +29,27 @@ function RegistroInner() {
   const [verificationError, setVerificationError] = useState<string | undefined>(undefined);
   const [verifying, setVerifying] = useState(false);
 
+  const getRedirectUrl = (): string => {
+    const intent = consumeCheckoutIntent();
+    if (intent) return `/creditos?pacote=${intent.pacoteId}`;
+    if (returnTo && returnTo.startsWith("/")) return returnTo;
+    return "/conta/leituras";
+  };
+
   const handleGoogle = async () => {
     if (!isLoaded) return;
     setGoogleLoading(true);
     try {
+      const intent = consumeCheckoutIntent();
+      const redirectUrlComplete = intent
+        ? `/creditos?pacote=${intent.pacoteId}`
+        : returnTo && returnTo.startsWith("/")
+          ? returnTo
+          : "/conta/leituras";
       await signUp.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/conta/leituras",
+        redirectUrlComplete,
       });
     } catch {
       setGoogleLoading(false);
@@ -96,7 +112,7 @@ function RegistroInner() {
 
       if (result.status === "complete" && result.createdSessionId) {
         await setActive({ session: result.createdSessionId });
-        router.push("/conta/leituras");
+        router.push(getRedirectUrl());
       } else {
         setVerificationError("Algo deu errado. Tenta de novo.");
         setVerifying(false);

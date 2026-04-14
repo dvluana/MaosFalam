@@ -2,16 +2,19 @@
 
 import { useSignIn } from "@clerk/nextjs/legacy";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import PageLoading from "@/components/ui/PageLoading";
+import { consumeCheckoutIntent } from "@/lib/checkout-intent";
 
 function LoginInner() {
   const { signIn, isLoaded, setActive } = useSignIn();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get("return") ?? null;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,14 +22,27 @@ function LoginInner() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
+  const getRedirectUrl = (): string => {
+    const intent = consumeCheckoutIntent();
+    if (intent) return `/creditos?pacote=${intent.pacoteId}`;
+    if (returnTo && returnTo.startsWith("/")) return returnTo;
+    return "/conta/leituras";
+  };
+
   const handleGoogle = async () => {
     if (!isLoaded) return;
     setGoogleLoading(true);
     try {
+      const intent = consumeCheckoutIntent();
+      const redirectUrlComplete = intent
+        ? `/creditos?pacote=${intent.pacoteId}`
+        : returnTo && returnTo.startsWith("/")
+          ? returnTo
+          : "/conta/leituras";
       await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/conta/leituras",
+        redirectUrlComplete,
       });
     } catch {
       setGoogleLoading(false);
@@ -52,7 +68,7 @@ function LoginInner() {
 
       if (result.status === "complete" && result.createdSessionId) {
         await setActive({ session: result.createdSessionId });
-        router.push("/conta/leituras");
+        router.push(getRedirectUrl());
       } else {
         setError("Algo deu errado. Tenta de novo.");
         setLoading(false);
