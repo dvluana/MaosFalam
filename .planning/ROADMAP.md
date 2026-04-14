@@ -69,7 +69,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 2. Um UPDATE concorrente com remaining = 0 retorna 0 rows affected sem erro, sem saldo negativo no banco
 3. GET /api/user/credits retorna 200 com balance numerico para usuario logado (sem 404)
 4. reading_count em /conta/leituras reflete apenas leituras feitas com a conta logada, nao leituras anonimas claimadas
-   **Plans**: TBD
+   **Plans**: 2 plans
+
+Plans:
+
+- [ ] 06-01-PLAN.md — CHECK constraint migration, raw SQL debit helper, fix credits 404, fix reading_count
+- [ ] 06-02-PLAN.md — Atomic debit in /api/reading/capture, eliminate credit_used from client
 
 ### Phase 7: Credit Infrastructure Cleanup
 
@@ -141,7 +146,7 @@ Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 →
 
 | Phase                            | Milestone | Plans Complete | Status      | Completed |
 | -------------------------------- | --------- | -------------- | ----------- | --------- |
-| 6. Atomic Credit Transaction     | v1.3      | 0/?            | Not started | -         |
+| 6. Atomic Credit Transaction     | v1.3      | 0/2            | Not started | -         |
 | 7. Credit Infrastructure Cleanup | v1.3      | 0/?            | Not started | -         |
 | 8. Auth & Navigation Fixes       | v1.3      | 0/?            | Not started | -         |
 | 9. Reading Flow Fixes            | v1.3      | 0/?            | Not started | -         |
