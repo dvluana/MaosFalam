@@ -34,11 +34,11 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 
 ### Clean — Limpeza de Codigo
 
-- [ ] **CLEAN-01**: Remover CreditGate modal do /ler/nome (desnecessario com transacao atomica)
-- [ ] **CLEAN-02**: Remover credit_used de ReadingContext, scan, capture schema
-- [ ] **CLEAN-03**: Remover dead code (login/register stubs, purchaseCredits, consumeCheckoutIntent, sendWelcome, maosfalam_email)
+- [x] **CLEAN-01**: Remover CreditGate modal do /ler/nome (desnecessario com transacao atomica)
+- [x] **CLEAN-02**: Remover credit_used de ReadingContext, scan, capture schema
+- [x] **CLEAN-03**: Remover dead code (login/register stubs, purchaseCredits, consumeCheckoutIntent, sendWelcome, maosfalam_email)
 - [ ] **CLEAN-04**: Migrar login/registro de @clerk/nextjs/legacy pra @clerk/nextjs
-- [ ] **CLEAN-05**: Limpar sessionStorage keys orfas (pending_reading nunca setado, email nunca lido)
+- [x] **CLEAN-05**: Limpar sessionStorage keys orfas (pending_reading nunca setado, email nunca lido)
 
 ## Future Requirements (v2)
 
@@ -78,11 +78,11 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 | LOG-01      | Phase 10 | Complete |
 | LOG-02      | Phase 10 | Complete |
 | LOG-03      | Phase 10 | Complete |
-| CLEAN-01    | Phase 11 | Pending  |
-| CLEAN-02    | Phase 11 | Pending  |
-| CLEAN-03    | Phase 11 | Pending  |
+| CLEAN-01    | Phase 11 | Complete |
+| CLEAN-02    | Phase 11 | Complete |
+| CLEAN-03    | Phase 11 | Complete |
 | CLEAN-04    | Phase 11 | Pending  |
-| CLEAN-05    | Phase 11 | Pending  |
+| CLEAN-05    | Phase 11 | Complete |
 
 **Coverage:**
 

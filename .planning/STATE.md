@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Sistema de Creditos Robusto
 status: executing
-stopped_at: Completed 10-logging-hardening-01-PLAN.md
-last_updated: "2026-04-14T03:42:45.257Z"
+stopped_at: Completed 11-codebase-cleanup-01-PLAN.md
+last_updated: "2026-04-14T03:52:48.977Z"
 last_activity: 2026-04-14 — Phase 09 Plan 01 complete
 progress:
   total_phases: 6
-  completed_phases: 5
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 6
+  total_plans: 7
+  completed_plans: 7
 ---
 
 # Project State
@@ -63,6 +63,7 @@ _Updated after each plan completion_
 | Phase 08-auth-navigation-fixes P01 | 5m | 2 tasks | 3 files |
 | Phase 09-reading-flow-fixes P01 | 2m | 2 tasks | 2 files |
 | Phase 10-logging-hardening P01 | 3m | 3 tasks | 13 files |
+| Phase 11-codebase-cleanup P01 | 8m | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,8 @@ _Updated after each plan completion_
 - [Phase 09-reading-flow-fixes]: maosfalam_name sessionStorage set in all three submit paths (visitor, logged-in first, credit confirm)
 - [Phase 10-logging-hardening]: pino-pretty moved to devDependencies — never bundled in production
 - [Phase 10-logging-hardening]: Raw Error objects replaced with error.message strings in all logger.error calls to prevent Prisma query params and stack traces from leaking to log output
+- [Phase 11-01]: CreditGate modal removed: credit debit is atomic on server (Phase 06), no client confirmation needed
+- [Phase 11-01]: Clerk legacy migration deferred: @clerk/nextjs main useSignIn returns new signal API incompatible with current login/registro flow
 
 ### Pending Todos
 
@@ -135,5 +138,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-14 - Phase 09 Plan 01 complete
-Stopped at: Completed 10-logging-hardening-01-PLAN.md
+Stopped at: Completed 11-codebase-cleanup-01-PLAN.md
 Resume file: None

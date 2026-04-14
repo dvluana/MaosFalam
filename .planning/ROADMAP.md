@@ -54,7 +54,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Auth & Navigation Fixes** - Login Google sem CAPTCHA loop, ?return= param, genero configuravel no fluxo pra mim (completed 2026-04-14)
 - [ ] **Phase 9: Reading Flow Fixes** - Nome correto em leitura pra outra pessoa, revelacao redireciona pro caminho certo, fluxo logado end-to-end
 - [x] **Phase 10: Logging Hardening** - LOG_LEVEL por environment, pino-pretty so em dev, zero dados sensiveis nos logs (completed 2026-04-14)
-- [ ] **Phase 11: Codebase Cleanup** - Remover CreditGate, eliminar credit_used de ReadingContext, dead code, Clerk legacy migration, sessionStorage orphans
+- [x] **Phase 11: Codebase Cleanup** - Remover CreditGate, eliminar credit_used de ReadingContext, dead code, Clerk legacy migration, sessionStorage orphans (completed 2026-04-14)
 
 ## Phase Details
 
@@ -158,7 +158,7 @@ Plans:
 
 Plans:
 
-- [ ] 11-01-PLAN.md — Remove CreditGate, dead code cleanup, Clerk legacy migration, sessionStorage orphans
+- [x] 11-01-PLAN.md — Remove CreditGate, dead code cleanup, Clerk legacy migration, sessionStorage orphans
 
 ## Progress
 
@@ -172,4 +172,4 @@ Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 →
 | 8. Auth & Navigation Fixes       | v1.3      | 1/1            | Complete    | 2026-04-14 |
 | 9. Reading Flow Fixes            | v1.3      | 0/1            | Not started | -          |
 | 10. Logging Hardening            | v1.3      | 1/1            | Complete    | 2026-04-14 |
-| 11. Codebase Cleanup             | v1.3      | 0/1            | Not started | -          |
+| 11. Codebase Cleanup             | v1.3      | 1/1            | Complete    | 2026-04-14 |
