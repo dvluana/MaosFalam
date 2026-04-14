@@ -107,13 +107,14 @@ export async function POST(req: Request) {
     if (error instanceof Error && error.message === "Not authenticated") {
       return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
     }
+    const errMsg = error instanceof Error ? error.message : String(error);
     logger.error(
       {
-        err: error instanceof Error ? error.message : String(error),
+        err: errMsg,
         route: "/api/credits/purchase",
       },
-      "Erro na rota",
+      `purchase error: ${errMsg}`,
     );
-    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+    return NextResponse.json({ error: "Erro interno", detail: errMsg }, { status: 500 });
   }
 }
