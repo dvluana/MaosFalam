@@ -26,6 +26,7 @@ interface UploadConfirmScreenProps {
   onConfirm: () => void;
   onRetry: () => void;
   onBack: () => void;
+  sending?: boolean;
 }
 
 // ============================================================
@@ -38,6 +39,7 @@ export default function UploadConfirmScreen({
   onConfirm,
   onRetry,
   onBack,
+  sending = false,
 }: UploadConfirmScreenProps) {
   const { previewUrl, checks, canProceed, qualityOk, error } = result;
 
@@ -89,10 +91,10 @@ export default function UploadConfirmScreen({
                 ? `Tudo certo. A mão do ${targetName} fala.`
                 : "Tudo certo. Essa mão fala."}
             </p>
-            <Button variant="primary" onClick={onConfirm} className="w-full">
-              Enviar pra leitura
+            <Button variant="primary" onClick={onConfirm} className="w-full" disabled={sending}>
+              {sending ? "Enviando..." : "Enviar pra leitura"}
             </Button>
-            <Button variant="ghost" onClick={onRetry}>
+            <Button variant="ghost" onClick={onRetry} disabled={sending}>
               Trocar foto
             </Button>
           </>
@@ -112,10 +114,10 @@ export default function UploadConfirmScreen({
             <p className="font-jetbrains text-[9px] text-bone-dim tracking-[1px] uppercase">
               PODE AFETAR A LEITURA
             </p>
-            <Button variant="primary" onClick={onConfirm} className="w-full">
-              Usar mesmo assim
+            <Button variant="primary" onClick={onConfirm} className="w-full" disabled={sending}>
+              {sending ? "Enviando..." : "Usar mesmo assim"}
             </Button>
-            <Button variant="secondary" onClick={onRetry} className="w-full">
+            <Button variant="secondary" onClick={onRetry} className="w-full" disabled={sending}>
               Tirar outra
             </Button>
           </>

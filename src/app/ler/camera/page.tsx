@@ -117,19 +117,18 @@ function CameraPageInner() {
     [validateFile],
   );
 
+  const [uploadSending, setUploadSending] = useState(false);
+
   const handleUploadConfirm = useCallback(() => {
     if (!uploadResult.file) return;
     resetFailures();
-    setState("camera_capturing");
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-      navigator.vibrate?.(120);
-    }
+    setUploadSending(true);
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
       const base64 = dataUrl.split(",")[1] ?? "";
       setPhoto(base64);
-      window.setTimeout(() => router.push("/ler/scan"), 600);
+      router.push("/ler/scan");
     };
     reader.readAsDataURL(uploadResult.file);
   }, [uploadResult.file, router, resetFailures]);
@@ -165,16 +164,12 @@ function CameraPageInner() {
       if (!event.target.files?.length) return;
       const file = event.target.files[0];
       if (!file) return;
-      setState("camera_capturing");
-      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate?.(120);
-      }
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;
         const base64 = dataUrl.split(",")[1] ?? "";
         setPhoto(base64);
-        window.setTimeout(() => router.push("/ler/scan"), 600);
+        router.push("/ler/scan");
       };
       reader.readAsDataURL(file);
     },
@@ -329,6 +324,7 @@ function CameraPageInner() {
               onConfirm={handleUploadConfirm}
               onRetry={handleUploadRetry}
               onBack={handleUploadBack}
+              sending={uploadSending}
             />
           )}
         </>

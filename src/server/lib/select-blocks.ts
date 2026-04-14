@@ -405,10 +405,11 @@ function buildCompatibility(element: HandElement): ReportCompat[] {
 
   for (const other of elements) {
     const key = `${element}_${other}`;
-    const block = COMPAT_BLOCKS[key];
+    const reverseKey = `${other}_${element}`;
+    const block = COMPAT_BLOCKS[key] ?? COMPAT_BLOCKS[reverseKey];
     if (block) {
       results.push({
-        key,
+        key: COMPAT_BLOCKS[key] ? key : reverseKey,
         pair: block.pair,
         word: block.word,
         body: pickRandom(block.body),
