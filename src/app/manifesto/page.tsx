@@ -242,7 +242,7 @@ export default function ManifestoPage() {
       </section>
 
       {/* ═══ CONTENT ═══ */}
-      <div className="relative z-[1] max-w-[820px] mx-auto px-6">
+      <div className="relative z-[3] max-w-[820px] mx-auto px-6">
         {/* Intro sensorial */}
         <FadeUp
           className="py-25 first:border-t-0"
@@ -682,7 +682,7 @@ export default function ManifestoPage() {
       </div>
 
       {/* ═══ CTA FINAL ═══ */}
-      <FadeUp className="relative z-[1] text-center max-w-[620px] mx-auto pt-30 pb-25 max-[480px]:pt-20 max-[480px]:pb-18 px-6">
+      <FadeUp className="relative z-[3] text-center max-w-[620px] mx-auto pt-30 pb-25 max-[480px]:pt-20 max-[480px]:pb-18 px-6">
         <span
           className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20"
           style={{
@@ -731,7 +731,7 @@ export default function ManifestoPage() {
 
       {/* ═══ FOOTER ═══ */}
       <footer
-        className="relative z-[1] text-center px-6 pt-12 pb-15"
+        className="relative z-[3] text-center px-6 pt-12 pb-15"
         style={{ borderTop: "1px solid rgba(201,162,74,0.05)" }}
       >
         <DiamondOrnament className="w-15 mx-auto mb-5" />
