@@ -8,46 +8,77 @@ import { sendPaymentConfirmed } from "@/server/lib/resend";
 
 import type { NextRequest } from "next/server";
 
+// ============================================================
+// Webhook payload types (loosely typed — AbacatePay may add fields)
+// ============================================================
+
+interface WebhookPayload {
+  id: string;
+  event: string;
+  apiVersion: number;
+  devMode: boolean;
+  data: {
+    id: string;
+    externalId: string;
+    amount: number;
+    status: string;
+    customerId: string;
+    payerInformation?: {
+      method?: string;
+    };
+  };
+}
+
+// ============================================================
+// POST /api/webhook/abacatepay
+// Handles checkout.completed events from AbacatePay v2.
+// ============================================================
+
 export async function POST(req: NextRequest) {
   try {
+    // 1. Signature validation (v2: x-webhook-signature header, base64 HMAC-SHA256)
     const rawBody = await req.text();
-    const signature = req.headers.get("x-abacatepay-signature") || "";
+    const signature = req.headers.get("x-webhook-signature") || "";
 
     if (!verifyWebhookSignature(rawBody, signature)) {
       logger.warn("Invalid webhook signature");
       return NextResponse.json({ error: "Assinatura invalida" }, { status: 401 });
     }
 
-    const body = JSON.parse(rawBody) as {
-      event: string;
-      data: {
-        billing_id: string;
-        method?: string;
-      };
-    };
+    // 2. Event filtering (v2: checkout.completed, not billing.paid)
+    const body = JSON.parse(rawBody) as WebhookPayload;
 
-    if (body.event !== "billing.paid") {
+    if (body.devMode) {
+      logger.info({ eventId: body.id }, "Webhook received in devMode");
+    }
+
+    if (body.event !== "checkout.completed") {
       return NextResponse.json({ ok: true });
     }
 
-    const billingId = body.data.billing_id;
+    // 3. Payment lookup by externalId (= our payment.id UUID)
+    const externalId = body.data?.externalId;
+    if (!externalId) {
+      logger.warn({ checkoutId: body.data?.id }, "Webhook missing externalId");
+      return NextResponse.json({ error: "Missing externalId" }, { status: 400 });
+    }
 
-    // Find payment by billing ID
-    const payment = await prisma.payment.findFirst({
-      where: { abacatepayCheckoutId: billingId },
+    const payment = await prisma.payment.findUnique({
+      where: { id: externalId },
     });
 
     if (!payment) {
-      logger.warn({ billingId }, "Payment not found for billing");
+      logger.warn({ externalId }, "Payment not found for webhook");
       return NextResponse.json({ error: "Payment not found" }, { status: 404 });
     }
 
-    // Idempotent: skip if already paid
+    // 4. Idempotency: skip if already paid
     if (payment.status === "paid") {
-      logger.info({ billingId }, "Duplicate webhook, skipping");
+      logger.info({ externalId }, "Duplicate webhook, skipping");
       return NextResponse.json({ ok: true });
     }
 
+    // 5. Validate pack type
     if (!isValidPackType(payment.packType)) {
       logger.error({ packType: payment.packType }, "Invalid pack type");
       return NextResponse.json({ error: "Invalid pack" }, { status: 400 });
@@ -55,19 +86,22 @@ export async function POST(req: NextRequest) {
 
     const pack = CREDIT_PACKS[payment.packType as keyof typeof CREDIT_PACKS];
 
-    // Atomic transaction: mark paid + create credits + upgrade tier + convert lead
+    // 6. Extract payment method from payerInformation (v2 path)
+    const method = body.data.payerInformation?.method || "pix";
+
+    // 7. Atomic transaction: mark paid + create credits + upgrade tier + convert lead
     await prisma.$transaction(async (tx) => {
-      // 1. Mark payment as paid
+      // 7a. Mark payment as paid
       await tx.payment.update({
         where: { id: payment.id },
         data: {
           status: "paid",
           paidAt: new Date(),
-          method: body.data.method || "pix",
+          method,
         },
       });
 
-      // 2. Create credit pack
+      // 7b. Create credit pack
       await tx.creditPack.create({
         data: {
           clerkUserId: payment.clerkUserId,
@@ -78,7 +112,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // 3. If reading exists, upgrade to premium and debit 1 credit
+      // 7c. If reading exists, upgrade to premium and debit 1 credit
       if (payment.readingId) {
         await tx.reading.update({
           where: { id: payment.readingId },
@@ -97,7 +131,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // 4. Mark lead as converted
+      // 7d. Mark lead as converted
       const reading = payment.readingId
         ? await tx.reading.findUnique({ where: { id: payment.readingId } })
         : null;
@@ -112,13 +146,13 @@ export async function POST(req: NextRequest) {
     logger.info(
       {
         paymentId: payment.id,
-        billingId,
+        checkoutId: body.data.id,
         packType: payment.packType,
       },
       "Payment processed",
     );
 
-    // Send email (non-blocking)
+    // 8. Send email (non-blocking)
     const profile = await prisma.userProfile.findUnique({
       where: { clerkUserId: payment.clerkUserId },
       include: { lead: true },
