@@ -446,7 +446,7 @@ export default function ManifestoPage() {
             intensidade que a vida te ensinou a esconder. Se a da direita é mais profunda, você
             aprendeu a amar com mais força do que veio programada pra sentir.
           </p>
-          <Pullquote text="Uma e promessa. A outra e escolha." />
+          <Pullquote text="Uma é promessa. A outra é escolha." />
         </FadeUp>
 
         {/* O que o MaosFalam faz */}

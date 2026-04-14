@@ -48,7 +48,7 @@ interface Props {
 
 export default function ElementHero({ element, impactPhrase, targetName }: Props) {
   const storedName = useStoredName();
-  const name = storedName ?? targetName ?? "Voce";
+  const name = storedName ?? targetName ?? "Você";
 
   return (
     <section className="relative overflow-hidden pt-28 pb-20 px-6">

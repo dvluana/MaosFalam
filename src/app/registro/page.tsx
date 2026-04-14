@@ -53,7 +53,7 @@ function RegistroInner() {
       });
     } catch {
       setGoogleLoading(false);
-      setError("Nao consegui conectar com o Google. Tenta de novo.");
+      setError("Não consegui conectar com o Google. Tenta de novo.");
     }
   };
 
@@ -89,7 +89,7 @@ function RegistroInner() {
       setLoading(false);
       const msg = err instanceof Error ? err.message : "";
       if (msg.includes("email") && msg.includes("taken")) {
-        setError("Esse email ja tem conta. Faz login.");
+        setError("Esse email já tem conta. Faz login.");
       } else if (msg.includes("password")) {
         setError("Senha fraca. Tenta uma mais forte.");
       } else {
@@ -119,7 +119,7 @@ function RegistroInner() {
       }
     } catch {
       setVerifying(false);
-      setVerificationError("Codigo incorreto. Confere e tenta de novo.");
+      setVerificationError("Código incorreto. Confere e tenta de novo.");
     }
   };
 
@@ -162,15 +162,15 @@ function RegistroInner() {
           >
             <div className="flex flex-col gap-2 text-center">
               <p className="font-cormorant italic text-[24px] sm:text-[28px] text-bone leading-[1.25]">
-                Mandei um codigo pro seu email.
+                Mandei um código pro seu email.
               </p>
               <p className="font-cormorant italic text-[15px] text-bone-dim leading-[1.35]">
-                Confere la e digita aqui.
+                Confere lá e digita aqui.
               </p>
             </div>
 
             <Input
-              label="Codigo de verificacao"
+              label="Código de verificação"
               value={verificationCode}
               onChange={(e) => {
                 setVerificationCode(e.target.value);
@@ -234,7 +234,7 @@ function RegistroInner() {
         >
           <div className="flex flex-col gap-2 text-center">
             <p className="font-cormorant italic text-[24px] sm:text-[28px] text-bone leading-[1.25]">
-              Voce chegou. Eu ja estava te esperando.
+              Você chegou. Eu já estava te esperando.
             </p>
             <p className="font-cormorant italic text-[15px] text-bone-dim leading-[1.35]">
               Cria sua conta pra eu guardar suas leituras.
@@ -317,7 +317,7 @@ function RegistroInner() {
                 setPassword(e.target.value);
                 if (error) setError(undefined);
               }}
-              placeholder="Minimo 8 caracteres"
+              placeholder="Mínimo 8 caracteres"
               autoComplete="new-password"
               error={error}
             />
@@ -342,7 +342,7 @@ function RegistroInner() {
             onClick={() => router.push("/login")}
             className="w-full text-center font-cormorant italic text-[14px] text-gold hover:text-gold-light transition-colors"
           >
-            Ja tenho conta. Entrar.
+            Já tenho conta. Entrar.
           </button>
         </div>
       </motion.div>

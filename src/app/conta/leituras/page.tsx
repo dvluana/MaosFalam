@@ -373,7 +373,7 @@ function LeiturasContent() {
       purchaseToastShown.current = true;
       showToast({
         variant: "gold",
-        message: "Seus creditos estao esperando. Usa com sabedoria.",
+        message: "Seus créditos estão esperando. Usa com sabedoria.",
       });
       router.replace("/conta/leituras");
     }
@@ -396,7 +396,7 @@ function LeiturasContent() {
       .catch(() => {
         showToast({
           variant: "rose",
-          message: "Nao consegui trazer suas leituras. Tenta de novo.",
+          message: "Não consegui trazer suas leituras. Tenta de novo.",
         });
         setLoading(false);
       });

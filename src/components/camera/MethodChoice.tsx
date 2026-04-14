@@ -362,7 +362,7 @@ function MethodChoice({ onPickLive, onPickUpload }: Props) {
         accentColor="#7b6ba5"
         eyebrow="retrato"
         title="Me mandar a foto"
-        description="Ja tem um retrato da palma. Me manda."
+        description="Já tem um retrato da palma. Me manda."
         illustration={<PortraitIllustration />}
         delay={0.25}
       />

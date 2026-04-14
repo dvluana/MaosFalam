@@ -327,7 +327,7 @@ export default function NomePage() {
                       className="font-jetbrains text-[11px] tracking-[0.5px] text-gold mt-2"
                       style={{ fontWeight: 500 }}
                     >
-                      Esse email ja tem conta.{" "}
+                      Esse email já tem conta.{" "}
                       <button
                         type="button"
                         onClick={() => router.push("/login")}
@@ -420,7 +420,7 @@ export default function NomePage() {
                 onClick={() => router.push("/login")}
                 className="w-full text-center font-raleway text-[13px] text-gold hover:text-gold-light transition-colors"
               >
-                Ja tenho conta. Entrar.
+                Já tenho conta. Entrar.
               </button>
             </div>
           </form>
@@ -435,7 +435,7 @@ export default function NomePage() {
         >
           <div className="flex flex-col gap-3 text-center">
             <p className="font-cormorant italic text-[28px] sm:text-[32px] text-bone leading-[1.25]">
-              Pra quem e essa leitura?
+              Pra quem é essa leitura?
             </p>
           </div>
 

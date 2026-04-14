@@ -46,7 +46,7 @@ function LoginInner() {
       });
     } catch {
       setGoogleLoading(false);
-      setError("Nao consegui conectar com o Google. Tenta de novo.");
+      setError("Não consegui conectar com o Google. Tenta de novo.");
     }
   };
 
@@ -125,10 +125,10 @@ function LoginInner() {
         >
           <div className="flex flex-col gap-2 text-center">
             <p className="font-cormorant italic text-[24px] sm:text-[28px] text-bone leading-[1.25]">
-              Eu sei quem voce e.
+              Eu sei quem você é.
             </p>
             <p className="font-cormorant italic text-[15px] text-bone-dim leading-[1.35]">
-              Entra. Suas maos estao esperando.
+              Entra. Suas mãos estão esperando.
             </p>
           </div>
 
@@ -237,7 +237,7 @@ function LoginInner() {
               onClick={() => router.push("/registro")}
               className="font-cormorant italic text-[14px] text-gold hover:text-gold-light transition-colors"
             >
-              Nao tenho conta. Criar uma.
+              Não tenho conta. Criar uma.
             </button>
           </div>
         </div>

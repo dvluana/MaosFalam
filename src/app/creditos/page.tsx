@@ -31,20 +31,20 @@ const PACOTES: readonly Pacote[] = [
     nome: "Avulsa",
     creditos: 1,
     preco: 14.9,
-    paraQuem: "Pra voce. Sozinha.",
-    tagline: "Uma mao. Uma voz. Uma verdade.",
+    paraQuem: "Pra você. Sozinha.",
+    tagline: "Uma mão. Uma voz. Uma verdade.",
     story:
-      "A primeira vez que eu te leio. Voce me estende a palma, eu devolvo o que vi. Simples assim. Nao precisa mostrar pra ninguem. Fica entre nos.",
+      "A primeira vez que eu te leio. Você me estende a palma, eu devolvo o que vi. Simples assim. Não precisa mostrar pra ninguém. Fica entre nós.",
   },
   {
     id: "dupla",
     nome: "Dupla",
     creditos: 2,
     preco: 24.9,
-    paraQuem: "Pra voce e pra quem te importa.",
-    tagline: "Duas maos, lado a lado.",
+    paraQuem: "Pra você e pra quem te importa.",
+    tagline: "Duas mãos, lado a lado.",
     story:
-      "A sua e a dele. Ou a sua e a da sua melhor amiga. Ou a sua e a da sua mae. Uma leitura pra voce entender quem voce e, outra pra entender quem caminha do seu lado.",
+      "A sua e a dele. Ou a sua e a da sua melhor amiga. Ou a sua e a da sua mãe. Uma leitura pra você entender quem você é, outra pra entender quem caminha do seu lado.",
   },
   {
     id: "roda",
@@ -52,20 +52,20 @@ const PACOTES: readonly Pacote[] = [
     creditos: 5,
     preco: 49.9,
     popular: true,
-    paraQuem: "Pra fechar o circulo.",
-    tagline: "Cinco maos. Cinco historias.",
+    paraQuem: "Pra fechar o círculo.",
+    tagline: "Cinco mãos. Cinco histórias.",
     story:
-      "A roda e onde as ciganas se sentam no chao e cada uma mostra a palma. Voce le a sua e escolhe mais quatro. A familia, as amigas da infancia, o grupo que te conhece de verdade. Todo mundo sai sabendo.",
+      "A roda é onde as ciganas se sentam no chão e cada uma mostra a palma. Você lê a sua e escolhe mais quatro. A família, as amigas da infância, o grupo que te conhece de verdade. Todo mundo sai sabendo.",
   },
   {
     id: "tsara",
     nome: "Tsara",
     creditos: 10,
     preco: 79.9,
-    paraQuem: "Pra quando e festa.",
-    tagline: "Dez maos. A casa inteira.",
+    paraQuem: "Pra quando é festa.",
+    tagline: "Dez mãos. A casa inteira.",
     story:
-      "Tsara e nome que as ciganas davam pro encontro grande, quando todo mundo falava de todo mundo e a noite nao acabava. Dez leituras, pra voce espalhar pela sua gente. Cada uma sai com algo pra carregar.",
+      "Tsara é nome que as ciganas davam pro encontro grande, quando todo mundo falava de todo mundo e a noite não acabava. Dez leituras, pra você espalhar pela sua gente. Cada uma sai com algo pra carregar.",
   },
 ];
 
@@ -162,7 +162,7 @@ function CreditosInner() {
     if (hasCpf === false) {
       const rawCpf = cpf.replace(/\D/g, "");
       if (!isValidCPF(rawCpf)) {
-        setCpfError("CPF invalido.");
+        setCpfError("CPF inválido.");
         return;
       }
     }
@@ -208,13 +208,13 @@ function CreditosInner() {
             Escolha o que faz sentido.
           </h1>
           <p className="font-cormorant italic text-[18px] sm:text-[22px] text-bone-dim leading-[1.4] max-w-md mx-auto">
-            Uma leitura e diferente de cinco. E cinco e diferente de dez. Cada pacote e um jeito de
-            fazer isso. Voce escolhe quantas maos vao passar por aqui.
+            Uma leitura é diferente de cinco. E cinco é diferente de dez. Cada pacote é um jeito de
+            fazer isso. Você escolhe quantas mãos vão passar por aqui.
           </p>
         </header>
 
         {/* Deck de tarot: 1 carta por vez com setas laterais */}
-        <section className="relative mb-10" aria-label="Pacotes de creditos">
+        <section className="relative mb-10" aria-label="Pacotes de créditos">
           {/* Container do deck */}
           <div className="relative flex items-center justify-center">
             {/* Seta esquerda */}
@@ -467,7 +467,7 @@ function CreditosInner() {
                                     onBlur={() => {
                                       const raw = cpf.replace(/\D/g, "");
                                       if (raw.length > 0 && !isValidCPF(raw)) {
-                                        setCpfError("CPF invalido.");
+                                        setCpfError("CPF inválido.");
                                       }
                                     }}
                                     placeholder="000.000.000-00"
@@ -508,7 +508,7 @@ function CreditosInner() {
                             </Button>
 
                             <p className="font-cormorant italic text-[12px] text-bone-dim text-center mt-3">
-                              O preco do que voce vai descobrir e barato pelo que vale.
+                              O preço do que você vai descobrir é barato pelo que vale.
                             </p>
                           </div>
                         </article>
@@ -523,7 +523,7 @@ function CreditosInner() {
             <button
               type="button"
               onClick={goNext}
-              aria-label="Proximo pacote"
+              aria-label="Próximo pacote"
               className="absolute right-0 sm:right-[-12px] z-20 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center focus:outline-none transition-all hover:scale-110"
               style={{
                 background: "rgba(14,10,24,0.9)",
@@ -572,7 +572,7 @@ function CreditosInner() {
           <Card accentColor="violet">
             <div className="py-6 text-center">
               <p className="font-cormorant italic text-xl text-bone leading-relaxed mb-4">
-                O preco do que voce vai descobrir e barato pelo que vale.
+                O preço do que você vai descobrir é barato pelo que vale.
               </p>
               <p className="font-jetbrains text-[10px] text-violet uppercase tracking-[1.5px]">
                 Redirecionando...
@@ -705,12 +705,12 @@ function CreditosInner() {
                   id="login-title"
                   className="font-cinzel text-[22px] sm:text-[26px] text-bone leading-[1.15] mb-3 max-w-[280px]"
                 >
-                  Eu preciso saber quem voce e.
+                  Eu preciso saber quem você é.
                 </h3>
 
                 {/* Cigana voice */}
                 <p className="font-cormorant italic text-[17px] sm:text-[19px] text-bone-dim leading-[1.35] mb-8 max-w-[300px]">
-                  Pra eu guardar seus creditos e te chamar pelo nome quando voce voltar.
+                  Pra eu guardar seus créditos e te chamar pelo nome quando você voltar.
                 </p>
 
                 {/* Botao Google */}
@@ -718,7 +718,7 @@ function CreditosInner() {
 
                 {/* Hint rodape */}
                 <p className="font-cormorant italic text-[13px] text-bone-dim mt-6 max-w-[280px]">
-                  Um clique. Sem senha. Sem complicacao.
+                  Um clique. Sem senha. Sem complicação.
                 </p>
 
                 {/* Divisor + "ja tenho conta" */}
@@ -743,7 +743,7 @@ function CreditosInner() {
                   className="mt-4 font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold hover:text-gold-light transition-colors"
                   style={{ fontWeight: 500 }}
                 >
-                  Ja tenho conta · Entrar
+                  Já tenho conta · Entrar
                 </Link>
 
                 {/* Deco rodape */}

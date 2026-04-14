@@ -57,7 +57,7 @@ function ScanInner() {
     const ctx = loadReadingContext();
     const sessionId =
       ctx?.session_id ?? sessionStorage.getItem(STORAGE_KEYS.session_id) ?? generateUUID();
-    const targetName = ctx?.target_name ?? sessionStorage.getItem(STORAGE_KEYS.name) ?? "voce";
+    const targetName = ctx?.target_name ?? sessionStorage.getItem(STORAGE_KEYS.name) ?? "você";
     const targetGender =
       ctx?.target_gender ??
       (sessionStorage.getItem(STORAGE_KEYS.target_gender) as "female" | "male") ??
