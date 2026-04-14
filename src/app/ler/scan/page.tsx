@@ -73,7 +73,8 @@ function ScanInner() {
       dominant_hand: dominantHand,
       element_hint: elementHint,
     })
-      .then(({ reading_id, report }) => {
+      .then(({ reading_id, report, tier }) => {
+        sessionStorage.setItem("maosfalam_reading_tier", tier ?? "free");
         setApiResult({ ok: true, reading_id, impact_phrase: extractImpactPhrase(report) });
       })
       .catch((err: unknown) => {

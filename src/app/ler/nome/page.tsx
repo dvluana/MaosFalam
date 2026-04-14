@@ -159,7 +159,6 @@ export default function NomePage() {
       dominant_hand: dominantHand,
       is_self: true,
       session_id: sessionId,
-      credit_used: false,
     };
     saveReadingContext(ctx);
     router.push("/ler/toque");
@@ -177,13 +176,18 @@ export default function NomePage() {
     if (reading_count === 0) {
       const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
       sessionStorage.setItem("maosfalam_session_id", sessionId);
+
+      // Legacy keys for toque/camera guards and revelacao personalization
+      sessionStorage.setItem("maosfalam_name", trimmedName);
+      sessionStorage.setItem("maosfalam_name_fresh", "1");
+      sessionStorage.setItem("maosfalam_target_gender", gender);
+
       const ctx: ReadingContext = {
         target_name: trimmedName,
         target_gender: gender,
         dominant_hand: dominantHand,
         is_self: isSelf,
         session_id: sessionId,
-        credit_used: false,
       };
       saveReadingContext(ctx);
       router.push("/ler/toque");
@@ -216,13 +220,17 @@ export default function NomePage() {
       const sessionId = sessionStorage.getItem("maosfalam_session_id") ?? generateUUID();
       sessionStorage.setItem("maosfalam_session_id", sessionId);
 
+      // Legacy keys for toque/camera guards and revelacao personalization
+      sessionStorage.setItem("maosfalam_name", trimmedName);
+      sessionStorage.setItem("maosfalam_name_fresh", "1");
+      sessionStorage.setItem("maosfalam_target_gender", gender);
+
       const ctx: ReadingContext = {
         target_name: trimmedName,
         target_gender: gender,
         dominant_hand: dominantHand,
         is_self: isSelf,
         session_id: sessionId,
-        credit_used: true,
       };
       saveReadingContext(ctx);
       router.push("/ler/toque");

@@ -35,8 +35,6 @@ describe("debitCreditFIFO", () => {
       remaining: 1,
       paymentId: null,
       createdAt: new Date(),
-      userProfile: undefined as never,
-      payment: undefined as never,
     });
 
     vi.mocked(prisma.$queryRawUnsafe).mockResolvedValue([{ id: PACK_ID_1 }] as never);
@@ -74,8 +72,6 @@ describe("debitCreditFIFO", () => {
       remaining: 1,
       paymentId: null,
       createdAt: new Date(),
-      userProfile: undefined as never,
-      payment: undefined as never,
     });
 
     vi.mocked(prisma.$queryRawUnsafe).mockResolvedValue([{ id: PACK_ID_1 }] as never);
@@ -105,8 +101,6 @@ describe("debitCreditFIFO", () => {
       remaining: 3,
       paymentId: null,
       createdAt: olderDate,
-      userProfile: undefined as never,
-      payment: undefined as never,
     });
 
     vi.mocked(prisma.$queryRawUnsafe).mockResolvedValue([{ id: PACK_ID_1 }] as never);
@@ -141,8 +135,6 @@ describe("debitCreditFIFO", () => {
         remaining: 1,
         paymentId: null,
         createdAt: new Date(),
-        userProfile: undefined as never,
-        payment: undefined as never,
       })
       .mockResolvedValueOnce(null); // retry finds nothing
 

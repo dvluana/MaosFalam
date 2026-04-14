@@ -28,8 +28,7 @@ export async function captureReading(data: {
   is_self: boolean;
   dominant_hand?: "right" | "left";
   element_hint?: "fire" | "water" | "earth" | "air";
-  credit_used?: boolean;
-}): Promise<{ reading_id: string; report: ReportJSON }> {
+}): Promise<{ reading_id: string; report: ReportJSON; tier?: string }> {
   const res = await fetch("/api/reading/capture", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -42,7 +41,7 @@ export async function captureReading(data: {
       : (body.error ?? "Erro interno");
     throw new Error(msg);
   }
-  return res.json() as Promise<{ reading_id: string; report: ReportJSON }>;
+  return res.json() as Promise<{ reading_id: string; report: ReportJSON; tier?: string }>;
 }
 
 export async function requestNewReading(data: {

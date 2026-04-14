@@ -4,5 +4,4 @@ export interface ReadingContext {
   dominant_hand: "left" | "right";
   is_self: boolean;
   session_id: string;
-  credit_used: boolean;
 }

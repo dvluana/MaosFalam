@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/Button";
+import { loadReadingContext } from "@/lib/reading-context";
 
 function personalize(phrase: string, name: string | null): string {
   if (!name) return phrase;
@@ -25,7 +26,8 @@ export default function RevelacaoPage() {
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      const name = sessionStorage.getItem("maosfalam_name");
+      const ctx = loadReadingContext();
+      const name = ctx?.target_name ?? sessionStorage.getItem("maosfalam_name");
       const stored = sessionStorage.getItem("maosfalam_impact_phrase");
       const raw = stored ?? "Você carrega mais do que mostra. E isso te protege e te prende.";
       setPhrase(personalize(raw, name));
@@ -66,7 +68,10 @@ export default function RevelacaoPage() {
       setTimeout(() => router.replace("/ler/nome"), 500);
       return;
     }
-    setTimeout(() => router.push(`/ler/resultado/${readingId}`), 500);
+    const tier = sessionStorage.getItem("maosfalam_reading_tier");
+    const isPremium = tier === "premium";
+    const path = isPremium ? `/ler/resultado/${readingId}/completo` : `/ler/resultado/${readingId}`;
+    setTimeout(() => router.push(path), 500);
   };
 
   return (
