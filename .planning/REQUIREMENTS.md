@@ -22,9 +22,9 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 - [ ] **FLOW-01**: Nome correto em leitura pra outra pessoa (legacy sessionStorage keys sincronizadas)
 - [ ] **FLOW-02**: Revelacao redireciona pra /completo quando leitura e premium
 - [ ] **FLOW-03**: Fluxo logado pra mim e pra outra pessoa navega corretamente
-- [ ] **FLOW-04**: Login Google funcional (SSO callback sem CAPTCHA loop)
-- [ ] **FLOW-05**: Login e registro preservam checkout intent e ?return= param
-- [ ] **FLOW-06**: Genero configuravel no fluxo pra mim logado (hoje sempre female)
+- [x] **FLOW-04**: Login Google funcional (SSO callback sem CAPTCHA loop)
+- [x] **FLOW-05**: Login e registro preservam checkout intent e ?return= param
+- [x] **FLOW-06**: Genero configuravel no fluxo pra mim logado (hoje sempre female)
 
 ### Log — Logging e Seguranca
 
@@ -72,9 +72,9 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 | FLOW-01     | Phase 9  | Pending  |
 | FLOW-02     | Phase 9  | Pending  |
 | FLOW-03     | Phase 9  | Pending  |
-| FLOW-04     | Phase 8  | Pending  |
-| FLOW-05     | Phase 8  | Pending  |
-| FLOW-06     | Phase 8  | Pending  |
+| FLOW-04     | Phase 8  | Complete |
+| FLOW-05     | Phase 8  | Complete |
+| FLOW-06     | Phase 8  | Complete |
 | LOG-01      | Phase 10 | Pending  |
 | LOG-02      | Phase 10 | Pending  |
 | LOG-03      | Phase 10 | Pending  |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Sistema de Creditos Robusto
 status: planning
-stopped_at: Completed 07-credit-infrastructure-cleanup-01-PLAN.md
-last_updated: "2026-04-14T03:24:25.163Z"
+stopped_at: Completed 08-auth-navigation-fixes-01-PLAN.md
+last_updated: "2026-04-14T03:33:44.190Z"
 last_activity: 2026-04-13 — Roadmap defined for v1.3
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  completed_phases: 3
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # Project State
@@ -60,6 +60,7 @@ _Updated after each plan completion_
 | Phase 06-atomic-credit-transaction P01 | 3m | 2 tasks | 7 files |
 | Phase 06-atomic-credit-transaction P02 | 7m | 2 tasks | 8 files |
 | Phase 07-credit-infrastructure-cleanup P01 | 2m | 2 tasks | 7 files |
+| Phase 08-auth-navigation-fixes P01 | 5m | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,8 @@ _Updated after each plan completion_
 - [Phase 06-atomic-credit-transaction]: scan/page.tsx stores maosfalam_reading_tier from API response; revelacao reads it instead of ReadingContext.credit_used
 - [Phase 07-01]: handleCreditConfirm made synchronous — no async call, navigates directly to /ler/toque
 - [Phase 07-01]: seed-credits auto-call removed from useAuth; staging credits must be seeded manually via DB
+- [Phase 08-auth-navigation-fixes]: consumeCheckoutIntent called separately for OAuth (before redirect) vs email/password (after setActive)
+- [Phase 08-auth-navigation-fixes]: CAPTCHA loop is Clerk Dashboard config, not code — clerk-captcha div already present
 
 ### Pending Todos
 
@@ -126,5 +129,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-13 - Roadmap v1.3 defined
-Stopped at: Completed 07-credit-infrastructure-cleanup-01-PLAN.md
+Stopped at: Completed 08-auth-navigation-fixes-01-PLAN.md
 Resume file: None
