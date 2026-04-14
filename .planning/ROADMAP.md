@@ -85,11 +85,11 @@ Plans:
 **Goal**: Usuario consegue comprar creditos pela UI. /creditos chama API real, redireciona pro AbacatePay, volta com creditos. UpsellSection no resultado free funciona.
 **Depends on**: Phase 12
 **Requirements**: FRONT-01, FRONT-02, FRONT-03, FRONT-04, FRONT-05, PAY-07
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 
-- [ ] 13-01-PLAN.md — initiatePurchase() + CPF utils + /creditos page rewrite (remove fake payment, real API)
+- [x] 13-01-PLAN.md — initiatePurchase() + CPF utils + /creditos page rewrite (remove fake payment, real API)
 - [ ] 13-02-PLAN.md — UpsellSection update + payment return flow (?paid=1, ?purchased=1)
 
 **Success Criteria** (what must be TRUE):
@@ -132,6 +132,6 @@ Phase 12 → 13 → 14 (parallel to 15) → 15
 | Phase                     | Milestone | Plans Complete | Status      | Completed  |
 | ------------------------- | --------- | -------------- | ----------- | ---------- |
 | 12. AbacatePay v2 Backend | v2        | 2/2            | Complete    | 2026-04-14 |
-| 13. Frontend Payment Flow | v2        | 0/2            | Not started | -          |
+| 13. Frontend Payment Flow | v2        | 1/2            | In Progress |            |
 | 14. Email & Hardening     | v2        | 0/?            | Not started | -          |
 | 15. Bug Fixes             | v2        | 0/?            | Not started | -          |

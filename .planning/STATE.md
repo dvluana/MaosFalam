@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 12-02-PLAN.md
-last_updated: "2026-04-14T16:22:01.674Z"
+stopped_at: Completed 13-01-PLAN.md
+last_updated: "2026-04-14T18:11:04.769Z"
 last_activity: 2026-04-14
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
 ---
 
 # Project State
@@ -66,6 +66,7 @@ _Updated after each plan completion_
 | Phase 11-codebase-cleanup P01 | 8m | 3 tasks | 7 files |
 | Phase 12-abacatepay-v2-backend P01 | 5m | 2 tasks | 7 files |
 | Phase 12 P02 | 4m | 2 tasks | 3 files |
+| Phase 13-frontend-payment-flow P01 | 4m | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -128,6 +129,9 @@ _Updated after each plan completion_
 - [Phase 12-01]: verifyWebhookSignature uses fixed public key constant with base64 digest
 - [Phase 12]: Webhook payload loosely typed (no Zod) per AbacatePay docs — fields may change
 - [Phase 12]: Payment found by findUnique(id: externalId) since externalId equals payment.id primary key
+- [Phase 13-01]: CPF collected inline on /creditos for first-time buyers, profile fetched on mount
+- [Phase 13-01]: Removed ~300 lines fake payment UI (PIX QR, card form, method toggle)
+- [Phase 13-01]: readingId passed via ?reading= URL param, not checkout-intent
 
 ### Pending Todos
 
@@ -147,5 +151,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-14 — Completed plan 12-01
-Stopped at: Completed 12-02-PLAN.md
+Stopped at: Completed 13-01-PLAN.md
 Resume file: None

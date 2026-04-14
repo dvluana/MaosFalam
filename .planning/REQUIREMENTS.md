@@ -15,13 +15,13 @@ Pagamento real end-to-end, email transacional, bug fixes pendentes.
 - [x] **PAY-04**: Webhook handler processa evento checkout.completed (nao billing.paid); valida signature com chave publica fixa do AbacatePay via HMAC-SHA256
 - [x] **PAY-05**: Webhook atomico: marca paid → cria credit_pack → debita 1 credito FIFO (se reading_id) → upgrade tier → marca lead converted
 - [x] **PAY-06**: methods: ["PIX", "CARD"] no checkout (nao so PIX)
-- [ ] **PAY-07**: CPF validacao real no primeiro pagamento (formato XXX.XXX.XXX-XX ou 11 digitos)
+- [x] **PAY-07**: CPF validacao real no primeiro pagamento (formato XXX.XXX.XXX-XX ou 11 digitos)
 
 ### FRONT — Frontend Payment Flow
 
-- [ ] **FRONT-01**: /creditos page chama POST /api/credits/purchase e redireciona pra checkout_url do AbacatePay (sem PIX hardcoded, sem form de cartao local)
-- [ ] **FRONT-02**: payment-client.ts exporta initiatePurchase(packType, cpf?, readingId?) que retorna checkout_url
-- [ ] **FRONT-03**: checkout-intent wired: se usuario nao logado em /creditos, salva intent antes de redirect pra /login; apos login, consome intent e retorna pra /creditos com pack pre-selecionado
+- [x] **FRONT-01**: /creditos page chama POST /api/credits/purchase e redireciona pra checkout_url do AbacatePay (sem PIX hardcoded, sem form de cartao local)
+- [x] **FRONT-02**: payment-client.ts exporta initiatePurchase(packType, cpf?, readingId?) que retorna checkout_url
+- [x] **FRONT-03**: checkout-intent wired: se usuario nao logado em /creditos, salva intent antes de redirect pra /login; apos login, consome intent e retorna pra /creditos com pack pre-selecionado
 - [ ] **FRONT-04**: UpsellSection.upgradeReading() funcional — chama initiatePurchase ou redirect pra /creditos se sem creditos
 - [ ] **FRONT-05**: completionUrl do checkout redireciona pra /ler/resultado/[id]/completo (se veio do upsell) ou /conta/leituras?purchased=1 (se compra avulsa)
 
@@ -60,10 +60,10 @@ BUG-01, BUG-02, BUG-03 — independentes
 | PAY-04      | Phase 12 | Complete |
 | PAY-05      | Phase 12 | Complete |
 | PAY-06      | Phase 12 | Done     |
-| PAY-07      | Phase 13 | Pending  |
-| FRONT-01    | Phase 13 | Pending  |
-| FRONT-02    | Phase 13 | Pending  |
-| FRONT-03    | Phase 13 | Pending  |
+| PAY-07      | Phase 13 | Complete |
+| FRONT-01    | Phase 13 | Complete |
+| FRONT-02    | Phase 13 | Complete |
+| FRONT-03    | Phase 13 | Complete |
 | FRONT-04    | Phase 13 | Pending  |
 | FRONT-05    | Phase 13 | Pending  |
 | EMAIL-01    | Phase 14 | Pending  |
