@@ -49,7 +49,7 @@ All 13 plans completed. See `.planning/archive/v1.2/` for history.
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 6: Atomic Credit Transaction** - Debito atomico com raw SQL, CHECK constraint, fix /api/user/credits 404, fix reading_count inflation
+- [x] **Phase 6: Atomic Credit Transaction** - Debito atomico com raw SQL, CHECK constraint, fix /api/user/credits 404, fix reading_count inflation (completed 2026-04-14)
 - [ ] **Phase 7: Credit Infrastructure Cleanup** - Eliminar /api/reading/new e /api/dev/seed-credits, remover auto-seed do useAuth
 - [ ] **Phase 8: Auth & Navigation Fixes** - Login Google sem CAPTCHA loop, ?return= param, genero configuravel no fluxo pra mim
 - [ ] **Phase 9: Reading Flow Fixes** - Nome correto em leitura pra outra pessoa, revelacao redireciona pro caminho certo, fluxo logado end-to-end
@@ -74,7 +74,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 
 - [x] 06-01-PLAN.md — CHECK constraint migration, raw SQL debit helper, fix credits 404, fix reading_count
-- [ ] 06-02-PLAN.md — Atomic debit in /api/reading/capture, eliminate credit_used from client
+- [x] 06-02-PLAN.md — Atomic debit in /api/reading/capture, eliminate credit_used from client
 
 ### Phase 7: Credit Infrastructure Cleanup
 
@@ -144,11 +144,11 @@ Plans:
 **Execution Order:**
 Phases execute in numeric order: 6 → 7 → 8 (parallel to 9 after 6) → 9 → 10 (parallel to any) → 11
 
-| Phase                            | Milestone | Plans Complete | Status      | Completed |
-| -------------------------------- | --------- | -------------- | ----------- | --------- |
-| 6. Atomic Credit Transaction     | v1.3      | 1/2            | In Progress |           |
-| 7. Credit Infrastructure Cleanup | v1.3      | 0/?            | Not started | -         |
-| 8. Auth & Navigation Fixes       | v1.3      | 0/?            | Not started | -         |
-| 9. Reading Flow Fixes            | v1.3      | 0/?            | Not started | -         |
-| 10. Logging Hardening            | v1.3      | 0/?            | Not started | -         |
-| 11. Codebase Cleanup             | v1.3      | 0/?            | Not started | -         |
+| Phase                            | Milestone | Plans Complete | Status      | Completed  |
+| -------------------------------- | --------- | -------------- | ----------- | ---------- |
+| 6. Atomic Credit Transaction     | v1.3      | 2/2            | Complete    | 2026-04-14 |
+| 7. Credit Infrastructure Cleanup | v1.3      | 0/?            | Not started | -          |
+| 8. Auth & Navigation Fixes       | v1.3      | 0/?            | Not started | -          |
+| 9. Reading Flow Fixes            | v1.3      | 0/?            | Not started | -          |
+| 10. Logging Hardening            | v1.3      | 0/?            | Not started | -          |
+| 11. Codebase Cleanup             | v1.3      | 0/?            | Not started | -          |

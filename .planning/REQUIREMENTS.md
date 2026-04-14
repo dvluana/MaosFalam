@@ -9,7 +9,7 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 
 ### Credit — Debito Atomico e Seguranca
 
-- [ ] **CREDIT-01**: Debito de credito e criacao de reading acontecem na mesma transacao Prisma atomica (eliminar credit_used do client)
+- [x] **CREDIT-01**: Debito de credito e criacao de reading acontecem na mesma transacao Prisma atomica (eliminar credit_used do client)
 - [x] **CREDIT-02**: Constraint CHECK(remaining >= 0) no banco via migration
 - [x] **CREDIT-03**: Debit via raw SQL UPDATE SET remaining = remaining - 1 WHERE remaining > 0 (eliminar race condition)
 - [ ] **CREDIT-04**: Eliminar /api/reading/new (debito move pra /api/reading/capture)
@@ -62,7 +62,7 @@ Correcao, seguranca e maturidade do sistema de creditos e fluxos logados.
 
 | Requirement | Phase    | Status   |
 | ----------- | -------- | -------- |
-| CREDIT-01   | Phase 6  | Pending  |
+| CREDIT-01   | Phase 6  | Complete |
 | CREDIT-02   | Phase 6  | Complete |
 | CREDIT-03   | Phase 6  | Complete |
 | CREDIT-04   | Phase 7  | Pending  |
