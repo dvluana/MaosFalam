@@ -106,6 +106,12 @@ Plans:
 **Goal**: Emails transacionais enviados via Resend apos eventos chave. Hardening de seguranca e cleanup.
 **Depends on**: Phase 12 (webhook trigger)
 **Requirements**: EMAIL-01, EMAIL-02, EMAIL-03, EMAIL-04
+**Plans:** 1 plan
+
+Plans:
+
+- [ ] 14-01-PLAN.md — Harden resend.ts (retry, API key guard), sendWelcome, Clerk webhook, opt-in gating
+
 **Success Criteria** (what must be TRUE):
 
 1. Email de pagamento confirmado enviado apos webhook (voz da cigana, link pro resultado)
@@ -133,5 +139,5 @@ Phase 12 → 13 → 14 (parallel to 15) → 15
 | ------------------------- | --------- | -------------- | ----------- | ---------- |
 | 12. AbacatePay v2 Backend | v2        | 2/2            | Complete    | 2026-04-14 |
 | 13. Frontend Payment Flow | v2        | 2/2            | Complete    | 2026-04-14 |
-| 14. Email & Hardening     | v2        | 0/?            | Not started | -          |
+| 14. Email & Hardening     | v2        | 0/1            | Not started | -          |
 | 15. Bug Fixes             | v2        | 0/?            | Not started | -          |
