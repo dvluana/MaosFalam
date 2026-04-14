@@ -25,7 +25,7 @@ export default function Nav({ activeId = "home", visible = true }: NavProps) {
       ...LOGGED_ITEMS,
       {
         id: "sair",
-        num: "06",
+        num: "05",
         label: "Sair",
         sub: "Até a próxima",
         href: "/",
