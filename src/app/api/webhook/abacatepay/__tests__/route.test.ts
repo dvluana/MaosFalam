@@ -69,7 +69,7 @@ function makeWebhookPayload(overrides: Record<string, unknown> = {}) {
     devMode: false,
     data: {
       id: "chk_test456",
-      externalId: "payment-uuid-123",
+      externalId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
       amount: 1490,
       status: "PAID",
       customerId: "cus_test789",
@@ -94,7 +94,7 @@ function makeWebhookRequest(body: string, signature?: string): Request {
 }
 
 const MOCK_PAYMENT = {
-  id: "payment-uuid-123",
+  id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   clerkUserId: "user_abc",
   readingId: null,
   abacatepayCheckoutId: "chk_test456",

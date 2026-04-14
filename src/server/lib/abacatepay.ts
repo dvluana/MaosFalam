@@ -100,12 +100,18 @@ interface AbacateCustomer {
 
 /**
  * Creates an AbacatePay customer. Only email is required in v2.
+ * Optionally sends taxId (CPF) so it's pre-filled on checkout.
  * Returns the customer ID (cus_xxx).
  */
-export async function createCustomer(email: string, name?: string): Promise<string> {
+export async function createCustomer(
+  email: string,
+  name?: string,
+  taxId?: string,
+): Promise<string> {
   const res = await abacatePost<AbacateCustomer>("/customers/create", {
     email,
     ...(name && { name }),
+    ...(taxId && { taxId }),
   });
   return res.data.id;
 }

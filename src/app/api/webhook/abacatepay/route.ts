@@ -45,7 +45,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Assinatura invalida" }, { status: 401 });
     }
 
-    // 2. Event filtering (v2: checkout.completed, not billing.paid)
+    // 2. Log full payload for diagnosis (temporary — remove after confirming webhook works)
+    logger.info({ rawBody: rawBody.slice(0, 500) }, "Webhook raw body");
+
     const body = JSON.parse(rawBody) as WebhookPayload;
 
     if (body.devMode) {
@@ -65,9 +67,12 @@ export async function POST(req: NextRequest) {
       "Webhook payload received",
     );
 
-    let payment = externalId
-      ? await prisma.payment.findUnique({ where: { id: externalId } })
-      : null;
+    // UUID regex to avoid Prisma error on non-UUID externalId
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    let payment =
+      externalId && isUuid.test(externalId)
+        ? await prisma.payment.findUnique({ where: { id: externalId } })
+        : null;
 
     // Fallback: lookup by abacatepayCheckoutId if externalId missing or not found
     if (!payment && checkoutId) {

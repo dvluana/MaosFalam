@@ -57,7 +57,8 @@ export async function POST(req: Request) {
     let customerId = profile.abacatepayCustomerId;
     if (!customerId) {
       step = "create-customer";
-      customerId = await createCustomer(user.email, user.name);
+      const cpfForCustomer = data.cpf || profile.cpf || undefined;
+      customerId = await createCustomer(user.email, user.name, cpfForCustomer);
       step = "save-customer-id";
       await prisma.userProfile.update({
         where: { clerkUserId: user.id },
