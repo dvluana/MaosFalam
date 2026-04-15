@@ -223,17 +223,9 @@ function CreditosInner() {
                       <motion.div
                         key={p.id}
                         custom={direction}
-                        initial={{
-                          opacity: 0,
-                          x: direction * 60,
-                          rotate: direction * 4,
-                        }}
-                        animate={{ opacity: 1, x: 0, rotate: 0 }}
-                        exit={{
-                          opacity: 0,
-                          x: -direction * 60,
-                          rotate: -direction * 4,
-                        }}
+                        initial={{ opacity: 0, x: direction * 60 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -direction * 60 }}
                         transition={{
                           type: "spring",
                           stiffness: 180,
