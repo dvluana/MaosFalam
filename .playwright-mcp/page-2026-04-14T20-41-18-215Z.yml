@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+    - img
+    - main [ref=e2]:
+        - generic [ref=e12]:
+            - paragraph [ref=e13]:
+                - generic [ref=e14]: Suas mãos já sabem.Você ainda não.
+            - paragraph [ref=e16]
+        - link "Mostre sua mão":
+            - /url: /ler/nome
+            - text: Mostre sua mão
+            - img
+        - banner [ref=e17]:
+            - generic [ref=e18]:
+                - generic "MãosFalam" [ref=e19]:
+                    - img [ref=e20]
+                    - img "MãosFalam" [ref=e23]
+                - button "Abrir menu" [ref=e24] [cursor=pointer]
+                - dialog "Menu principal":
+                    - generic:
+                        - button "Fechar menu":
+                            - img
+                        - generic:
+                            - generic:
+                                - img
+                                - generic: MãosFalam
+                            - navigation:
+                                - link "01 Início Você está aqui":
+                                    - /url: /
+                                    - generic:
+                                        - generic: "01"
+                                        - generic: Início
+                                    - generic: Você está aqui
+                                - link "02 Minhas leituras O que suas mãos já disseram":
+                                    - /url: /conta/leituras
+                                    - generic:
+                                        - generic: "02"
+                                        - generic: Minhas leituras
+                                    - generic: O que suas mãos já disseram
+                                - link "03 Tarot Online Três cartas pra distrair a sorte":
+                                    - /url: /tarot
+                                    - generic:
+                                        - generic: "03"
+                                        - generic: Tarot Online
+                                    - generic: Três cartas pra distrair a sorte
+                                - link "04 Perfil Quem você é pra mim":
+                                    - /url: /conta/perfil
+                                    - generic:
+                                        - generic: "04"
+                                        - generic: Perfil
+                                    - generic: Quem você é pra mim
+                                - link "06 Sair Até a próxima":
+                                    - /url: /
+                                    - generic:
+                                        - generic: "06"
+                                        - generic: Sair
+                                    - generic: Até a próxima
+                            - generic:
+                                - paragraph: Me mostre sua mão e eu te conto quem você é
+                                - paragraph: © 2025 · MãosFalam
+    - alert [ref=e33]

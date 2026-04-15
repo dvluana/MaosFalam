@@ -1,0 +1,85 @@
+- generic [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Minhas leituras O que suas mãos já disseram":
+                                - /url: /conta/leituras
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Minhas leituras
+                                - generic: O que suas mãos já disseram
+                            - link "03 Tarot Online Três cartas pra distrair a sorte":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas pra distrair a sorte
+                            - link "04 Perfil Quem você é pra mim":
+                                - /url: /conta/perfil
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Perfil
+                                - generic: Quem você é pra mim
+                            - link "07 Sair Até a próxima":
+                                - /url: /
+                                - generic:
+                                    - generic: "07"
+                                    - generic: Sair
+                                - generic: Até a próxima
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2026 · MãosFalam
+    - main [ref=e13]:
+        - generic [ref=e14]:
+            - generic [ref=e17]: A minha tabela
+            - generic [ref=e19]:
+                - heading "Escolha o que faz sentido." [level=1] [ref=e20]
+                - paragraph [ref=e21]: Uma leitura é diferente de cinco. E cinco é diferente de dez. Cada pacote é um jeito de fazer isso. Você escolhe quantas mãos vão passar por aqui.
+            - region "Pacotes de créditos" [ref=e22]:
+                - generic [ref=e23]:
+                    - button "Pacote anterior" [ref=e24]:
+                        - generic [ref=e25]: ‹
+                    - article [ref=e68]:
+                        - generic [ref=e77]:
+                            - generic [ref=e79]: Pacote 01
+                            - heading "Avulsa" [level=2] [ref=e81]
+                            - generic [ref=e82]: Pra você. Sozinha.
+                            - paragraph [ref=e83]: Uma mão. Uma voz. Uma verdade.
+                            - paragraph [ref=e84]: A primeira vez que eu te leio. Você me estende a palma, eu devolvo o que vi. Simples assim. Não precisa mostrar pra ninguém. Fica entre nós.
+                            - generic [ref=e86]:
+                                - generic [ref=e87]:
+                                    - generic [ref=e88]: 1 leitura
+                                    - generic [ref=e89]: R$ 14,90 cada
+                                - generic [ref=e91]: R$ 14,90
+                            - button "Escolher · R$ 14,90" [ref=e92] [cursor=pointer]:
+                                - generic [ref=e93]: Escolher · R$ 14,90
+                            - paragraph [ref=e94]: O preço do que você vai descobrir é barato pelo que vale.
+                    - button "Próximo pacote" [ref=e57]:
+                        - generic [ref=e58]: ›
+                - generic [ref=e60]: Carta 01 de 04
+                - generic [ref=e61]:
+                    - button "Ir pro pacote Avulsa" [active] [ref=e62]
+                    - button "Ir pro pacote Dupla" [ref=e63]
+                    - button "Ir pro pacote Roda" [ref=e64]
+                    - button "Ir pro pacote Tsara" [ref=e65]
+    - alert [ref=e66]

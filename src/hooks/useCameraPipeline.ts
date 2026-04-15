@@ -243,13 +243,8 @@ export default function useCameraPipeline({
       // Back camera (mirrored=false): labels are inverted — MediaPipe "Left" = user's right hand.
       // (Upload/photo path inverts separately — see useUploadValidation.)
       const rawHandedness = detectHandedness(result.handednesses[0]);
-      const userHandedness: "left" | "right" = mirroredRef.current
-        ? rawHandedness === "Left"
-          ? "left"
-          : "right" // front camera: direct mapping
-        : rawHandedness === "Left"
-          ? "right"
-          : "left"; // back camera: invert mapping
+      // Handedness inversion temporarily disabled for debugging
+      const userHandedness: "left" | "right" = rawHandedness === "Left" ? "left" : "right";
 
       const expectedHand = dominantHandRef.current;
       if (userHandedness !== expectedHand) {

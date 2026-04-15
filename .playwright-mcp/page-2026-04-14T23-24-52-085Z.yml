@@ -1,0 +1,75 @@
+- generic [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Mostre sua mão Começar agora":
+                                - /url: /ler/nome
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Mostre sua mão
+                                - generic: Começar agora
+                            - link "03 Tarot Online Três cartas, de graça":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas, de graça
+                            - link "04 Entrar Já te conheço":
+                                - /url: /login
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Entrar
+                                - generic: Já te conheço
+                            - link "05 Criar conta Pra você voltar":
+                                - /url: /registro
+                                - generic:
+                                    - generic: "05"
+                                    - generic: Criar conta
+                                - generic: Pra você voltar
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2026 · MãosFalam
+    - main [ref=e13]:
+        - generic [ref=e16]:
+            - generic [ref=e17]:
+                - paragraph [ref=e18]: Você chegou. Eu já estava te esperando.
+                - paragraph [ref=e19]: Cria sua conta pra eu guardar suas leituras.
+            - button "Criar com Google" [disabled] [ref=e20]:
+                - img [ref=e21]
+                - text: Criar com Google
+            - generic [ref=e28]: ou
+            - generic [ref=e30]:
+                - generic [ref=e31]:
+                    - generic [ref=e32]: Seu nome
+                    - textbox "O primeiro que vier" [active] [ref=e34]
+                - generic [ref=e35]:
+                    - generic [ref=e36]: Email
+                    - textbox "voce@exemplo.com" [ref=e38]
+                - generic [ref=e39]:
+                    - generic [ref=e40]: Senha
+                    - textbox "Mínimo 8 caracteres" [ref=e42]
+                - button "Criar conta" [disabled]
+            - button "Já tenho conta. Entrar." [ref=e43]
+    - button "Open Next.js Dev Tools" [ref=e49] [cursor=pointer]:
+        - img [ref=e50]
+    - alert [ref=e53]

@@ -1,0 +1,59 @@
+- generic [active] [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Minhas leituras O que suas mãos já disseram":
+                                - /url: /conta/leituras
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Minhas leituras
+                                - generic: O que suas mãos já disseram
+                            - link "03 Tarot Online Três cartas pra distrair a sorte":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas pra distrair a sorte
+                            - link "04 Perfil Quem você é pra mim":
+                                - /url: /conta/perfil
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Perfil
+                                - generic: Quem você é pra mim
+                            - link "07 Sair Até a próxima":
+                                - /url: /
+                                - generic:
+                                    - generic: "07"
+                                    - generic: Sair
+                                - generic: Até a próxima
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2025 · MãosFalam
+    - main [ref=e42]:
+        - generic [ref=e46]: O ritual
+        - paragraph [ref=e48]: Pressione e segure.
+        - generic [ref=e49]:
+            - img
+            - button "Pressione e segure" [ref=e50] [cursor=pointer]
+        - paragraph [ref=e52]: Toque e não solte
+    - alert [ref=e19]

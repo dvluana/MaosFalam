@@ -1,0 +1,76 @@
+- generic [active] [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Minhas leituras O que suas mãos já disseram":
+                                - /url: /conta/leituras
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Minhas leituras
+                                - generic: O que suas mãos já disseram
+                            - link "03 Tarot Online Três cartas pra distrair a sorte":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas pra distrair a sorte
+                            - link "04 Perfil Quem você é pra mim":
+                                - /url: /conta/perfil
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Perfil
+                                - generic: Quem você é pra mim
+                            - link "07 Sair Até a próxima":
+                                - /url: /
+                                - generic:
+                                    - generic: "07"
+                                    - generic: Sair
+                                - generic: Até a próxima
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2026 · MãosFalam
+    - main [ref=e13]:
+        - generic [ref=e16]:
+            - generic [ref=e17]:
+                - paragraph [ref=e18]: Você chegou. Eu já estava te esperando.
+                - paragraph [ref=e19]: Cria sua conta pra eu guardar suas leituras.
+            - button "Criar com Google" [ref=e20]:
+                - img [ref=e21]
+                - text: Criar com Google
+            - generic [ref=e28]: ou
+            - generic [ref=e30]:
+                - generic [ref=e31]:
+                    - generic [ref=e32]: Seu nome
+                    - textbox "O primeiro que vier" [ref=e34]: Novo Teste
+                - generic [ref=e35]:
+                    - generic [ref=e36]: Email
+                    - textbox "voce@exemplo.com" [ref=e38]: novo-teste-xyz@maosfalam.com
+                - generic [ref=e39]:
+                    - generic [ref=e40]: Senha
+                    - textbox "Mínimo 8 caracteres" [ref=e42]: MaosFalam2026NTxyz!
+                    - paragraph [ref=e55]: Algo deu errado. Tenta de novo.
+                - button "Criar conta" [ref=e54] [cursor=pointer]
+            - button "Já tenho conta. Entrar." [ref=e43]
+    - button "Open Next.js Dev Tools" [ref=e49] [cursor=pointer]:
+        - img [ref=e50]
+    - alert [ref=e53]

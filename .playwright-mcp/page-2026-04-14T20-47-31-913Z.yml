@@ -1,0 +1,84 @@
+- generic [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Mostre sua mão Começar agora":
+                                - /url: /ler/nome
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Mostre sua mão
+                                - generic: Começar agora
+                            - link "03 Tarot Online Três cartas, de graça":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas, de graça
+                            - link "04 Entrar Já te conheço":
+                                - /url: /login
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Entrar
+                                - generic: Já te conheço
+                            - link "05 Criar conta Pra você voltar":
+                                - /url: /registro
+                                - generic:
+                                    - generic: "05"
+                                    - generic: Criar conta
+                                - generic: Pra você voltar
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2025 · MãosFalam
+    - main [ref=e13]:
+        - generic [ref=e14]:
+            - generic [ref=e17]: A minha tabela
+            - generic [ref=e19]:
+                - heading "Escolha o que faz sentido." [level=1] [ref=e20]
+                - paragraph [ref=e21]: Uma leitura e diferente de cinco. E cinco e diferente de dez. Cada pacote e um jeito de fazer isso. Voce escolhe quantas maos vao passar por aqui.
+            - region "Pacotes de creditos" [ref=e22]:
+                - generic [ref=e23]:
+                    - button "Pacote anterior" [ref=e24]:
+                        - generic [ref=e25]: ‹
+                    - article [ref=e121]:
+                        - generic [ref=e130]:
+                            - generic [ref=e132]: Pacote 04
+                            - heading "Tsara" [level=2] [ref=e134]
+                            - generic [ref=e135]: Pra quando e festa.
+                            - paragraph [ref=e136]: Dez maos. A casa inteira.
+                            - paragraph [ref=e137]: Tsara e nome que as ciganas davam pro encontro grande, quando todo mundo falava de todo mundo e a noite nao acabava. Dez leituras, pra voce espalhar pela sua gente. Cada uma sai com algo pra carregar.
+                            - generic [ref=e139]:
+                                - generic [ref=e140]:
+                                    - generic [ref=e141]: 10 leituras
+                                    - generic [ref=e142]: R$ 7,99 cada
+                                - generic [ref=e144]: R$ 79,90
+                            - button "Escolher · R$ 79,90" [ref=e145] [cursor=pointer]
+                            - paragraph [ref=e146]: O preco do que voce vai descobrir e barato pelo que vale.
+                    - button "Proximo pacote" [ref=e56]:
+                        - generic [ref=e57]: ›
+                - generic [ref=e59]: Carta 04 de 04
+                - generic [ref=e60]:
+                    - button "Ir pro pacote Avulsa" [ref=e61]
+                    - button "Ir pro pacote Dupla" [ref=e62]
+                    - button "Ir pro pacote Roda" [ref=e63]
+                    - button "Ir pro pacote Tsara" [active] [ref=e64]
+    - alert [ref=e65]
