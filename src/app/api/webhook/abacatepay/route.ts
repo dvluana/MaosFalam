@@ -151,13 +151,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
-    // 5. Validate pack type
+    // 5. Validate pack type and amount
     if (!isValidPackType(payment.packType)) {
       logger.error({ packType: payment.packType }, "Invalid pack type");
       return NextResponse.json({ error: "Invalid pack" }, { status: 400 });
     }
 
     const pack = CREDIT_PACKS[payment.packType as keyof typeof CREDIT_PACKS];
+
+    // 5b. Amount re-check: paid amount must match expected pack price
+    const paidAmount = checkout?.amount ?? 0;
+    if (paidAmount !== payment.amountCents) {
+      logger.error(
+        { expected: payment.amountCents, received: paidAmount, paymentId: payment.id },
+        "Amount mismatch — possible tampering",
+      );
+      return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
+    }
 
     // 6. Extract payment method from payerInformation (v2 path)
     const method = body.data?.payerInformation?.method || "pix";
