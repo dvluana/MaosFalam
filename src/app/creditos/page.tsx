@@ -338,10 +338,7 @@ function CreditosInner() {
                             </h2>
 
                             {/* Pra quem */}
-                            <span
-                              className="font-jetbrains text-[9.5px] tracking-[1.5px] uppercase text-bone-dim mb-5"
-                              style={{ fontWeight: 500 }}
-                            >
+                            <span className="font-raleway text-[13px] text-bone-dim mb-5">
                               {p.paraQuem}
                             </span>
 

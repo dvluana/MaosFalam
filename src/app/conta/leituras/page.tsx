@@ -329,14 +329,18 @@ function CreditsBanner({ credits, onBuyMore }: { credits: number; onBuyMore: () 
             Seus créditos
           </span>
           <div className="flex items-baseline gap-2">
-            <span
-              className="font-cinzel text-[38px] sm:text-[44px] text-gold leading-none"
+            <motion.span
+              key={credits}
+              initial={{ scale: 1.3, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              className="font-cinzel text-[38px] sm:text-[44px] text-gold leading-none inline-block"
               style={{
                 textShadow: "0 0 24px rgba(201,162,74,0.45), 0 0 48px rgba(201,162,74,0.2)",
               }}
             >
               {credits}
-            </span>
+            </motion.span>
             <span className="font-cormorant italic text-[16px] text-bone-dim">
               {credits === 1 ? "leitura" : "leituras"}
             </span>
