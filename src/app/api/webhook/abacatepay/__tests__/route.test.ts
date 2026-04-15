@@ -84,12 +84,13 @@ function makeWebhookPayload(overrides: Record<string, unknown> = {}) {
   };
 }
 
-function makeWebhookRequest(body: string, signature?: string): Request {
+function makeWebhookRequest(body: string, signature?: string, secret?: string): Request {
   const headers = new Headers({ "content-type": "application/json" });
   if (signature !== undefined) {
     headers.set("x-webhook-signature", signature);
   }
-  return new Request("https://maosfalam.com/api/webhook/abacatepay", {
+  const qs = secret !== undefined ? `?webhookSecret=${secret}` : "?webhookSecret=test-secret";
+  return new Request(`https://maosfalam.com/api/webhook/abacatepay${qs}`, {
     method: "POST",
     headers,
     body,
@@ -117,6 +118,7 @@ const MOCK_PAYMENT = {
 describe("POST /api/webhook/abacatepay", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.ABACATEPAY_WEBHOOK_SECRET = "test-secret";
     (verifyWebhookSignature as ReturnType<typeof vi.fn>).mockReturnValue(true);
     (prisma.userProfile.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(null);
   });

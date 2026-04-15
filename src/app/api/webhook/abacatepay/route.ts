@@ -39,9 +39,20 @@ interface WebhookPayload {
 
 export async function POST(req: NextRequest) {
   try {
+    // 0. Camada 1: validar webhookSecret na URL
+    const url = new URL(req.url);
+    const webhookSecret = url.searchParams.get("webhookSecret");
+    if (
+      !process.env.ABACATEPAY_WEBHOOK_SECRET ||
+      webhookSecret !== process.env.ABACATEPAY_WEBHOOK_SECRET
+    ) {
+      logger.warn("Invalid or missing webhook secret");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const rawBody = await req.text();
 
-    // 1. Signature validation (v2: x-webhook-signature header, base64 HMAC-SHA256)
+    // 1. Camada 2: HMAC-SHA256 signature validation
     const signature = req.headers.get("x-webhook-signature") || "";
 
     // Log full payload structure for debugging (no sensitive data — just keys and IDs)
