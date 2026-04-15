@@ -3,44 +3,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState, type FormEvent } from "react";
+import { Suspense, useCallback, useMemo, useState } from "react";
 
-import {
-  Button,
-  Card,
-  Input,
-  Toast,
-  StateSwitcher,
-  GoogleButton,
-  PageLoading,
-} from "@/components/ui";
+import { Button, Eyebrow, GoogleButton, PageLoading } from "@/components/ui";
 import { useAuth } from "@/hooks/useAuth";
-import { saveCheckoutIntent, readCheckoutIntent } from "@/lib/checkout-intent";
+import { saveCheckoutIntent } from "@/lib/checkout-intent";
+import { initiatePurchase } from "@/lib/payment-client";
 
-type PageState =
-  | "default"
-  | "pix_selected"
-  | "card_selected"
-  | "processing_payment"
-  | "payment_success"
-  | "payment_failed_pix_expired"
-  | "payment_failed_card_declined"
-  | "payment_failed_generic"
-  | "requires_login";
-
-const STATES: readonly PageState[] = [
-  "default",
-  "pix_selected",
-  "card_selected",
-  "processing_payment",
-  "payment_success",
-  "payment_failed_pix_expired",
-  "payment_failed_card_declined",
-  "payment_failed_generic",
-  "requires_login",
-] as const;
-
-type PaymentMethod = "pix" | "card";
+type PageState = "default" | "processing_payment" | "payment_failed_generic" | "requires_login";
 
 interface Pacote {
   id: string;
@@ -97,8 +67,6 @@ const PACOTES: readonly Pacote[] = [
   },
 ];
 
-const PIX_CODE = "00020126580014br.gov.bcb.pix0136a629534e-7693-4846-b028-2c3e7a8e5204";
-
 function formatBRL(v: number): string {
   return v.toLocaleString("pt-BR", {
     style: "currency",
@@ -108,12 +76,6 @@ function formatBRL(v: number): string {
 
 function formatPorLeitura(v: number, c: number): string {
   return formatBRL(v / c);
-}
-
-function formatTimer(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 }
 
 export default function CreditosPage() {
@@ -129,14 +91,9 @@ function CreditosInner() {
   const params = useSearchParams();
   const { user } = useAuth();
 
-  const stateParam = params?.get("state") as PageState | null;
-  const [localState, setLocalState] = useState<PageState | null>(null);
-  const pageState: PageState =
-    localState ?? (stateParam && STATES.includes(stateParam) ? stateParam : "default");
-  const setPageState = (s: PageState): void => setLocalState(s);
+  const [pageState, setPageState] = useState<PageState>("default");
 
-  // Deck: a carta atual é a "selecionada". Default inicia em Roda (index 2),
-  // mas pode ser sobrescrita pelo ?pacote= ou pelo intent salvo no checkout.
+  // Deck state
   const initialIdx = (() => {
     const fromUrl = params?.get("pacote");
     if (fromUrl) {
@@ -147,7 +104,6 @@ function CreditosInner() {
   })();
   const [deckIdx, setDeckIdx] = useState<number>(initialIdx);
   const [direction, setDirection] = useState<1 | -1>(1);
-  const selectedPacote = PACOTES[deckIdx]?.id ?? "roda";
 
   const goTo = (idx: number) => {
     const total = PACOTES.length;
@@ -159,122 +115,46 @@ function CreditosInner() {
   const goPrev = () => goTo(deckIdx - 1);
   const goNext = () => goTo(deckIdx + 1);
 
-  const scrollToPagamento = () => {
-    if (typeof window === "undefined") return;
-    const el = document.getElementById("pagamento");
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-  const [method, setMethod] = useState<PaymentMethod>("pix");
-  const [timer, setTimer] = useState<number>(15 * 60);
-  const [copied, setCopied] = useState<boolean>(false);
-
-  const [cardNumber, setCardNumber] = useState<string>("");
-  const [cardExpiry, setCardExpiry] = useState<string>("");
-  const [cardCvv, setCardCvv] = useState<string>("");
-  const [cardName, setCardName] = useState<string>("");
+  // Purchase state
+  const [purchasing, setPurchasing] = useState<boolean>(false);
+  const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
   const [loginLoading] = useState<boolean>(false);
 
-  const pacote = useMemo(
-    () => PACOTES.find((p) => p.id === selectedPacote) ?? null,
-    [selectedPacote],
-  );
+  // Reading ID from upsell flow
+  const readingId = params?.get("reading") ?? undefined;
 
-  // Ao montar com user logado: se há intent salvo, restaura pacote/método
-  // e rola direto pra seção de pagamento (o login deu certo, a pessoa volta
-  // exatamente onde estava).
-  useEffect(() => {
-    if (!user) return;
-    const intent = readCheckoutIntent();
-    if (!intent) return;
-    const idx = PACOTES.findIndex((p) => p.id === intent.pacoteId);
-    const frame = window.requestAnimationFrame(() => {
-      if (idx < 0) return;
-      setDeckIdx(idx);
-      setMethod(intent.method);
-      // scroll suave pra seção de pagamento
-      window.setTimeout(() => {
-        const el = document.getElementById("pagamento");
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 400);
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [user]);
+  const pacote = useMemo(() => PACOTES[deckIdx] ?? null, [deckIdx]);
 
-  // Timer PIX
-  useEffect(() => {
-    if (pageState !== "pix_selected") return;
-    const id = window.setInterval(() => {
-      setTimer((t) => {
-        if (t <= 1) {
-          window.clearInterval(id);
-          setPageState("payment_failed_pix_expired");
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => window.clearInterval(id);
-  }, [pageState]);
-
-  // Auto-redirect success
-  useEffect(() => {
-    if (pageState !== "payment_success") return;
-    const id = window.setTimeout(() => {
-      // Se havia uma leitura pendente (usuária clicou em "Desbloquear tudo"
-      // num resultado free), volta exatamente pra essa leitura em modo
-      // completo. Senão, cai na lista de leituras.
-      const pending =
-        typeof window !== "undefined"
-          ? window.sessionStorage.getItem("maosfalam_pending_reading")
-          : null;
-      if (pending) {
-        window.sessionStorage.removeItem("maosfalam_pending_reading");
-        router.push(`/ler/resultado/${pending}/completo`);
-      } else {
-        router.push("/conta/leituras");
-      }
-    }, 1500);
-    return () => window.clearTimeout(id);
-  }, [pageState, router]);
-
-  // Processing -> success
-  useEffect(() => {
-    if (pageState !== "processing_payment") return;
-    const id = window.setTimeout(() => {
-      setPageState("payment_success");
-    }, 2000);
-    return () => window.clearTimeout(id);
-  }, [pageState]);
-
-  function handlePagar(): void {
+  const handleEscolher = useCallback(async () => {
     if (!pacote) return;
+
+    // Not logged in: save intent and show login modal
     if (!user) {
-      // Salva intenção pra preservar contexto se a usuária sair pra login
-      saveCheckoutIntent(pacote.id, method);
+      saveCheckoutIntent(pacote.id, "pix");
       setPageState("requires_login");
       return;
     }
-    if (method === "pix") {
-      setTimer(15 * 60);
-      setPageState("pix_selected");
-    } else {
-      setPageState("card_selected");
+
+    // Initiate purchase — button shows spinner, no separate state card
+    setPageState("default");
+    setPurchasing(true);
+    setPurchaseError(null);
+
+    try {
+      const result = await initiatePurchase(pacote.id, readingId);
+      window.location.href = result.checkout_url;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Erro desconhecido";
+      const is429 = message.startsWith("429");
+      setPurchaseError(
+        is429 ? "Devagar. Tenta de novo daqui a pouco." : "Algo saiu do caminho. Tente de novo.",
+      );
+      setPageState("payment_failed_generic");
+    } finally {
+      setPurchasing(false);
     }
-  }
-
-  function handleCopyPix(): void {
-    if (typeof navigator === "undefined" || !navigator.clipboard) return;
-    void navigator.clipboard.writeText(PIX_CODE).then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    });
-  }
-
-  function handleCardSubmit(e: FormEvent<HTMLFormElement>): void {
-    e.preventDefault();
-    setPageState("processing_payment");
-  }
+  }, [pacote, user, readingId]);
 
   function handleGoogleLogin(): void {
     router.push("/login?return=/creditos");
@@ -282,33 +162,14 @@ function CreditosInner() {
 
   function handleRetry(): void {
     setPageState("default");
-    setTimer(15 * 60);
+    setPurchaseError(null);
   }
 
   return (
     <main className="min-h-screen velvet-bg text-bone font-raleway">
       <div className="mx-auto max-w-2xl px-5 pt-28 pb-16">
         {/* Eyebrow */}
-        <div className="flex items-center gap-3 justify-center mb-6">
-          <span
-            className="h-px w-10"
-            style={{
-              background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
-            }}
-          />
-          <span
-            className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold whitespace-nowrap"
-            style={{ fontWeight: 500 }}
-          >
-            A minha tabela
-          </span>
-          <span
-            className="h-px w-10"
-            style={{
-              background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
-            }}
-          />
-        </div>
+        <Eyebrow label="A minha tabela" className="justify-center mb-6" />
 
         <header className="text-center mb-12">
           <h1 className="font-cinzel text-[28px] sm:text-[34px] text-bone leading-tight mb-4">
@@ -338,36 +199,13 @@ function CreditosInner() {
               }}
             >
               <span className="font-cinzel text-[22px] text-gold leading-none" aria-hidden>
-                ‹
+                &#8249;
               </span>
             </button>
 
             {/* Carta central + peeks laterais */}
             <div className="relative mx-auto" style={{ width: "min(100%, 440px)" }}>
-              {/* Peek da carta anterior — escondida atrás à esquerda */}
-              <div
-                aria-hidden
-                className="absolute inset-y-4 -left-3 w-8 pointer-events-none hidden sm:block"
-                style={{
-                  background: "#0e0a18",
-                  border: "1px solid rgba(201,162,74,0.12)",
-                  transform: "rotate(-3deg)",
-                  opacity: 0.5,
-                  zIndex: 1,
-                }}
-              />
-              {/* Peek da carta seguinte — escondida atrás à direita */}
-              <div
-                aria-hidden
-                className="absolute inset-y-4 -right-3 w-8 pointer-events-none hidden sm:block"
-                style={{
-                  background: "#0e0a18",
-                  border: "1px solid rgba(201,162,74,0.12)",
-                  transform: "rotate(3deg)",
-                  opacity: 0.5,
-                  zIndex: 1,
-                }}
-              />
+              {/* Peek cards removidos — causavam retângulos fantasma ao trocar de carta */}
 
               {/* Carta ativa */}
               <div
@@ -382,8 +220,7 @@ function CreditosInner() {
                     const p = PACOTES[deckIdx]!;
                     const num = String(deckIdx + 1).padStart(2, "0");
                     return (
-                      <motion.button
-                        type="button"
+                      <motion.div
                         key={p.id}
                         custom={direction}
                         initial={{
@@ -402,16 +239,16 @@ function CreditosInner() {
                           stiffness: 180,
                           damping: 22,
                         }}
-                        drag="x"
+                        drag={purchasing ? false : "x"}
                         dragConstraints={{ left: 0, right: 0 }}
+                        dragSnapToOrigin
                         dragElastic={0.3}
                         onDragEnd={(_, info) => {
+                          if (purchasing) return;
                           if (info.offset.x < -60) goNext();
                           else if (info.offset.x > 60) goPrev();
                         }}
-                        onClick={scrollToPagamento}
-                        className="block w-full text-left focus:outline-none cursor-pointer"
-                        aria-label={`Pacote ${p.nome}`}
+                        className="block w-full text-left"
                       >
                         <article
                           className="card-noise relative overflow-hidden px-6 py-8 sm:px-9 sm:py-10"
@@ -422,7 +259,7 @@ function CreditosInner() {
                               "0 30px 60px -16px rgba(0,0,0,0.9), 0 0 56px -8px rgba(201,162,74,0.25), 0 0 1px rgba(201,162,74,0.3)",
                           }}
                         >
-                          {/* Radial glow gold — carta ativa */}
+                          {/* Radial glow gold */}
                           <div
                             aria-hidden
                             className="pointer-events-none absolute inset-0"
@@ -432,7 +269,7 @@ function CreditosInner() {
                             }}
                           />
 
-                          {/* Corner accents — 4 cantos pra dar cara de carta */}
+                          {/* Corner accents */}
                           <span
                             aria-hidden
                             className="absolute w-[14px] h-[14px] top-2 left-2 border-t border-l"
@@ -485,7 +322,7 @@ function CreditosInner() {
                           )}
 
                           <div className="relative flex flex-col">
-                            {/* Header: número + nome */}
+                            {/* Header: numero + nome */}
                             <div className="flex items-baseline gap-3 mb-1">
                               <span
                                 className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold-dim"
@@ -501,10 +338,7 @@ function CreditosInner() {
                             </h2>
 
                             {/* Pra quem */}
-                            <span
-                              className="font-jetbrains text-[9.5px] tracking-[1.5px] uppercase text-bone-dim mb-5"
-                              style={{ fontWeight: 500 }}
-                            >
+                            <span className="font-raleway text-[13px] text-bone-dim mb-5">
                               {p.paraQuem}
                             </span>
 
@@ -533,8 +367,8 @@ function CreditosInner() {
                               }}
                             />
 
-                            {/* Footer: créditos + preço */}
-                            <div className="flex items-end justify-between gap-4">
+                            {/* Footer: creditos + preco */}
+                            <div className="flex items-end justify-between gap-4 mb-6">
                               <div className="flex flex-col">
                                 <span
                                   className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim mb-1"
@@ -559,28 +393,28 @@ function CreditosInner() {
                               </div>
                             </div>
 
-                            {/* Hint de toque pra ir pro pagamento */}
-                            <div
-                              className="mt-5 pt-4 flex items-center justify-center"
-                              style={{
-                                borderTop: "1px solid rgba(201,162,74,0.2)",
-                              }}
+                            {/* CTA: Escolher */}
+                            <Button
+                              variant="primary"
+                              size="lg"
+                              disabled={purchasing}
+                              onClick={() => void handleEscolher()}
+                              className="w-full"
                             >
-                              <span
-                                className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim flex items-center gap-2"
-                                style={{ fontWeight: 500 }}
-                              >
-                                <span className="w-1 h-1 rotate-45 bg-gold-dim" />
-                                Toque pra escolher esse
-                                <span aria-hidden className="text-gold text-[12px]">
-                                  ↓
-                                </span>
-                                <span className="w-1 h-1 rotate-45 bg-gold-dim" />
+                              <span className="inline-flex items-center justify-center gap-2">
+                                {purchasing && (
+                                  <span className="block w-3.5 h-3.5 rounded-full border-2 border-bone/20 border-t-bone animate-spin shrink-0" />
+                                )}
+                                {`Escolher · ${formatBRL(p.preco)}`}
                               </span>
-                            </div>
+                            </Button>
+
+                            <p className="font-cormorant italic text-[12px] text-bone-dim text-center mt-3">
+                              O preço do que você vai descobrir é barato pelo que vale.
+                            </p>
                           </div>
                         </article>
-                      </motion.button>
+                      </motion.div>
                     );
                   })()}
                 </AnimatePresence>
@@ -601,12 +435,12 @@ function CreditosInner() {
               }}
             >
               <span className="font-cinzel text-[22px] text-gold leading-none" aria-hidden>
-                ›
+                &#8250;
               </span>
             </button>
           </div>
 
-          {/* Indicador de posição (dots tarot) */}
+          {/* Indicador de posicao (dots tarot) */}
           <div className="flex items-center justify-center gap-3 mt-8">
             <span
               className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim"
@@ -635,311 +469,19 @@ function CreditosInner() {
           </div>
         </section>
 
-        {/* Seção de pagamento destacada */}
-        <section id="pagamento" className="scroll-mt-28 mb-12">
-          {/* Eyebrow */}
-          <div className="flex items-center gap-3 justify-center mb-6">
-            <span
-              className="h-px w-10"
-              style={{
-                background: "linear-gradient(90deg, transparent, rgba(201,162,74,0.55))",
-              }}
-            />
-            <span
-              className="font-jetbrains text-[10px] tracking-[1.8px] uppercase text-gold whitespace-nowrap"
-              style={{ fontWeight: 500 }}
-            >
-              Fechar a conta
-            </span>
-            <span
-              className="h-px w-10"
-              style={{
-                background: "linear-gradient(270deg, transparent, rgba(201,162,74,0.55))",
-              }}
-            />
-          </div>
-
-          <article
-            className="card-noise relative overflow-hidden px-6 py-8 sm:px-9 sm:py-10"
-            style={{
-              background: "#0e0a18",
-              border: "1px solid rgba(201,162,74,0.18)",
-              boxShadow: "0 24px 48px -16px rgba(0,0,0,0.85), 0 0 40px -12px rgba(201,162,74,0.15)",
-            }}
-          >
-            <span
-              aria-hidden
-              className="absolute w-[10px] h-[10px] top-2 left-2 border-t border-l"
-              style={{ borderColor: "rgba(201,162,74,0.5)" }}
-            />
-            <span
-              aria-hidden
-              className="absolute w-[10px] h-[10px] bottom-2 right-2 border-b border-r"
-              style={{ borderColor: "rgba(201,162,74,0.5)" }}
-            />
-
-            <div className="relative flex flex-col gap-6">
-              {/* Resumo do pacote selecionado */}
-              {pacote ? (
-                <div className="flex items-start justify-between gap-4 pb-5 border-b border-[rgba(201,162,74,0.14)]">
-                  <div className="flex flex-col">
-                    <span
-                      className="font-jetbrains text-[9px] tracking-[1.5px] uppercase text-gold-dim mb-1"
-                      style={{ fontWeight: 500 }}
-                    >
-                      Você escolheu
-                    </span>
-                    <span className="font-cinzel text-[22px] sm:text-[26px] text-gold leading-none">
-                      {pacote.nome}
-                    </span>
-                    <span className="font-cormorant italic text-[14px] text-bone-dim mt-1">
-                      {pacote.creditos} {pacote.creditos === 1 ? "leitura" : "leituras"} ·{" "}
-                      {formatPorLeitura(pacote.preco, pacote.creditos)} cada
-                    </span>
-                  </div>
-                  <span
-                    className="font-cinzel text-[26px] sm:text-[30px] text-gold leading-none"
-                    style={{
-                      textShadow: "0 0 20px rgba(201,162,74,0.45), 0 0 40px rgba(201,162,74,0.2)",
-                    }}
-                  >
-                    {formatBRL(pacote.preco)}
-                  </span>
-                </div>
-              ) : (
-                <p className="font-cormorant italic text-[18px] text-bone-dim text-center">
-                  Escolhe um pacote lá em cima primeiro.
-                </p>
-              )}
-
-              {/* Método de pagamento */}
-              <div className="flex flex-col gap-3">
-                <span
-                  className="font-jetbrains text-[9.5px] tracking-[1.5px] uppercase text-gold-dim"
-                  style={{ fontWeight: 500 }}
-                >
-                  Como você quer pagar
-                </span>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setMethod("pix")}
-                    className="relative px-4 py-4 text-center transition-all focus:outline-none"
-                    style={{
-                      background: method === "pix" ? "rgba(201,162,74,0.08)" : "transparent",
-                      border:
-                        method === "pix"
-                          ? "1px solid rgba(201,162,74,0.55)"
-                          : "1px solid rgba(201,162,74,0.12)",
-                    }}
-                  >
-                    <span
-                      className="font-cinzel text-[14px] tracking-[0.06em]"
-                      style={{
-                        color: method === "pix" ? "#c9a24a" : "#9b9284",
-                      }}
-                    >
-                      Pix
-                    </span>
-                    <span className="block font-cormorant italic text-[12px] text-bone-dim mt-1">
-                      instantâneo
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMethod("card")}
-                    className="relative px-4 py-4 text-center transition-all focus:outline-none"
-                    style={{
-                      background: method === "card" ? "rgba(201,162,74,0.08)" : "transparent",
-                      border:
-                        method === "card"
-                          ? "1px solid rgba(201,162,74,0.55)"
-                          : "1px solid rgba(201,162,74,0.12)",
-                    }}
-                  >
-                    <span
-                      className="font-cinzel text-[14px] tracking-[0.06em]"
-                      style={{
-                        color: method === "card" ? "#c9a24a" : "#9b9284",
-                      }}
-                    >
-                      Cartão
-                    </span>
-                    <span className="block font-cormorant italic text-[12px] text-bone-dim mt-1">
-                      crédito ou débito
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              {/* CTA pagar */}
-              <div className="flex flex-col items-center gap-3 pt-2">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  disabled={!pacote}
-                  onClick={handlePagar}
-                  className="w-full"
-                >
-                  Pagar {pacote ? formatBRL(pacote.preco) : ""}
-                </Button>
-                <p className="font-cormorant italic text-[13px] text-bone-dim text-center">
-                  O preço do que você vai descobrir é barato pelo que vale.
-                </p>
-              </div>
-            </div>
-          </article>
-        </section>
-
-        {/* Estados dinâmicos */}
-        {pageState === "pix_selected" && pacote && (
-          <Card accentColor="gold">
-            <h3 className="font-cinzel text-sm text-gold uppercase tracking-[0.04em] mb-4">
-              Pix gerado
-            </h3>
-            <p className="font-cormorant italic text-base text-bone-dim mb-5">
-              Abra o app do banco e escaneie. Você tem {formatTimer(timer)}.
-            </p>
-            <div
-              aria-label="QR Code Pix"
-              className="mx-auto mb-5 w-48 h-48 branded-radius"
-              style={{
-                background: "repeating-conic-gradient(#08050e 0 25%, #e8dfd0 0 50%)",
-                backgroundSize: "16px 16px",
-              }}
-            />
-            <p className="font-jetbrains text-[10px] text-violet uppercase tracking-[1.5px] mb-2">
-              Código Pix
-            </p>
-            <p className="font-jetbrains text-[11px] text-bone-dim break-all mb-4 p-3 border border-[rgba(201,162,74,0.08)] branded-radius">
-              {PIX_CODE}
-            </p>
-            <div className="flex gap-3 flex-wrap">
-              <Button variant="secondary" size="sm" onClick={handleCopyPix}>
-                {copied ? "\u2713 Copiado" : "Copiar código Pix"}
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => setPageState("processing_payment")}>
-                Já paguei
-              </Button>
-            </div>
-          </Card>
-        )}
-
-        {pageState === "card_selected" && pacote && (
-          <Card accentColor="violet">
-            <h3 className="font-cinzel text-sm text-gold uppercase tracking-[0.04em] mb-5">
-              Dados do cartão
-            </h3>
-            <form onSubmit={handleCardSubmit} className="space-y-5">
-              <Input
-                label="Número do cartão"
-                placeholder="0000 0000 0000 0000"
-                inputMode="numeric"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-                required
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  label="Validade"
-                  placeholder="MM/AA"
-                  value={cardExpiry}
-                  onChange={(e) => setCardExpiry(e.target.value)}
-                  required
-                />
-                <Input
-                  label="CVV"
-                  placeholder="000"
-                  inputMode="numeric"
-                  value={cardCvv}
-                  onChange={(e) => setCardCvv(e.target.value)}
-                  required
-                />
-              </div>
-              <Input
-                label="Nome no cartão"
-                placeholder="como está impresso"
-                value={cardName}
-                onChange={(e) => setCardName(e.target.value)}
-                required
-              />
-              <div className="pt-2">
-                <Button variant="primary" size="lg" type="submit">
-                  Pagar {formatBRL(pacote.preco)}
-                </Button>
-              </div>
-            </form>
-          </Card>
-        )}
-
-        {pageState === "processing_payment" && (
-          <Card accentColor="violet">
-            <div className="py-6 text-center">
-              <p className="font-cormorant italic text-xl text-bone leading-relaxed mb-4">
-                O preço do que você vai descobrir é barato pelo que vale.
-              </p>
-              <p className="font-jetbrains text-[10px] text-violet uppercase tracking-[1.5px]">
-                Processando
-              </p>
-            </div>
-          </Card>
-        )}
-
-        {pageState === "payment_success" && (
-          <Toast
-            variant="rose"
-            icon="♀"
-            message="Suas linhas completas estão esperando."
-            detail="pagamento confirmado"
-          />
-        )}
-
-        {pageState === "payment_failed_pix_expired" && (
-          <Card accentColor="rose">
-            <p className="font-cormorant italic text-lg text-bone mb-4">
-              O código Pix expirou. Gere um novo.
-            </p>
-            <Button variant="primary" size="sm" onClick={handleRetry}>
-              Gerar novo
-            </Button>
-          </Card>
-        )}
-
-        {pageState === "payment_failed_card_declined" && (
-          <Card accentColor="rose">
-            <p className="font-cormorant italic text-lg text-bone mb-4">
-              O cartão não passou. Tente outro ou use Pix.
-            </p>
-            <div className="flex gap-3 flex-wrap">
-              <Button variant="primary" size="sm" onClick={() => setPageState("card_selected")}>
-                Outro cartão
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  setMethod("pix");
-                  setTimer(15 * 60);
-                  setPageState("pix_selected");
-                }}
-              >
-                Usar Pix
-              </Button>
-            </div>
-          </Card>
-        )}
-
+        {/* Error state — inline toast style, no separate card */}
         {pageState === "payment_failed_generic" && (
-          <Card accentColor="rose">
+          <div className="text-center py-6">
             <p className="font-cormorant italic text-lg text-bone mb-4">
-              Algo deu errado no pagamento. Tente novamente.
+              {purchaseError ?? "Algo saiu do caminho. Tente de novo."}
             </p>
-            <Button variant="primary" size="sm" onClick={handleRetry}>
+            <Button variant="secondary" size="sm" onClick={handleRetry}>
               Tentar de novo
             </Button>
-          </Card>
+          </div>
         )}
 
+        {/* Login modal */}
         {pageState === "requires_login" && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -951,7 +493,7 @@ function CreditosInner() {
             aria-labelledby="login-title"
             onClick={() => !loginLoading && setPageState("default")}
           >
-            {/* Backdrop escuro com blur */}
+            {/* Backdrop */}
             <div
               aria-hidden
               className="absolute inset-0"
@@ -978,7 +520,7 @@ function CreditosInner() {
                   "0 40px 80px -20px rgba(0,0,0,0.95), 0 0 80px -8px rgba(201,162,74,0.22), 0 0 1px rgba(201,162,74,0.5)",
               }}
             >
-              {/* Radial glow interno */}
+              {/* Radial glow */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0"
@@ -1013,7 +555,7 @@ function CreditosInner() {
                 />
               ))}
 
-              {/* Close X no topo-direita */}
+              {/* Close X */}
               <button
                 type="button"
                 onClick={() => !loginLoading && setPageState("default")}
@@ -1022,7 +564,7 @@ function CreditosInner() {
                 className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center text-bone-dim hover:text-gold transition-colors focus:outline-none disabled:opacity-30"
               >
                 <span className="font-cinzel text-[22px] leading-none" aria-hidden>
-                  ×
+                  &#215;
                 </span>
               </button>
 
@@ -1047,7 +589,7 @@ function CreditosInner() {
                   Antes de guardar
                 </span>
 
-                {/* Título */}
+                {/* Titulo */}
                 <h3
                   id="login-title"
                   className="font-cinzel text-[22px] sm:text-[26px] text-bone leading-[1.15] mb-3 max-w-[280px]"
@@ -1060,15 +602,15 @@ function CreditosInner() {
                   Pra eu guardar seus créditos e te chamar pelo nome quando você voltar.
                 </p>
 
-                {/* Botão Google (componente unificado) */}
+                {/* Botao Google */}
                 <GoogleButton onClick={handleGoogleLogin} loading={loginLoading} />
 
-                {/* Hint rodapé */}
+                {/* Hint rodape */}
                 <p className="font-cormorant italic text-[13px] text-bone-dim mt-6 max-w-[280px]">
                   Um clique. Sem senha. Sem complicação.
                 </p>
 
-                {/* Divisor + "já tenho conta" */}
+                {/* Divisor + "ja tenho conta" */}
                 <div className="flex items-center gap-3 mt-6 w-full">
                   <span
                     className="h-px flex-1"
@@ -1093,7 +635,7 @@ function CreditosInner() {
                   Já tenho conta · Entrar
                 </Link>
 
-                {/* Deco rodapé */}
+                {/* Deco rodape */}
                 <div className="flex items-center gap-2 mt-6">
                   <span className="h-px w-12 bg-gold-dim/30" />
                   <span className="w-1 h-1 rotate-45 bg-gold-dim" />
@@ -1104,8 +646,6 @@ function CreditosInner() {
           </motion.div>
         )}
       </div>
-
-      <StateSwitcher states={STATES} current={pageState} />
     </main>
   );
 }

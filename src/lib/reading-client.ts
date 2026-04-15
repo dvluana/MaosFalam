@@ -6,7 +6,7 @@ export async function registerLead(data: {
   gender: "female" | "male";
   session_id: string;
   email_opt_in: boolean;
-}): Promise<{ lead_id: string }> {
+}): Promise<{ lead_id: string | null; existing_account?: boolean }> {
   const res = await fetch("/api/lead/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -16,7 +16,7 @@ export async function registerLead(data: {
     const body = (await res.json().catch(() => ({}))) as { error?: string };
     throw new Error(body.error ?? "Erro ao registrar lead");
   }
-  return res.json() as Promise<{ lead_id: string }>;
+  return res.json() as Promise<{ lead_id: string | null; existing_account?: boolean }>;
 }
 
 export async function captureReading(data: {
@@ -26,7 +26,9 @@ export async function captureReading(data: {
   target_name: string;
   target_gender: "female" | "male";
   is_self: boolean;
-}): Promise<{ reading_id: string; report: ReportJSON }> {
+  dominant_hand?: "right" | "left";
+  element_hint?: "fire" | "water" | "earth" | "air";
+}): Promise<{ reading_id: string; report: ReportJSON; tier?: string }> {
   const res = await fetch("/api/reading/capture", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -39,24 +41,7 @@ export async function captureReading(data: {
       : (body.error ?? "Erro interno");
     throw new Error(msg);
   }
-  return res.json() as Promise<{ reading_id: string; report: ReportJSON }>;
-}
-
-export async function requestNewReading(data: {
-  target_name: string;
-  target_gender: "female" | "male";
-  is_self: boolean;
-}): Promise<{ ok: boolean; credits_remaining: number }> {
-  const res = await fetch("/api/reading/new", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(body.error ?? "Erro ao criar leitura");
-  }
-  return res.json() as Promise<{ ok: boolean; credits_remaining: number }>;
+  return res.json() as Promise<{ reading_id: string; report: ReportJSON; tier?: string }>;
 }
 
 export async function getReading(id: string): Promise<Reading | null> {

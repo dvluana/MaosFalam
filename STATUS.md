@@ -1,95 +1,90 @@
 # STATUS
 
-Ultima atualizacao: 2026-04-11 (backend completo, front-back wired, auditoria final)
+Ultima atualizacao: 2026-04-14 (CPF modal removido, webhook investigado)
 
 ## Estado atual
 
-Branch: main (sincronizada com origin)
-Build: green (type-check + lint + 82 tests)
-Banco: Neon "maosfalam" com 5 tabelas (leads, user_profiles, readings, credit_packs, payments)
-Auth: Clerk v7 (Google OAuth + email/senha via componentes built-in)
+Branch: develop (trabalho ativo)
+Build: green (type-check + lint + build + 160 tests)
+Banco: Neon develop branch com 5 tabelas + CHECK constraint remaining >= 0
+Auth: Clerk v7 (Google OAuth + email/senha, telas custom com useSignIn/useSignUp legacy)
+Deploy: staging.maosfalam.com (Vercel preview, branch develop)
+Producao: maosfalam.com (em breve)
+Pagamento: AbacatePay v2 sandbox integrado (checkout hosted, PIX + cartao)
+Email: Resend templates prontos (aguardando RESEND_API_KEY + dominio verificado)
 
-## Backend (milestone v1.0 — completo)
+## Milestones completos
 
-7 fases executadas via GSD:
+### v1.0 Backend MVP (7 fases)
 
-| Fase               | O que entregou                                                               |
-| ------------------ | ---------------------------------------------------------------------------- |
-| 1. Foundation      | Neon DB + Prisma singleton + Pino PII redaction + env docs                   |
-| 2. Auth            | Clerk proxy.ts + auth helpers + ClerkProvider                                |
-| 3. AI Pipeline     | GPT-4o Structured Outputs + Zod validation + selectBlocks fallbacks          |
-| 4. Public API      | lead/register, reading/capture, reading/[id] + rate limit + security headers |
-| 5. Protected API   | reading/new (FIFO debit), user/credits, user/readings, user/profile          |
-| 6. Client Adapters | reading-client, payment-client, user-client reais + pages migradas           |
-| 7. Frontend Wiring | Scan chama API real, useAuth migrado pra Clerk, camera salva base64          |
+- Neon+Prisma, Clerk, GPT-4o, 9 API routes, client adapters, front-back wiring
 
-### API Routes funcionais
+### v1.1 Alinhamento Arquitetural (5 fases)
 
-| Rota                         | Auth       | Status                                        |
-| ---------------------------- | ---------- | --------------------------------------------- |
-| POST /api/lead/register      | Nao        | Funcional (201 + Zod + rate limit 10/h)       |
-| POST /api/reading/capture    | Nao        | Funcional (GPT-4o + selectBlocks + Prisma)    |
-| GET /api/reading/[id]        | Nao        | Funcional (UUID validation + 410 inactive)    |
-| POST /api/reading/new        | Sim        | Funcional (FIFO debit atomico)                |
-| GET /api/user/credits        | Sim        | Funcional (balance + pack list)               |
-| GET /api/user/readings       | Sim        | Funcional (per-user, isActive filter)         |
-| GET/PUT /api/user/profile    | Sim        | Funcional (Clerk + Neon merge)                |
-| POST /api/credits/purchase   | Sim        | Implementado (AbacatePay v2, front nao chama) |
-| POST /api/webhook/abacatepay | Assinatura | Implementado (idempotente, front nao chama)   |
+- Auditoria codebase, ReadingContext unificado, MediaPipe real, Clerk cleanup, docs sync
 
-### Seguranca
+### v1.2 Fluxo de Mao Dominante (5 fases)
 
-- Rate limiting: in-memory Map (5/h capture, 10/h lead)
-- Security headers: HSTS, X-Frame-Options, Permissions-Policy, Referrer-Policy
-- PII redaction: Pino redact (name, email, cpf, phone)
-- Zod validation: toda API route
-- Tier enforcement: server-only (client nao aceita tier)
+- Camera UI, upload pipeline, edge cases, outra pessoa + a11y, pipeline refactor
 
-## Motor de leitura v2 (completo, implementado em paralelo)
+### v1.3 Sistema de Creditos Robusto (6 fases, 21 reqs)
 
-- ~515 textos em `src/data/blocks/` (19 arquivos TS)
-- `selectBlocks` em `src/server/lib/select-blocks.ts`
-- Tipos: HandAttributes, ReportJSON, TextBlock, LineBlocks
-- Fallbacks pra variacoes desconhecidas do GPT-4o
-- Gender map com 18 marcadores ({{inteira}} etc)
-- 4 mocks de HandAttributes (fire, water, earth, air)
+- Transacao atomica, CHECK constraint, raw SQL debit race-safe, CreditGate removido, logging hardened
 
-## Front-back integracao
+### v2 Monetizacao (4 fases, 19 reqs) — em finalizacao
 
-### Conectado e funcional
+- AbacatePay v2: wrapper migrado, 4 produtos criados, checkout hosted, webhook checkout.completed
+- Frontend: /creditos com API real, redirect pro AbacatePay, UpsellSection funcional (CPF removido, AbacatePay coleta)
+- Email: templates redesenhados (pagamento confirmado, boas-vindas, leitura pronta), retry, opt-in check
+- Bug fixes: acentuacao (40+ fixes), camera handedness, revelacao responsiva, manifesto contraste, login error handling
 
-- /ler/nome → registerLead (com toggle ela/ele + checkbox LGPD)
-- /ler/camera → salva foto base64 no sessionStorage (upload real)
-- /ler/scan → captureReading (GPT-4o real) com error handling
-- /ler/revelacao → le reading_id real do sessionStorage
-- /ler/resultado/[id] → getReading da API
-- /ler/resultado/[id]/completo → tier gate (redirect se nao premium)
-- /conta/leituras → getUserReadings + getCredits reais
-- /conta/leituras/[id] → getReading da API
-- /compartilhar/[token] → getReading server-side com target_name real
-- /login → Clerk <SignIn> component
-- /registro → Clerk <SignUp> component
+### Post-v2 Bug Sweep (sessao 2026-04-14)
 
-### Pendente (fake/mock)
+- Env vars Vercel limpas (\\n no final causava 500)
+- Proxy.ts: API routes retornam 401 JSON em vez de 307 redirect
+- /creditos: UX simplificado (botao direto no card, sem secao separada)
+- Upsell: redirect pra /creditos em vez de API inexistente
+- Nome vazio "Pra mim": validacao + fallback
+- Gender markers no template (corrige genero errado)
+- Menu numbering sequencial (04→05)
+- Copyright 2025→2026
+- sessionStorage name override: API target_name prioritario
+- Card pula posicao: spinner sem mudar texto
+- Manifesto: z-index fix no vignette overlay
+- Login email/senha: handle needs_first_factor + mensagens especificas
+- Home: cortinas, lampada Edison, cursor cristal desativados (comentados)
+- Dados orfaos limpos no banco (9 payments, 5 credit_packs)
+- 22 testes E2E automatizados (18 PASS, 4 WARNING)
 
-- useCameraPipeline.ts: timer fake, nao MediaPipe real
-- /creditos: pagamento inteiro fake (AbacatePay v2)
-- /conta/perfil: edit nome e trocar senha sao no-ops (Clerk gerencia)
-- /esqueci-senha: form nao faz nada (Clerk gerencia)
-- /redefinir-senha/[token]: form nao faz nada (Clerk gerencia)
-- VALID_MOCK_IDS: guard de dev aceita "fire","demo" como IDs
-- fallbackName="Marina" em 2 result pages
-- Share "Stories" e window.alert() stub
-- maosfalam_email escrito mas nunca lido
+## Infra
+
+- Git: main (protegida) + develop (trabalho)
+- Neon: main (prod) + develop (dev) — project steep-bread-93583259
+- Vercel: staging.maosfalam.com (develop) + maosfalam.com (main)
+- AbacatePay: 4 produtos sandbox (mf_avulsa, mf_dupla, mf_roda, mf_tsara)
+- Webhook AbacatePay: checkout.completed → staging.maosfalam.com/api/webhook/abacatepay
+- Env vars separadas por environment (production vs preview)
 
 ## Decisoes tecnicas
 
-- [2026-04-11] Neon + Prisma 7 com @prisma/adapter-neon. directUrl pra migrations, DATABASE_URL pooled pra runtime.
-- [2026-04-11] Clerk como auth. proxy.ts com clerkMiddleware. Login/registro via componentes built-in <SignIn>/<SignUp> com tema dark customizado.
-- [2026-04-11] GPT-4o com Structured Outputs (json_schema strict:true). Zod v4 como safety net. Model pinned gpt-4o-2024-08-06.
-- [2026-04-11] selectBlocks com fallback \_fallback em todos os block maps. Logger.warn quando variacao desconhecida.
-- [2026-04-11] Rate limit in-memory Map suficiente pro MVP. Migrar pra Upstash antes de escalar.
-- [2026-04-11] Foto nunca armazenada. Processada e descartada. Logs so registram element + confidence.
-- [2026-04-11] lead_id opcional no /api/reading/capture (users autenticados nao tem lead).
-- [2026-04-11] timingSafeEqual com guard de length no webhook.
-- [2026-04-11] deleteAccount removido do escopo (nao vai existir).
+- [2026-04-14] AbacatePay v2: checkout hosted (redirect), nao transparent (PIX QR local)
+- [2026-04-14] Produtos como entidades no AbacatePay, referenciados por externalId com cache lazy
+- [2026-04-14] Webhook signature: chave publica fixa HMAC-SHA256 base64 (nao env var)
+- [2026-04-14] Payment criado FIRST (pending), checkout com externalId=payment.id
+- [2026-04-14] CPF removido do nosso fluxo — AbacatePay coleta CPF no checkout hosted
+- [2026-04-14] Emails: API key guard + 1x retry, fire-and-forget, nunca bloqueia fluxo
+- [2026-04-14] Clerk webhook user.created pra email de boas-vindas (svix signature)
+- [2026-04-14] Proxy.ts: API routes sem auth retornam 401 JSON, page routes redirect pro Clerk
+- [2026-04-13] Transacao atomica no /api/reading/capture
+- [2026-04-13] debitCreditFIFO usa raw SQL UPDATE SET remaining = remaining - 1 WHERE remaining > 0
+- [2026-04-13] temperature: 0 no GPT-4o
+- [2026-04-11] photo-store.ts: singleton module-level substitui sessionStorage pra foto
+- [2026-04-11] useSyncExternalStore pra useCredits
+
+## Pendente
+
+- Clerk Dashboard: mudar nome "PariTech" pra "MaosFalam", remover Facebook OAuth (so Google)
+- Clerk legacy migration (@clerk/nextjs/legacy → @clerk/nextjs, API signal incompativel)
+- Share card vazio (design issue)
+- Configurar RESEND_API_KEY + verificar dominio maosfalam.com.br no Resend
+- Configurar CLERK_WEBHOOK_SECRET no Vercel (pra email de boas-vindas)

@@ -1,25 +1,26 @@
 # MÃOSFALAM — Arquitetura
 
-> **STATUS: PLANO.** Backend ainda não implementado. Frontend roda com mocks.
+> **STATUS: v1.2 implementado.** Pipeline refatorado (photo-store, race condition fix, element pre-hint). Pagamentos (AbacatePay) e email (Resend) adiados para v2.
 
 ---
 
 ## 1. Stack
 
-| Camada           | Ferramenta                                                   |
-| ---------------- | ------------------------------------------------------------ |
-| Frontend         | Next.js 16 + TypeScript strict + Tailwind v4 + Framer Motion |
-| Auth             | Clerk (Google OAuth + email/senha)                           |
-| Banco            | Neon (Postgres serverless) + Prisma                          |
-| IA visão         | GPT-4o (OpenAI API)                                          |
-| Pagamento        | AbacatePay (PIX + cartão)                                    |
-| Email            | Resend                                                       |
-| Motor de leitura | Blocos em TypeScript estático (~168 blocos, ~461 textos)     |
-| Detecção client  | MediaPipe Hand Landmarker                                    |
-| Logging          | Pino                                                         |
-| Testes           | Vitest + Playwright                                          |
-| CI/CD            | GitHub Actions                                               |
-| Deploy           | Vercel                                                       |
+| Camada           | Ferramenta                                                                    |
+| ---------------- | ----------------------------------------------------------------------------- |
+| Frontend         | Next.js 16 + TypeScript strict + Tailwind v4 + Framer Motion                  |
+| Auth             | Clerk v7 (Google OAuth + email/senha) — `src/proxy.ts`                        |
+| Banco            | Neon (Postgres serverless) + Prisma 7 (config em `prisma.config.ts`)          |
+| IA visão         | GPT-4o (OpenAI API)                                                           |
+| Pagamento        | AbacatePay (PIX + cartão) — stub em v1.1, implementar em v2                   |
+| Email            | Resend — não implementado em v1.1, adiado para v2                             |
+| Motor de leitura | Blocos em TypeScript estático (~168 blocos, ~461 textos)                      |
+| Detecção client  | MediaPipe Hand Landmarker (`@mediapipe/tasks-vision`)                         |
+| Logging          | Pino                                                                          |
+| Testes           | Vitest + Playwright                                                           |
+| CI/CD            | GitHub Actions                                                                |
+| Deploy           | Vercel — staging.maosfalam.com (branch develop) + maosfalam.com (branch main) |
+| Neon branches    | `main` (prod) + `develop` (dev)                                               |
 
 ---
 
@@ -40,35 +41,35 @@ src/
       user/account/
       webhook/abacatepay/
 
-  features/                         # fluxos de produto
-    reading/
-    auth/
-    account/
-    tarot/
-
   components/                       # UI reutilizável
     ui/                             # primitives
     shared/                         # blocos compartilhados
     landing/                        # home
     lp-venda/                       # LP comercial
+    reading/                        # resultado, glyphs, cards
+    camera/                         # câmera e overlay
+    account/                        # área logada
+    tarot/                          # tarot
 
   server/                           # backend
-    api/
-      capture.ts                    # foto → GPT-4o → blocos → salva
-      credits.ts                    # saldo, débito FIFO, compra
-      webhook.ts                    # AbacatePay
-      lead.ts                       # salva lead
     lib/
       select-blocks.ts              # motor de leitura
       openai.ts                     # wrapper GPT-4o
-      abacatepay.ts                 # wrapper pagamento
-      resend.ts                     # wrapper email
-    types/
+      abacatepay.ts                 # wrapper pagamento (stub)
+      resend.ts                     # wrapper email (stub)
+      rate-limit.ts                 # rate limiting in-memory
+      auth.ts                       # helpers Clerk server-side
+      prisma.ts                     # Prisma client singleton
+      logger.ts                     # Pino logger
 
   lib/                              # adapters front (mock → API)
     reading-client.ts
     payment-client.ts
-    email-client.ts
+    user-client.ts
+    checkout-intent.ts
+    reading-context.ts              # helpers sessionStorage ReadingContext
+    photo-store.ts                  # singleton module-level pra foto + element hint
+    mediapipe.ts                    # Hand Landmarker: load, validate, draw, capture, element hint
 
   data/                             # dados estáticos
     blocks/
@@ -90,9 +91,12 @@ src/
   hooks/
   mocks/
   types/
+  generated/                        # Prisma client gerado (não editar)
+  proxy.ts                          # auth middleware (Clerk clerkMiddleware)
 
 /prisma
   schema.prisma
+  prisma.config.ts                  # configuração do Prisma 7 (datasource, adapter)
 ```
 
 ---
@@ -100,14 +104,44 @@ src/
 ## 3. Funil
 
 ```
-Landing → Coleta Lead (nome + email + ela/ele) → Toque → Câmera → Scan → Revelação → Resultado FREE
+Landing → /ler/nome (coleta lead + contexto) → /ler/camera → /ler/scan → /ler/revelacao → /ler/resultado/[id]
 ```
 
-### Coleta de Lead (antes do toque)
+### /ler/nome — Fluxo único com is_self flag
 
-- Nome, email, ela/ele (2 botões)
-- Checkbox opt-in email marketing (LGPD, não pré-marcado)
+O contexto de leitura é coletado via `ReadingContext` (sessionStorage):
+
+```typescript
+// src/types/reading-context.ts
+interface ReadingContext {
+  target_name: string;
+  target_gender: "female" | "male";
+  dominant_hand: "right" | "left";
+  is_self: boolean;
+  session_id: string;
+  credit_used?: boolean;
+}
+```
+
+**Visitante (não logada):**
+
+- Coleta: nome alvo + gênero (ela/ele) + mão dominante (destra/canhota) + opt-in email LGPD
 - Cigana: "Me diz seu nome. Eu preciso dele pra ler."
+- Registra lead via POST /api/lead/register (fire-and-forget, falha não bloqueia)
+- Não existe rota separada para "ler outra pessoa" — `is_self = true` pra visitante
+
+**Logada:**
+
+- Mostra toggle "Pra mim" / "Pra outra pessoa"
+- "Pra mim" → preenche nome/gênero da conta Clerk automaticamente, `is_self = true`
+- "Pra outra pessoa" → campo de nome livre, `is_self = false`
+- Coleta mão dominante em ambos os casos
+
+**CreditGate (logada, segunda leitura ou mais):**
+
+- Se saldo > 0: modal de confirmação "Usar 1 crédito pra leitura de {{nome}}?"
+- Débito ocorre no server via POST /api/reading/new antes de ir para câmera
+- Se saldo = 0: redirect /creditos antes da câmera
 
 ### Paywall (após resultado free)
 
@@ -119,19 +153,11 @@ Landing → Coleta Lead (nome + email + ela/ele) → Toque → Câmera → Scan 
 4. _"Tem algo chegando. E não, não é o que você tá esperando."_
 5. _"Tem uma marca na sua mão que quase ninguém tem. Eu vi."_
 
-### Fluxo de pagamento (primeiro)
+### Fluxo de pagamento
 
 ```
-"Desbloquear tudo" → Login Clerk → Pede CPF → AbacatePay checkout → Webhook → Créditos + Desbloqueio
+"Desbloquear tudo" → Login Clerk → AbacatePay checkout → Webhook → Créditos + Desbloqueio
 ```
-
-### Leitura pra outra pessoa
-
-```
-"Nova leitura" → [Pra mim / Pra outra pessoa] → Nome + Ela/Ele → Confirma crédito → Câmera → Resultado
-```
-
-Relatório sempre em segunda pessoa, endereçado à pessoa lida. Concordância de gênero via marcadores nos blocos (`{{inteira}}` → `inteira/inteiro`).
 
 ---
 
@@ -162,6 +188,8 @@ O relatório COMPLETO (free + premium) é salvo no Neon como JSONB. O frontend d
 
 ## 5. Schema do Banco
 
+Source of truth: `prisma/schema.prisma`. Os modelos abaixo refletem o schema atual.
+
 ### leads
 
 ```sql
@@ -177,6 +205,7 @@ CREATE TABLE leads (
   converted       BOOLEAN DEFAULT false,
   created_at      TIMESTAMPTZ DEFAULT NOW()
 );
+-- indexes: email, session_id
 ```
 
 ### user_profiles
@@ -186,7 +215,7 @@ Clerk = source of truth pra name, email, foto. Neon = só dados de pagamento.
 ```sql
 CREATE TABLE user_profiles (
   clerk_user_id           VARCHAR(100) PRIMARY KEY,
-  lead_id                 UUID REFERENCES leads(id),
+  lead_id                 UUID UNIQUE REFERENCES leads(id),
   cpf                     VARCHAR(14),
   phone                   VARCHAR(20),
   abacatepay_customer_id  VARCHAR(100),
@@ -212,6 +241,8 @@ CREATE TABLE readings (
   is_active       BOOLEAN DEFAULT true,
   created_at      TIMESTAMPTZ DEFAULT NOW()
 );
+-- indexes: clerk_user_id, lead_id
+-- URL de compartilhamento usa reading UUID direto (sem coluna de token separada)
 ```
 
 ### credit_packs
@@ -220,12 +251,13 @@ CREATE TABLE readings (
 CREATE TABLE credit_packs (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   clerk_user_id   VARCHAR(100) NOT NULL,
-  payment_id      UUID REFERENCES payments(id),
+  payment_id      UUID UNIQUE REFERENCES payments(id),
   pack_type       VARCHAR(20) NOT NULL,
   total           INTEGER NOT NULL,
   remaining       INTEGER NOT NULL,
   created_at      TIMESTAMPTZ DEFAULT NOW()
 );
+-- créditos não expiram (sem coluna de data de expiração)
 ```
 
 Saldo: `SUM(remaining) WHERE remaining > 0`
@@ -237,7 +269,7 @@ Débito: FIFO (pack mais antigo com saldo primeiro).
 CREATE TABLE payments (
   id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   clerk_user_id           VARCHAR(100) NOT NULL,
-  reading_id              UUID REFERENCES readings(id),
+  reading_id              UUID UNIQUE REFERENCES readings(id),
   abacatepay_billing_id   VARCHAR(100),
   pack_type               VARCHAR(20) NOT NULL,
   amount_cents            INTEGER NOT NULL,
@@ -247,6 +279,7 @@ CREATE TABLE payments (
   created_at              TIMESTAMPTZ DEFAULT NOW(),
   updated_at              TIMESTAMPTZ DEFAULT NOW()
 );
+-- index: abacatepay_billing_id
 ```
 
 ### Relações
@@ -261,7 +294,7 @@ erDiagram
 
     leads { uuid id PK; varchar name; varchar email; varchar gender }
     user_profiles { varchar clerk_user_id PK; varchar cpf; varchar abacatepay_customer_id }
-    readings { uuid id PK; varchar target_name; jsonb report; varchar tier }
+    readings { uuid id PK; varchar target_name; jsonb report; varchar tier; boolean is_self }
     credit_packs { uuid id PK; int remaining }
     payments { uuid id PK; varchar abacatepay_billing_id; varchar status }
 ```
@@ -296,21 +329,54 @@ Performance: <1ms. Zero I/O.
 
 ### O que é
 
-MediaPipe Hand Landmarker é uma lib do Google que roda no browser (client-side, zero server). Detecta a mão em tempo real via câmera e retorna 21 pontos (landmarks) com coordenadas x, y, z. Roda a ~30fps em celular médio.
+MediaPipe Hand Landmarker (`@mediapipe/tasks-vision`) é uma lib do Google que roda no browser (client-side, zero server). Detecta a mão em tempo real via câmera e retorna 21 pontos (landmarks) com coordenadas x, y, z. Roda a ~30fps em celular médio.
+
+Módulos:
+
+- `src/lib/mediapipe.ts` — carrega modelo WASM, valida landmarks, detecta handedness, computa element hint, desenha skeleton, captura frame
+- `src/lib/photo-store.ts` — singleton module-level pra foto + element hint (substitui sessionStorage)
 
 Importante: MediaPipe NÃO lê linhas da palma. Ele detecta articulações dos dedos e posição da mão. Quem lê as linhas é o GPT-4o depois, a partir da foto.
+
+### Mão dominante
+
+A mão dominante (`dominant_hand: "right" | "left"`) é perguntada em `/ler/nome` antes da câmera abrir, como parte do `ReadingContext`. A câmera mostra instrução específica ("mostre sua mão direita") e o MediaPipe valida que a mão correta está no frame via handedness.
 
 ### Fluxo da câmera
 
 ```
-getUserMedia (câmera traseira ou frontal)
-  → Canvas overlay com guia SVG de mão
-  → MediaPipe processa cada frame
-  → Valida condições em tempo real
-  → Quando tudo OK por 1.5s contínuo → auto-captura
-  → Foto extraída do canvas como base64 JPEG
-  → Enviada pro server (POST /api/reading/capture)
+getUserMedia (câmera traseira por default, botão pra trocar)
+  → CameraViewport (video + canvas de landmarks em tempo real)
+  → Hand Landmarker processa cada frame via requestAnimationFrame
+  → DrawingUtils desenha esqueleto de 21 pontos dourados sobre a mão
+  → Valida: mão correta, palma aberta, centralizada, estável 1.5s
+  → Auto-captura: captureFrame() → base64 JPEG (quality 0.82)
+  → computeElementHint(landmarks) → calcula elemento via ratio palm/fingers
+  → Foto salva em photo-store (module-level, NÃO sessionStorage)
+  → Navega pra /ler/scan
 ```
+
+### Pipeline foto → resultado
+
+```
+/ler/camera:
+  captureFrame() → setPhoto(base64) + setElementHint(hint)
+  router.push("/ler/scan")
+
+/ler/scan:
+  getPhoto() + getElementHint() → clearPhotoStore()
+  POST /api/reading/capture { photo_base64, element_hint, ... }
+  Animação 8s + API call em paralelo
+  Gate: navega SOMENTE quando AMBOS completam (sem race condition)
+  → /ler/revelacao
+
+/ler/revelacao:
+  Lê reading_id + impact_phrase do sessionStorage
+  Typewriter da frase de impacto
+  → /ler/resultado/[id]
+```
+
+**Foto nunca toca sessionStorage.** O `photo-store` (`src/lib/photo-store.ts`) é um singleton module-level que sobrevive soft navigation mas é garbage-collected no refresh. A foto é consumida e descartada pelo scan page imediatamente após o POST.
 
 ### 21 landmarks do MediaPipe
 
@@ -326,13 +392,14 @@ MCP = base do dedo. TIP = ponta. Os landmarks na BASE de cada dedo (MCP: 5, 9, 1
 
 ### O que o MediaPipe valida (antes de capturar)
 
-| Validação     | Como detecta                                            | Feedback da cigana                                |
-| ------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| Mão presente  | Pelo menos 1 hand detected                              | "Preciso ver sua mão. Posiciona no centro."       |
-| Palma aberta  | Distância entre THUMB_TIP e PINKY_TIP > threshold       | "Abre mais os dedos. Preciso ver as linhas."      |
-| Mão estável   | Variação dos landmarks < threshold por 1.5s             | "Segura... quase..."                              |
-| Centralizada  | WRIST e MIDDLE_MCP dentro da zona central do frame      | "Centraliza a mão no quadro."                     |
-| Iluminação ok | Brightness média do frame > threshold (canvas analysis) | "Preciso de mais luz. Suas linhas estão tímidas." |
+| Validação     | Como detecta                                              | Feedback da cigana                                |
+| ------------- | --------------------------------------------------------- | ------------------------------------------------- |
+| Mão presente  | Pelo menos 1 hand detected                                | "Preciso ver sua mão. Posiciona no centro."       |
+| Mão correta   | handedness label bate com dominant_hand do ReadingContext | "Essa é a outra mão. Mostre a [destra/canhota]."  |
+| Palma aberta  | Distância entre THUMB_TIP e PINKY_TIP > threshold         | "Abre mais os dedos. Preciso ver as linhas."      |
+| Mão estável   | Variação dos landmarks < threshold por 1.5s (timestamp)   | "Segura... quase..."                              |
+| Centralizada  | WRIST e MIDDLE_MCP dentro da zona central do frame        | "Centraliza a mão no quadro."                     |
+| Iluminação ok | Brightness média do frame > threshold (canvas analysis)   | "Preciso de mais luz. Suas linhas estão tímidas." |
 
 ### O que o MediaPipe NÃO faz
 
@@ -342,6 +409,10 @@ MCP = base do dedo. TIP = ponta. Os landmarks na BASE de cada dedo (MCP: 5, 9, 1
 - Não mede comprimento ou curvatura de nada
 
 Tudo isso é feito pelo GPT-4o a partir da foto estática. O MediaPipe é só o porteiro: garante que a foto vai ser boa o suficiente pra IA analisar.
+
+### Câmera frontal e espelhamento
+
+Câmera frontal exibe o video espelhado (comportamento padrão do browser). O handedness do MediaPipe para câmera frontal mapeia diretamente para a mão real do usuário (já corrigido pela lib). `captureFrame()` des-espelha o canvas antes de gerar o JPEG pra garantir que a imagem enviada ao GPT-4o está na orientação anatômica correta.
 
 ### Dados que o MediaPipe extrai e que são ÚTEIS pro relatório
 
@@ -364,8 +435,6 @@ const fingerRatio = fingerLength / palmHeight;
 //   Longa + longos = Água
 ```
 
-Esse cálculo de elemento pode ser feito no client (rápido, grátis) e enviado junto com a foto como pre-hint pro GPT-4o. O GPT-4o confirma ou corrige.
-
 ### Confidence do GPT-4o (depois de enviar)
 
 O prompt do GPT-4o pede um campo `confidence` no JSON de retorno:
@@ -382,7 +451,9 @@ Processada e descartada. Nunca armazenada.
 
 ## 8. AbacatePay
 
-### Endpoints usados
+> **Nota:** Implementação adiada para milestone v2. Em v1.1, `/api/credits/purchase` e `/api/webhook/abacatepay` existem como stubs que retornam 501.
+
+### Endpoints usados (plano v2)
 
 | Ação           | Endpoint                 |
 | -------------- | ------------------------ |
@@ -390,7 +461,7 @@ Processada e descartada. Nunca armazenada.
 | Criar cobrança | POST /v1/billing/create  |
 | Webhook        | billing.paid             |
 
-### Cobrança
+### Cobrança (plano v2)
 
 ```typescript
 {
@@ -410,7 +481,7 @@ Processada e descartada. Nunca armazenada.
 }
 ```
 
-### Webhook
+### Webhook (plano v2)
 
 1. Valida assinatura
 2. Busca payment por billing_id (idempotente)
@@ -421,16 +492,20 @@ Processada e descartada. Nunca armazenada.
 
 ## 9. Auth (Clerk)
 
+- Clerk v7 — `auth()` é async, importar de `@clerk/nextjs/server`
+- Auth middleware: `src/proxy.ts` (não `middleware.ts`)
 - Google OAuth + email/senha
 - 50K users free
-- Conta criada no primeiro pagamento ou "salvar leitura"
+- Conta criada no primeiro pagamento ou ao salvar leitura
 - Lead vinculada ao clerk_user_id quando cria conta
 
 ---
 
 ## 10. Email
 
-### Quem manda o quê
+> **Nota:** Resend não implementado em v1.1. Adiado para milestone futura após domínio verificado (`maosfalam.com.br`).
+
+### Quem manda o quê (plano v2)
 
 | Tipo                      | Quem manda | Exemplos                                          |
 | ------------------------- | ---------- | ------------------------------------------------- |
@@ -440,7 +515,7 @@ Processada e descartada. Nunca armazenada.
 
 Reset de senha, verificação de email, e qualquer fluxo de autenticação é 100% do Clerk. Você não implementa nada, não cria template, não manda email. O Clerk gerencia sozinho com os componentes dele.
 
-### Emails transacionais (Resend, automáticos)
+### Emails transacionais (Resend, automáticos — plano v2)
 
 | Trigger                  | Assunto                                  | Conteúdo                                                              | Quando                              |
 | ------------------------ | ---------------------------------------- | --------------------------------------------------------------------- | ----------------------------------- |
@@ -449,7 +524,7 @@ Reset de senha, verificação de email, e qualquer fluxo de autenticação é 10
 | Conta criada             | "Bem-vinda, {{name}}"                    | Boas-vindas na voz da cigana. O que ela pode fazer com a conta.       | Após primeiro login Clerk           |
 | Leitura pra outra pessoa | "A leitura de {{target_name}} tá pronta" | Link pro relatório + botão "Enviar pra {{target_name}}" via WhatsApp. | Após processar leitura pra terceiro |
 
-### Emails de marketing (Resend, só opt-in)
+### Emails de marketing (Resend, só opt-in — plano v2)
 
 Só pra leads com `email_opt_in = true`.
 
@@ -471,19 +546,19 @@ Só pra leads com `email_opt_in = true`.
 
 ## 11. API Routes
 
-| Método | Rota                    | Auth       |
-| ------ | ----------------------- | ---------- |
-| POST   | /api/lead/register      | Não        |
-| POST   | /api/reading/capture    | Não        |
-| GET    | /api/reading/[id]       | Não        |
-| POST   | /api/reading/new        | Sim        |
-| POST   | /api/credits/purchase   | Sim        |
-| GET    | /api/user/credits       | Sim        |
-| GET    | /api/user/readings      | Sim        |
-| GET    | /api/user/profile       | Sim        |
-| PUT    | /api/user/profile       | Sim        |
-| DELETE | /api/user/account       | Sim        |
-| POST   | /api/webhook/abacatepay | Assinatura |
+| Método | Rota                    | Auth              |
+| ------ | ----------------------- | ----------------- |
+| POST   | /api/lead/register      | Não               |
+| POST   | /api/reading/capture    | Não               |
+| GET    | /api/reading/[id]       | Não               |
+| POST   | /api/reading/new        | Sim               |
+| POST   | /api/credits/purchase   | Sim (stub)        |
+| GET    | /api/user/credits       | Sim               |
+| GET    | /api/user/readings      | Sim               |
+| GET    | /api/user/profile       | Sim               |
+| PUT    | /api/user/profile       | Sim               |
+| DELETE | /api/user/account       | Sim               |
+| POST   | /api/webhook/abacatepay | Assinatura (stub) |
 
 ---
 
@@ -509,6 +584,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
 CLERK_SECRET_KEY=sk_...
 OPENAI_API_KEY=sk-...
 ABACATEPAY_API_KEY=...
+ABACATEPAY_WEBHOOK_SECRET=...
 RESEND_API_KEY=re_...
 DATABASE_URL=postgresql://...@...neon.tech/maosfalam
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
@@ -528,17 +604,17 @@ LOG_LEVEL=debug
 | POST /api/credits/purchase   | 5/hora por user | Evita criação de cobranças em loop.                                                           |
 | POST /api/webhook/abacatepay | Sem limite      | Vem do AbacatePay, não de usuário. Validação por assinatura.                                  |
 
-Implementar com `@upstash/ratelimit` (free tier: 10K requests/dia) ou middleware simples com Map em memória pro MVP.
+Rate limiting implementado como Map in-memory (`src/server/lib/rate-limit.ts`). Migrar para Upstash quando escalar (v2+).
 
 ### Validação de inputs
 
 Zod em TODA API route. Nenhum input do client chega na lógica de negócio sem passar por schema Zod. Se o payload não bater, retorna 400 antes de qualquer processamento.
 
 ```typescript
-// Exemplo: /api/lead/register
+// Exemplo: /api/lead/register (Zod v4)
 const schema = z.object({
   name: z.string().min(2).max(100),
-  email: z.string().email(),
+  email: z.email(),
   gender: z.enum(["female", "male"]),
   session_id: z.string().min(10).max(64),
   email_opt_in: z.boolean(),
@@ -565,7 +641,7 @@ const schema = z.object({
 ### Headers HTTP
 
 ```typescript
-// middleware.ts ou next.config.js headers
+// next.config.ts headers
 {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
@@ -609,7 +685,17 @@ Só aceita requests do próprio domínio. API routes do Next.js no App Router j�
 ```bash
 git clone [repo] && cd MaosFalam
 npm install
-cp .env.example .env.local    # preencher com suas keys
-npx prisma generate           # gera types do banco
+cp .env.example .env.local    # preencher com suas keys (DATABASE_URL aponta pra Neon develop)
+npx prisma generate           # gera types do banco em src/generated/prisma/
 npm run dev                   # http://localhost:3000
 ```
+
+**Neon branches:**
+
+- `main`: produção (vinculada à branch git main)
+- `develop`: desenvolvimento (vinculada à branch git develop, usar como padrão em .env.local)
+
+**Vercel:**
+
+- `staging.maosfalam.com` → branch develop
+- `maosfalam.com` → branch main

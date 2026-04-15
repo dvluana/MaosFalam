@@ -1,27 +1,31 @@
-export async function purchaseCredits(
+export async function initiatePurchase(
   packType: string,
-  cpf?: string,
   readingId?: string,
-): Promise<string> {
+): Promise<{ checkout_url: string }> {
+  const body: Record<string, string> = { pack_type: packType };
+  if (readingId) body.reading_id = readingId;
+
   const res = await fetch("/api/credits/purchase", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      pack_type: packType,
-      cpf,
-      reading_id: readingId,
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!res.ok) {
-    const err = await res.json();
-    throw new Error(
-      (err as { error?: string }).error || "Erro no pagamento",
-    );
+    const parsed = (await res.json().catch(() => ({}))) as {
+      error?: string;
+      detail?: string;
+      step?: string;
+    };
+    const parts = [String(res.status)];
+    if (parsed.error) parts.push(parsed.error);
+    if (parsed.step) parts.push(`[${parsed.step}]`);
+    if (parsed.detail) parts.push(parsed.detail);
+    if (parts.length === 1) parts.push("Erro ao iniciar pagamento");
+    throw new Error(parts.join(": "));
   }
 
-  const data = (await res.json()) as { checkout_url: string };
-  return data.checkout_url;
+  return res.json() as Promise<{ checkout_url: string }>;
 }
 
 export async function getCredits(): Promise<{

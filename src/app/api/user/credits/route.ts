@@ -8,10 +8,18 @@ export async function GET() {
   try {
     const clerkUserId = await getClerkUserId();
 
-    const packs = await prisma.creditPack.findMany({
-      where: { clerkUserId },
-      orderBy: { createdAt: "asc" },
-    });
+    // Parallel fetch: credit packs + count of readings made under this account
+    // reading_count only counts readings with this user's clerkUserId (CREDIT-07):
+    // excludes anonymous readings claimed via email match
+    const [packs, ownReadingsCount] = await Promise.all([
+      prisma.creditPack.findMany({
+        where: { clerkUserId },
+        orderBy: { createdAt: "asc" },
+      }),
+      prisma.reading.count({
+        where: { clerkUserId, isActive: true },
+      }),
+    ]);
 
     const balance = packs.reduce(
       (sum: number, p: { remaining: number }) => sum + Math.max(0, p.remaining),
@@ -20,6 +28,7 @@ export async function GET() {
 
     return NextResponse.json({
       balance,
+      reading_count: ownReadingsCount,
       packs: packs.map(
         (p: {
           id: string;
@@ -40,7 +49,10 @@ export async function GET() {
     if (error instanceof Error && error.message === "Not authenticated") {
       return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
     }
-    logger.error({ error, route: "/api/user/credits" }, "Erro na rota");
+    logger.error(
+      { err: error instanceof Error ? error.message : String(error), route: "/api/user/credits" },
+      "Erro na rota",
+    );
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import PageLoading from "@/components/ui/PageLoading";
 import { getReading } from "@/lib/reading-client";
+import { buildShareUrl } from "@/lib/share-url";
 import type { HandElement, Reading } from "@/types/report";
 
 const ELEMENT_LABEL: Record<HandElement, string> = {
@@ -180,13 +181,17 @@ function renderShareCard(phrase: string, elementTitle: string): HTMLCanvasElemen
   ctx.fillStyle = COLORS.gold;
   ctx.textAlign = "center";
   ctx.letterSpacing = "4px";
-  ctx.fillText("MaosFalam", CARD_W / 2, CARD_H - 140);
+  ctx.fillText("M\u00e3osFalam", CARD_W / 2, CARD_H - 140);
   ctx.letterSpacing = "0px";
 
   // Tagline
   ctx.font = '22px "Georgia", serif';
   ctx.fillStyle = COLORS.boneDim;
-  ctx.fillText("Me mostre sua mao e eu te conto quem voce e", CARD_W / 2, CARD_H - 90);
+  ctx.fillText(
+    "Me mostre sua m\u00e3o e eu te conto quem voc\u00ea \u00e9",
+    CARD_W / 2,
+    CARD_H - 90,
+  );
 
   return canvas;
 }
@@ -221,12 +226,7 @@ export default function SharePage({ params }: PageProps) {
       });
   }, [id]);
 
-  const shareUrl =
-    data !== null
-      ? typeof window !== "undefined"
-        ? `${window.location.origin}/compartilhar/${data.id}`
-        : `/compartilhar/${data.id}`
-      : "";
+  const shareUrl = data !== null ? buildShareUrl(data.id) : "";
 
   const impactPhrase = data?.report.impact_phrase ?? "";
   const elementTitle = data ? ELEMENT_LABEL[data.report.element.key] : "";

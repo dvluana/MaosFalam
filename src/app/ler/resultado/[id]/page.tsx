@@ -1,13 +1,12 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { Suspense, use, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, use, useCallback, useEffect, useState } from "react";
 
 import BlurredDeck from "@/components/reading/BlurredDeck";
 import ElementHero from "@/components/reading/ElementHero";
 import ReadingOverview from "@/components/reading/ReadingOverview";
 import ReadingSection from "@/components/reading/ReadingSection";
-import ResultStateSwitcher from "@/components/reading/ResultStateSwitcher";
 import ShareButton from "@/components/reading/ShareButton";
 import UpsellSection from "@/components/reading/UpsellSection";
 import PageLoading from "@/components/ui/PageLoading";
@@ -61,11 +60,75 @@ function InvalidReading() {
   );
 }
 
+function ServerError() {
+  return (
+    <main className="min-h-dvh bg-black flex items-center justify-center px-6">
+      <div className="text-center max-w-sm">
+        <p className="font-cormorant italic text-[22px] text-bone leading-snug mb-6">
+          Eu preciso de um momento. Volte em breve.
+        </p>
+        <a
+          href={typeof window !== "undefined" ? window.location.href : "#"}
+          className="font-body text-[10px] uppercase tracking-[0.06em] text-bone border border-gold/10 rounded-[0_6px_0_6px] px-10 py-4 inline-block hover:bg-violet/5 transition-colors"
+        >
+          Tentar de novo
+        </a>
+      </div>
+    </main>
+  );
+}
+
+function PaymentConfirming({ message }: { message: string }) {
+  return (
+    <main className="min-h-dvh bg-black flex items-center justify-center px-6">
+      <div className="text-center max-w-sm flex flex-col items-center gap-4">
+        <span className="block w-6 h-6 rounded-full border-2 border-gold/20 border-t-gold animate-spin" />
+        <p className="font-cormorant italic text-[22px] text-bone leading-snug">{message}</p>
+      </div>
+    </main>
+  );
+}
+
 function ResultadoInner({ id }: { id: string }) {
-  const search = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isPaidReturn = searchParams.get("paid") === "1";
+
   const [reading, setReading] = useState<Reading | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [serverError, setServerError] = useState(false);
+  const [paymentPending, setPaymentPending] = useState(isPaidReturn);
+  const [retried, setRetried] = useState(false);
+
+  const handlePaymentReturn = useCallback(
+    (r: Reading) => {
+      if (r.tier === "premium") {
+        router.replace(`/ler/resultado/${id}/completo`);
+      } else if (!retried) {
+        // Webhook may not have processed yet; retry once after 3s
+        const timer = setTimeout(() => {
+          setRetried(true);
+          getReading(id)
+            .then((refetched) => {
+              if (refetched?.tier === "premium") {
+                router.replace(`/ler/resultado/${id}/completo`);
+              } else {
+                // Still free after retry — show normal page
+                setPaymentPending(false);
+              }
+            })
+            .catch(() => {
+              setPaymentPending(false);
+            });
+        }, 3000);
+        return () => clearTimeout(timer);
+      } else {
+        setPaymentPending(false);
+      }
+    },
+    [id, retried, router],
+  );
 
   useEffect(() => {
     getReading(id)
@@ -77,17 +140,30 @@ function ResultadoInner({ id }: { id: string }) {
         }
         setReading(r);
         setLoading(false);
+
+        if (isPaidReturn) {
+          handlePaymentReturn(r);
+        }
       })
       .catch(() => {
-        setNotFound(true);
+        setServerError(true);
         setLoading(false);
       });
-  }, [id]);
-
-  // Keep search params available for ResultStateSwitcher
-  void search;
+  }, [id, isPaidReturn, handlePaymentReturn]);
 
   if (loading) return <PageLoading />;
+  if (paymentPending) {
+    return (
+      <PaymentConfirming
+        message={
+          retried
+            ? "Seu pagamento esta sendo confirmado. Recarregue em alguns instantes."
+            : "Confirmando seu pagamento..."
+        }
+      />
+    );
+  }
+  if (serverError) return <ServerError />;
   if (notFound || !reading) return <InvalidReading />;
 
   const report: ReportJSON = reading.report;
@@ -129,14 +205,12 @@ function ResultadoInner({ id }: { id: string }) {
         <BlurredDeck cards={PAYWALL_TEASERS} />
 
         <div className="flex flex-col gap-6 mt-4">
-          <UpsellSection />
+          <UpsellSection readingId={id} />
           <div className="flex justify-center">
             <ShareButton readingId={id} />
           </div>
         </div>
       </div>
-
-      <ResultStateSwitcher element={element} tier="free" readingId={id} />
     </main>
   );
 }

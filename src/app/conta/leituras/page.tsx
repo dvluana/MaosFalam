@@ -3,20 +3,19 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import BuyCreditsModal from "@/components/account/BuyCreditsModal";
 import ElementGlyph from "@/components/reading/ElementGlyph";
 import Button from "@/components/ui/Button";
-import StateSwitcher from "@/components/ui/StateSwitcher";
+import { useToast } from "@/components/ui/ToastProvider";
 import { getCredits } from "@/lib/payment-client";
 import { getUserProfile, getUserReadings } from "@/lib/user-client";
 import type { Reading as BaseReading, HandElement, ReportJSON, Tier } from "@/types/report";
 
 type Reading = BaseReading & { target_name?: string };
 
-const STATES = ["has_readings", "empty", "loading"] as const;
-type State = (typeof STATES)[number];
+type State = "has_readings" | "empty" | "loading";
 
 type View = "cards" | "list";
 
@@ -36,20 +35,9 @@ const ELEMENT_GLOW: Record<HandElement, string> = {
 
 function Skeletons() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-      {[0, 1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="card-noise relative"
-          style={{
-            aspectRatio: "5 / 7",
-            background: "#0e0a18",
-            border: "1px solid rgba(201,162,74,0.15)",
-          }}
-        >
-          <div className="absolute inset-3 border border-[rgba(201,162,74,0.08)] animate-pulse" />
-        </div>
-      ))}
+    <div className="flex flex-col items-center justify-center py-20 gap-4">
+      <span className="block w-6 h-6 rounded-full border-2 border-gold/20 border-t-gold animate-spin" />
+      <p className="font-cormorant italic text-[16px] text-bone-dim">Um momento...</p>
     </div>
   );
 }
@@ -69,8 +57,10 @@ function formatDate(iso: string): string {
 function getVariant(
   reading: Reading,
   currentUserName: string,
-): "active_free" | "active_premium" | "for_other" {
-  if (reading.target_name && reading.target_name !== currentUserName) return "for_other";
+): "active_free" | "active_premium" | "for_other_free" | "for_other_premium" {
+  const isOther = reading.target_name && reading.target_name !== currentUserName;
+  if (isOther && reading.tier === "premium") return "for_other_premium";
+  if (isOther) return "for_other_free";
   if (reading.tier === "premium") return "active_premium";
   return "active_free";
 }
@@ -78,7 +68,8 @@ function getVariant(
 const BADGE_META: Record<ReturnType<typeof getVariant>, { label: string; color: string }> = {
   active_free: { label: "Free", color: "rgba(201,162,74,0.8)" },
   active_premium: { label: "Completa", color: "rgba(139,123,191,0.8)" },
-  for_other: { label: "Pra outra pessoa", color: "rgba(201,162,74,0.8)" },
+  for_other_free: { label: "Pra outra pessoa", color: "rgba(201,162,74,0.8)" },
+  for_other_premium: { label: "Completa · outra pessoa", color: "rgba(139,123,191,0.8)" },
 };
 
 /**
@@ -338,14 +329,18 @@ function CreditsBanner({ credits, onBuyMore }: { credits: number; onBuyMore: () 
             Seus créditos
           </span>
           <div className="flex items-baseline gap-2">
-            <span
-              className="font-cinzel text-[38px] sm:text-[44px] text-gold leading-none"
+            <motion.span
+              key={credits}
+              initial={{ scale: 1.3, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              className="font-cinzel text-[38px] sm:text-[44px] text-gold leading-none inline-block"
               style={{
                 textShadow: "0 0 24px rgba(201,162,74,0.45), 0 0 48px rgba(201,162,74,0.2)",
               }}
             >
               {credits}
-            </span>
+            </motion.span>
             <span className="font-cormorant italic text-[16px] text-bone-dim">
               {credits === 1 ? "leitura" : "leituras"}
             </span>
@@ -367,13 +362,27 @@ function CreditsBanner({ credits, onBuyMore }: { credits: number; onBuyMore: () 
 
 function LeiturasContent() {
   const router = useRouter();
-  const search = useSearchParams();
-  const stateParam = search.get("state") as State | null;
+  const searchParams = useSearchParams();
   const [userData, setUserData] = useState<{ name: string; credits: number } | null>(null);
   const [readings, setReadings] = useState<Reading[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<View>("list");
   const [buyModalOpen, setBuyModalOpen] = useState(false);
+  const { showToast } = useToast();
+  const purchaseToastShown = useRef(false);
+
+  // Handle ?purchased=1 return from AbacatePay — show toast once and clean URL
+  useEffect(() => {
+    if (searchParams.get("purchased") === "1" && !purchaseToastShown.current) {
+      purchaseToastShown.current = true;
+      // Remove query param immediately via History API (no re-render, no race condition)
+      window.history.replaceState(null, "", "/conta/leituras");
+      showToast({
+        variant: "gold",
+        message: "Seus créditos estão esperando. Usa com sabedoria.",
+      });
+    }
+  }, [searchParams, showToast]);
 
   useEffect(() => {
     Promise.all([getUserProfile(), getUserReadings(), getCredits()])
@@ -390,18 +399,19 @@ function LeiturasContent() {
         setLoading(false);
       })
       .catch(() => {
+        showToast({
+          variant: "rose",
+          message: "Não consegui trazer suas leituras. Tenta de novo.",
+        });
         setLoading(false);
       });
-  }, []);
+  }, [showToast]);
 
   const currentState: State = useMemo(() => {
-    if (stateParam && (STATES as readonly string[]).includes(stateParam)) {
-      return stateParam;
-    }
     if (loading) return "loading";
     if (!readings.length) return "empty";
     return "has_readings";
-  }, [stateParam, loading, readings]);
+  }, [loading, readings]);
 
   return (
     <div className="max-w-xl mx-auto px-5 pt-4 pb-16">
@@ -539,8 +549,6 @@ function LeiturasContent() {
           )}
         </>
       )}
-
-      <StateSwitcher states={STATES} current={currentState} />
     </div>
   );
 }

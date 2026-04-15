@@ -9,14 +9,17 @@ vi.mock("@/server/lib/prisma", () => ({
     reading: {
       findMany: vi.fn(),
     },
+    lead: {
+      findMany: vi.fn(),
+    },
   },
 }));
 
 vi.mock("@/server/lib/auth", () => ({
-  getClerkUserId: vi.fn(),
+  getClerkUser: vi.fn(),
 }));
 
-import { getClerkUserId } from "@/server/lib/auth";
+import { getClerkUser } from "@/server/lib/auth";
 import { prisma } from "@/server/lib/prisma";
 
 import { GET } from "./route";
@@ -27,7 +30,12 @@ const READING_UUID_2 = "c1b2c3d4-e5f6-4789-abcd-000000000002";
 describe("GET /api/user/readings", () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(getClerkUserId).mockResolvedValue("user_test_123");
+    vi.mocked(getClerkUser).mockResolvedValue({
+      id: "user_test_123",
+      name: "Ana Test",
+      email: "ana@test.com",
+    });
+    vi.mocked(prisma.lead.findMany).mockResolvedValue([] as never);
   });
 
   it("API-07: 2 active readings returns both in response", async () => {
@@ -108,7 +116,7 @@ describe("GET /api/user/readings", () => {
   });
 
   it("API-07: unauthenticated request returns 401", async () => {
-    vi.mocked(getClerkUserId).mockRejectedValue(new Error("Not authenticated"));
+    vi.mocked(getClerkUser).mockRejectedValue(new Error("Not authenticated"));
 
     const res = await GET();
     const json = await res.json();

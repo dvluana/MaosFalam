@@ -64,15 +64,28 @@ export default function ToastProvider({ children }: { children: React.ReactNode 
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm pointer-events-none">
+      {/* Backdrop overlay when toasts are visible */}
+      <AnimatePresence>
+        {toasts.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 pointer-events-none"
+            style={{ background: "rgba(8,5,14,0.4)" }}
+          />
+        )}
+      </AnimatePresence>
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm pointer-events-none">
         <AnimatePresence mode="popLayout">
           {toasts.map((t) => (
             <motion.div
               key={t.id}
               layout
-              initial={{ opacity: 0, y: 24, scale: 0.95 }}
+              initial={{ opacity: 0, y: -24, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.95 }}
+              exit={{ opacity: 0, y: -24, scale: 0.95 }}
               transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
               className="pointer-events-auto"
             >

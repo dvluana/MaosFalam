@@ -1,53 +1,168 @@
 import { NextResponse } from "next/server";
 
 import { CREDIT_PACKS, isValidPackType } from "@/data/credit-packs";
-import { validateWebhookSignature } from "@/server/lib/abacatepay";
+import { verifyWebhookSignature } from "@/server/lib/abacatepay";
 import { logger } from "@/server/lib/logger";
 import { prisma } from "@/server/lib/prisma";
 import { sendPaymentConfirmed } from "@/server/lib/resend";
 
 import type { NextRequest } from "next/server";
 
+// ============================================================
+// Webhook payload types (loosely typed — AbacatePay may add fields)
+// ============================================================
+
+interface WebhookPayload {
+  id: string;
+  event: string;
+  apiVersion: number;
+  devMode: boolean;
+  data: {
+    // AbacatePay v2 nests checkout data inside data.checkout (not data directly)
+    checkout: {
+      id: string;
+      externalId: string;
+      amount: number;
+      status: string;
+      customerId: string;
+    };
+    payerInformation?: {
+      method?: string;
+    };
+  };
+}
+
+// ============================================================
+// POST /api/webhook/abacatepay
+// Handles checkout.completed events from AbacatePay v2.
+// ============================================================
+
 export async function POST(req: NextRequest) {
   try {
-    const rawBody = await req.text();
-    const signature = req.headers.get("x-abacatepay-signature") || "";
+    // 0. Camada 1: validar webhookSecret na URL
+    const url = new URL(req.url);
+    const webhookSecret = url.searchParams.get("webhookSecret");
+    if (
+      !process.env.ABACATEPAY_WEBHOOK_SECRET ||
+      webhookSecret !== process.env.ABACATEPAY_WEBHOOK_SECRET
+    ) {
+      logger.warn("Invalid or missing webhook secret");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    if (!validateWebhookSignature(rawBody, signature)) {
+    const rawBody = await req.text();
+
+    // 1. Camada 2: HMAC-SHA256 signature validation
+    const signature = req.headers.get("x-webhook-signature") || "";
+
+    // Log full payload structure for debugging (no sensitive data — just keys and IDs)
+    let parsedForLog: Record<string, unknown> = {};
+    try {
+      parsedForLog = JSON.parse(rawBody) as Record<string, unknown>;
+    } catch {
+      // If parse fails, log raw body length only
+    }
+    logger.info(
+      {
+        hasSignature: !!signature,
+        bodyLength: rawBody.length,
+        topLevelKeys: Object.keys(parsedForLog),
+        event: parsedForLog.event,
+        dataKeys: parsedForLog.data ? Object.keys(parsedForLog.data as object) : [],
+        dataId: (parsedForLog.data as Record<string, unknown>)?.id,
+        dataExternalId: (parsedForLog.data as Record<string, unknown>)?.externalId,
+        dataStatus: (parsedForLog.data as Record<string, unknown>)?.status,
+      },
+      "Webhook raw payload structure",
+    );
+
+    if (!verifyWebhookSignature(rawBody, signature)) {
       logger.warn("Invalid webhook signature");
       return NextResponse.json({ error: "Assinatura invalida" }, { status: 401 });
     }
 
-    const body = JSON.parse(rawBody) as {
-      event: string;
-      data: {
-        billing_id: string;
-        method?: string;
-      };
-    };
+    const body = JSON.parse(rawBody) as WebhookPayload;
 
-    if (body.event !== "billing.paid") {
+    if (body.devMode) {
+      logger.info({ eventId: body.id }, "Webhook received in devMode");
+    }
+
+    if (body.event !== "checkout.completed") {
       return NextResponse.json({ ok: true });
     }
 
-    const billingId = body.data.billing_id;
+    // 3. Payment lookup: try externalId first, fallback to checkout ID
+    // AbacatePay v2 nests checkout data inside data.checkout
+    const checkout = body.data?.checkout;
+    const externalId = checkout?.externalId;
+    const checkoutId = checkout?.id;
 
-    // Find payment by billing ID
-    const payment = await prisma.payment.findFirst({
-      where: { abacatepayBillingId: billingId },
-    });
+    logger.info(
+      { event: body.event, checkoutId, externalId: externalId || "empty", devMode: body.devMode },
+      "Webhook payload received",
+    );
+
+    // UUID regex to avoid Prisma error on non-UUID externalId
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    let payment =
+      externalId && isUuid.test(externalId)
+        ? await prisma.payment.findUnique({ where: { id: externalId } })
+        : null;
+
+    if (payment) {
+      logger.info({ method: "externalId", paymentId: payment.id }, "Payment found");
+    }
+
+    // Fallback 1: lookup by abacatepayCheckoutId if externalId missing or not found
+    if (!payment && checkoutId) {
+      payment = await prisma.payment.findFirst({
+        where: { abacatepayCheckoutId: checkoutId },
+      });
+      if (payment) {
+        logger.info({ method: "checkoutId", paymentId: payment.id }, "Payment found via fallback");
+      }
+    }
+
+    // Fallback 2: lookup most recent pending payment by amount (last resort)
+    if (!payment && checkout?.amount) {
+      payment = await prisma.payment.findFirst({
+        where: {
+          status: "pending",
+          amountCents: checkout?.amount ?? 0,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      if (payment) {
+        logger.warn(
+          { method: "amount-fallback", paymentId: payment.id, amount: checkout?.amount ?? 0 },
+          "Payment found via amount fallback — externalId/checkoutId lookup failed",
+        );
+      }
+    }
 
     if (!payment) {
-      logger.warn({ billingId }, "Payment not found for billing");
-      return NextResponse.json({ error: "Payment not found" }, { status: 404 });
+      logger.warn({ externalId, checkoutId }, "Payment not found for webhook");
+      return NextResponse.json(
+        {
+          error: "Payment not found",
+          debug: {
+            externalId,
+            checkoutId,
+            event: body.event,
+            dataKeys: Object.keys(body.data || {}),
+          },
+        },
+        { status: 404 },
+      );
     }
 
-    // Idempotent: skip if already paid
+    // 4. Idempotency: skip if already paid
     if (payment.status === "paid") {
-      logger.info({ billingId }, "Duplicate webhook, skipping");
+      logger.info({ externalId }, "Duplicate webhook, skipping");
       return NextResponse.json({ ok: true });
     }
 
+    // 5. Validate pack type and amount
     if (!isValidPackType(payment.packType)) {
       logger.error({ packType: payment.packType }, "Invalid pack type");
       return NextResponse.json({ error: "Invalid pack" }, { status: 400 });
@@ -55,19 +170,32 @@ export async function POST(req: NextRequest) {
 
     const pack = CREDIT_PACKS[payment.packType as keyof typeof CREDIT_PACKS];
 
-    // Atomic transaction: mark paid + create credits + upgrade tier + convert lead
+    // 5b. Amount re-check: paid amount must match expected pack price
+    const paidAmount = checkout?.amount ?? 0;
+    if (paidAmount !== payment.amountCents) {
+      logger.error(
+        { expected: payment.amountCents, received: paidAmount, paymentId: payment.id },
+        "Amount mismatch — possible tampering",
+      );
+      return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
+    }
+
+    // 6. Extract payment method from payerInformation (v2 path)
+    const method = body.data?.payerInformation?.method || "pix";
+
+    // 7. Atomic transaction: mark paid + create credits + upgrade tier + convert lead
     await prisma.$transaction(async (tx) => {
-      // 1. Mark payment as paid
+      // 7a. Mark payment as paid
       await tx.payment.update({
         where: { id: payment.id },
         data: {
           status: "paid",
           paidAt: new Date(),
-          method: body.data.method || "pix",
+          method,
         },
       });
 
-      // 2. Create credit pack
+      // 7b. Create credit pack
       await tx.creditPack.create({
         data: {
           clerkUserId: payment.clerkUserId,
@@ -78,7 +206,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // 3. If reading exists, upgrade to premium and debit 1 credit
+      // 7c. If reading exists, upgrade to premium and debit 1 credit
       if (payment.readingId) {
         await tx.reading.update({
           where: { id: payment.readingId },
@@ -97,7 +225,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // 4. Mark lead as converted
+      // 7d. Mark lead as converted
       const reading = payment.readingId
         ? await tx.reading.findUnique({ where: { id: payment.readingId } })
         : null;
@@ -112,13 +240,13 @@ export async function POST(req: NextRequest) {
     logger.info(
       {
         paymentId: payment.id,
-        billingId,
+        checkoutId: checkout?.id,
         packType: payment.packType,
       },
       "Payment processed",
     );
 
-    // Send email (non-blocking)
+    // 8. Send email (non-blocking)
     const profile = await prisma.userProfile.findUnique({
       where: { clerkUserId: payment.clerkUserId },
       include: { lead: true },
@@ -133,7 +261,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    logger.error({ error, route: "/api/webhook/abacatepay" }, "Webhook error");
+    logger.error(
+      {
+        err: error instanceof Error ? error.message : String(error),
+        route: "/api/webhook/abacatepay",
+      },
+      "Webhook error",
+    );
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

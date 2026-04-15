@@ -295,7 +295,18 @@ export const HandAttributesSchema = z.object({
 });
 
 // --- analyzeHand ---
-export async function analyzeHand(photoBase64: string): Promise<HandAttributes> {
+export async function analyzeHand(
+  photoBase64: string,
+  dominantHand: "right" | "left",
+  elementHint?: "fire" | "water" | "earth" | "air",
+): Promise<HandAttributes> {
+  const handLabel = dominantHand === "right" ? "direita" : "esquerda";
+  const dominanceContext = `Esta e a mao ${handLabel} da pessoa. E a mao dominante (a que ela escreve com). Analise considerando a orientacao correta da palma. Ignore tatuagens, henna, nail art, aneis, pulseiras e qualquer acessorio visivel. Analise APENAS as linhas naturais da palma, montes, e sinais quiromanticos.`;
+
+  const elementHintText = elementHint
+    ? `Pre-analise geometrica dos landmarks da mao indica elemento: ${elementHint}. Confirme ou corrija com base na foto.`
+    : null;
+
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -309,16 +320,21 @@ export async function analyzeHand(photoBase64: string): Promise<HandAttributes> 
         {
           role: "user",
           content: [
+            // dominanceContext first: hand orientation + accessory exclusion (dynamic, per-request)
+            { type: "text" as const, text: dominanceContext },
+            // optional element hint from MediaPipe landmark geometry (pre-analysis)
+            ...(elementHintText ? [{ type: "text" as const, text: elementHintText }] : []),
             // text-before-image: primes extraction (per OpenAI vision docs)
-            { type: "text", text: "Analise esta palma." },
+            { type: "text" as const, text: "Analise esta palma." },
             {
-              type: "image_url",
-              image_url: { url: `data:image/jpeg;base64,${photoBase64}`, detail: "high" },
+              type: "image_url" as const,
+              image_url: { url: `data:image/jpeg;base64,${photoBase64}`, detail: "high" as const },
             },
           ],
         },
       ],
       max_tokens: 1500,
+      temperature: 0,
       response_format: {
         type: "json_schema",
         json_schema: {

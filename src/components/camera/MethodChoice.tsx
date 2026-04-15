@@ -351,8 +351,8 @@ function MethodChoice({ onPickLive, onPickUpload }: Props) {
         glowColor="rgba(201,162,74,0.15)"
         accentColor="#c9a24a"
         eyebrow="ao vivo"
-        title="Abrir a mao agora"
-        description="Abro a camera, voce estende a palma."
+        title="Abrir a mão agora"
+        description="Abro a câmera, você estende a palma."
         illustration={<MysticEyeIllustration />}
         delay={0.1}
       />
@@ -362,7 +362,7 @@ function MethodChoice({ onPickLive, onPickUpload }: Props) {
         accentColor="#7b6ba5"
         eyebrow="retrato"
         title="Me mandar a foto"
-        description="Ja tem um retrato da palma. Me manda."
+        description="Já tem um retrato da palma. Me manda."
         illustration={<PortraitIllustration />}
         delay={0.25}
       />

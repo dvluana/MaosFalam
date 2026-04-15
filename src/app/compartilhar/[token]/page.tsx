@@ -121,7 +121,7 @@ export default async function SharePage({ params }: PageProps) {
           <p className="font-jetbrains text-[9px] text-bone-dim uppercase tracking-widest">
             leitura de {reading.target_name}
           </p>
-          <h1 className="font-cinzel text-[26px] text-bone">As maos falaram</h1>
+          <h1 className="font-cinzel text-[26px] text-bone">As mãos falaram</h1>
           <div className="flex gap-2 justify-center mt-1">
             <Badge variant="gold">{ELEMENT_LABEL[report.element.key]}</Badge>
           </div>

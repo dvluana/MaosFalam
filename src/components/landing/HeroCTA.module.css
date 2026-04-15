@@ -1,19 +1,28 @@
 /* ═══════════════════════════════════════════════════════════
-   HERO CTA — botão "Mostre sua mão" no centro do hero.
-   Crystal orb breathing animation, gold corner ornaments,
-   gradiente roxo profundo. Animation pausa no hover.
+   HERO CTA — "Mostre sua mão"
+   Fixed at bottom on all devices. Respects safe area.
    ═══════════════════════════════════════════════════════════ */
 
 .cta {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  gap: 10px;
+  width: calc(100% - 40px);
+  max-width: 400px;
   padding: 18px 24px;
-  background: linear-gradient(160deg, var(--color-surface-up), #2a2150, var(--color-surface-up));
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+
+  background: linear-gradient(160deg, #1a1538, #2a2150, #1a1538);
   color: var(--color-bone);
   font-family: var(--font-raleway);
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -22,87 +31,66 @@
   border: none;
   border-radius: 0 6px 0 6px;
   cursor: pointer;
-  position: relative;
-  overflow: visible;
+
   box-shadow:
-    0 0 0 1px rgba(201, 162, 74, 0.1),
-    0 0 28px rgba(123, 107, 165, 0.14),
-    0 0 56px rgba(123, 107, 165, 0.05);
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  animation: btnCrystal 7s ease-in-out infinite;
-  margin-top: 32px;
+    0 0 0 1px rgba(201, 162, 74, 0.18),
+    0 8px 32px rgba(0, 0, 0, 0.6);
+
+  /* Start hidden */
   opacity: 0;
-  transform: translateY(8px);
+  pointer-events: none;
+  transition:
+    box-shadow 0.3s ease,
+    opacity 0.8s ease;
 }
 
-.cta.visible {
-  animation:
-    btnCrystal 7s ease-in-out infinite,
-    ctaIn 1.2s ease forwards;
-}
-
-@keyframes ctaIn {
-  0% {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Corner ornaments: inherits from global .corner-ornaments class.
-   Overrides below adjust size and transition for hero CTA context. */
+/* Corner ornaments */
 .cta::before,
 .cta::after {
   width: 9px;
   height: 9px;
   border-color: rgba(201, 162, 74, 0.28);
-  transition: all 0.5s;
+  transition: all 0.4s;
+}
+
+.cta.visible {
+  opacity: 1;
+  pointer-events: auto;
+  animation: ctaIn 1.2s ease forwards;
+}
+
+@keyframes ctaIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .cta:hover {
-  transform: translateY(-2px);
   box-shadow:
-    0 0 0 1px rgba(218, 185, 80, 0.45),
-    0 0 20px rgba(218, 185, 80, 0.28),
-    0 0 50px rgba(175, 155, 235, 0.36),
-    0 0 100px rgba(130, 105, 210, 0.2),
-    inset 0 0 30px rgba(160, 140, 220, 0.1);
-  animation-play-state: paused;
+    0 0 0 1px rgba(201, 162, 74, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.6);
 }
 .cta:hover::before,
 .cta:hover::after {
-  width: 14px;
-  height: 14px;
-  border-color: rgba(201, 162, 74, 0.45);
+  width: 12px;
+  height: 12px;
+  border-color: rgba(201, 162, 74, 0.4);
 }
 
-@keyframes btnCrystal {
-  0%,
-  100% {
-    box-shadow:
-      0 0 0 1px rgba(201, 162, 74, 0.18),
-      0 0 10px rgba(201, 162, 74, 0.1),
-      0 0 28px rgba(139, 123, 191, 0.14),
-      0 0 55px rgba(100, 80, 180, 0.06),
-      inset 0 0 20px rgba(139, 123, 191, 0.03);
-  }
-  40% {
-    box-shadow:
-      0 0 0 1px rgba(218, 185, 80, 0.38),
-      0 0 18px rgba(218, 185, 80, 0.28),
-      0 0 45px rgba(175, 155, 235, 0.32),
-      0 0 95px rgba(130, 105, 210, 0.18),
-      inset 0 0 28px rgba(160, 140, 220, 0.09);
-  }
-  60% {
-    box-shadow:
-      0 0 0 1px rgba(228, 200, 100, 0.34),
-      0 0 22px rgba(228, 200, 100, 0.24),
-      0 0 50px rgba(165, 145, 230, 0.3),
-      0 0 105px rgba(120, 95, 200, 0.16),
-      inset 0 0 32px rgba(150, 130, 215, 0.1);
-  }
+/* Chevron icon */
+.icon {
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+.cta:hover .icon {
+  opacity: 1;
+  transform: translateX(2px);
 }

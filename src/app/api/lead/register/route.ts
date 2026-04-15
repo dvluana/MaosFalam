@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -28,6 +29,14 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const data = schema.parse(body);
 
+    // Check if this email already has a Clerk account
+    const clerk = await clerkClient();
+    const existingUsers = await clerk.users.getUserList({ emailAddress: [data.email] });
+    if (existingUsers.totalCount > 0) {
+      logger.info({ route: "/api/lead/register" }, "Lead email has existing Clerk account");
+      return NextResponse.json({ existing_account: true, lead_id: null }, { status: 200 });
+    }
+
     const lead = await prisma.lead.create({
       data: {
         name: data.name,
@@ -45,7 +54,10 @@ export async function POST(req: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Dados invalidos" }, { status: 400 });
     }
-    logger.error({ error, route: "/api/lead/register" }, "Erro na rota");
+    logger.error(
+      { err: error instanceof Error ? error.message : String(error), route: "/api/lead/register" },
+      "Erro na rota",
+    );
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

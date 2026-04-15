@@ -1,17 +1,29 @@
 /* ═══════════════════════════════════
-   HERO — porta fiel de public/home.html
+   HERO — mobile-first layout
+
+   Structure:
+   .hero (100dvh flex column)
+     ├─ spacer (flex-grow, pushes video down from lamp)
+     ├─ .dioramaWrap (video + effects)
+     ├─ .heroContent (title + subtitle)
+     └─ spacer (flex-grow, pushes content up from bottom)
+
+   The video sits in the vertical center with content below it.
+   Lamp is fixed at top (separate component). Clock is fixed at bottom-left.
+   CTA is fixed at bottom (separate component).
    ═══════════════════════════════════ */
+
 .hero {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
   position: relative;
-  padding: 0 0 8vh;
   overflow: hidden;
   z-index: 25;
 }
+
+/* Bottom vignette */
 .hero::before {
   content: "";
   position: absolute;
@@ -26,23 +38,14 @@
 
 /* ── MANDALA ── */
 .heroMandala {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -52%);
-  width: min(520px, 90vw);
-  height: min(520px, 90vw);
-  pointer-events: none;
-  z-index: 1;
-  animation: mandalaSpin 60s linear infinite;
-  opacity: 0.65;
+  display: none;
 }
 @keyframes mandalaSpin {
   from {
-    transform: translate(-50%, -52%) rotate(0deg);
+    transform: translate(-50%, -55%) rotate(0deg);
   }
   to {
-    transform: translate(-50%, -52%) rotate(360deg);
+    transform: translate(-50%, -55%) rotate(360deg);
   }
 }
 
@@ -50,80 +53,32 @@
 .dioramaWrap {
   position: relative;
   z-index: 2;
-  width: min(400px, 82vw);
-  margin-bottom: 8px;
+  width: min(476px, 92vw);
+  /* Push video down from the lamp — the top spacer handles this via flex */
+  margin-top: auto;
+  flex-shrink: 0;
 }
+
 .dioramaVoid {
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 78%;
-  height: 55px;
-  background: radial-gradient(
-    ellipse 100% 100% at 50% 50%,
-    rgba(201, 162, 74, 0.12) 0%,
-    transparent 70%
-  );
-  filter: blur(22px);
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
+
 .dioramaGlow {
-  position: absolute;
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    rgba(201, 162, 74, 0.06) 0%,
-    transparent 80%
-  );
-  filter: blur(30px);
-  animation: glowPulse 6s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
-@keyframes glowPulse {
-  0%,
-  100% {
-    opacity: 0.48;
-    transform: translateX(-50%) scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    transform: translateX(-50%) scale(1.08);
-  }
-}
+
 .dioramaStage {
-  position: absolute;
-  bottom: -32px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 55%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 162, 74, 0.22), transparent);
-  pointer-events: none;
-  z-index: 4;
+  display: none;
 }
-.dioramaStage::after {
-  content: "";
-  position: absolute;
-  top: 8px;
-  left: 18%;
-  width: 64%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139, 123, 191, 0.14), transparent);
-}
+
 .dioramaImg {
   width: 100%;
   display: block;
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 30px rgba(0, 0, 0, 0.6));
+  /* Soft edge blend — mask fades edges to transparent, bg shows through */
+  mask-image: radial-gradient(ellipse 82% 78% at 50% 48%, black 45%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 82% 78% at 50% 48%, black 45%, transparent 100%);
 }
 
 /* ── HERO CONTENT ── */
@@ -134,7 +89,10 @@
   width: 100%;
   max-width: 430px;
   padding: 0 20px;
-  margin-top: -32px;
+  margin-top: 16px;
+  /* Push content up from the bottom — bottom spacer after this handles CTA clearance */
+  margin-bottom: auto;
+  padding-bottom: 100px; /* Room for fixed CTA + LunarClock */
 }
 
 /* ── PARTICLES ── */
@@ -191,22 +149,28 @@
   }
 }
 
+/* ── MOBILE ── */
 @media (max-width: 480px) {
   .dioramaWrap {
-    width: 92vw;
+    width: min(420px, 92vw);
+  }
+  .heroMandala {
+    width: min(360px, 80vw);
+    height: min(360px, 80vw);
   }
 }
 
-/* ── MOBILE VIDEO CENTERING ── */
-@media (max-width: 480px) {
+/* ── SHORT SCREENS (iPhone SE, landscape-ish) ── */
+@media (max-height: 680px) {
   .dioramaWrap {
-    margin-left: auto;
-    margin-right: auto;
-    width: 88vw;
+    width: min(336px, 80vw);
   }
-  .hero {
-    align-items: center;
-    padding-left: 0;
-    padding-right: 0;
+  .heroMandala {
+    width: min(280px, 65vw);
+    height: min(280px, 65vw);
+  }
+  .heroContent {
+    margin-top: 8px;
+    padding-bottom: 80px;
   }
 }

@@ -44,6 +44,8 @@ src/
   mocks/            # mocks isolados
   types/            # contratos de dados
   data/             # blocos estaticos, pacotes de creditos
+  proxy.ts          # auth middleware (Clerk clerkMiddleware)
+  generated/        # Prisma client gerado (nao editar)
 ```
 
 ## Modularizacao
@@ -74,7 +76,7 @@ Componentes: PascalCase.tsx | Hooks: useCamelCase.ts | Types: PascalCase | Const
 - @docs/blocks.md — blocos de texto. Quando criar mocks ou resultado.
 - @docs/palmistry.md — quiromancia. Quando tocar em deteccao.
 - @docs/brand-voice.md — tom de voz. Quando tiver duvida sobre copy.
-- @docs/architecture.md — Arquitetura backend (parcialmente implementado v1.0). Stack, banco, APIs, motor de leitura, pagamentos, auth.
+- @docs/architecture.md — Arquitetura backend (v1.1 implementado). Stack, banco, APIs, motor de leitura, pagamentos (stub), auth. Referencia precisa do codigo atual.
 - @docs/product.md — mercado, monetizacao. Se precisar contexto de negocio.
 - @docs/DS.md — design system. Quando criar componentes visuais.
 
@@ -114,6 +116,15 @@ Cinzel Decorative: LOGO ONLY. Cormorant Garamond italic: voz da cigana. Cinzel: 
 - Env vars configuradas por environment (production vs preview) na Vercel.
 - PWA configurado (manifest.json, icons, apple-touch-icon).
 
+### Env vars de controle por environment
+
+| Env var                   | Production | Preview  | Efeito                                     |
+| ------------------------- | ---------- | -------- | ------------------------------------------ |
+| `NEXT_PUBLIC_COMING_SOON` | `true`     | —        | Mostra pagina "em breve" em vez do app     |
+| `NEXT_PUBLIC_ENV_LABEL`   | —          | `Testes` | Prefixo no titulo da aba + favicon laranja |
+
+**Pra desativar "em breve":** remover `NEXT_PUBLIC_COMING_SOON` no Vercel Dashboard (Settings > Environment Variables) ou via CLI: `vercel env rm NEXT_PUBLIC_COMING_SOON production -y`. Redeploy automatico apos push ou `vercel deploy --prod`.
+
 ## Behavior
 
 - Seja direto. Faca o trabalho. Sem explicacoes longas.
@@ -122,14 +133,15 @@ Cinzel Decorative: LOGO ONLY. Cormorant Garamond italic: voz da cigana. Cinzel: 
 - Quando terminar: rode `npm run build`.
 - Agrupe tarefas. Nao peca confirmacao a cada passo.
 - ANTES de editar arquivo existente: leia ele primeiro.
+- APOS `git push`: verifique o deploy com `vercel list` (ou `vercel inspect <url>` se erro). Se status = Error, investigue o build log e corrija antes de seguir. Nao assuma que o deploy deu certo.
 
 <!-- GSD:project-start source:PROJECT.md -->
 
 ## Project
 
-**MaosFalam Backend**
+**MaosFalam v1.1 — Alinhamento Arquitetural**
 
-Backend do MaosFalam, webapp de quiromancia com IA. O frontend existe com mocks. Esta milestone implementa a infraestrutura de backend: banco de dados (Neon + Prisma), autenticacao (Clerk), API routes, integracao GPT-4o pra analise de palma, e seguranca. Pagamento (AbacatePay) e email (Resend) ficam pra milestone futura.
+Backend completo com Neon + Prisma 7, Clerk v7 (auth middleware em `src/proxy.ts`), GPT-4o pra analise de palma, MediaPipe Hand Landmarker pra deteccao client-side, API routes, e seguranca. A milestone v1.1 alinha o codigo com as decisoes arquiteturais — fluxo unico com is_self flag, MediaPipe Hand Landmarker real, Clerk como unico auth, e limpeza de artefatos obsoletos. Pagamento (AbacatePay) e email (Resend) ficam pra milestone v2.
 
 **Core Value:** A foto da palma entra, a leitura personalizada sai. O backend precisa conectar GPT-4o ao motor de leitura (`selectBlocks`) e persistir os resultados no Neon.
 
@@ -138,7 +150,7 @@ Backend do MaosFalam, webapp de quiromancia com IA. O frontend existe com mocks.
 - **Tech stack**: Next.js 16, TypeScript strict, sem `any`, `no-console: error`
 - **Seguranca**: foto nunca armazenada, CPF nunca logado, dados pessoais nunca nos logs
 - **Performance**: `selectBlocks` <1ms (zero I/O, tudo em memoria)
-- **Auth**: Clerk e source of truth pra name/email/foto. Neon so tem CPF e customer_id
+- **Auth**: Clerk e source of truth pra name/email/foto. Neon so tem CPF e customer_id. `src/proxy.ts` (nao `middleware.ts`) e o arquivo de autenticacao Clerk
 - **Brand voice**: todo texto pro usuario segue `docs/brand-voice.md` (voz da cigana)
 <!-- GSD:project-end -->
 
@@ -172,6 +184,7 @@ Backend do MaosFalam, webapp de quiromancia com IA. O frontend existe com mocks.
 - @prisma/adapter-neon 7.7.0 - Neon serverless PostgreSQL adapter
 - @neondatabase/serverless 1.0.2 - Serverless database driver
 - @clerk/nextjs 7.0.12 - Auth provider with Google OAuth and email/password support
+- @mediapipe/tasks-vision 0.10.34 - Hand Landmarker for client-side hand detection (no server)
 - Vitest 4.1.3 - Unit test runner (Vue/React optimized)
 - @testing-library/react 16.3.2 - React component testing utilities
 - @testing-library/jest-dom 6.9.1 - Custom matchers for DOM assertions
@@ -192,6 +205,7 @@ Backend do MaosFalam, webapp de quiromancia com IA. O frontend existe com mocks.
 ## Key Dependencies
 
 - @clerk/nextjs - Handles all authentication (Google OAuth, email/password, session management)
+- @mediapipe/tasks-vision - Hand Landmarker for real-time hand detection client-side (no server cost)
 - @prisma/client - Database access layer, type-safe queries
 - framer-motion - Provides smooth animations for UI transitions
 - zod - Input validation for all API routes (security critical)
@@ -478,7 +492,7 @@ Backend do MaosFalam, webapp de quiromancia com IA. O frontend existe com mocks.
 - Location: `src/app/api/reading/capture/route.ts`
 - Triggers: POST from `captureReading()` adapter with photo + session data
 - Responsibilities: Validate, analyze with OpenAI, select blocks, persist, send email, return report
-- Location: `src/middleware.ts`
+- Location: `src/proxy.ts`
 - Triggers: Every request (except static assets)
 - Responsibilities: Clerk authentication check on protected routes (/api/reading/new, /api/credits/_, /api/user/_, /conta/\*)
 

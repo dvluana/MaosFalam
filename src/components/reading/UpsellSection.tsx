@@ -4,25 +4,25 @@ import { useRouter } from "next/navigation";
 
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
+import { useAuth } from "@/hooks/useAuth";
 
-/**
- * Ao clicar "Desbloquear tudo", salva o reading id atual em sessionStorage
- * pra que depois do pagamento a /creditos consiga mandar a usuária de volta
- * exatamente pra essa leitura em modo /completo (sem perder contexto).
- * O id é extraído do pathname: /ler/resultado/{id}.
- */
-export default function UpsellSection() {
+interface UpsellSectionProps {
+  readingId: string;
+}
+
+export default function UpsellSection({ readingId }: UpsellSectionProps) {
   const router = useRouter();
+  const { user } = useAuth();
 
   const handleClick = () => {
-    if (typeof window !== "undefined") {
-      // Extrai o id da leitura atual do pathname: /ler/resultado/{id}
-      const match = window.location.pathname.match(/\/ler\/resultado\/([^/]+)/);
-      if (match?.[1]) {
-        sessionStorage.setItem("maosfalam_pending_reading", match[1]);
-      }
+    if (!user) {
+      router.push("/login");
+      return;
     }
-    router.push("/creditos");
+
+    // Redirect to credits page — upgrade happens via purchase flow
+    // (buy credit -> webhook credits -> user revisits reading)
+    router.push(`/creditos?reading=${readingId}`);
   };
 
   return (

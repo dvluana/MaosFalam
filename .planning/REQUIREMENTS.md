@@ -1,161 +1,102 @@
-# Requirements: MaosFalam
+# Requirements: MaosFalam v2 Monetizacao
 
-**Defined:** 2026-04-11
-**Core Value:** Foto da palma entra, leitura personalizada sai. Backend conecta GPT-4o ao motor de leitura e persiste resultados.
-
-## v1.0 Requirements (Complete)
-
-All v1.0 requirements shipped. See `.planning/archive/v1.0/` for history.
-
-- ✓ DB-01 through DB-04 (Database schema + Prisma + Neon)
-- ✓ AUTH-01 through AUTH-04 (Clerk auth + middleware)
-- ✓ AI-01 through AI-04 (GPT-4o integration)
-- ✓ API-01 through API-10 (Public + protected API routes)
-- ✓ SEC-01 through SEC-07 (Security + rate limiting)
-- ✓ INFRA-01 through INFRA-05 (Logger + build + env)
-- ✓ ADAPT-01 through ADAPT-04 (Client adapters)
-- ✓ WIRE-01 through WIRE-06 (Frontend-backend wiring)
-
-## v1.1 Requirements
-
-Requirements for milestone v1.1: Alinhamento Arquitetural.
-
-### Audit + Cleanup
-
-- [x] **AUDIT-01**: share_token e share_expires_at removidos de types, mocks, componentes, reading-client
-- [x] **AUDIT-02**: expires_at removido de credit_packs (types, queries, API, componentes)
-- [x] **AUDIT-03**: Referencias NextAuth removidas (useSession, getServerSession, next-auth)
-- [x] **AUDIT-04**: Referencias R2/Cloudflare removidas (photo_key, photoKey)
-- [x] **AUDIT-05**: "Claude Vision" substituido por "GPT-4o" em todo o codigo
-- [x] **AUDIT-06**: "Planeta dominante" substituido por "Monte dominante"
-- [x] **AUDIT-07**: Ordem das secoes do resultado segue v2 (Prologo > Coracao > Paywall > Cabeca > Vida > Venus > Montes > Destino > Cruzamentos > Compatibilidade > Raros > Epilogo)
-- [x] **AUDIT-08**: VALID_MOCK_IDS removido do resultado page
-- [x] **AUDIT-09**: fallbackName="Marina" removido (usa nome do sessionStorage/API)
-- [x] **AUDIT-10**: Dead stubs login()/register() removidos do useAuth
-- [x] **AUDIT-11**: TODOs obsoletos limpos
-
-### ReadingContext + Credits
-
-- [x] **CTX-01**: ReadingContext type criado (target_name, target_gender, dominant_hand, is_self, session_id, credit_used)
-- [x] **CTX-02**: /ler/nome visitante coleta nome + email + genero + dominancia + opt-in
-- [x] **CTX-03**: /ler/nome logada mostra "Pra mim" / "Pra outra pessoa" na MESMA tela
-- [x] **CTX-04**: Fluxo "pra outra pessoa" monta ReadingContext com is_self=false e dados do formulario
-- [x] **CTX-05**: CreditGate component mostra confirmacao de credito antes de prosseguir
-- [x] **CTX-06**: Visitante e logada primeira leitura passam sem check de credito
-- [x] **CTX-07**: Logada segunda leitura+ confirma credito (com saldo) ou redireciona pra /creditos (sem saldo)
-- [x] **CTX-08**: Debito real acontece no SERVER via POST /api/reading/new (nao no client)
-- [x] **CTX-09**: Lead salvo via POST /api/lead/register ANTES do toque
-
-### MediaPipe
-
-- [ ] **MP-01**: @mediapipe/tasks-vision instalado e Hand Landmarker configurado
-- [ ] **MP-02**: useCameraPipeline real: getUserMedia + Hand Landmarker + loop de frames
-- [ ] **MP-03**: Validacao de landmarks: mao aberta, centralizada, estavel por 1.5s
-- [ ] **MP-04**: Auto-captura do canvas como base64 JPEG quando validacao passa
-- [ ] **MP-05**: Handedness: perguntar destra/canhota antes da camera
-- [ ] **MP-06**: Instrucao na camera e validacao da mao correta (feedback da cigana se mao errada)
-- [ ] **MP-07**: Espelhamento de camera frontal tratado corretamente
-- [ ] **MP-08**: dominant_hand salvo no HandAttributes e enviado no ReadingContext
-
-### Clerk Cleanup
-
-- [ ] **CLK-01**: /esqueci-senha redireciona pra fluxo Clerk (nao implementacao custom)
-- [ ] **CLK-02**: /redefinir-senha/[token] redireciona pra fluxo Clerk
-- [ ] **CLK-03**: /conta/perfil edit nome usa Clerk UserProfile
-- [ ] **CLK-04**: /conta/perfil trocar senha usa Clerk UserProfile
-
-### Docs + Error Handling
-
-- [ ] **DOCS-01**: architecture.md alinhado com codigo real (decisoes v1.1 refletidas)
-- [ ] **DOCS-02**: CLAUDE.md atualizado (Clerk, sem R2, GPT-4o, estrutura atual)
-- [ ] **DOCS-03**: /conta/leituras mostra toast de erro quando API falha
-- [ ] **DOCS-04**: Resultado diferencia 404 (leitura nao existe) de 500 (erro de servidor)
+**Defined:** 2026-04-14
+**Core Value:** A foto da palma entra, a leitura personalizada sai. Monetizacao: primeira leitura gratis, completa requer credito.
 
 ## v2 Requirements
 
-Adiados para milestone futura.
+Pagamento real end-to-end, email transacional, bug fixes pendentes.
 
-### Payment
+### PAY — AbacatePay v2 Integration
 
-- **PAY-01**: POST /api/credits/purchase cria checkout no AbacatePay v2
-- **PAY-02**: POST /api/webhook/abacatepay processa billing.paid atomicamente
-- **PAY-03**: Webhook idempotente (mesmo billing_id processado uma vez)
-- **PAY-04**: Validacao de assinatura do webhook
+- [x] **PAY-01**: abacatepay.ts migrado pra API v2 — endpoints /v2/checkouts/create, /v2/customers/create; produtos referenciados por ID (nao inline)
+- [x] **PAY-02**: 4 produtos criados no AbacatePay (mf_avulsa, mf_dupla, mf_roda, mf_tsara) com externalId mapeado ao CREDIT_PACKS
+- [x] **PAY-03**: POST /api/credits/purchase chama createCheckout() v2 e retorna checkout_url do AbacatePay
+- [x] **PAY-04**: Webhook handler processa evento checkout.completed (nao billing.paid); valida signature com chave publica fixa do AbacatePay via HMAC-SHA256
+- [x] **PAY-05**: Webhook atomico: marca paid → cria credit_pack → debita 1 credito FIFO (se reading_id) → upgrade tier → marca lead converted
+- [x] **PAY-06**: methods: ["PIX", "CARD"] no checkout (nao so PIX)
+- [x] **PAY-07**: CPF validacao real no primeiro pagamento (formato XXX.XXX.XXX-XX ou 11 digitos)
 
-### Email
+### FRONT — Frontend Payment Flow
 
-- **EMAIL-01**: Email de pagamento confirmado via Resend SDK
-- **EMAIL-02**: Email de boas-vindas via Resend SDK
-- **EMAIL-03**: Email de leitura pronta pra lead via Resend SDK
-- **EMAIL-04**: Idempotency keys em todos os envios
+- [x] **FRONT-01**: /creditos page chama POST /api/credits/purchase e redireciona pra checkout_url do AbacatePay (sem PIX hardcoded, sem form de cartao local)
+- [x] **FRONT-02**: payment-client.ts exporta initiatePurchase(packType, cpf?, readingId?) que retorna checkout_url
+- [x] **FRONT-03**: checkout-intent wired: se usuario nao logado em /creditos, salva intent antes de redirect pra /login; apos login, consome intent e retorna pra /creditos com pack pre-selecionado
+- [x] **FRONT-04**: UpsellSection.upgradeReading() funcional — chama initiatePurchase ou redirect pra /creditos se sem creditos
+- [x] **FRONT-05**: completionUrl do checkout redireciona pra /ler/resultado/[id]/completo (se veio do upsell) ou /conta/leituras?purchased=1 (se compra avulsa)
 
-### Scaling
+### EMAIL — Resend Integration
 
-- **SCALE-01**: Migrar rate limiting de Map in-memory pra @upstash/ratelimit
+- [x] **EMAIL-01**: Resend envia email de pagamento confirmado apos webhook (template com voz da cigana, link pro resultado)
+- [x] **EMAIL-02**: Resend envia email de boas-vindas apos primeira conta criada
+- [x] **EMAIL-03**: Emails so enviados se lead.email_opt_in === true (exceto transacionais de pagamento)
+- [x] **EMAIL-04**: Resend com retry (1x) em falha transiente; falha nao bloqueia fluxo principal
 
-## Out of Scope
+### BUG — Bug Fixes Pendentes
 
-| Feature                        | Reason                                         |
-| ------------------------------ | ---------------------------------------------- |
-| AbacatePay webhook             | Webhook v2 nao documentado                     |
-| Resend email                   | Depende de dominio verificado                  |
-| App nativo                     | Web-first                                      |
-| Assinatura mensal              | Modelo e creditos avulsos                      |
-| Compatibilidade entre maos     | v2 do produto                                  |
-| Upload de foto pro storage     | Foto processada e descartada, nunca armazenada |
-| dominant_hand no prompt GPT-4o | Fase futura apos MediaPipe funcionar           |
-| Blocos de texto novos          | Conteudo atual suficiente                      |
+- [x] **BUG-01**: Manifesto — corrigir 63 palavras sem acento
+- [x] **BUG-02**: Camera handedness — espelhamento so aplica em camera frontal/selfie, nao em upload nem camera traseira
+- [x] **BUG-03**: Revelacao — carta nao corta em telas pequenas (min-height ou scroll)
+
+## Dependency Map
+
+```
+PAY-01 → PAY-02 → PAY-03 → FRONT-01
+PAY-01 → PAY-04 → PAY-05
+PAY-03 → FRONT-02 → FRONT-04
+FRONT-02 → FRONT-03
+PAY-05 → EMAIL-01
+EMAIL-01 → EMAIL-02 (same infra)
+BUG-01, BUG-02, BUG-03 — independentes
+```
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
-
-| Requirement | Phase   | Status   |
-| ----------- | ------- | -------- |
-| AUDIT-01    | Phase 1 | Complete |
-| AUDIT-02    | Phase 1 | Complete |
-| AUDIT-03    | Phase 1 | Complete |
-| AUDIT-04    | Phase 1 | Complete |
-| AUDIT-05    | Phase 1 | Complete |
-| AUDIT-06    | Phase 1 | Complete |
-| AUDIT-07    | Phase 1 | Complete |
-| AUDIT-08    | Phase 1 | Complete |
-| AUDIT-09    | Phase 1 | Complete |
-| AUDIT-10    | Phase 1 | Complete |
-| AUDIT-11    | Phase 1 | Complete |
-| CTX-01      | Phase 2 | Complete |
-| CTX-02      | Phase 2 | Complete |
-| CTX-03      | Phase 2 | Complete |
-| CTX-04      | Phase 2 | Complete |
-| CTX-05      | Phase 2 | Complete |
-| CTX-06      | Phase 2 | Complete |
-| CTX-07      | Phase 2 | Complete |
-| CTX-08      | Phase 2 | Complete |
-| CTX-09      | Phase 2 | Complete |
-| MP-01       | Phase 3 | Pending  |
-| MP-02       | Phase 3 | Pending  |
-| MP-03       | Phase 3 | Pending  |
-| MP-04       | Phase 3 | Pending  |
-| MP-05       | Phase 3 | Pending  |
-| MP-06       | Phase 3 | Pending  |
-| MP-07       | Phase 3 | Pending  |
-| MP-08       | Phase 3 | Pending  |
-| CLK-01      | Phase 4 | Pending  |
-| CLK-02      | Phase 4 | Pending  |
-| CLK-03      | Phase 4 | Pending  |
-| CLK-04      | Phase 4 | Pending  |
-| DOCS-03     | Phase 4 | Pending  |
-| DOCS-04     | Phase 4 | Pending  |
-| DOCS-01     | Phase 5 | Pending  |
-| DOCS-02     | Phase 5 | Pending  |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| PAY-01      | Phase 12 | Done     |
+| PAY-02      | Phase 12 | Done     |
+| PAY-03      | Phase 12 | Done     |
+| PAY-04      | Phase 12 | Complete |
+| PAY-05      | Phase 12 | Complete |
+| PAY-06      | Phase 12 | Done     |
+| PAY-07      | Phase 13 | Complete |
+| FRONT-01    | Phase 13 | Complete |
+| FRONT-02    | Phase 13 | Complete |
+| FRONT-03    | Phase 13 | Complete |
+| FRONT-04    | Phase 13 | Complete |
+| FRONT-05    | Phase 13 | Complete |
+| EMAIL-01    | Phase 14 | Complete |
+| EMAIL-02    | Phase 14 | Complete |
+| EMAIL-03    | Phase 14 | Complete |
+| EMAIL-04    | Phase 14 | Complete |
+| BUG-01      | Phase 15 | Complete |
+| BUG-02      | Phase 15 | Complete |
+| BUG-03      | Phase 15 | Complete |
 
 **Coverage:**
 
-- v1.1 requirements: 36 total
-- Mapped to phases: 36
+- v2 requirements: 19 total
+- Mapped to phases: 19
 - Unmapped: 0
+
+## Inherited from v1.3 (deferred)
+
+- FLOW-01, FLOW-02, FLOW-03: Verified fixed via Phase 9 cherry-pick (reading_count + target_name)
+- CLEAN-04: Clerk legacy migration deferred (signal API incompativel, nao bloqueia v2)
+
+## Out of Scope
+
+| Feature                             | Razao                                  |
+| ----------------------------------- | -------------------------------------- |
+| Transparent checkout (PIX QR local) | Checkout hosted e suficiente pra MVP   |
+| App nativo                          | Web-first                              |
+| Assinatura mensal                   | Modelo e creditos avulsos              |
+| Rate limiting distribuido (Upstash) | Map in-memory suficiente ate ~1000 CCU |
+| Clerk OAuth inline                  | Complexidade alta, baixo impacto       |
+| Compatibilidade entre maos          | v3                                     |
 
 ---
 
-_Requirements defined: 2026-04-11_
-_Last updated: 2026-04-11 after roadmap v1.1 creation_
+_Requirements defined: 2026-04-14_
+_Last updated: 2026-04-14_

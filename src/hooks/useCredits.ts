@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 
@@ -10,49 +10,84 @@ interface CreditState {
   loading: boolean;
 }
 
+const DEFAULT_STATE: CreditState = { balance: 0, reading_count: 0, loading: true };
+const EMPTY_STATE: CreditState = { balance: 0, reading_count: 0, loading: false };
+
+// External store — React 19 compliant via useSyncExternalStore
+const store = {
+  state: { ...DEFAULT_STATE } as CreditState,
+  listeners: new Set<() => void>(),
+  notify() {
+    this.listeners.forEach((fn) => fn());
+  },
+  subscribe(fn: () => void) {
+    store.listeners.add(fn);
+    return () => {
+      store.listeners.delete(fn);
+    };
+  },
+  getSnapshot(): CreditState {
+    return store.state;
+  },
+  getServerSnapshot(): CreditState {
+    return DEFAULT_STATE;
+  },
+  startFetch() {
+    store.state = { ...DEFAULT_STATE, loading: true };
+    store.notify();
+    void fetchCredits();
+  },
+  reset() {
+    store.state = EMPTY_STATE;
+    store.notify();
+  },
+};
+
+async function fetchCredits(): Promise<void> {
+  try {
+    const [creditsRes, readingsRes] = await Promise.all([
+      fetch("/api/user/credits"),
+      fetch("/api/user/readings"),
+    ]);
+    const credits = (await creditsRes.json()) as { balance: number };
+    const readings = (await readingsRes.json()) as {
+      readings: Array<{ id: string }>;
+      reading_count: number;
+    };
+    store.state = {
+      balance: credits.balance,
+      reading_count: readings.reading_count,
+      loading: false,
+    };
+  } catch {
+    store.state = EMPTY_STATE;
+  }
+  store.notify();
+}
+
 export function useCredits(): CreditState & { refetch: () => void } {
   const { user, hydrated } = useAuth();
-  const [state, setState] = useState<CreditState>({
-    balance: 0,
-    reading_count: 0,
-    loading: true,
-  });
-  const refetchRef = useRef<() => void>(() => undefined);
+  const userId = user?.id ?? null;
+  const fetchedForRef = useRef<string | null>(null);
 
-  const fetchData = useCallback(async () => {
-    if (!user) {
-      setState({ balance: 0, reading_count: 0, loading: false });
-      return;
-    }
-    setState((prev) => ({ ...prev, loading: true }));
-    try {
-      const [creditsRes, readingsRes] = await Promise.all([
-        fetch("/api/user/credits"),
-        fetch("/api/user/readings"),
-      ]);
-      const credits = (await creditsRes.json()) as { balance: number };
-      const readings = (await readingsRes.json()) as { readings: Array<{ id: string }> };
-      setState({
-        balance: credits.balance,
-        reading_count: readings.readings.length,
-        loading: false,
-      });
-    } catch {
-      setState({ balance: 0, reading_count: 0, loading: false });
-    }
-  }, [user]);
+  const state = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
 
-  useEffect(() => {
-    refetchRef.current = () => {
-      void fetchData();
-    };
-  }, [fetchData]);
-
+  // Fetch once per userId — effect avoids ref access during render
   useEffect(() => {
     if (!hydrated) return;
-    void fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hydrated, user]);
+    if (userId && fetchedForRef.current !== userId) {
+      fetchedForRef.current = userId;
+      store.startFetch();
+    }
+    if (!userId && fetchedForRef.current !== null) {
+      fetchedForRef.current = null;
+      store.reset();
+    }
+  }, [hydrated, userId]);
 
-  return { ...state, refetch: () => refetchRef.current() };
+  const refetch = useCallback(() => {
+    store.startFetch();
+  }, []);
+
+  return { ...state, refetch };
 }

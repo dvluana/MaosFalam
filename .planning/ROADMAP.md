@@ -3,7 +3,10 @@
 ## Milestones
 
 - ✅ **v1.0 Backend MVP** - Phases 1-7 (shipped 2026-04-11)
-- 🚧 **v1.1 Alinhamento Arquitetural** - Phases 1-5 (in progress)
+- ✅ **v1.1 Alinhamento Arquitetural** - Phases 1-5 (shipped 2026-04-11)
+- ✅ **v1.2 Fluxo de Mao Dominante** - Phases 1-5 (shipped 2026-04-11)
+- ✅ **v1.3 Sistema de Creditos Robusto** - Phases 6-11 (shipped 2026-04-14)
+- 🚧 **v2 Monetizacao** - Phases 12-15 (in progress)
 
 <details>
 <summary>✅ v1.0 Backend MVP (Phases 1-7) - SHIPPED 2026-04-11</summary>
@@ -14,122 +17,133 @@ All 17 plans completed. See `.planning/archive/v1.0/` for history.
 
 </details>
 
+<details>
+<summary>✅ v1.1 Alinhamento Arquitetural (Phases 1-5) - SHIPPED 2026-04-11</summary>
+
+Phase 1: Auditoria | Phase 2: ReadingContext + Creditos | Phase 3: MediaPipe Real | Phase 4: Clerk Cleanup + Error Handling | Phase 5: Docs Sync
+
+All 9 plans completed. See `.planning/archive/v1.1/` for history.
+
+</details>
+
+<details>
+<summary>✅ v1.2 Fluxo de Mao Dominante (Phases 1-5) - SHIPPED 2026-04-11</summary>
+
+Phase 1: Camera UI | Phase 2: Upload Pipeline | Phase 3: Edge Cases + Prompt | Phase 4: Outra Pessoa + A11y | Phase 5: Pipeline Refactor
+
+All 13 plans completed. See `.planning/archive/v1.2/` for history.
+
+</details>
+
+<details>
+<summary>✅ v1.3 Sistema de Creditos Robusto (Phases 6-11) - SHIPPED 2026-04-14</summary>
+
+Phase 6: Atomic Credit Transaction | Phase 7: Credit Infrastructure Cleanup | Phase 8: Auth & Navigation Fixes | Phase 9: Reading Flow Fixes | Phase 10: Logging Hardening | Phase 11: Codebase Cleanup
+
+All 7 plans completed. See `.planning/archive/v1.3/` for history.
+
+</details>
+
 ---
 
-### 🚧 v1.1 Alinhamento Arquitetural (In Progress)
+### 🚧 v2 Monetizacao (In Progress)
 
-**Milestone Goal:** Auditar e alinhar o codigo com as decisoes de arquitetura tomadas, refatorar fluxos core, e implementar MediaPipe real antes de features novas.
+**Milestone Goal:** Pagamento real end-to-end. Usuario compra creditos via AbacatePay (checkout hosted), webhook credita, leitura premium desbloqueia. Email transacional via Resend confirma pagamento. Bugs de UX pendentes resolvidos.
 
 ## Phases
 
-**Phase Numbering:**
-
-- Integer phases (1, 2, 3): Planned milestone work
-- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
-
-Decimal phases appear between their surrounding integers in numeric order.
-
-- [ ] **Phase 1: Auditoria** - Remover artefatos obsoletos e alinhar nomenclatura com decisoes v1.0
-- [x] **Phase 2: ReadingContext + Creditos** - Refatorar fluxo /ler/nome e gate de creditos (completed 2026-04-11)
-- [ ] **Phase 3: MediaPipe Real** - Substituir mock por Hand Landmarker real com auto-captura
-- [ ] **Phase 4: Clerk Cleanup + Error Handling** - Delegar auth flows ao Clerk e diferenciar erros
-- [ ] **Phase 5: Docs Sync** - Alinhar architecture.md e CLAUDE.md com o codigo real
+- [x] **Phase 12: AbacatePay v2 Backend** - Migrar wrapper pra API v2, criar produtos, atualizar webhook, testes (completed 2026-04-14)
+- [x] **Phase 13: Frontend Payment Flow** - /creditos real, initiatePurchase, checkout intent, UpsellSection, CPF (completed 2026-04-14)
+- [x] **Phase 14: Email & Hardening** - Resend emails transacionais, CPF validation, error handling, stale cleanup (completed 2026-04-14)
+- [x] **Phase 15: Bug Fixes** - Manifesto acentos, camera handedness, revelacao corta (completed 2026-04-14)
 
 ## Phase Details
 
-### Phase 1: Auditoria
+### Phase 12: AbacatePay v2 Backend
 
-**Goal**: Codebase limpa e alinhada com as decisoes arquiteturais de v1.0 — sem referencias a share_token, NextAuth, R2, Claude Vision, ou dados obsoletos
-**Depends on**: Nothing (first phase)
-**Requirements**: AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04, AUDIT-05, AUDIT-06, AUDIT-07, AUDIT-08, AUDIT-09, AUDIT-10, AUDIT-11
-**Success Criteria** (what must be TRUE):
-
-1. Nenhuma referencia a share_token, share_expires_at, expires_at de credit_packs existe em qualquer arquivo TypeScript ou JSON
-2. Nenhuma referencia a NextAuth, next-auth, useSession, getServerSession existe no projeto
-3. Nenhuma referencia a R2, Cloudflare, photo_key, photoKey existe no projeto
-4. Toda ocorrencia de "Planeta dominante" foi substituida por "Monte dominante" e "Claude Vision" por "GPT-4o"
-5. A pagina de resultado nao usa VALID_MOCK_IDS nem fallbackName="Marina"; login()/register() stubs e TODOs obsoletos foram removidos
-   **Plans**: 2 plans
+**Goal**: Backend de pagamento migrado pra AbacatePay API v2. Checkout hosted funciona end-to-end: cria checkout → usuario paga no AbacatePay → webhook credita.
+**Depends on**: Nothing (first phase of v2)
+**Requirements**: PAY-01, PAY-02, PAY-03, PAY-04, PAY-05, PAY-06
+**Plans:** 2/2 plans complete
 
 Plans:
 
-- [x] 01-01-PLAN.md — Remover share_token, VALID_MOCK_IDS, fallbackName="Marina" de types e paginas
-- [x] 01-02-PLAN.md — Corrigir ordem de secoes, verificar items ja limpos, limpar TODOs obsoletos
+- [x] 12-01-PLAN.md — v2 wrapper rewrite + purchase route + schema migration + product setup
+- [x] 12-02-PLAN.md — Webhook handler rewrite + comprehensive tests
 
-### Phase 2: ReadingContext + Creditos
-
-**Goal**: Visitante e usuario logado passam pelo /ler/nome com coleta completa de contexto e o debito de credito ocorre no servidor antes de qualquer captura
-**Depends on**: Phase 1
-**Requirements**: CTX-01, CTX-02, CTX-03, CTX-04, CTX-05, CTX-06, CTX-07, CTX-08, CTX-09
 **Success Criteria** (what must be TRUE):
 
-1. Visitante em /ler/nome preenche nome, email, genero e dominancia antes de prosseguir; lead e salvo via POST /api/lead/register
-2. Usuario logado ve "Pra mim" / "Pra outra pessoa" na mesma tela e ambos os caminhos montam ReadingContext correto com is_self flag
-3. Modal CreditGate aparece para usuario logado fazendo segunda leitura ou mais, mostrando saldo antes de confirmar
-4. Sem saldo, o usuario e redirecionado para /creditos antes de chegar na camera
-5. Debito de credito acontece exclusivamente via POST /api/reading/new no servidor, nunca no cliente
-   **Plans**: 2 plans
-   **UI hint**: yes
+1. abacatepay.ts usa /v2/checkouts/create com items referenciando produto por ID (nao inline products)
+2. 4 produtos existem no AbacatePay com externalId mapeado (mf_avulsa, mf_dupla, mf_roda, mf_tsara)
+3. POST /api/credits/purchase retorna checkout_url valido do AbacatePay
+4. Webhook processa checkout.completed (nao billing.paid) e valida signature com chave publica fixa
+5. Transacao atomica no webhook: paid → credit_pack → debit FIFO → tier upgrade (preservado de v1.3)
+6. methods inclui PIX e CARD
+
+### Phase 13: Frontend Payment Flow
+
+**Goal**: Usuario consegue comprar creditos pela UI. /creditos chama API real, redireciona pro AbacatePay, volta com creditos. UpsellSection no resultado free funciona.
+**Depends on**: Phase 12
+**Requirements**: FRONT-01, FRONT-02, FRONT-03, FRONT-04, FRONT-05, PAY-07
+**Plans:** 2/2 plans complete
 
 Plans:
 
-- [x] 02-01-PLAN.md — ReadingContext type, sessionStorage helpers, useCredits hook
-- [x] 02-02-PLAN.md — Refatorar /ler/nome com fluxo dual visitante/logada + CreditGate modal
+- [x] 13-01-PLAN.md — initiatePurchase() + CPF utils + /creditos page rewrite (remove fake payment, real API)
+- [x] 13-02-PLAN.md — UpsellSection update + payment return flow (?paid=1, ?purchased=1)
 
-### Phase 3: MediaPipe Real
-
-**Goal**: Camera usa Hand Landmarker real com validacao de landmarks e auto-captura; a mao dominante e coletada antes da camera e validada em tempo real
-**Depends on**: Phase 2
-**Requirements**: MP-01, MP-02, MP-03, MP-04, MP-05, MP-06, MP-07, MP-08
 **Success Criteria** (what must be TRUE):
 
-1. @mediapipe/tasks-vision esta instalado e o Hand Landmarker carrega sem erros em celular moderno
-2. Camera abre, detecta a mao em tempo real e exibe feedback textual da cigana quando a posicao esta errada (mao fechada, descentralizada, mao errada)
-3. Apos 1.5s de mao valida e estavelizada, a foto e capturada automaticamente do canvas como base64 JPEG sem intervencao do usuario
-4. Handedness (destra/canhota) e perguntado antes da camera e dominant_hand e enviado no ReadingContext para o servidor
-5. Camera frontal espelhada e camera traseira nao espelhada funcionam corretamente sem inversao de landmarks
-   **Plans**: 2 plans
-   **UI hint**: yes
+1. /creditos chama POST /api/credits/purchase e redireciona pra checkout_url (sem PIX hardcoded)
+2. payment-client.ts exporta initiatePurchase() usado por /creditos e UpsellSection
+3. Usuario nao logado em /creditos → login → volta pra /creditos com pack pre-selecionado (checkout intent)
+4. UpsellSection no resultado free redireciona pra /creditos ou inicia compra direta
+5. Apos pagamento, completionUrl leva pra /ler/resultado/[id]/completo ou /conta/leituras?purchased=1
+6. CPF coletado e validado (formato real) no primeiro pagamento
+
+### Phase 14: Email & Hardening
+
+**Goal**: Emails transacionais enviados via Resend apos eventos chave. Hardening de seguranca e cleanup.
+**Depends on**: Phase 12 (webhook trigger)
+**Requirements**: EMAIL-01, EMAIL-02, EMAIL-03, EMAIL-04
+**Plans:** 1/1 plans complete
 
 Plans:
 
-- [ ] 03-01-PLAN.md — Instalar MediaPipe, estender CamState, criar modulo mediapipe.ts, reescrever useCameraPipeline com deteccao real
-- [ ] 03-02-PLAN.md — Conectar video+canvas no CameraViewport, passar refs da camera page, verificar fluxo completo
+- [x] 14-01-PLAN.md — Harden resend.ts (retry, API key guard), sendWelcome, Clerk webhook, opt-in gating
 
-### Phase 4: Clerk Cleanup + Error Handling
-
-**Goal**: Fluxos de senha e perfil delegados ao Clerk sem telas customizadas; pagina de leituras exibe erros claros; resultado diferencia 404 de 500
-**Depends on**: Phase 3
-**Requirements**: CLK-01, CLK-02, CLK-03, CLK-04, DOCS-03, DOCS-04
 **Success Criteria** (what must be TRUE):
 
-1. /esqueci-senha e /redefinir-senha/[token] redirecionam para o fluxo Clerk sem renderizar formulario customizado
-2. /conta/perfil usa Clerk UserProfile para edicao de nome e troca de senha; nao existe formulario manual para essas acoes
-3. /conta/leituras mostra toast na voz da cigana quando a API falha ao carregar leituras
-4. Pagina de resultado exibe mensagem distinta para leitura nao encontrada (404) versus erro de servidor (500)
-   **Plans**: TBD
-   **UI hint**: yes
+1. Email de pagamento confirmado enviado apos webhook (voz da cigana, link pro resultado)
+2. Email de boas-vindas enviado apos primeira conta criada
+3. Emails marketing so enviados se lead.email_opt_in === true
+4. Falha no Resend nao bloqueia fluxo principal (retry 1x, catch silencioso)
 
-### Phase 5: Docs Sync
+### Phase 15: Bug Fixes
 
-**Goal**: architecture.md e CLAUDE.md refletem com precisao o codigo que existe hoje, sem referencias a sistemas removidos ou planos nao implementados
-**Depends on**: Phase 4
-**Requirements**: DOCS-01, DOCS-02
+**Goal**: Bugs pendentes de UX resolvidos.
+**Depends on**: Nothing (independent)
+**Requirements**: BUG-01, BUG-02, BUG-03
+**Plans:** 1/1 plans complete
+
+Plans:
+
+- [x] 15-01-PLAN.md — Manifesto accents + camera handedness mirroring fix + revelacao responsive card
+
 **Success Criteria** (what must be TRUE):
 
-1. architecture.md nao menciona share_token, expires_at de creditos, NextAuth, R2, ou Claude Vision; reflete fluxo unico com is_self flag e decisoes v1.1
-2. CLAUDE.md lista Clerk (sem NextAuth), GPT-4o (sem Claude Vision), sem mencao a R2, e a estrutura de pastas bate com o projeto real
-   **Plans**: TBD
+1. Manifesto: 63 palavras sem acento corrigidas
+2. Camera: handedness espelhamento so em camera frontal, nao em upload/traseira
+3. Revelacao: carta nao corta em telas < 640px (scroll ou min-height)
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phase 12 → 13 → 14 (parallel to 15) → 15
 
-| Phase                             | Milestone | Plans Complete | Status      | Completed  |
-| --------------------------------- | --------- | -------------- | ----------- | ---------- |
-| 1. Auditoria                      | v1.1      | 2/2            | Complete    | -          |
-| 2. ReadingContext + Creditos      | v1.1      | 2/2            | Complete    | 2026-04-11 |
-| 3. MediaPipe Real                 | v1.1      | 0/2            | Planning    | -          |
-| 4. Clerk Cleanup + Error Handling | v1.1      | 0/?            | Not started | -          |
-| 5. Docs Sync                      | v1.1      | 0/?            | Not started | -          |
+| Phase                     | Milestone | Plans Complete | Status   | Completed  |
+| ------------------------- | --------- | -------------- | -------- | ---------- |
+| 12. AbacatePay v2 Backend | v2        | 2/2            | Complete | 2026-04-14 |
+| 13. Frontend Payment Flow | v2        | 2/2            | Complete | 2026-04-14 |
+| 14. Email & Hardening     | v2        | 1/1            | Complete | 2026-04-14 |
+| 15. Bug Fixes             | v2        | 1/1            | Complete | 2026-04-14 |

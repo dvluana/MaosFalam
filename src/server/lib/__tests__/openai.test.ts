@@ -61,7 +61,7 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
       .mockResolvedValueOnce(new Response(JSON.stringify(makeValidGptResponse()), { status: 200 }));
 
     const { analyzeHand } = await import("../openai");
-    await analyzeHand("base64photodata");
+    await analyzeHand("base64photodata", "right");
 
     expect(fetchSpy).toHaveBeenCalledOnce();
     const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
@@ -77,12 +77,48 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
       .mockResolvedValueOnce(new Response(JSON.stringify(makeValidGptResponse()), { status: 200 }));
 
     const { analyzeHand } = await import("../openai");
-    await analyzeHand("base64photodata");
+    await analyzeHand("base64photodata", "right");
+
+    const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    const userContent = body.messages[1].content as Array<{ type: string; text?: string }>;
+    // Last item is image_url; all items before it are text
+    const last = userContent[userContent.length - 1];
+    expect(last.type).toBe("image_url");
+    for (const item of userContent.slice(0, -1)) {
+      expect(item.type).toBe("text");
+    }
+    // First text item contains "mao" (dominanceContext)
+    expect(userContent[0].text).toContain("mao");
+  });
+
+  it("injects elementHint text when provided", async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify(makeValidGptResponse()), { status: 200 }));
+
+    const { analyzeHand } = await import("../openai");
+    await analyzeHand("base64photodata", "right", "fire");
+
+    const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    const userContent = body.messages[1].content as Array<{ type: string; text?: string }>;
+    // Should have 4 items: dominanceContext, elementHint, "Analise esta palma.", image_url
+    expect(userContent).toHaveLength(4);
+    expect(userContent[1].text).toContain("fire");
+    expect(userContent[1].text).toContain("Pre-analise");
+    expect(userContent[3].type).toBe("image_url");
+  });
+
+  it("omits elementHint text when not provided", async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify(makeValidGptResponse()), { status: 200 }));
+
+    const { analyzeHand } = await import("../openai");
+    await analyzeHand("base64photodata", "right");
 
     const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
     const userContent = body.messages[1].content as Array<{ type: string }>;
-    expect(userContent[0].type).toBe("text");
-    expect(userContent[1].type).toBe("image_url");
+    expect(userContent).toHaveLength(3);
   });
 
   it("AI-02: returns valid HandAttributes on valid GPT-4o response", async () => {
@@ -91,7 +127,7 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     );
 
     const { analyzeHand } = await import("../openai");
-    const result = await analyzeHand("base64photodata");
+    const result = await analyzeHand("base64photodata", "right");
 
     expect(result.element).toBe("fire");
     expect(result.confidence).toBe(0.85);
@@ -127,7 +163,7 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     );
 
     const { analyzeHand } = await import("../openai");
-    await expect(analyzeHand("base64photodata")).rejects.toThrow(
+    await expect(analyzeHand("base64photodata", "right")).rejects.toThrow(
       "Invalid hand attributes from GPT-4o",
     );
   });
@@ -142,7 +178,7 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     );
 
     const { analyzeHand } = await import("../openai");
-    await expect(analyzeHand("base64photodata")).rejects.toThrow(
+    await expect(analyzeHand("base64photodata", "right")).rejects.toThrow(
       "GPT-4o refused: low confidence image",
     );
   });
@@ -157,14 +193,16 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     );
 
     const { analyzeHand } = await import("../openai");
-    await expect(analyzeHand("base64photodata")).rejects.toThrow("GPT-4o returned empty content");
+    await expect(analyzeHand("base64photodata", "right")).rejects.toThrow(
+      "GPT-4o returned empty content",
+    );
   });
 
   it("throws when OpenAI API returns non-OK status", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(new Response("{}", { status: 429 }));
 
     const { analyzeHand } = await import("../openai");
-    await expect(analyzeHand("base64photodata")).rejects.toThrow("OpenAI error: 429");
+    await expect(analyzeHand("base64photodata", "right")).rejects.toThrow("OpenAI error: 429");
   });
 
   it("AI-04: logger.info receives only element and confidence on success", async () => {
@@ -188,7 +226,7 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     // static analysis assertion below
     const { analyzeHand } = await import("../openai");
     // Call with a known photo string
-    await analyzeHand("SENSITIVE_BASE64_DATA");
+    await analyzeHand("SENSITIVE_BASE64_DATA", "right");
 
     // Verify testLogger isn't capturing the photo (proving our pattern works)
     testLogger.info({ element: "fire", confidence: 0.85 }, "Hand analyzed");

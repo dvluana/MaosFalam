@@ -1,6 +1,8 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { debitCreditFIFO } from "@/server/lib/debit-credit";
 import { logger } from "@/server/lib/logger";
 import { analyzeHand } from "@/server/lib/openai";
 import { prisma } from "@/server/lib/prisma";
@@ -20,6 +22,8 @@ const schema = z.object({
   target_name: z.string().min(2).max(100),
   target_gender: z.enum(["female", "male"]),
   is_self: z.boolean(),
+  dominant_hand: z.enum(["right", "left"]).default("right"),
+  element_hint: z.enum(["fire", "water", "earth", "air"]).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -40,7 +44,7 @@ export async function POST(req: NextRequest) {
     const data = schema.parse(body);
 
     // 1. Analyze with GPT-4o
-    const attributes = await analyzeHand(data.photo_base64);
+    const attributes = await analyzeHand(data.photo_base64, data.dominant_hand, data.element_hint);
 
     // 2. Check confidence
     if (attributes.confidence < 0.3) {
@@ -57,7 +61,19 @@ export async function POST(req: NextRequest) {
     // 3. Select blocks
     const report = selectBlocks(attributes, data.target_name, data.target_gender);
 
-    // 4. Save reading
+    // 4. Determine tier server-side via atomic credit debit.
+    //    The client cannot influence this — credit_used is not in the schema.
+    const { userId: clerkUserId } = await auth();
+
+    let tier: "free" | "premium" = "free";
+    if (clerkUserId) {
+      const debit = await debitCreditFIFO(clerkUserId);
+      if (debit.debited) {
+        tier = "premium";
+      }
+    }
+
+    // 5. Save reading
     const reading = await prisma.reading.create({
       data: {
         leadId: data.lead_id,
@@ -67,7 +83,8 @@ export async function POST(req: NextRequest) {
         isSelf: data.is_self,
         attributes: JSON.parse(JSON.stringify(attributes)),
         report: JSON.parse(JSON.stringify(report)),
-        tier: "free",
+        tier,
+        clerkUserId: clerkUserId ?? undefined,
         confidence: attributes.confidence,
       },
     });
@@ -81,12 +98,12 @@ export async function POST(req: NextRequest) {
       "Reading created",
     );
 
-    // 5. Send email to lead (non-blocking)
+    // 6. Send email to lead (non-blocking)
     if (data.lead_id) {
       const lead = await prisma.lead.findUnique({
         where: { id: data.lead_id },
       });
-      if (lead?.email) {
+      if (lead?.email && lead.emailOptIn === true) {
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
         sendLeadReading(lead.email, lead.name, `${baseUrl}/ler/resultado/${reading.id}`);
       }
@@ -95,12 +112,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       reading_id: reading.id,
       report,
+      tier,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Dados invalidos" }, { status: 400 });
     }
-    logger.error({ error, route: "/api/reading/capture" }, "Erro na rota");
+    logger.error(
+      {
+        err: error instanceof Error ? error.message : String(error),
+        route: "/api/reading/capture",
+      },
+      "Erro na rota",
+    );
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

@@ -1,81 +1,219 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState, type ChangeEvent } from "react";
+import { useRouter } from "next/navigation";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import CameraErrorState from "@/components/camera/CameraErrorState";
 import CameraEyebrow from "@/components/camera/CameraEyebrow";
 import CameraFeedback from "@/components/camera/CameraFeedback";
 import CameraViewport from "@/components/camera/CameraViewport";
 import CaptureFlash from "@/components/camera/CaptureFlash";
+import LandscapeWarning from "@/components/camera/LandscapeWarning";
 import MethodChoice from "@/components/camera/MethodChoice";
-import UploadPreview from "@/components/camera/UploadPreview";
+import UploadConfirmScreen from "@/components/camera/UploadConfirmScreen";
+import UploadInstructionScreen from "@/components/camera/UploadInstructionScreen";
+import UploadValidationScreen from "@/components/camera/UploadValidationScreen";
 import PageLoading from "@/components/ui/PageLoading";
-import StateSwitcher from "@/components/ui/StateSwitcher";
 import useCameraPipeline from "@/hooks/useCameraPipeline";
-import { CAM_EYEBROW, CAM_FEEDBACK, CAM_STATES, isErrorState, type CamState } from "@/types/camera";
+import { useFailureCounter } from "@/hooks/useFailureCounter";
+import { useLandscapeGuard } from "@/hooks/useLandscapeGuard";
+import { useUploadValidation } from "@/hooks/useUploadValidation";
+import { clearPhotoStore, setPhoto } from "@/lib/photo-store";
+import { loadReadingContext } from "@/lib/reading-context";
+import { STORAGE_KEYS } from "@/lib/storage-keys";
+import { CAM_EYEBROW, CAM_FEEDBACK, isErrorState, type CamState } from "@/types/camera";
 
 function CameraPageInner() {
   const router = useRouter();
-  const search = useSearchParams();
-  const forced = search?.get("state") as CamState | null;
-  const [state, setState] = useState<CamState>(forced ?? "method_choice");
+  const [state, setState] = useState<CamState>("method_choice");
   const [showUpload, setShowUpload] = useState(false);
+  type UploadStep = "instruction" | "validating" | "confirm";
+  const [uploadStep, setUploadStep] = useState<UploadStep>("instruction");
+  const [mirrored, setMirrored] = useState(false);
+  const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
+  const [cameraKey, setCameraKey] = useState(0);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const landmarkCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
+
+  const isLandscape = useLandscapeGuard();
+
+  const { suggestMethodSwitch, recordFailure, resetFailures } = useFailureCounter();
+
+  // Load reading context — "use client" page, no SSR content to mismatch
+  const readingContext = loadReadingContext();
+  const dominantHand = readingContext?.dominant_hand ?? "right";
+  const targetName = readingContext?.target_name ?? "";
+  const isSelf = readingContext?.is_self ?? true;
+
+  const {
+    result: uploadResult,
+    validate: validateFile,
+    reset: resetUpload,
+  } = useUploadValidation(dominantHand);
 
   // Guard: sem nome no sessionStorage, volta pro /ler/nome
+  // Clear stale photo from previous reading to avoid sending old photo
   useEffect(() => {
-    if (!sessionStorage.getItem("maosfalam_name_fresh")) {
+    if (!sessionStorage.getItem(STORAGE_KEYS.name_fresh)) {
       router.replace("/ler/nome");
+      return;
     }
+    clearPhotoStore();
   }, [router]);
 
-  if (forced && forced !== state) {
-    setState(forced);
-  }
+  // Permission denied → auto-redirect to upload after brief pause
+  useEffect(() => {
+    if (state === "camera_permission_denied" || state === "camera_permission_denied_permanent") {
+      const timer = setTimeout(() => {
+        setState("method_choice");
+        resetUpload();
+        setUploadStep("instruction");
+        setShowUpload(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [state, resetUpload]);
+
+  // Record failure when camera enters error state
+  useEffect(() => {
+    if (state === "camera_error_generic") {
+      recordFailure();
+    }
+  }, [state, recordFailure]);
 
   const handleCaptured = useCallback(
     (photoBase64: string) => {
-      sessionStorage.setItem("maosfalam_photo", photoBase64);
+      resetFailures();
+      setPhoto(photoBase64);
       router.push("/ler/scan");
     },
-    [router],
+    [router, resetFailures],
   );
 
   useCameraPipeline({
     state,
-    forced: Boolean(forced),
+    forced: false,
     setState,
     onCaptured: handleCaptured,
+    videoRef,
+    canvasRef,
+    landmarkCanvasRef,
+    onMirroredChange: setMirrored,
+    preferredFacing: facingMode,
+    cameraKey,
   });
 
-  const handleUploadSelected = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
+  const handleUploadFileSelected = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setUploadStep("validating");
+      await validateFile(file);
+      setUploadStep("confirm");
+    },
+    [validateFile],
+  );
+
+  const [uploadSending, setUploadSending] = useState(false);
+
+  const handleUploadConfirm = useCallback(() => {
+    if (!uploadResult.file) return;
+    resetFailures();
+    setUploadSending(true);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const base64 = dataUrl.split(",")[1] ?? "";
+      setPhoto(base64);
+      router.push("/ler/scan");
+    };
+    reader.readAsDataURL(uploadResult.file);
+  }, [uploadResult.file, router, resetFailures]);
+
+  const handleUploadBack = useCallback(() => {
+    resetUpload();
+    setUploadStep("instruction");
+    setShowUpload(false);
+  }, [resetUpload]);
+
+  const handleUploadRetry = useCallback(() => {
+    recordFailure();
+    resetUpload();
+    setUploadStep("instruction");
+    // Reseta o input file para permitir re-selecao do mesmo arquivo
+    if (uploadInputRef.current) uploadInputRef.current.value = "";
+  }, [resetUpload, recordFailure]);
+
+  const handleSwitchCamera = useCallback(() => {
+    // Stop current stream
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((t) => t.stop());
+      videoRef.current.srcObject = null;
+    }
+    setFacingMode((prev) => (prev === "environment" ? "user" : "environment"));
+    setCameraKey((prev) => prev + 1);
+    setState("loading_mediapipe");
+  }, []);
+
+  const handleUploadSelectedFromError = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       if (!event.target.files?.length) return;
       const file = event.target.files[0];
       if (!file) return;
-      setState("camera_capturing");
-      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-        navigator.vibrate?.(120);
-      }
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;
         const base64 = dataUrl.split(",")[1] ?? "";
-        sessionStorage.setItem("maosfalam_photo", base64);
-        window.setTimeout(() => router.push("/ler/scan"), 600);
+        setPhoto(base64);
+        router.push("/ler/scan");
       };
       reader.readAsDataURL(file);
     },
     [router],
   );
 
+  const stopCameraStream = useCallback(() => {
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((t) => t.stop());
+      videoRef.current.srcObject = null;
+    }
+  }, []);
+
+  const handleBack = useCallback(() => {
+    if (state === "method_choice" && !showUpload) {
+      router.back();
+    } else if (showUpload) {
+      resetUpload();
+      setUploadStep("instruction");
+      setShowUpload(false);
+      setState("method_choice");
+    } else {
+      stopCameraStream();
+      setState("method_choice");
+      setShowUpload(false);
+    }
+  }, [state, showUpload, router, resetUpload, stopCameraStream]);
+
+  const canGoBack = state !== "camera_capturing";
+
   const errorState = isErrorState(state);
   const showViewport = !errorState && state !== "method_choice";
   const showTitle = !errorState && state !== "method_choice";
 
+  // Method switch suggestion message depends on which flow the user is in
+  const methodSwitchText = showUpload
+    ? "Tente agora pela camera. Ao vivo fica mais facil."
+    : "Tente agora na galeria. Uma foto bem iluminada resolve.";
+
   return (
     <main className="relative min-h-dvh bg-black flex flex-col items-center justify-center px-6 pt-28 pb-16 gap-10 overflow-hidden">
+      <LandscapeWarning visible={isLandscape} />
+
       <CaptureFlash active={state === "camera_capturing"} />
 
       <div
@@ -89,6 +227,29 @@ function CameraPageInner() {
 
       <CameraEyebrow label={CAM_EYEBROW[state]} />
 
+      {/* Back button — hidden during capture */}
+      {canGoBack && (
+        <button
+          type="button"
+          onClick={handleBack}
+          className="fixed top-5 left-5 z-[60] flex items-center gap-2 py-2 px-3 transition-opacity duration-300 hover:opacity-100 opacity-70"
+          aria-label="Voltar"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path
+              d="M9 2.5L4.5 7L9 11.5"
+              stroke="var(--color-gold)"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="font-raleway text-[11px] tracking-[0.06em] uppercase text-bone-dim">
+            Voltar
+          </span>
+        </button>
+      )}
+
       <AnimatePresence mode="wait">
         {showTitle && (
           <motion.p
@@ -99,7 +260,9 @@ function CameraPageInner() {
             transition={{ duration: 0.6 }}
             className="relative font-cormorant italic text-[24px] sm:text-[28px] text-bone text-center max-w-sm leading-[1.3]"
           >
-            {CAM_FEEDBACK[state]}
+            {state === "camera_wrong_hand"
+              ? `Essa é a mão ${dominantHand === "right" ? "esquerda" : "direita"}. Me mostre a ${dominantHand === "right" ? "direita" : "esquerda"}.`
+              : CAM_FEEDBACK[state]}
           </motion.p>
         )}
         {state === "method_choice" && (
@@ -123,35 +286,72 @@ function CameraPageInner() {
       {state === "method_choice" && !showUpload && (
         <MethodChoice
           onPickLive={() => setState("loading_mediapipe")}
-          onPickUpload={() => setShowUpload(true)}
+          onPickUpload={() => {
+            resetUpload();
+            setUploadStep("instruction");
+            setShowUpload(true);
+          }}
         />
       )}
 
       {showUpload && (
-        <UploadPreview
-          onConfirm={(file: File) => {
-            setState("camera_capturing");
-            if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-              navigator.vibrate?.(120);
-            }
-            const reader = new FileReader();
-            reader.onload = () => {
-              const dataUrl = reader.result as string;
-              const base64 = dataUrl.split(",")[1] ?? "";
-              sessionStorage.setItem("maosfalam_photo", base64);
-              window.setTimeout(() => router.push("/ler/scan"), 600);
-            };
-            reader.readAsDataURL(file);
-          }}
-          onCancel={() => setShowUpload(false)}
-        />
+        <>
+          {/* File input oculto — acionado programaticamente */}
+          <input
+            ref={uploadInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+            className="hidden"
+            onChange={handleUploadFileSelected}
+          />
+
+          {uploadStep === "instruction" && (
+            <UploadInstructionScreen
+              dominantHand={dominantHand}
+              targetName={targetName}
+              isSelf={isSelf}
+              onContinue={() => uploadInputRef.current?.click()}
+              onBack={handleUploadBack}
+            />
+          )}
+
+          {uploadStep === "validating" && <UploadValidationScreen checks={uploadResult.checks} />}
+
+          {uploadStep === "confirm" && (
+            <UploadConfirmScreen
+              result={uploadResult}
+              targetName={isSelf ? undefined : targetName}
+              onConfirm={handleUploadConfirm}
+              onRetry={handleUploadRetry}
+              onBack={handleUploadBack}
+              sending={uploadSending}
+            />
+          )}
+        </>
       )}
 
-      {showViewport && <CameraViewport state={state} />}
+      {showViewport && (
+        <CameraViewport
+          state={state}
+          videoRef={videoRef}
+          canvasRef={canvasRef}
+          landmarkCanvasRef={landmarkCanvasRef}
+          mirrored={mirrored}
+          dominantHand={dominantHand}
+          targetName={targetName}
+          onSwitchCamera={handleSwitchCamera}
+        />
+      )}
 
       {!errorState && state !== "camera_capturing" && (
         <div className="relative">
           <CameraFeedback text="" />
+          {/* Method switch suggestion after 3 failures */}
+          {suggestMethodSwitch && (
+            <p className="font-cormorant italic text-[15px] text-bone-dim text-center max-w-xs mt-2">
+              {methodSwitchText}
+            </p>
+          )}
         </div>
       )}
 
@@ -159,11 +359,9 @@ function CameraPageInner() {
         <CameraErrorState
           state={state}
           onRetry={() => router.replace("/ler/camera")}
-          onUploadSelected={handleUploadSelected}
+          onUploadSelected={handleUploadSelectedFromError}
         />
       )}
-
-      <StateSwitcher states={CAM_STATES} current={state} />
     </main>
   );
 }

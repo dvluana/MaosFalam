@@ -19,8 +19,10 @@
  */
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+
+import { Button } from "@/components/ui";
+import { initiatePurchase } from "@/lib/payment-client";
 
 interface Pacote {
   id: string;
@@ -82,13 +84,26 @@ interface Props {
 }
 
 export default function BuyCreditsModal({ open, onClose }: Props) {
-  const router = useRouter();
+  const [selected, setSelected] = useState<string | null>(null);
+  const [purchasing, setPurchasing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [lastOpen, setLastOpen] = useState(false);
+
+  // Reset state on open (render-time rising-edge, no useEffect setState)
+  if (open && !lastOpen) {
+    setSelected(null);
+    setPurchasing(false);
+    setError(null);
+    setLastOpen(true);
+  } else if (!open && lastOpen) {
+    setLastOpen(false);
+  }
 
   // Esc fecha + trava scroll do body
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape" && !purchasing) onClose();
     };
     window.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
@@ -97,13 +112,20 @@ export default function BuyCreditsModal({ open, onClose }: Props) {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [open, onClose]);
+  }, [open, onClose, purchasing]);
 
-  const handlePick = (pacoteId: string) => {
-    // Navega pra /creditos com pacote pré-selecionado. A /creditos lê ?pacote=
-    // no mount e já cai direto no bloco de pagamento.
-    router.push(`/creditos?pacote=${pacoteId}`);
-  };
+  const handleBuy = useCallback(async () => {
+    if (!selected) return;
+    setPurchasing(true);
+    setError(null);
+    try {
+      const result = await initiatePurchase(selected);
+      window.location.href = result.checkout_url;
+    } catch {
+      setError("Algo saiu do caminho. Tenta de novo.");
+      setPurchasing(false);
+    }
+  }, [selected]);
 
   return (
     <AnimatePresence>
@@ -214,81 +236,88 @@ export default function BuyCreditsModal({ open, onClose }: Props) {
                 Mais mãos, mais verdades.
               </h3>
 
-              {/* Lista de pacotes */}
-              <div className="flex flex-col gap-3">
-                {PACOTES.map((p) => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => handlePick(p.id)}
-                    className="group relative text-left transition-all focus:outline-none bg-deep/70 border border-gold/18 p-4 pl-[18px]"
-                  >
-                    {/* Corner accents do pacote */}
-                    <span
-                      aria-hidden
-                      className="absolute w-[7px] h-[7px] top-1 left-1 border-t border-l border-gold/40 group-hover:border-gold/80 transition-colors"
-                    />
-                    <span
-                      aria-hidden
-                      className="absolute w-[7px] h-[7px] bottom-1 right-1 border-b border-r border-gold/40 group-hover:border-gold/80 transition-colors"
-                    />
-
-                    {/* Badge popular */}
-                    {p.popular && (
-                      <span
-                        className="absolute top-2 right-2 font-jetbrains text-[7px] tracking-[1.2px] uppercase px-1.5 py-0.5 text-gold bg-gold/12 border border-gold/45"
-                        style={{ fontWeight: 500 }}
-                      >
-                        popular
-                      </span>
-                    )}
-
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex flex-col min-w-0 flex-1">
-                        <div className="flex items-baseline gap-2">
-                          <h4 className="font-cinzel text-[16px] sm:text-[18px] font-medium tracking-[0.04em] text-gold leading-none">
-                            {p.nome}
-                          </h4>
-                          <span
-                            className="font-jetbrains text-[8px] tracking-[1.2px] uppercase text-gold-dim"
-                            style={{ fontWeight: 500 }}
-                          >
-                            {p.creditos} {p.creditos === 1 ? "leitura" : "leituras"}
-                          </span>
-                        </div>
-                        <p className="font-cormorant italic text-[14px] text-bone-dim leading-[1.35] mt-1.5">
-                          {p.tagline}
-                        </p>
+              {/* Lista de pacotes — selecionar */}
+              <div className="flex flex-col gap-2.5">
+                {PACOTES.map((p) => {
+                  const isSelected = selected === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      disabled={purchasing}
+                      onClick={() => setSelected(p.id)}
+                      className="group relative text-left transition-all focus:outline-none p-4 pl-[18px]"
+                      style={{
+                        background: isSelected ? "rgba(201,162,74,0.08)" : "rgba(17,12,26,0.7)",
+                        border: isSelected
+                          ? "1px solid rgba(201,162,74,0.5)"
+                          : "1px solid rgba(201,162,74,0.12)",
+                      }}
+                    >
+                      {/* Badge popular */}
+                      {p.popular && (
                         <span
-                          className="font-jetbrains text-[8px] tracking-[1.5px] uppercase text-bone-dim mt-1.5"
+                          className="absolute -top-2.5 right-3 font-jetbrains text-[7px] tracking-[1.2px] uppercase px-2 py-0.5 text-gold bg-deep border border-gold/45"
                           style={{ fontWeight: 500 }}
                         >
-                          {p.paraQuem}
+                          popular
                         </span>
+                      )}
+
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex flex-col min-w-0 flex-1">
+                          <div className="flex items-baseline gap-2">
+                            <h4 className="font-cinzel text-[16px] sm:text-[18px] font-medium tracking-[0.04em] text-gold leading-none">
+                              {p.nome}
+                            </h4>
+                            <span className="font-raleway text-[11px] text-bone-dim">
+                              {p.creditos} {p.creditos === 1 ? "leitura" : "leituras"}
+                            </span>
+                          </div>
+                          <p className="font-raleway text-[13px] text-bone-dim leading-[1.4] mt-1">
+                            {p.paraQuem}
+                          </p>
+                        </div>
+                        <div className="shrink-0 flex flex-col items-end">
+                          <span className="font-cinzel text-[18px] sm:text-[20px] text-gold leading-none">
+                            {formatBRL(p.preco)}
+                          </span>
+                          <span className="font-raleway text-[11px] text-bone-dim mt-1">
+                            {formatPorLeitura(p.preco, p.creditos)} cada
+                          </span>
+                        </div>
                       </div>
-                      <div className="shrink-0 flex flex-col items-end">
-                        <span
-                          className="font-cinzel text-[20px] sm:text-[22px] text-gold leading-none"
-                          style={{
-                            textShadow:
-                              "0 0 16px rgba(201,162,74,0.3), 0 0 32px rgba(201,162,74,0.12)",
-                          }}
-                        >
-                          {formatBRL(p.preco)}
-                        </span>
-                        <span className="font-cormorant italic text-[11px] text-bone-dim mt-1">
-                          {formatPorLeitura(p.preco, p.creditos)} cada
-                        </span>
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
 
-              {/* Hint cigana */}
-              <p className="font-cormorant italic text-[13px] text-bone-dim text-center mt-5">
-                O preço do que você vai descobrir é barato pelo que vale.
-              </p>
+              {/* Error */}
+              {error && (
+                <p className="font-raleway text-[13px] text-rose text-center mt-3">{error}</p>
+              )}
+
+              {/* CTA */}
+              <div className="mt-5">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  disabled={!selected || purchasing}
+                  onClick={() => void handleBuy()}
+                  className="w-full !text-[13px]"
+                >
+                  {purchasing ? (
+                    <span className="inline-flex items-center gap-2">
+                      <span className="block w-3.5 h-3.5 rounded-full border-2 border-bone/20 border-t-bone animate-spin" />
+                      Redirecionando...
+                    </span>
+                  ) : selected ? (
+                    `Comprar · ${formatBRL(PACOTES.find((p) => p.id === selected)?.preco ?? 0)}`
+                  ) : (
+                    "Escolha um pacote"
+                  )}
+                </Button>
+              </div>
             </div>
           </motion.article>
         </motion.div>
