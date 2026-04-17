@@ -157,6 +157,7 @@ None.
 | 260411-p9a | Linking leituras anonimas a contas                | 2026-04-11 | e4b4feb | [260411-p9a-linking-leituras-anonimas-a-contas](./quick/260411-p9a-linking-leituras-anonimas-a-contas/)             |
 | 260411-qgu | Fluxo premium completo staging                    | 2026-04-11 | a659f05 | [260411-qgu-fluxo-premium-completo-staging](./quick/260411-qgu-fluxo-premium-completo-staging/)                     |
 | 260417-jfc | Fix no-free-flow-after-login + element concept UX | 2026-04-17 | e401fe6 | [260417-jfc-fix-no-free-flow-after-login-element-con](./quick/260417-jfc-fix-no-free-flow-after-login-element-con/) |
+| 260417-rjx | Fix pickRandom seeded PRNG in select-blocks       | 2026-04-17 | 3721805 | [260417-rjx-fix-pickrandom-seeded-prng-in-select-blo](./quick/260417-rjx-fix-pickrandom-seeded-prng-in-select-blo/) |
 | 260417-rjx | Fix pickRandom — seeded PRNG in selectBlocks      | 2026-04-17 | 3721805 | [260417-rjx-fix-pickrandom-seeded-prng-in-select-blo](./quick/260417-rjx-fix-pickrandom-seeded-prng-in-select-blo/) |
 
 ## Session Continuity
