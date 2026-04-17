@@ -171,7 +171,7 @@ export default function RevelacaoPage() {
         }}
       >
         <article
-          className="card-noise relative overflow-hidden min-h-[280px]"
+          className="card-noise relative overflow-hidden min-h-[280px] mx-auto"
           style={{
             aspectRatio: "5 / 7",
             maxHeight: "min(476px, 55dvh)",
