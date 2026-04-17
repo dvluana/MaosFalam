@@ -160,6 +160,6 @@ None.
 
 ## Session Continuity
 
-Last activity: 2026-04-14 — Completed plan 12-01
-Stopped at: Completed 15-01-PLAN.md
+Last activity: 2026-04-17 — Completed quick task 260417-jfc: Fix no-free-flow-after-login + element concept UX
+Stopped at: Quick task 260417-jfc complete
 Resume file: None
