@@ -281,11 +281,10 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
       // ----------------------------------------------------------
       updateCheck("handedness", { status: "running" });
 
-      // MediaPipe classifies from its own POV (as if looking at its own hand).
-      // A palm photo facing the camera has the anatomy flipped from MediaPipe's
-      // perspective, so we invert: MediaPipe "Left" = user's right hand.
+      // MediaPipe IMAGE mode returns the anatomically correct label for static photos.
+      // No inversion needed (inversion only applied in live camera with mirroring).
       const detectedLabel = detectHandedness(handednessCategories);
-      const detectedSide = detectedLabel === "Left" ? "right" : "left";
+      const detectedSide: "left" | "right" = detectedLabel === "Left" ? "left" : "right";
       let handOk = false;
 
       if (detectedSide !== dominantHand) {
