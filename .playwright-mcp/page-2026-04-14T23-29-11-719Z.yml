@@ -1,0 +1,104 @@
+- generic [ref=e2]:
+    - generic [ref=e3]:
+        - generic [ref=e4]:
+            - img [ref=e5]
+            - generic [ref=e7]: Sandbox Mode
+        - generic [ref=e68]:
+            - generic [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e81]:
+                    - img [ref=e82]
+                    - generic [ref=e85]: Compra 100% segura
+            - generic [ref=e87]:
+                - generic [ref=e88]:
+                    - button "Dados" [ref=e90] [cursor=pointer]:
+                        - img [ref=e91]
+                        - generic [ref=e94]: Dados
+                    - generic [ref=e95]:
+                        - img [ref=e96]
+                        - button "Pagamento" [disabled] [ref=e98]:
+                            - img [ref=e99]
+                            - generic [ref=e101]: Pagamento
+                - generic [ref=e102]:
+                    - heading "Forma de pagamento" [level=2] [ref=e103]
+                    - generic [ref=e104]:
+                        - generic [ref=e105] [cursor=pointer]:
+                            - radio "PIX" [ref=e106]
+                            - img [ref=e108]
+                            - generic [ref=e110]: PIX
+                        - generic [ref=e111] [cursor=pointer]:
+                            - radio "Cartão de crédito" [checked] [ref=e112]
+                            - img [ref=e114]
+                            - img [ref=e116]
+                            - generic [ref=e118]: Cartão de crédito
+                    - generic [ref=e119]:
+                        - generic [ref=e120]:
+                            - generic [ref=e121]: Número do Cartão
+                            - textbox "Número do Cartão" [ref=e122]:
+                                - /placeholder: "Ex: 1234 5678 9012 3456"
+                        - generic [ref=e123]:
+                            - generic [ref=e124]: Nome no Cartão
+                            - textbox "Nome no Cartão" [ref=e125]:
+                                - /placeholder: Nome igual ao cartão
+                        - generic [ref=e126]:
+                            - generic [ref=e127]:
+                                - generic [ref=e128]: Data de validade
+                                - textbox "Data de validade" [ref=e129]:
+                                    - /placeholder: MM/AA
+                            - generic [ref=e130]:
+                                - generic [ref=e131]: CVV
+                                - textbox "CVV" [ref=e132]:
+                                    - /placeholder: "Ex.: 123"
+                        - generic [ref=e133]:
+                            - generic [ref=e134]:
+                                - generic [ref=e135]: CPF do titular
+                                - generic [ref=e136] [cursor=pointer]:
+                                    - checkbox "Sou o titular do cartão" [ref=e137]
+                                    - text: Sou o titular do cartão
+                            - textbox "CPF do titular" [ref=e138]:
+                                - /placeholder: 000.000.000-00
+                        - generic [ref=e139]:
+                            - generic [ref=e140]:
+                                - generic [ref=e141]: CEP
+                                - textbox "CEP" [ref=e142]:
+                                    - /placeholder: 00000-000
+                            - generic [ref=e143]:
+                                - generic [ref=e144]: Nº Residencial
+                                - textbox "Nº Residencial" [ref=e145]:
+                                    - /placeholder: "000"
+                        - generic [ref=e146]:
+                            - generic [ref=e147]: Complemento
+                            - textbox "Complemento" [ref=e148]:
+                                - /placeholder: Apto, casa, etc.
+                        - paragraph [ref=e149]: Os seus dados pessoais serão utilizados para processar o seu pedido, melhorar a sua experiência neste site e para outros fins descritos na nossa política de privacidade.
+                    - generic [ref=e150]:
+                        - generic [ref=e152]:
+                            - img [ref=e154]
+                            - generic [ref=e156]:
+                                - heading "MaosFalam Avulsa" [level=3] [ref=e157]
+                                - generic [ref=e159]: R$ 14,90
+                        - generic [ref=e160]:
+                            - heading "Resumo" [level=4] [ref=e163]
+                            - generic [ref=e165]:
+                                - generic [ref=e166]: Subtotal
+                                - generic [ref=e167]: R$ 14,90
+                            - generic [ref=e169]:
+                                - generic [ref=e170]: "Total:"
+                                - generic [ref=e171]: R$ 14,90
+                    - generic [ref=e174]:
+                        - button "Concluir pagamento" [ref=e175] [cursor=pointer]:
+                            - generic [ref=e176]:
+                                - generic [ref=e177]: Concluir pagamento
+                                - img [ref=e178]
+                            - generic [ref=e181]: Trabalhando nisso...
+                            - generic [ref=e182]:
+                                - generic [ref=e183]: Sucesso
+                                - img [ref=e184]
+                            - generic [ref=e186]:
+                                - generic [ref=e187]: Ooops
+                                - img [ref=e188]
+                        - generic [ref=e191]:
+                            - img [ref=e192]
+                            - generic [ref=e195]: 7 dias de garantia. Sem perguntas, sem burocracia.
+            - paragraph [ref=e197]: Copyright © 2026 AbacatePay LLC - Abacatepay Tecnologia
+    - region "Notifications alt+T"

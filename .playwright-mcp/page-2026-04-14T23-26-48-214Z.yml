@@ -1,0 +1,88 @@
+- generic [active] [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Minhas leituras O que suas mãos já disseram":
+                                - /url: /conta/leituras
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Minhas leituras
+                                - generic: O que suas mãos já disseram
+                            - link "03 Tarot Online Três cartas pra distrair a sorte":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas pra distrair a sorte
+                            - link "04 Perfil Quem você é pra mim":
+                                - /url: /conta/perfil
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Perfil
+                                - generic: Quem você é pra mim
+                            - link "07 Sair Até a próxima":
+                                - /url: /
+                                - generic:
+                                    - generic: "07"
+                                    - generic: Sair
+                                - generic: Até a próxima
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2026 · MãosFalam
+    - main [ref=e25]:
+        - generic [ref=e26]:
+            - generic [ref=e29]: A minha tabela
+            - generic [ref=e31]:
+                - heading "Escolha o que faz sentido." [level=1] [ref=e32]
+                - paragraph [ref=e33]: Uma leitura é diferente de cinco. E cinco é diferente de dez. Cada pacote é um jeito de fazer isso. Você escolhe quantas mãos vão passar por aqui.
+            - region "Pacotes de créditos" [ref=e34]:
+                - generic [ref=e35]:
+                    - button "Pacote anterior" [ref=e36]:
+                        - generic [ref=e37]: ‹
+                    - article [ref=e41]:
+                        - generic [ref=e50]: mais escolhida
+                        - generic [ref=e51]:
+                            - generic [ref=e53]: Pacote 03
+                            - heading "Roda" [level=2] [ref=e55]
+                            - generic [ref=e56]: Pra fechar o círculo.
+                            - paragraph [ref=e57]: Cinco mãos. Cinco histórias.
+                            - paragraph [ref=e58]: A roda é onde as ciganas se sentam no chão e cada uma mostra a palma. Você lê a sua e escolhe mais quatro. A família, as amigas da infância, o grupo que te conhece de verdade. Todo mundo sai sabendo.
+                            - generic [ref=e60]:
+                                - generic [ref=e61]:
+                                    - generic [ref=e62]: 5 leituras
+                                    - generic [ref=e63]: R$ 9,98 cada
+                                - generic [ref=e65]: R$ 49,90
+                            - button "Escolher · R$ 49,90" [ref=e66] [cursor=pointer]:
+                                - generic [ref=e67]: Escolher · R$ 49,90
+                            - paragraph [ref=e68]: O preço do que você vai descobrir é barato pelo que vale.
+                    - button "Próximo pacote" [ref=e69]:
+                        - generic [ref=e70]: ›
+                - generic [ref=e72]: Carta 03 de 04
+                - generic [ref=e73]:
+                    - button "Ir pro pacote Avulsa" [ref=e74]
+                    - button "Ir pro pacote Dupla" [ref=e75]
+                    - button "Ir pro pacote Roda" [ref=e76]
+                    - button "Ir pro pacote Tsara" [ref=e77]
+    - button "Open Next.js Dev Tools" [ref=e20] [cursor=pointer]:
+        - img [ref=e21]
+    - alert [ref=e24]

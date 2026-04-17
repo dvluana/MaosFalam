@@ -1,0 +1,2 @@
+[    1159ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ https://logical-drum-3.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:11
+[   18632ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://staging.maosfalam.com/api/reading/5e39469a-8e0e-495d-b6ae-a1fa9692d979/upgrade:0

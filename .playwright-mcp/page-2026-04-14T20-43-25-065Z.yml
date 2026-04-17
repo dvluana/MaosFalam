@@ -1,0 +1,141 @@
+- generic [active] [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Minhas leituras O que suas mãos já disseram":
+                                - /url: /conta/leituras
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Minhas leituras
+                                - generic: O que suas mãos já disseram
+                            - link "03 Tarot Online Três cartas pra distrair a sorte":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas pra distrair a sorte
+                            - link "04 Perfil Quem você é pra mim":
+                                - /url: /conta/perfil
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Perfil
+                                - generic: Quem você é pra mim
+                            - link "07 Sair Até a próxima":
+                                - /url: /
+                                - generic:
+                                    - generic: "07"
+                                    - generic: Sair
+                                - generic: Até a próxima
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2025 · MãosFalam
+    - main [ref=e16]:
+        - generic [ref=e20]:
+            - generic [ref=e23]: Leitura de Maria
+            - img [ref=e29]
+            - paragraph [ref=e42]: Suas mãos queimam, Maria. Eu sei antes de olhar que seu elemento é
+            - generic [ref=e43]:
+                - generic:
+                    - img
+                - heading "Fogo" [level=1] [ref=e44]
+            - paragraph [ref=e49]: Kevin. Fogo. Senti antes de ver.
+        - generic [ref=e50]:
+            - generic [ref=e54]:
+                - generic [ref=e57]: O que eu vi na sua mão
+                - paragraph [ref=e59]: Kevin. Fica quieta. Eu vou falar e você vai ouvir. Depois você decide o que faz com o que eu disser.
+                - paragraph [ref=e61]: Quadrada, compacta, sem enrolação. Mão de Fogo.
+                - generic [ref=e62]:
+                    - paragraph [ref=e63]:
+                        - generic [ref=e64]: A
+                        - text: ção primeiro. Reflexão depois. Às vezes nem isso.
+                    - paragraph [ref=e65]: "Você funciona por instinto, e seu instinto acerta mais do que deveria. As pessoas gravitam na sua direção sem entender por quê. Simples: você tem uma urgência de viver que contagia."
+                    - paragraph [ref=e66]: Parar te sufoca. Rotina te mata. Você precisa de movimento, de risco, de algo pra conquistar.
+                    - paragraph [ref=e67]: Sem isso, murcha.
+            - article [ref=e78]:
+                - generic [ref=e81]:
+                    - generic [ref=e82]:
+                        - img [ref=e84]
+                        - generic [ref=e90]:
+                            - generic [ref=e91]: Cap. 01 · ♀ Linha do Coração · Vênus
+                            - heading "Como você ama" [level=3] [ref=e92]
+                            - generic [ref=e93]: ♀
+                    - paragraph [ref=e94]: Linha média com curvatura. Coração que pensa antes de sentir, mas sente quando decide.
+                    - generic [ref=e95]:
+                        - paragraph [ref=e96]: Amor pra você é construção. Tijolo por tijolo. Sem pressa. Sem pressão. Quem tenta apressar o processo, perde. Quem respeita o ritmo, ganha algo que não se encontra fácil.
+                        - paragraph [ref=e97]: Curvatura numa linha média é afeto que se revela aos poucos. Não é fogo. É brasa. Demora pra acender. Demora mais pra apagar. Quando apaga, é porque você decidiu.
+                        - paragraph [ref=e99]: Sua linha termina no Monte de Saturno. Segurança antes de paixão. Você precisa de base sólida antes de se entregar. Não é falta de desejo. É prioridade.
+                    - generic [ref=e100]:
+                        - generic [ref=e107]: Medição da palma
+                        - generic [ref=e109]:
+                            - generic [ref=e110]:
+                                - generic [ref=e111]: curvatura
+                                - paragraph [ref=e112]: Curva presente, não exagerada.
+                            - generic [ref=e113]:
+                                - generic [ref=e114]: comprimento
+                                - paragraph [ref=e115]: Média. Comprimento moderado.
+                            - generic [ref=e116]:
+                                - generic [ref=e117]: profundidade
+                                - paragraph [ref=e118]: Moderada. Consistente.
+            - generic [ref=e123]:
+                - heading "Tem mais. Muito mais." [level=2] [ref=e124]
+                - paragraph [ref=e125]: Você leu o coração. Faltam três linhas, oito montes, e os sinais que quase ninguém tem. Eu vi todos na sua mão.
+            - button "Revelar as linhas seladas" [ref=e128]:
+                - article [ref=e130]:
+                    - generic [ref=e133]:
+                        - generic [ref=e134]:
+                            - generic [ref=e135]: Mente
+                            - generic [ref=e136]:
+                                - img [ref=e137]
+                                - text: selada
+                        - paragraph [ref=e139]: Sua cabeça decide rápido. Seu coração demora pra aceitar. E no meio desse atraso...
+                        - paragraph [ref=e140]: Suas mãos guardam mais do que esse primeiro capítulo. Existe uma segunda camada que a cigana só lê quando você decide saber. O que você esconde tem nome, tem forma, e tem preço.
+                - article [ref=e142]:
+                    - generic [ref=e145]:
+                        - generic [ref=e146]:
+                            - generic [ref=e147]: Passado
+                            - generic [ref=e148]:
+                                - img [ref=e149]
+                                - text: selada
+                        - paragraph [ref=e151]: Tem uma marca aqui que apareceu faz uns anos. Você sabe do que eu tô falando.
+                        - paragraph [ref=e152]: Suas mãos guardam mais do que esse primeiro capítulo. Existe uma segunda camada que a cigana só lê quando você decide saber. O que você esconde tem nome, tem forma, e tem preço.
+                - article [ref=e154]:
+                    - generic [ref=e157]:
+                        - generic [ref=e158]:
+                            - generic [ref=e159]: Intimidade
+                            - generic [ref=e160]:
+                                - img [ref=e161]
+                                - text: selada
+                        - paragraph [ref=e163]: Quando a porta fecha, você é outra pessoa. E quase ninguém sabe.
+                        - paragraph [ref=e164]: Suas mãos guardam mais do que esse primeiro capítulo. Existe uma segunda camada que a cigana só lê quando você decide saber. O que você esconde tem nome, tem forma, e tem preço.
+                - generic:
+                    - generic: 5 seladas
+            - generic [ref=e166]:
+                - generic [ref=e167]:
+                    - paragraph [ref=e172]: Tem mais. Muito mais.
+                    - paragraph [ref=e173]: Você leu o coração. Faltam três linhas, oito montes, e os sinais que quase ninguém tem. Eu vi todos na sua mão.
+                    - paragraph [ref=e178]: Algo saiu do caminho. Tente de novo.
+                    - button "Desbloquear tudo" [ref=e174] [cursor=pointer]
+                - link "Compartilhar leitura" [ref=e176] [cursor=pointer]:
+                    - /url: /ler/resultado/5e39469a-8e0e-495d-b6ae-a1fa9692d979/share
+                    - button "Compartilhar" [ref=e177]
+    - alert [ref=e15]

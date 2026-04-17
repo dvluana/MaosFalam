@@ -1,0 +1,14 @@
+[     770ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ https://logical-drum-3.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:11
+[    6161ms] [WARNING] The resource https://staging.maosfalam.com/_next/static/chunks/0798lfk2h~pi7.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://staging.maosfalam.com/conta/leituras:0
+[   20399ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'find')
+    at k (https://staging.maosfalam.com/_next/static/chunks/0xtws8~1.5-kv.js:1:11111)
+    at ay (https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:56831)
+    at oZ (https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:77088)
+    at iu (https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:88690)
+    at sd (https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:131930)
+    at https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:131775
+    at sf (https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:131783)
+    at se (https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:127704)
+    at sH (https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:153481)
+    at MessagePort._ (https://staging.maosfalam.com/_next/static/chunks/110q6k5sdl4es.js:1:1646) @ https://staging.maosfalam.com/_next/static/chunks/0zi8r6awu_84b.js:0
+[   24412ms] [WARNING] The resource https://staging.maosfalam.com/_next/static/chunks/0798lfk2h~pi7.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://staging.maosfalam.com/ler/resultado/f62fd2f8-5bbe-4ccc-81b2-599134eee962:0

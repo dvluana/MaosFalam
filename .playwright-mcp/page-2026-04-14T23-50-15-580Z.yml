@@ -1,0 +1,105 @@
+- generic [active] [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Minhas leituras O que suas mãos já disseram":
+                                - /url: /conta/leituras
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Minhas leituras
+                                - generic: O que suas mãos já disseram
+                            - link "03 Tarot Online Três cartas pra distrair a sorte":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas pra distrair a sorte
+                            - link "04 Perfil Quem você é pra mim":
+                                - /url: /conta/perfil
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Perfil
+                                - generic: Quem você é pra mim
+                            - link "07 Sair Até a próxima":
+                                - /url: /
+                                - generic:
+                                    - generic: "07"
+                                    - generic: Sair
+                                - generic: Até a próxima
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2026 · MãosFalam
+    - generic [ref=e13]:
+        - generic [ref=e15]:
+            - link "Conta" [ref=e16] [cursor=pointer]:
+                - /url: /conta/leituras
+            - generic [ref=e18]: Leituras
+        - main [ref=e21]:
+            - generic [ref=e22]:
+                - generic [ref=e23]:
+                    - generic [ref=e26]: Suas leituras
+                    - heading "O que as suas mãos já disseram." [level=1] [ref=e28]
+                - generic [ref=e32]:
+                    - generic [ref=e33]:
+                        - generic [ref=e34]: Seus créditos
+                        - generic [ref=e35]:
+                            - generic [ref=e36]: "1"
+                            - generic [ref=e37]: leitura
+                        - generic [ref=e38]: Sobrou pouco. Usa com sabedoria.
+                    - button "Comprar mais" [ref=e39] [cursor=pointer]
+                - button "Fazer nova leitura" [ref=e41] [cursor=pointer]
+                - generic [ref=e42]:
+                    - generic [ref=e43]: 2 leituras
+                    - generic [ref=e44]:
+                        - button "Ver como cartas" [ref=e45]: Cartas
+                        - button "Ver como lista" [ref=e46]: Lista
+                - generic [ref=e47]:
+                    - link "Marina Silva · 14 de abr. Completa · outra pessoa ›" [ref=e48] [cursor=pointer]:
+                        - /url: /conta/leituras/1cc41a04-d897-4615-974d-5f321aad1cf8
+                        - generic [ref=e49]:
+                            - img [ref=e53]
+                            - generic [ref=e56]:
+                                - generic [ref=e57]:
+                                    - heading "Marina Silva" [level=3] [ref=e58]
+                                    - generic [ref=e59]: ·
+                                - paragraph
+                                - generic [ref=e60]: 14 de abr.
+                            - generic [ref=e61]:
+                                - generic [ref=e62]: Completa · outra pessoa
+                                - generic [ref=e63]: ›
+                    - link "Cigana Teste · 14 de abr. Free ›" [ref=e64] [cursor=pointer]:
+                        - /url: /conta/leituras/f62fd2f8-5bbe-4ccc-81b2-599134eee962
+                        - generic [ref=e65]:
+                            - img [ref=e69]
+                            - generic [ref=e72]:
+                                - generic [ref=e73]:
+                                    - heading "Cigana Teste" [level=3] [ref=e74]
+                                    - generic [ref=e75]: ·
+                                - paragraph
+                                - generic [ref=e76]: 14 de abr.
+                            - generic [ref=e77]:
+                                - generic [ref=e78]: Free
+                                - generic [ref=e79]: ›
+    - button "Open Next.js Dev Tools" [ref=e85] [cursor=pointer]:
+        - img [ref=e86]
+    - alert [ref=e89]

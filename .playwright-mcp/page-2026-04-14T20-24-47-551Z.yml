@@ -1,0 +1,236 @@
+- generic [active] [ref=e1]:
+    - img
+    - banner [ref=e2]:
+        - generic [ref=e3]:
+            - link "MãosFalam" [ref=e4] [cursor=pointer]:
+                - /url: /
+                - img [ref=e5]
+                - img "MãosFalam" [ref=e8]
+            - button "Abrir menu" [ref=e9] [cursor=pointer]
+            - dialog "Menu principal":
+                - generic:
+                    - button "Fechar menu":
+                        - img
+                    - generic:
+                        - generic:
+                            - img
+                            - generic: MãosFalam
+                        - navigation:
+                            - link "01 Início Você está aqui":
+                                - /url: /
+                                - generic:
+                                    - generic: "01"
+                                    - generic: Início
+                                - generic: Você está aqui
+                            - link "02 Mostre sua mão Começar agora":
+                                - /url: /ler/nome
+                                - generic:
+                                    - generic: "02"
+                                    - generic: Mostre sua mão
+                                - generic: Começar agora
+                            - link "03 Tarot Online Três cartas, de graça":
+                                - /url: /tarot
+                                - generic:
+                                    - generic: "03"
+                                    - generic: Tarot Online
+                                - generic: Três cartas, de graça
+                            - link "04 Entrar Já te conheço":
+                                - /url: /login
+                                - generic:
+                                    - generic: "04"
+                                    - generic: Entrar
+                                - generic: Já te conheço
+                            - link "05 Criar conta Pra você voltar":
+                                - /url: /registro
+                                - generic:
+                                    - generic: "05"
+                                    - generic: Criar conta
+                                - generic: Pra você voltar
+                        - generic:
+                            - paragraph: Me mostre sua mão e eu te conto quem você é
+                            - paragraph: © 2025 · MãosFalam
+    - main [ref=e13]:
+        - generic [ref=e14]:
+            - generic:
+                - img
+            - generic [ref=e15]:
+                - generic [ref=e16]: Manifesto . MaosFalam
+                - heading "Cinco mil anos de silêncio acabaram." [level=1] [ref=e17]:
+                    - text: Cinco mil anos
+                    - text: de
+                    - emphasis [ref=e18]: silêncio
+                    - text: acabaram.
+                - paragraph [ref=e19]:
+                    - text: Sua mão tem um mapa. Esse mapa tá falando desde o dia que você nasceu.
+                    - text: Você só nunca parou pra ouvir.
+            - generic [ref=e26]: Rolar
+        - generic [ref=e27]:
+            - generic [ref=e28]:
+                - generic [ref=e29]: Antes de qualquer coisa
+                - heading "Fecha os olhos. Abre a mão." [level=2] [ref=e30]: Fecha os olhos. Abre a mão.
+                - paragraph [ref=e32]: Passa o dedo pela palma. Devagar. Sente as linhas? Umas são fundas. Outras são finas, quase invisíveis. Tem umas que se cruzam. Tem umas que param no meio.
+                - paragraph [ref=e33]: Agora abre os olhos e olha.
+                - blockquote [ref=e35]:
+                    - generic [ref=e36]: “
+                    - paragraph [ref=e37]: Essa mão que você usa pra destrancar o celular, pra segurar o café, pra tocar quem você ama. Essa mão tem um mapa.
+                    - generic [ref=e38]: E esse mapa tá falando desde o dia que você nasceu
+                - paragraph [ref=e39]: Você só nunca parou pra ouvir.
+            - generic [ref=e40]:
+                - generic [ref=e41]: 01 . A história que ninguém te contou
+                - heading "Cinco mil anos atrás" [level=2] [ref=e42]: Cinco mil anos atrás
+                - paragraph [ref=e44]:
+                    - text: "Antes de existir escrita, antes de existir religião organizada, antes de alguém pensar em inventar horóscopo. Uma mulher olhou pra palma da mão de outra mulher e disse:"
+                    - emphasis [ref=e45]: eu sei o que vai acontecer com você.
+                - paragraph [ref=e46]: Não tinha bola de cristal. Não tinha carta. Não tinha app. Tinha a mão aberta e alguém que sabia ler.
+                - paragraph [ref=e47]:
+                    - text: Na Índia, chamavam de
+                    - strong [ref=e48]: Jyotish Shastra
+                    - text: ". Na China, era parte da medicina. Os gregos deram o nome que ficou:"
+                    - emphasis [ref=e49]: quiromancia
+                    - text: . Quiro, mão. Mancia, adivinhação. Hipócrates usava pra diagnosticar. Júlio César lia as mãos dos soldados antes de mandar pra guerra.
+                - paragraph [ref=e50]:
+                    - text: "Não era misticismo. Era a forma mais antiga de olhar pra uma pessoa e dizer:"
+                    - emphasis [ref=e51]: eu vejo você.
+                - paragraph [ref=e52]: E aí vieram os séculos. A igreja baniu. A ciência riu. A quiromancia foi empurrada pras tendas de feira, pros becos, pros acampamentos. Virou “coisa de cigana”.
+                - blockquote [ref=e54]:
+                    - generic [ref=e55]: “
+                    - paragraph [ref=e56]: Mas a cigana nunca parou de ler.
+                - paragraph [ref=e57]: Ela sabia que as linhas mudam. Que a mão que você tem aos 15 não é a mesma aos 30. Que a linha do coração fica mais funda quando você ama de verdade e mais fina quando você se protege demais.
+                - paragraph [ref=e58]:
+                    - text: A cigana sabia que a mão não prevê o futuro.
+                    - strong [ref=e59]: A mão conta quem você é. E quem você é determina pra onde você vai.
+            - generic [ref=e60]:
+                - generic [ref=e61]: 02 . O que a sua mão diz
+                - heading "As quatro linhas. Quatro capítulos." [level=2] [ref=e62]: As quatro linhas. Quatro capítulos.
+                - paragraph [ref=e64]: Sua mão tem quatro linhas principais. Cada uma é um capítulo da pessoa que você é. Não da pessoa que você finge ser.
+                - generic [ref=e65]:
+                    - generic [ref=e66]:
+                        - generic [ref=e69]: Linha 01
+                        - generic [ref=e70]: Do Coração
+                        - paragraph [ref=e71]:
+                            - text: Como você ama. Não como você
+                            - emphasis [ref=e72]: acha
+                            - text: que ama. O que você esconde. O que você entrega rápido demais. O que você segura até não aguentar mais.
+                    - generic [ref=e73]:
+                        - generic [ref=e76]: Linha 02
+                        - generic [ref=e77]: Da Cabeça
+                        - paragraph [ref=e78]: Como sua mente funciona. Se você pensa reto ou torto. Se você decide rápido ou fica girando no mesmo pensamento às 3 da manhã.
+                    - generic [ref=e79]:
+                        - generic [ref=e82]: Linha 03
+                        - generic [ref=e83]: Da Vida
+                        - paragraph [ref=e84]: Ela não diz quando você vai morrer. Ela diz como você vive. Com que intensidade. Onde você quebrou e como levantou.
+                    - generic [ref=e85]:
+                        - generic [ref=e88]: Linha 04
+                        - generic [ref=e89]: Do Destino
+                        - paragraph [ref=e90]: Nem todo mundo tem. Se você tem, ela mostra o caminho que você tá trilhando. Se ela só aparece na mão direita, você inventou esse caminho sozinha.
+                - paragraph [ref=e91]:
+                    - text: Além das linhas, tem os montes. Sete elevações na palma, cada uma ligada a um planeta. Júpiter é ambição. Saturno é destino. Sol é sucesso. Mercúrio é comunicação. Vênus é amor. Marte é coragem.
+                    - strong [ref=e92]: Ninguém tem a mesma mão.
+            - generic [ref=e93]:
+                - generic [ref=e94]: 03 . Duas mãos. Duas histórias.
+                - heading "A esquerda e a direita" [level=2] [ref=e95]: A esquerda e a direita
+                - paragraph [ref=e97]: Coloca as duas lado a lado. Olha. Elas não são iguais.
+                - generic [ref=e99]:
+                    - generic [ref=e101]:
+                        - generic [ref=e102]: Mão Esquerda
+                        - generic [ref=e103]: Quem você nasceu
+                        - paragraph [ref=e104]: A programação original. O que veio com você. A promessa que foi feita antes de você escolher qualquer coisa.
+                    - generic [ref=e105]:
+                        - generic [ref=e106]: Mão Direita
+                        - generic [ref=e107]: Quem você virou
+                        - paragraph [ref=e108]: O que a vida fez. As decisões, os traumas, os amores, as fugas. As diferenças entre uma e outra contam tudo o que aconteceu no meio.
+                - paragraph [ref=e109]: Se a linha do coração da esquerda é mais profunda que a da direita, você nasceu com uma intensidade que a vida te ensinou a esconder. Se a da direita é mais profunda, você aprendeu a amar com mais força do que veio programada pra sentir.
+                - blockquote [ref=e111]:
+                    - generic [ref=e112]: “
+                    - paragraph [ref=e113]: Uma e promessa. A outra e escolha.
+            - generic [ref=e114]:
+                - generic [ref=e115]: 04 . O que MaosFalam faz
+                - heading "Não é genérico. Nunca é genérico." [level=2] [ref=e116]: Não é genérico. Nunca é genérico.
+                - generic [ref=e119]:
+                    - paragraph [ref=e120]: Pega tudo isso. Os cinco mil anos. As quatro linhas. Os sete montes. A mão esquerda e a direita. Cada cruzamento, cada bifurcação, cada marca que apareceu nos últimos anos.
+                    - paragraph [ref=e121]:
+                        - text: E
+                        - emphasis [ref=e122]: lê
+                        - text: .
+                    - paragraph [ref=e123]:
+                        - text: Não é “você é uma pessoa sensível que às vezes se fecha”. Isso qualquer um fala. MaosFalam te conta como você ama, por que se protege, o que te derrubou e como você levantou.
+                        - strong [ref=e124]: Com nome. Com detalhe. Com a precisão de quem tá olhando pra sua palma e vendo o que você não vê.
+                - paragraph [ref=e125]: A leitura é construída cruzando mais de dez mil referências de quiromancia profissional. Cada linha da sua mão é comparada, medida, interpretada. Não por achismo. Por um sistema que estudou o que as melhores leitoras de mão do mundo levam décadas pra aprender.
+                - paragraph [ref=e126]: A diferença é que agora isso cabe na tela do seu celular. E demora 30 segundos.
+            - generic [ref=e127]:
+                - generic [ref=e128]: 05 . O que as pessoas sentem
+                - heading "Depois de ler, você não olha do mesmo jeito." [level=2] [ref=e129]: Depois de ler, você não olha do mesmo jeito.
+                - generic [ref=e131]:
+                    - generic [ref=e132]:
+                        - paragraph [ref=e133]: “Tem gente que lê e chora.”
+                        - text: Reconhecimento
+                    - generic [ref=e134]:
+                        - paragraph [ref=e135]: “Tem gente que lê e manda pro ex.”
+                        - text: Revelação
+                    - generic [ref=e136]:
+                        - paragraph [ref=e137]: “Tem gente que lê e fica quieta por horas.”
+                        - text: Silêncio necessário
+                - paragraph [ref=e138]: Eu não sei o que você vai fazer. Mas eu sei que depois de ler, você não vai olhar pra sua mão do mesmo jeito.
+            - generic [ref=e139]:
+                - generic [ref=e140]: 06 . Por onde começar
+                - heading "A Linha do Coração é grátis. Sempre." [level=2] [ref=e141]: A Linha do Coração é grátis. Sempre.
+                - paragraph [ref=e143]: Porque eu quero que você sinta o que é ser lida de verdade antes de decidir qualquer coisa.
+                - generic [ref=e145]:
+                    - generic [ref=e146]:
+                        - generic [ref=e147]: Gratuito
+                        - generic [ref=e148]: Linha do Coração
+                    - generic [ref=e149]:
+                        - generic [ref=e150]: O que você descobre de graça
+                        - list [ref=e151]:
+                            - listitem [ref=e152]: Como você ama de verdade
+                            - listitem [ref=e154]: O que você esconde de quem te ama
+                            - listitem [ref=e156]: Seu padrão quando confia em alguém
+                            - listitem [ref=e158]: Por que você se protege tanto
+                            - listitem [ref=e160]: Uma frase sobre você que vai doer um pouco
+                - paragraph [ref=e162]: Só a Linha do Coração. Mas já é o suficiente pra você ficar em silêncio.
+            - generic [ref=e163]:
+                - generic [ref=e164]: 07 . A leitura completa
+                - heading "Sua mão não tem só uma linha." [level=2] [ref=e165]: Sua mão não tem só uma linha.
+                - paragraph [ref=e167]: A Linha do Coração é só a porta. O que tá lá dentro é outra coisa.
+                - list [ref=e169]:
+                    - listitem [ref=e170]:
+                        - generic [ref=e171]: "01"
+                        - text: Linha do Coração. Como você ama, o que esconde quando ama
+                    - listitem [ref=e172]:
+                        - generic [ref=e173]: "02"
+                        - text: Linha da Cabeça. Como sua mente funciona, por que não para
+                    - listitem [ref=e174]:
+                        - generic [ref=e175]: "03"
+                        - text: Linha da Vida. O que te derrubou, como você levantou
+                    - listitem [ref=e176]:
+                        - generic [ref=e177]: "04"
+                        - text: Linha do Destino. Pra onde você tá indo, mesmo sem saber
+                    - listitem [ref=e178]:
+                        - generic [ref=e179]: "05"
+                        - text: Seis montes mapeados . tipo de mão . elemento
+                    - listitem [ref=e180]:
+                        - generic [ref=e181]: "06"
+                        - text: Compatibilidade . amor, sexo e intimidade
+                    - listitem [ref=e182]:
+                        - generic [ref=e183]: "07"
+                        - text: Sinais raros e marcas de proteção
+                    - listitem [ref=e184]:
+                        - generic [ref=e185]: "08"
+                        - text: Mão esquerda versus mão direita. Promessa e escolha
+                - paragraph [ref=e186]: Resultado com seu nome. Só seu. Só pra você. Nenhuma leitura é genérica. A sua é só sua.
+                - paragraph [ref=e187]:
+                    - text: O sistema não chuta. Ele
+                    - emphasis [ref=e188]: lê
+                    - text: . Mede a profundidade de cada linha. Identifica bifurcações. Mapeia os sete montes. Compara a esquerda com a direita. Encontra padrões que a olho nu passam despercebidos.
+        - generic [ref=e189]:
+            - paragraph [ref=e195]:
+                - text: Tá tudo aí.
+                - text: Sempre esteve.
+            - paragraph [ref=e196]:
+                - text: Você só nunca parou pra ver.
+                - text: Me mostre sua mão e eu te conto quem você é.
+            - link "Em Breve" [ref=e197] [cursor=pointer]:
+                - /url: /
+                - text: Em Breve
+        - paragraph [ref=e205]: 2025 . MaosFalam . Todos os direitos reservados
+    - alert [ref=e206]

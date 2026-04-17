@@ -1,0 +1,65 @@
+- generic [ref=e2]:
+    - generic [ref=e3]:
+        - generic [ref=e4]:
+            - img [ref=e5]
+            - generic [ref=e7]: Sandbox Mode
+        - generic [ref=e68]:
+            - generic [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e81]:
+                    - img [ref=e82]
+                    - generic [ref=e85]: Compra 100% segura
+            - generic [ref=e87]:
+                - generic [ref=e88]:
+                    - button "Dados" [ref=e90] [cursor=pointer]:
+                        - img [ref=e91]
+                        - generic [ref=e94]: Dados
+                    - generic [ref=e95]:
+                        - img [ref=e96]
+                        - button "Pagamento" [disabled] [ref=e98]:
+                            - img [ref=e99]
+                            - generic [ref=e101]: Pagamento
+                - generic [ref=e102]:
+                    - heading "Forma de pagamento" [level=2] [ref=e103]
+                    - generic [ref=e104]:
+                        - generic [ref=e105] [cursor=pointer]:
+                            - radio "PIX" [checked] [active] [ref=e106]
+                            - img [ref=e198]
+                            - img [ref=e108]
+                            - generic [ref=e110]: PIX
+                        - generic [ref=e111] [cursor=pointer]:
+                            - radio "Cartão de crédito" [ref=e112]
+                            - img [ref=e116]
+                            - generic [ref=e118]: Cartão de crédito
+                    - paragraph [ref=e201]: Escolha Pix para pagar. Após continuar, você verá o QR Code.
+                    - generic [ref=e150]:
+                        - generic [ref=e152]:
+                            - img [ref=e154]
+                            - generic [ref=e156]:
+                                - heading "MaosFalam Avulsa" [level=3] [ref=e157]
+                                - generic [ref=e159]: R$ 14,90
+                        - generic [ref=e160]:
+                            - heading "Resumo" [level=4] [ref=e163]
+                            - generic [ref=e165]:
+                                - generic [ref=e166]: Subtotal
+                                - generic [ref=e167]: R$ 14,90
+                            - generic [ref=e169]:
+                                - generic [ref=e170]: "Total:"
+                                - generic [ref=e171]: R$ 14,90
+                    - generic [ref=e174]:
+                        - button "Concluir pagamento" [ref=e175] [cursor=pointer]:
+                            - generic [ref=e176]:
+                                - generic [ref=e177]: Concluir pagamento
+                                - img [ref=e178]
+                            - generic [ref=e181]: Trabalhando nisso...
+                            - generic [ref=e182]:
+                                - generic [ref=e183]: Sucesso
+                                - img [ref=e184]
+                            - generic [ref=e186]:
+                                - generic [ref=e187]: Ooops
+                                - img [ref=e188]
+                        - generic [ref=e191]:
+                            - img [ref=e192]
+                            - generic [ref=e195]: 7 dias de garantia. Sem perguntas, sem burocracia.
+            - paragraph [ref=e197]: Copyright © 2026 AbacatePay LLC - Abacatepay Tecnologia
+    - region "Notifications alt+T"
