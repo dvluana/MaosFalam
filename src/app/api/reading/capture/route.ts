@@ -46,9 +46,22 @@ export async function POST(req: NextRequest) {
     // 1. Analyze with GPT-4o
     const attributes = await analyzeHand(data.photo_base64, data.dominant_hand, data.element_hint);
 
+    // MediaPipe element is authoritative for camera path (deterministic geometric ratios).
+    // Upload path has no MediaPipe — GPT-4o remains the fallback.
+    const finalAttributes = data.element_hint
+      ? { ...attributes, element: data.element_hint }
+      : attributes;
+
+    if (data.element_hint) {
+      logger.info(
+        { gptElement: attributes.element, mediapiElement: data.element_hint },
+        "Element overridden by MediaPipe",
+      );
+    }
+
     // 2. Check confidence
-    if (attributes.confidence < 0.3) {
-      logger.info({ confidence: attributes.confidence }, "Low confidence, rejecting");
+    if (finalAttributes.confidence < 0.3) {
+      logger.info({ confidence: finalAttributes.confidence }, "Low confidence, rejecting");
       return NextResponse.json(
         {
           error: "Suas linhas estao timidas hoje. Tente de novo com mais luz.",
@@ -59,7 +72,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Select blocks
-    const report = selectBlocks(attributes, data.target_name, data.target_gender);
+    const report = selectBlocks(finalAttributes, data.target_name, data.target_gender);
 
     // 4. Determine tier server-side via atomic credit debit.
     //    The client cannot influence this — credit_used is not in the schema.
@@ -81,19 +94,19 @@ export async function POST(req: NextRequest) {
         targetName: data.target_name,
         targetGender: data.target_gender,
         isSelf: data.is_self,
-        attributes: JSON.parse(JSON.stringify(attributes)),
+        attributes: JSON.parse(JSON.stringify(finalAttributes)),
         report: JSON.parse(JSON.stringify(report)),
         tier,
         clerkUserId: clerkUserId ?? undefined,
-        confidence: attributes.confidence,
+        confidence: finalAttributes.confidence,
       },
     });
 
     logger.info(
       {
         readingId: reading.id,
-        element: attributes.element,
-        confidence: attributes.confidence,
+        element: finalAttributes.element,
+        confidence: finalAttributes.confidence,
       },
       "Reading created",
     );

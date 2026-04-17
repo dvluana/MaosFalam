@@ -55,7 +55,6 @@ Schema esperado:
 }
 
 Regras:
-- element: determine pela proporcao palma/dedos (quadrada+curtos=terra, quadrada+longos=ar, longa+curtos=fogo, longa+longos=agua)
 - heart.variation: combine comprimento (short/medium/long) + curvatura (straight/curved/deep_curved). Se profundidade fraca, use "faint"
 - heart.modifiers: inclua apenas os presentes. fork_end=bifurcacao no final, island=ilhas, break=interrupcoes, ends_index/ends_middle=onde termina, deep=profundidade acentuada
 - head.variation: mesma logica do coracao. deep_curved=queda pro Monte da Lua
@@ -304,7 +303,7 @@ export async function analyzeHand(
   const dominanceContext = `Esta e a mao ${handLabel} da pessoa. E a mao dominante (a que ela escreve com). Analise considerando a orientacao correta da palma. Ignore tatuagens, henna, nail art, aneis, pulseiras e qualquer acessorio visivel. Analise APENAS as linhas naturais da palma, montes, e sinais quiromanticos.`;
 
   const elementHintText = elementHint
-    ? `Pre-analise geometrica dos landmarks da mao indica elemento: ${elementHint}. Confirme ou corrija com base na foto.`
+    ? `Elemento da mao ja determinado por landmarks: ${elementHint}. Nao precisa classificar elemento — foque nas linhas, montes e sinais.`
     : null;
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {

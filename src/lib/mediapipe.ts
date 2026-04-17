@@ -113,12 +113,12 @@ export function detectHandedness(handedness: Category[]): "Left" | "Right" {
 type HandElement = "fire" | "water" | "earth" | "air";
 
 /**
- * Estimates hand element type from MediaPipe normalized landmarks.
+ * Computes hand element type from MediaPipe normalized landmarks.
  * Uses palm aspect ratio (palmHeight/palmWidth) and finger-to-palm length ratio.
  * Returns undefined if landmarks are insufficient or geometry is degenerate.
  *
- * This is a client-side pre-hint sent to GPT-4o for confirmation.
- * GPT-4o is the authoritative classifier.
+ * AUTHORITATIVE source for element classification on the camera path.
+ * GPT-4o element is only used as fallback for the upload path (no MediaPipe).
  */
 export function computeElementHint(landmarks: NormalizedLandmark[]): HandElement | undefined {
   if (landmarks.length < 21) return undefined;

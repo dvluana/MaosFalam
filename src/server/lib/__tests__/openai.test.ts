@@ -104,7 +104,7 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     // Should have 4 items: dominanceContext, elementHint, "Analise esta palma.", image_url
     expect(userContent).toHaveLength(4);
     expect(userContent[1].text).toContain("fire");
-    expect(userContent[1].text).toContain("Pre-analise");
+    expect(userContent[1].text).toContain("Elemento da mao ja determinado");
     expect(userContent[3].type).toBe("image_url");
   });
 
