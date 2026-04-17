@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { Analytics } from "@vercel/analytics/next";
 import {
   Cinzel,
   Cinzel_Decorative,
@@ -142,6 +143,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </>
             )}
           </ToastProvider>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
