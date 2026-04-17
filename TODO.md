@@ -4,6 +4,13 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ## AGORA
 
+### Testar no staging (manual)
+
+- [ ] Bug 2: logar com conta sem creditos, ir em /ler/nome, verificar bifurcacao "Leitura free" / "Comprar creditos"
+- [ ] Item 3A: fazer leitura completa, verificar que revelacao mostra segunda linha sobre elemento antes de "Continuar"
+- [ ] Item 3C: no resultado, verificar que ELEMENT_INTRO conecta formato da mao ao elemento (ex: "Palma quadrada. Dedos curtos. Mao de Fogo...")
+- [ ] Apos validar: subir develop pra main
+
 ### Clerk Dashboard (manual)
 
 - [ ] Mudar nome da app de "PariTech" pra "MaosFalam"

@@ -77,6 +77,8 @@ function ScanInner() {
     })
       .then(({ reading_id, report, tier }) => {
         sessionStorage.setItem(STORAGE_KEYS.reading_tier, tier ?? "free");
+        const element = report.element.key;
+        sessionStorage.setItem(STORAGE_KEYS.element, element);
         setApiResult({ ok: true, reading_id, impact_phrase: extractImpactPhrase(report) });
       })
       .catch((err: unknown) => {

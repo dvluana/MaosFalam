@@ -24,6 +24,8 @@ export default function RevelacaoPage() {
   const [complete, setComplete] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [showBridge, setShowBridge] = useState(false);
+  const [hasElement, setHasElement] = useState(false);
   const [fadingOut, setFadingOut] = useState(false);
 
   useEffect(() => {
@@ -33,6 +35,8 @@ export default function RevelacaoPage() {
       const stored = sessionStorage.getItem(STORAGE_KEYS.impact_phrase);
       const raw = stored ?? "Você carrega mais do que mostra. E isso te protege e te prende.";
       setPhrase(personalize(raw, name));
+      const element = sessionStorage.getItem(STORAGE_KEYS.element);
+      if (element) setHasElement(true);
     });
     return () => window.cancelAnimationFrame(frame);
   }, []);
@@ -59,9 +63,15 @@ export default function RevelacaoPage() {
 
   useEffect(() => {
     if (!complete) return;
-    const t = setTimeout(() => setShowButton(true), 1400);
-    return () => clearTimeout(t);
-  }, [complete]);
+    const t1 = setTimeout(() => setShowButton(true), 1400);
+    const t2 = setTimeout(() => {
+      if (hasElement) setShowBridge(true);
+    }, 2000);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [complete, hasElement]);
 
   const onContinue = () => {
     setFadingOut(true);
@@ -363,6 +373,21 @@ export default function RevelacaoPage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Bridge line — primes element concept before result page */}
+      <AnimatePresence>
+        {showBridge && (
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 0.7, y: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="font-cormorant italic text-[15px] sm:text-[17px] text-bone-dim text-center max-w-[280px] leading-[1.4]"
+          >
+            Eu li sua palma antes de qualquer coisa. A forma da sua mao ja me contou o que eu
+            precisava.
+          </motion.p>
+        )}
+      </AnimatePresence>
     </motion.main>
   );
 }

@@ -26,24 +26,28 @@ export const ELEMENT_IMPACT: Record<HandElement, TextBlock> = {
 
 export const ELEMENT_INTRO: Record<HandElement, TextBlock> = {
   fire: {
-    content: "Fogo. Palma quadrada. Dedos curtos. Isso é Fogo.",
-    alt: "Palma larga. Dedos que não perdem tempo. Fogo puro.",
-    alt2: "Quadrada, compacta, sem enrolação. Mão de Fogo.",
+    content:
+      "Palma quadrada. Dedos curtos. Mao de Fogo. Voce age antes de pensar, e o mundo gira na sua direcao por causa disso.",
+    alt: "Palma larga. Dedos que nao perdem tempo. Fogo puro. Isso significa que voce nao espera. Nunca esperou.",
+    alt2: "Quadrada, compacta, sem enrolacao. Mao de Fogo. Quem tem essa mao nao pede licenca pra entrar.",
   },
   water: {
-    content: "Água. Palma longa. Dedos longos e flexíveis. Isso é Água.",
-    alt: "Mão longa, dedos que parecem dançar. Água na forma.",
-    alt2: "Palma fina, comprida, dedos articulados. Água.",
+    content:
+      "Palma longa. Dedos longos e flexíveis. Mao de Agua. Voce sente o que os outros nem registram, e isso e sua potencia e seu peso.",
+    alt: "Mao longa, dedos que parecem dancar. Agua na forma. Tudo te atravessa. Tudo fica.",
+    alt2: "Palma fina, comprida, dedos articulados. Mao de Agua. Sua sensibilidade nao e fraqueza. E radar.",
   },
   earth: {
-    content: "Terra. Palma grande e quadrada. Dedos proporcionais. Isso é Terra.",
-    alt: "Palma larga, firme, dedos sólidos. Terra.",
-    alt2: "Mão que parece feita pra segurar peso. Terra pura.",
+    content:
+      "Palma grande e quadrada. Dedos proporcionais. Mao de Terra. Voce constroi em silencio o que os outros so planejam.",
+    alt: "Palma larga, firme, dedos solidos. Terra pura. Suas raizes sao fundas. Quando decide ficar, fica.",
+    alt2: "Mao que parece feita pra segurar peso. Terra. As pessoas confiam em voce sem saber por que.",
   },
   air: {
-    content: "Ar. Palma quadrada. Dedos longos. Isso é Ar.",
-    alt: "Palma compacta, dedos compridos e articulados. Ar.",
-    alt2: "Dedos que gesticulam. Palma quadrada. Mente de Ar.",
+    content:
+      "Palma quadrada. Dedos longos. Mao de Ar. Sua cabeca trabalha em camadas que os outros nem percebem.",
+    alt: "Palma compacta, dedos compridos e articulados. Ar. Voce entende rapido. Rapido demais, as vezes.",
+    alt2: "Dedos que gesticulam. Palma quadrada. Mente de Ar. Voce ja esta cinco passos na frente. O problema e que la e solitario.",
   },
 } as const;
 
