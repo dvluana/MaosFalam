@@ -10,4 +10,5 @@ export const STORAGE_KEYS = {
   reading_context: "maosfalam_reading_context",
   checkout_intent: "maosfalam_checkout_intent",
   readings_claimed: "maosfalam_readings_claimed",
+  element: "maosfalam_element",
 } as const;

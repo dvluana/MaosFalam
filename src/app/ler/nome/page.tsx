@@ -41,6 +41,9 @@ export default function NomePage() {
   // Submission state
   const [submitting, setSubmitting] = useState(false);
 
+  // No-credits bifurcation state
+  const [showNoCreditsBifurcation, setShowNoCreditsBifurcation] = useState(false);
+
   // Detect whether the Clerk account has a usable name
   const clerkHasName = Boolean(user?.name && user.name.trim().length >= 2);
 
@@ -59,6 +62,7 @@ export default function NomePage() {
   // When toggling "Pra mim", restore account name (or clear for manual input)
   const handleIsSelfToggle = (value: boolean) => {
     setIsSelf(value);
+    setShowNoCreditsBifurcation(false);
     if (value && user && clerkHasName) {
       setName(user.name);
     } else if (!value || !clerkHasName) {
@@ -137,42 +141,9 @@ export default function NomePage() {
   };
 
   // ============================================================
-  // LOGGED-IN SUBMIT
+  // SHARED NAVIGATION HELPER (logged-in paths)
   // ============================================================
-  const handleLoggedInSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmedName = name.trim();
-    if (trimmedName.length < 2) return;
-
-    // First reading is always free (CTX-06)
-    if (reading_count === 0) {
-      const sessionId = sessionStorage.getItem(STORAGE_KEYS.session_id) ?? generateUUID();
-      sessionStorage.setItem(STORAGE_KEYS.session_id, sessionId);
-
-      // Legacy keys for toque/camera guards and revelacao personalization
-      sessionStorage.setItem(STORAGE_KEYS.name, trimmedName);
-      sessionStorage.setItem(STORAGE_KEYS.name_fresh, "1");
-      sessionStorage.setItem(STORAGE_KEYS.target_gender, gender);
-
-      const ctx: ReadingContext = {
-        target_name: trimmedName,
-        target_gender: gender,
-        dominant_hand: dominantHand,
-        is_self: isSelf,
-        session_id: sessionId,
-      };
-      saveReadingContext(ctx);
-      router.push("/ler/toque");
-      return;
-    }
-
-    // Subsequent readings: gate on credit balance (CTX-07)
-    if (balance === 0) {
-      router.push("/creditos");
-      return;
-    }
-
-    // Has credits: navigate directly — credit debit is atomic on server (Phase 06)
+  const navigateToReading = (trimmedName: string) => {
     const sessionId = sessionStorage.getItem(STORAGE_KEYS.session_id) ?? generateUUID();
     sessionStorage.setItem(STORAGE_KEYS.session_id, sessionId);
     sessionStorage.setItem(STORAGE_KEYS.name, trimmedName);
@@ -187,6 +158,39 @@ export default function NomePage() {
     };
     saveReadingContext(ctx);
     router.push("/ler/toque");
+  };
+
+  // ============================================================
+  // FREE READING (no-credits path)
+  // ============================================================
+  const handleFreeReading = () => {
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2) return;
+    navigateToReading(trimmedName);
+  };
+
+  // ============================================================
+  // LOGGED-IN SUBMIT
+  // ============================================================
+  const handleLoggedInSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2) return;
+
+    // First reading is always free (CTX-06)
+    if (reading_count === 0) {
+      navigateToReading(trimmedName);
+      return;
+    }
+
+    // Subsequent readings: gate on credit balance (CTX-07)
+    if (balance === 0) {
+      setShowNoCreditsBifurcation(true);
+      return;
+    }
+
+    // Has credits: navigate directly — credit debit is atomic on server (Phase 06)
+    navigateToReading(trimmedName);
   };
 
   // ============================================================
@@ -466,7 +470,10 @@ export default function NomePage() {
               <Input
                 label={isSelf ? "Seu nome" : "Nome da pessoa"}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setShowNoCreditsBifurcation(false);
+                }}
                 placeholder={isSelf ? "Como eu te chamo?" : "Como eu a chamo?"}
                 autoFocus
               />
@@ -519,14 +526,35 @@ export default function NomePage() {
             </div>
           </div>
 
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            disabled={!loggedInCanSubmit || submitting}
-          >
-            Continuar
-          </Button>
+          {!showNoCreditsBifurcation ? (
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              disabled={!loggedInCanSubmit || submitting}
+            >
+              Continuar
+            </Button>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <p className="font-cormorant italic text-[16px] text-bone-dim text-center leading-[1.35]">
+                Voce precisa de creditos pra uma leitura completa. A free ainda e sua.
+              </p>
+              <div className="flex gap-3">
+                <Button type="button" variant="primary" size="default" onClick={handleFreeReading}>
+                  Leitura free
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="default"
+                  onClick={() => router.push("/creditos")}
+                >
+                  Comprar creditos
+                </Button>
+              </div>
+            </div>
+          )}
         </form>
       )}
     </main>
