@@ -62,6 +62,33 @@ describe("selectBlocks — valid attributes", () => {
   });
 });
 
+describe("selectBlocks — determinism (DETERMINISM-01)", () => {
+  it("produces deterministic output for identical inputs", () => {
+    const result1 = selectBlocks(VALID_ATTRIBUTES, "Maria", "female");
+    const result2 = selectBlocks(VALID_ATTRIBUTES, "Maria", "female");
+
+    expect(result1).toEqual(result2);
+  });
+
+  it("different attributes produce different reports", () => {
+    const waterAttrs: HandAttributes = { ...VALID_ATTRIBUTES, element: "water" };
+    const result1 = selectBlocks(VALID_ATTRIBUTES, "Maria", "female");
+    const result2 = selectBlocks(waterAttrs, "Maria", "female");
+
+    expect(result1).not.toEqual(result2);
+  });
+
+  it("different name produces different substituted text", () => {
+    const result1 = selectBlocks(VALID_ATTRIBUTES, "Maria", "female");
+    const result2 = selectBlocks(VALID_ATTRIBUTES, "Ana", "female");
+
+    // element intro can contain {{name}} substitution — check opening or element text
+    const text1 = JSON.stringify(result1);
+    const text2 = JSON.stringify(result2);
+    expect(text1).not.toEqual(text2);
+  });
+});
+
 describe("selectBlocks — _fallback hardening (AI-02)", () => {
   it("unknown heart variation does not throw", () => {
     const attrs: HandAttributes = {

@@ -45,12 +45,35 @@ import type {
 import { logger } from "./logger";
 
 // ---------------------------------------------------------------------------
+// Seeded PRNG (mulberry32)
+// ---------------------------------------------------------------------------
+
+function mulberry32(seed: number): () => number {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hashInputs(attrs: HandAttributes, name: string, gender: string): number {
+  const str = JSON.stringify(attrs) + "|" + name + "|" + gender;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+  }
+  return hash;
+}
+
+// ---------------------------------------------------------------------------
 // Helpers (internal)
 // ---------------------------------------------------------------------------
 
-function pickRandom(block: TextBlock): string {
+function pickRandom(block: TextBlock, rng: () => number): string {
   const options = [block.content, block.alt, block.alt2];
-  return options[Math.floor(Math.random() * options.length)]!;
+  return options[Math.floor(rng() * options.length)]!;
 }
 
 function replaceGender(text: string, gender: "female" | "male"): string {
@@ -159,18 +182,22 @@ export function selectBlocks(
 ): ReportJSON {
   const el = attributes.element;
 
+  // --- Seeded PRNG (deterministic per inputs) ---
+  const seed = hashInputs(attributes, name, gender);
+  const rng = mulberry32(seed);
+
   // --- Element ---
-  const elementIntro = pickRandom(ELEMENT_INTRO[el]);
-  const elementBody = pickRandom(ELEMENT_BODY[el]);
+  const elementIntro = pickRandom(ELEMENT_INTRO[el], rng);
+  const elementBody = pickRandom(ELEMENT_BODY[el], rng);
 
   // --- Impact phrase ---
   const heartTag = attributes.heart.variation.includes("straight") ? "straight" : "curved";
   const specificKey = `${el}_heart_${heartTag}`;
   const phrases = IMPACT_PHRASES as Record<string, string>;
-  const impactPhrase = phrases[specificKey] ?? phrases[el] ?? pickRandom(ELEMENT_IMPACT[el]);
+  const impactPhrase = phrases[specificKey] ?? phrases[el] ?? pickRandom(ELEMENT_IMPACT[el], rng);
 
   // --- Opening ---
-  const opening = pickRandom(REPORT_OPENING);
+  const opening = pickRandom(REPORT_OPENING, rng);
 
   // --- Portrait ---
   const dominantMount = resolveDominantMount(attributes.mounts);
@@ -194,6 +221,7 @@ export function selectBlocks(
     HEART_BLOCKS as unknown as Record<string, LineBlocks>,
     HEART_MODIFIERS as unknown as Record<string, TextBlock>,
     HEART_MEASUREMENTS as unknown as Record<string, MeasurementSet>,
+    rng,
   );
 
   const headSection = buildLineSection(
@@ -203,6 +231,7 @@ export function selectBlocks(
     HEAD_BLOCKS as unknown as Record<string, LineBlocks>,
     HEAD_MODIFIERS as unknown as Record<string, TextBlock>,
     HEAD_MEASUREMENTS as unknown as Record<string, MeasurementSet>,
+    rng,
   );
 
   const lifeSection = buildLineSection(
@@ -212,6 +241,7 @@ export function selectBlocks(
     LIFE_BLOCKS as unknown as Record<string, LineBlocks>,
     {},
     LIFE_MEASUREMENTS as unknown as Record<string, MeasurementSet>,
+    rng,
   );
 
   const fateSection = buildLineSection(
@@ -221,22 +251,23 @@ export function selectBlocks(
     FATE_BLOCKS as unknown as Record<string, LineBlocks>,
     {},
     FATE_MEASUREMENTS as unknown as Record<string, MeasurementSet>,
+    rng,
   );
 
   // --- Venus ---
-  const venus = buildVenus(attributes);
+  const venus = buildVenus(attributes, rng);
 
   // --- Crossings ---
-  const crossings = buildCrossings(attributes);
+  const crossings = buildCrossings(attributes, rng);
 
   // --- Compatibility ---
-  const compatibility = buildCompatibility(el);
+  const compatibility = buildCompatibility(el, rng);
 
   // --- Rare signs ---
-  const rareSigns = buildRareSigns(attributes.rare_signs);
+  const rareSigns = buildRareSigns(attributes.rare_signs, rng);
 
   // --- Epilogue ---
-  const epilogue = pickRandom(EPILOGUE);
+  const epilogue = pickRandom(EPILOGUE, rng);
 
   // --- Assemble ---
   const report: ReportJSON = {
@@ -302,6 +333,7 @@ function buildLineSection(
   blocks: Record<string, LineBlocks>,
   modifierBlocks: Record<string, TextBlock>,
   measurements: Record<string, MeasurementSet>,
+  rng: () => number,
 ): ReportSection {
   const meta = resolveMeta(key);
 
@@ -309,15 +341,15 @@ function buildLineSection(
     logger.warn({ axis: key, variation }, "Unknown variation — using _fallback block");
   }
   const lineBlock = blocks[variation] ?? blocks["_fallback"];
-  const sectionOpening = lineBlock ? pickRandom(lineBlock.opening) : "";
-  const bodyPast = lineBlock ? pickRandom(lineBlock.body_past) : "";
-  const bodyPresent = lineBlock ? pickRandom(lineBlock.body_present) : "";
+  const sectionOpening = lineBlock ? pickRandom(lineBlock.opening, rng) : "";
+  const bodyPast = lineBlock ? pickRandom(lineBlock.body_past, rng) : "";
+  const bodyPresent = lineBlock ? pickRandom(lineBlock.body_present, rng) : "";
 
   const activeModifiers: string[] = [];
   for (const mod of modifiers) {
     const modBlock = modifierBlocks[mod];
     if (modBlock) {
-      activeModifiers.push(pickRandom(modBlock));
+      activeModifiers.push(pickRandom(modBlock, rng));
     }
   }
 
@@ -344,15 +376,15 @@ function buildLineSection(
 // Venus builder
 // ---------------------------------------------------------------------------
 
-function buildVenus(attributes: HandAttributes): ReportVenus {
+function buildVenus(attributes: HandAttributes, rng: () => number): ReportVenus {
   const meta = resolveMeta("venus");
 
-  const venusOpening = pickRandom(VENUS_OPENING);
+  const venusOpening = pickRandom(VENUS_OPENING, rng);
   const bodyBlock =
     attributes.venus.mount === "pronounced" ? VENUS_BODY_PRONOUNCED : VENUS_BODY_FLAT;
-  const venusBody = pickRandom(bodyBlock);
-  const cinturaoText = attributes.venus.cinturao ? pickRandom(VENUS_CINTURAO) : null;
-  const venusClosing = pickRandom(VENUS_CLOSING);
+  const venusBody = pickRandom(bodyBlock, rng);
+  const cinturaoText = attributes.venus.cinturao ? pickRandom(VENUS_CINTURAO, rng) : null;
+  const venusClosing = pickRandom(VENUS_CLOSING, rng);
 
   const measurement: Record<string, string> = {
     "Cinturao de Venus": attributes.venus.cinturao ? "Presente. Sinal raro." : "Ausente.",
@@ -380,14 +412,14 @@ function buildVenus(attributes: HandAttributes): ReportVenus {
 // Crossings builder
 // ---------------------------------------------------------------------------
 
-function buildCrossings(attributes: HandAttributes): ReportCrossing[] {
+function buildCrossings(attributes: HandAttributes, rng: () => number): ReportCrossing[] {
   const results: ReportCrossing[] = [];
 
   for (const [key, condition] of Object.entries(CROSSING_CONDITIONS)) {
     if (condition(attributes)) {
       const block = CROSSING_BLOCKS[key];
       if (block) {
-        results.push({ key, body: pickRandom(block) });
+        results.push({ key, body: pickRandom(block, rng) });
       }
     }
   }
@@ -399,7 +431,7 @@ function buildCrossings(attributes: HandAttributes): ReportCrossing[] {
 // Compatibility builder
 // ---------------------------------------------------------------------------
 
-function buildCompatibility(element: HandElement): ReportCompat[] {
+function buildCompatibility(element: HandElement, rng: () => number): ReportCompat[] {
   const elements: HandElement[] = ["fire", "water", "earth", "air"];
   const results: ReportCompat[] = [];
 
@@ -412,7 +444,7 @@ function buildCompatibility(element: HandElement): ReportCompat[] {
         key: COMPAT_BLOCKS[key] ? key : reverseKey,
         pair: block.pair,
         word: block.word,
-        body: pickRandom(block.body),
+        body: pickRandom(block.body, rng),
       });
     }
   }
@@ -424,7 +456,7 @@ function buildCompatibility(element: HandElement): ReportCompat[] {
 // Rare signs builder
 // ---------------------------------------------------------------------------
 
-function buildRareSigns(signs: Record<RareSignKey, boolean>): ReportRareSign[] {
+function buildRareSigns(signs: Record<RareSignKey, boolean>, rng: () => number): ReportRareSign[] {
   const results: ReportRareSign[] = [];
 
   for (const [key, present] of Object.entries(signs) as [RareSignKey, boolean][]) {
@@ -434,7 +466,7 @@ function buildRareSigns(signs: Record<RareSignKey, boolean>): ReportRareSign[] {
         results.push({
           key,
           name: block.name,
-          body: pickRandom(block.body),
+          body: pickRandom(block.body, rng),
         });
       }
     }
