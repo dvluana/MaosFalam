@@ -141,6 +141,10 @@ _Updated after each plan completion_
 - [Phase 14]: svix used via transitive dependency from @clerk/nextjs — no new install
 - [Phase 15-bug-fixes]: Back camera inverts MediaPipe handedness labels via mirroredRef.current
 - [Phase 15-bug-fixes]: Revelacao card uses max-height: min(476px, 55dvh) for responsive sizing
+- [260417-u26]: computeElementHint uses worldLandmarks (3D meters) + dist3D — no aspect ratio correction needed
+- [260417-u26]: angleDeg in validateLandmarks uses WRIST→MIDDLE_MCP vector in screen-space (normalized coords)
+- [260417-u26]: Camera jitter: JITTER_THRESHOLD=0.025, STABLE_FRAMES_REQUIRED=5, ELEMENT_SAMPLES_REQUIRED=8
+- [260417-u26]: Camera blocks angle > 45deg; upload blocks > 60deg (more tolerant for static photos)
 
 ### Pending Todos
 
@@ -159,9 +163,10 @@ None.
 | 260417-jfc | Fix no-free-flow-after-login + element concept UX | 2026-04-17 | e401fe6 | [260417-jfc-fix-no-free-flow-after-login-element-con](./quick/260417-jfc-fix-no-free-flow-after-login-element-con/) |
 | 260417-rjx | Fix pickRandom seeded PRNG in select-blocks       | 2026-04-17 | 3721805 | [260417-rjx-fix-pickrandom-seeded-prng-in-select-blo](./quick/260417-rjx-fix-pickrandom-seeded-prng-in-select-blo/) |
 | 260417-ryl | MediaPipe authoritative element classification    | 2026-04-17 | 7eeb24b | [260417-ryl-mediapipe-authoritative-element-classifi](./quick/260417-ryl-mediapipe-authoritative-element-classifi/) |
+| 260417-u26 | Fix pipeline MediaPipe worldLandmarks + jitter    | 2026-04-17 | 11f5caa | [260417-u26-fix-pipeline-mediapipe-worldlandmarks-es](./quick/260417-u26-fix-pipeline-mediapipe-worldlandmarks-es/) |
 
 ## Session Continuity
 
-Last activity: 2026-04-17 — Completed quick task 260417-ryl: MediaPipe authoritative element classification
-Stopped at: Quick task 260417-ryl complete
+Last activity: 2026-04-17 — Completed quick task 260417-u26: Fix pipeline MediaPipe worldLandmarks + jitter stability
+Stopped at: Quick task 260417-u26 complete
 Resume file: None
