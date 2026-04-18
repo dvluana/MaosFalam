@@ -56,9 +56,29 @@
 
 ## Traceability
 
-| REQ-ID       | Phase | Status  |
-| ------------ | ----- | ------- |
-| ELEM-01..06  | TBD   | Pending |
-| MEDIA-01..05 | TBD   | Pending |
-| IMG-01..03   | TBD   | Pending |
-| MIX-01..10   | TBD   | Pending |
+| REQ-ID   | Phase    | Status  |
+| -------- | -------- | ------- |
+| ELEM-01  | Phase 16 | Pending |
+| ELEM-02  | Phase 16 | Pending |
+| ELEM-03  | Phase 16 | Pending |
+| ELEM-04  | Phase 16 | Pending |
+| ELEM-05  | Phase 16 | Pending |
+| ELEM-06  | Phase 16 | Pending |
+| IMG-01   | Phase 16 | Pending |
+| IMG-02   | Phase 16 | Pending |
+| IMG-03   | Phase 16 | Pending |
+| MEDIA-01 | Phase 17 | Pending |
+| MEDIA-02 | Phase 17 | Pending |
+| MEDIA-03 | Phase 17 | Pending |
+| MEDIA-04 | Phase 17 | Pending |
+| MEDIA-05 | Phase 17 | Pending |
+| MIX-01   | Phase 18 | Pending |
+| MIX-02   | Phase 18 | Pending |
+| MIX-03   | Phase 18 | Pending |
+| MIX-04   | Phase 18 | Pending |
+| MIX-05   | Phase 18 | Pending |
+| MIX-06   | Phase 18 | Pending |
+| MIX-07   | Phase 19 | Pending |
+| MIX-08   | Phase 19 | Pending |
+| MIX-09   | Phase 19 | Pending |
+| MIX-10   | Phase 19 | Pending |

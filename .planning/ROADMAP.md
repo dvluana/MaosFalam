@@ -6,7 +6,8 @@
 - ✅ **v1.1 Alinhamento Arquitetural** - Phases 1-5 (shipped 2026-04-11)
 - ✅ **v1.2 Fluxo de Mao Dominante** - Phases 1-5 (shipped 2026-04-11)
 - ✅ **v1.3 Sistema de Creditos Robusto** - Phases 6-11 (shipped 2026-04-14)
-- 🚧 **v2 Monetizacao** - Phases 12-15 (in progress)
+- ✅ **v2 Monetizacao** - Phases 12-15 (shipped 2026-04-14)
+- 🚧 **v1.4 Classificacao de Elemento** - Phases 16-19 (in progress)
 
 <details>
 <summary>✅ v1.0 Backend MVP (Phases 1-7) - SHIPPED 2026-04-11</summary>
@@ -44,106 +45,98 @@ All 7 plans completed. See `.planning/archive/v1.3/` for history.
 
 </details>
 
+<details>
+<summary>✅ v2 Monetizacao (Phases 12-15) - SHIPPED 2026-04-14</summary>
+
+Phase 12: AbacatePay v2 Backend | Phase 13: Frontend Payment Flow | Phase 14: Email & Hardening | Phase 15: Bug Fixes
+
+All 6 plans completed. See `.planning/archive/v2/` for history.
+
+</details>
+
 ---
 
-### 🚧 v2 Monetizacao (In Progress)
+### 🚧 v1.4 Classificacao de Elemento (In Progress)
 
-**Milestone Goal:** Pagamento real end-to-end. Usuario compra creditos via AbacatePay (checkout hosted), webhook credita, leitura premium desbloqueia. Email transacional via Resend confirma pagamento. Bugs de UX pendentes resolvidos.
+**Milestone Goal:** Classificacao de elemento correta e consistente. GPT-4o classifica com prompt multi-indicador (Types A/B/C/D x 6-7 indicadores visuais). MediaPipe valida posicao/angulo/estabilidade (sem classificar elemento). Suporte a maos mistas (primary + secondary element). Leituras antigas sem secondary renderizam normal.
 
 ## Phases
 
-- [x] **Phase 12: AbacatePay v2 Backend** - Migrar wrapper pra API v2, criar produtos, atualizar webhook, testes (completed 2026-04-14)
-- [x] **Phase 13: Frontend Payment Flow** - /creditos real, initiatePurchase, checkout intent, UpsellSection, CPF (completed 2026-04-14)
-- [x] **Phase 14: Email & Hardening** - Resend emails transacionais, CPF validation, error handling, stale cleanup (completed 2026-04-14)
-- [x] **Phase 15: Bug Fixes** - Manifesto acentos, camera handedness, revelacao corta (completed 2026-04-14)
+- [ ] **Phase 16: GPT-4o Schema e Image Quality** - Prompt multi-indicador, deriveElement(), triple-schema sync, JPEG 0.92, body limit 4MB
+- [ ] **Phase 17: MediaPipe Validation Refactor** - Remove computeElementHint, restaura handedness traseira, angulo 25 graus com hysteresis, jitter detection
+- [ ] **Phase 18: Block Engine e Conteudo Misto** - secondary_element no motor, ELEMENT_BRIDGE, ELEMENT_EXCLUSIVITY_MIXED, seed hash fix
+- [ ] **Phase 19: Frontend Mao Mista** - ElementHero/ElementSection com secondary, backward compat verificado
 
 ## Phase Details
 
-### Phase 12: AbacatePay v2 Backend
+### Phase 16: GPT-4o Schema e Image Quality
 
-**Goal**: Backend de pagamento migrado pra AbacatePay API v2. Checkout hosted funciona end-to-end: cria checkout → usuario paga no AbacatePay → webhook credita.
-**Depends on**: Nothing (first phase of v2)
-**Requirements**: PAY-01, PAY-02, PAY-03, PAY-04, PAY-05, PAY-06
-**Plans:** 2/2 plans complete
-
-Plans:
-
-- [x] 12-01-PLAN.md — v2 wrapper rewrite + purchase route + schema migration + product setup
-- [x] 12-02-PLAN.md — Webhook handler rewrite + comprehensive tests
-
+**Goal**: GPT-4o classifica elemento via tipos neutros A/B/C/D com 6-7 indicadores visuais. Triple schema (OpenAI JSON Schema, Zod, TypeScript) sincronizado. Imagem de qualidade alta antes de chegar ao modelo.
+**Depends on**: Nothing (first phase of v1.4)
+**Requirements**: ELEM-01, ELEM-02, ELEM-03, ELEM-04, ELEM-05, ELEM-06, IMG-01, IMG-02, IMG-03
 **Success Criteria** (what must be TRUE):
 
-1. abacatepay.ts usa /v2/checkouts/create com items referenciando produto por ID (nao inline products)
-2. 4 produtos existem no AbacatePay com externalId mapeado (mf_avulsa, mf_dupla, mf_roda, mf_tsara)
-3. POST /api/credits/purchase retorna checkout_url valido do AbacatePay
-4. Webhook processa checkout.completed (nao billing.paid) e valida signature com chave publica fixa
-5. Transacao atomica no webhook: paid → credit_pack → debit FIFO → tier upgrade (preservado de v1.3)
-6. methods inclui PIX e CARD
+1. A mesma foto enviada 3 vezes ao GPT-4o produz o mesmo primary_type nos 3 retornos
+2. deriveElement() mapeia A/B/C/D para earth/air/fire/water no servidor, nunca no cliente
+3. npm run type-check passa sem erros apos as 3 schemas serem atualizadas em lockstep
+4. captureFrame gera JPEG com quality 0.92 e a rota capture rejeita payloads acima de 4MB
+5. secondary_type retorna "none" quando mao nao e mista, e o campo secondary_element fica ausente no objeto de saida
+   **Plans**: TBD
 
-### Phase 13: Frontend Payment Flow
+### Phase 17: MediaPipe Validation Refactor
 
-**Goal**: Usuario consegue comprar creditos pela UI. /creditos chama API real, redireciona pro AbacatePay, volta com creditos. UpsellSection no resultado free funciona.
-**Depends on**: Phase 12
-**Requirements**: FRONT-01, FRONT-02, FRONT-03, FRONT-04, FRONT-05, PAY-07
-**Plans:** 2/2 plans complete
-
-Plans:
-
-- [x] 13-01-PLAN.md — initiatePurchase() + CPF utils + /creditos page rewrite (remove fake payment, real API)
-- [x] 13-02-PLAN.md — UpsellSection update + payment return flow (?paid=1, ?purchased=1)
-
+**Goal**: MediaPipe restringe-se a validar qualidade da foto (angulo, estabilidade, handedness). Nenhum rastro de classificacao de elemento permanece no pipeline.
+**Depends on**: Phase 16
+**Requirements**: MEDIA-01, MEDIA-02, MEDIA-03, MEDIA-04, MEDIA-05
 **Success Criteria** (what must be TRUE):
 
-1. /creditos chama POST /api/credits/purchase e redireciona pra checkout_url (sem PIX hardcoded)
-2. payment-client.ts exporta initiatePurchase() usado por /creditos e UpsellSection
-3. Usuario nao logado em /creditos → login → volta pra /creditos com pack pre-selecionado (checkout intent)
-4. UpsellSection no resultado free redireciona pra /creditos ou inicia compra direta
-5. Apos pagamento, completionUrl leva pra /ler/resultado/[id]/completo ou /conta/leituras?purchased=1
-6. CPF coletado e validado (formato real) no primeiro pagamento
+1. computeElementHint, dist3D, elementSamplesRef e elementMode nao existem em nenhum arquivo do projeto
+2. Camera traseira + mao direita passa handedness; camera traseira + mao esquerda falha handedness
+3. Mao inclinada mais de 25 graus mostra estado adjusting; ao endireitar a mao o estado stable e alcancado dentro de 3 segundos
+4. Countdown visual aparece durante o periodo de estabilidade enquanto o timer conta
+5. Jitter acima de 2.5% em 5 frames reseta o contador de estabilidade sem travar o usuario em loop
+   **Plans**: TBD
 
-### Phase 14: Email & Hardening
+### Phase 18: Block Engine e Conteudo Misto
 
-**Goal**: Emails transacionais enviados via Resend apos eventos chave. Hardening de seguranca e cleanup.
-**Depends on**: Phase 12 (webhook trigger)
-**Requirements**: EMAIL-01, EMAIL-02, EMAIL-03, EMAIL-04
-**Plans:** 1/1 plans complete
-
-Plans:
-
-- [x] 14-01-PLAN.md — Harden resend.ts (retry, API key guard), sendWelcome, Clerk webhook, opt-in gating
-
+**Goal**: O motor de leitura suporta mao mista com secondary_element. Novos blocos de conteudo escritos com voz da cigana. Seed hash nao quebra leituras existentes.
+**Depends on**: Phase 16
+**Requirements**: MIX-01, MIX-02, MIX-03, MIX-04, MIX-05, MIX-06
 **Success Criteria** (what must be TRUE):
 
-1. Email de pagamento confirmado enviado apos webhook (voz da cigana, link pro resultado)
-2. Email de boas-vindas enviado apos primeira conta criada
-3. Emails marketing so enviados se lead.email_opt_in === true
-4. Falha no Resend nao bloqueia fluxo principal (retry 1x, catch silencioso)
+1. selectBlocks() chamado com e sem secondary_element produz o mesmo texto primario (seed hash estavel)
+2. ELEMENT_BRIDGE tem 12 strings, uma por par direcional (fogo+agua e agua+fogo sao distintas)
+3. ELEMENT_EXCLUSIVITY_MIXED tem 12 strings e todas passam o checklist de brand-voice (zero palavras proibidas)
+4. ReportJSON.element.secondary_key e element.bridge sao opcionais e absent em leituras sem mao mista
+5. Unit test falha se secondary_element modificar a variacao textual dos blocos primarios
+   **Plans**: TBD
 
-### Phase 15: Bug Fixes
+### Phase 19: Frontend Mao Mista
 
-**Goal**: Bugs pendentes de UX resolvidos.
-**Depends on**: Nothing (independent)
-**Requirements**: BUG-01, BUG-02, BUG-03
-**Plans:** 1/1 plans complete
-
-Plans:
-
-- [x] 15-01-PLAN.md — Manifesto accents + camera handedness mirroring fix + revelacao responsive card
-
+**Goal**: Resultado exibe secondary element de forma subordinada quando presente. Leituras antigas sem secondary renderizam sem crash e sem slots vazios.
+**Depends on**: Phase 18
+**Requirements**: MIX-07, MIX-08, MIX-09, MIX-10
 **Success Criteria** (what must be TRUE):
 
-1. Manifesto: 63 palavras sem acento corrigidas
-2. Camera: handedness espelhamento so em camera frontal, nao em upload/traseira
-3. Revelacao: carta nao corta em telas < 640px (scroll ou min-height)
+1. Leitura anterior a v1.4 (sem secondary_key) carrega e renderiza sem erro em ElementHero e ElementSection
+2. Leitura nova com mao mista mostra badge subordinado "Com tracos de [secundario]" em ElementHero
+3. ElementSection exibe o texto de bridge logo apos o body do elemento primario quando bridge existe
+4. HandSummary usa texto de exclusivity mista quando secondary_element esta presente
+   **Plans**: TBD
+   **UI hint**: yes
 
 ## Progress
 
 **Execution Order:**
-Phase 12 → 13 → 14 (parallel to 15) → 15
+Phase 16 → 17 (parallel com 18) → 18 → 19
 
-| Phase                     | Milestone | Plans Complete | Status   | Completed  |
-| ------------------------- | --------- | -------------- | -------- | ---------- |
-| 12. AbacatePay v2 Backend | v2        | 2/2            | Complete | 2026-04-14 |
-| 13. Frontend Payment Flow | v2        | 2/2            | Complete | 2026-04-14 |
-| 14. Email & Hardening     | v2        | 1/1            | Complete | 2026-04-14 |
-| 15. Bug Fixes             | v2        | 1/1            | Complete | 2026-04-14 |
+| Phase                             | Milestone | Plans Complete | Status      | Completed  |
+| --------------------------------- | --------- | -------------- | ----------- | ---------- |
+| 12. AbacatePay v2 Backend         | v2        | 2/2            | Complete    | 2026-04-14 |
+| 13. Frontend Payment Flow         | v2        | 2/2            | Complete    | 2026-04-14 |
+| 14. Email & Hardening             | v2        | 1/1            | Complete    | 2026-04-14 |
+| 15. Bug Fixes                     | v2        | 1/1            | Complete    | 2026-04-14 |
+| 16. GPT-4o Schema e Image Quality | v1.4      | 0/TBD          | Not started | -          |
+| 17. MediaPipe Validation Refactor | v1.4      | 0/TBD          | Not started | -          |
+| 18. Block Engine e Conteudo Misto | v1.4      | 0/TBD          | Not started | -          |
+| 19. Frontend Mao Mista            | v1.4      | 0/TBD          | Not started | -          |

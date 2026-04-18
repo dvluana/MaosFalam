@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Completed 15-01-PLAN.md
-last_updated: "2026-04-14T18:45:21.275Z"
-last_activity: 2026-04-14
+milestone: v1.4
+milestone_name: Classificacao de Elemento
+status: not_started
+stopped_at: Roadmap defined
+last_updated: "2026-04-18T00:00:00.000Z"
+last_activity: 2026-04-18
 progress:
   total_phases: 4
-  completed_phases: 4
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-18)
 
 **Core value:** Foto da palma entra, leitura personalizada sai. Monetizacao via creditos AbacatePay.
-**Current focus:** Milestone v1.4 — Classificação de Elemento
+**Current focus:** Milestone v1.4 — Classificacao de Elemento
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Not started
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-18 — Milestone v1.4 started
+Status: Roadmap defined, ready for Phase 16
+Last activity: 2026-04-18 — Roadmap v1.4 created
 
 ## Performance Metrics
 
@@ -77,6 +77,7 @@ _Updated after each plan completion_
 
 - v1.3 phases 6-11 defined 2026-04-13 from credit system audit
 - v2 phases 12-15 defined 2026-04-14 from AbacatePay v2 audit + code assessment
+- v1.4 phases 16-19 defined 2026-04-18 from element classification experimental session findings
 
 ### Decisions
 
@@ -144,7 +145,6 @@ _Updated after each plan completion_
 - [260417-u26]: computeElementHint uses worldLandmarks (3D meters) + dist3D — no aspect ratio correction needed
 - [260417-u26]: angleDeg in validateLandmarks uses WRIST→MIDDLE_MCP vector in screen-space (normalized coords)
 - [260417-u26]: Camera jitter: JITTER_THRESHOLD=0.025, STABLE_FRAMES_REQUIRED=5, ELEMENT_SAMPLES_REQUIRED=8
-- [260417-u26]: Camera blocks angle > 45deg; upload blocks > 60deg (more tolerant for static photos)
 
 ### Pending Todos
 
@@ -167,6 +167,6 @@ None.
 
 ## Session Continuity
 
-Last activity: 2026-04-17 — Completed quick task 260417-u26: Fix pipeline MediaPipe worldLandmarks + jitter stability
-Stopped at: Quick task 260417-u26 complete
+Last activity: 2026-04-18 — Roadmap v1.4 created (phases 16-19)
+Stopped at: Roadmap defined
 Resume file: None
