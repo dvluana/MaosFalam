@@ -1,516 +1,392 @@
 # Pitfalls Research
 
-**Domain:** Next.js 16 backend — Neon + Prisma v7 + Clerk + GPT-4o vision + credit debit
-**Researched:** 2026-04-10
-**Confidence:** HIGH (Prisma/Neon/Clerk official docs + community verified), MEDIUM (GPT-4o vision specifics)
+**Domain:** AI vision classification (GPT-4o multi-indicator), MediaPipe camera validation, mixed-element support — added to existing palm reading system
+**Researched:** 2026-04-18
+**Confidence:** HIGH (first-hand experimental session + codebase analysis), MEDIUM (GPT-4o non-determinism specifics from documented session)
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Prisma Client Not Using Singleton — Connection Pool Exhaustion in Dev and Prod
+### Pitfall 1: GPT-4o Sparse MoE Non-Determinism Even at temperature=0
 
 **What goes wrong:**
-Every hot-reload in development creates a new `PrismaClient` instance with a fresh connection pool. Old pools are never closed. After a few reloads, Neon reports "too many connections" and queries fail silently or timeout. In production on Vercel (serverless), each invocation also risks creating duplicate clients if the module is instantiated at the top level without a global guard.
+GPT-4o uses a Sparse Mixture of Experts (MoE) architecture. Unlike dense models, different expert subsets activate per request, even with `temperature: 0`. This means identical prompt + identical image can produce different element classifications across calls — "fire" on one call, "earth" on the next. The experimental session discovered this: multi-indicator prompts were tested, results varied, and the source was not prompt wording but architecture-level stochasticity.
 
 **Why it happens:**
-Developers copy the Prisma quickstart that shows `new PrismaClient()` at the top of a file. In a standard Node server this is fine — one process, one client. Next.js App Router hot-reloads modules but does not re-initialize `globalThis`, so without a singleton guard, each reload adds a new pool.
+Developers assume `temperature: 0` means fully deterministic output. For dense models (GPT-3.5, Claude Haiku), that is largely true. GPT-4o's MoE routing adds non-determinism that `temperature` does not control. OpenAI does not expose a seed parameter for vision calls.
 
 **How to avoid:**
-Use the Prisma-recommended singleton pattern in `src/lib/prisma.ts`:
+Do not design the system expecting consistent element output from GPT-4o for the same image. Instead:
 
-```typescript
-import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import { neonConfig, Pool } from "@neondatabase/serverless";
+1. Treat GPT-4o element output as one signal among many, not the authoritative one
+2. Use the `primary_type` + `secondary_type` + `type_reasoning` multi-indicator schema so GPT-4o reports its observations, and a deterministic `deriveElement()` function on the server collapses them into the final element — same observations always produce same element
+3. Never store `element` from raw GPT-4o output directly. Store the intermediate `primary_type` + `secondary_type` and run `deriveElement()` server-side
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
-
-function createPrismaClient() {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  const adapter = new PrismaNeon(pool);
-  return new PrismaClient({ adapter });
-}
-
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-```
-
-Also set `connection_limit=1` in the DATABASE_URL query string for serverless: `?connection_limit=1`. Neon's free tier supports 20 idle connections total.
+This is the exact design v1.4 targets: GPT-4o classifies hand shape indicators (A/B/C/D types), `deriveElement` maps them deterministically.
 
 **Warning signs:**
 
-- Error `too many clients already` from Neon in dev
-- Queries that work once then hang on second request
-- Prisma logs showing multiple connection pool initializations
+- Running the same photo through capture twice yields different element values in the DB
+- Element shown in sharing card differs from element in the reading body (stale state issue)
+- User reports "eu sou Fogo mas apareceu Terra"
 
-**Phase to address:** Database Setup (Phase 1 — schema + Prisma initialization)
+**Phase to address:** Phase 1 — GPT-4o prompt redesign. Establish multi-indicator schema before wiring anything else.
 
 ---
 
-### Pitfall 2: Missing DIRECT_URL — Prisma Migrations Fail Against Neon Pooler
+### Pitfall 2: MediaPipe worldLandmarks Element Hint — Unreliable as Classification Source
 
 **What goes wrong:**
-`prisma migrate deploy` and `prisma db push` fail with timeout or SSL errors when run against the pooled connection (PgBouncer). Prisma CLI commands require a direct TCP connection, not a pooled one. The symptom is often a cryptic timeout that looks like a network issue.
+The experimental session confirmed that `computeElementHint` using MediaPipe `worldLandmarks` (3D real-world coordinates in meters) does not reliably classify hand element. The palm/finger ratio heuristic produces internally consistent geometry but does not correlate with the four-element classification system as defined in `docs/palmistry.md`. The hint was biased by hand pose (camera angle, finger spread state) more than by actual hand shape type.
 
 **Why it happens:**
-Neon provides two connection strings: a pooled one (via PgBouncer, `pooler.neon.tech`) and a direct one (`neon.tech`). Developers set only `DATABASE_URL` to the pooled string because it is listed first in the Neon dashboard.
+The element classification in palmistry depends on the resting proportions and texture of the hand — not on the geometry of a single frame where the hand is extended flat for capture. A "Water" hand (long rectangular palm, long fine fingers) and an "Air" hand (square palm, long knuckled fingers) can produce similar landmark geometry when both are held open toward the camera.
+
+The current code still calls `computeElementHint` and sends it as `element_hint` to GPT-4o. v1.4 plan is to remove this path and use MediaPipe only for validation.
 
 **How to avoid:**
-Always define both env vars:
 
-```env
-DATABASE_URL="postgresql://...@ep-xxx.pooler.neon.tech/maosfalam?sslmode=require"
-DIRECT_URL="postgresql://...@ep-xxx.neon.tech/maosfalam?sslmode=require"
-```
-
-In `prisma/schema.prisma`:
-
-```prisma
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-```
-
-The adapter uses `DATABASE_URL` at runtime; Prisma CLI uses `DIRECT_URL` for migrations.
+1. Remove `computeElementHint` from the camera pipeline for classification purposes
+2. Remove `elementSamplesRef`, `elementMode`, and `setElementHint` from `useCameraPipeline` detection loop
+3. Remove `elementHint` parameter from `analyzeHand` and the "Elemento da mao ja determinado por landmarks" text injected into the GPT-4o prompt — this biases GPT-4o toward a potentially wrong answer
+4. MediaPipe's only job is: hand present, correct hand, palm open, centered, angle <25°, stable (no jitter). Nothing else.
 
 **Warning signs:**
 
-- `prisma migrate deploy` hangs for 30s then errors
-- `Error: P1001: Can't reach database server at pooler.neon.tech`
-- Migrations work locally but fail in CI
+- `elementSamplesRef` is still populated in `useCameraPipeline`
+- `analyzeHand` still accepts `elementHint` parameter
+- `setElementHint` is still called in the capture path
+- GPT-4o prompt still contains "Elemento da mao ja determinado por landmarks"
 
-**Phase to address:** Database Setup (Phase 1)
+**Phase to address:** Phase 2 — MediaPipe validation refactor. Remove classification path entirely before touching GPT-4o prompt.
 
 ---
 
-### Pitfall 3: Clerk in Next.js 16 — middleware.ts Renamed to proxy.ts
+### Pitfall 3: Prompt Wording Biases GPT-4o Element Classification
 
 **What goes wrong:**
-Next.js 16 renamed `middleware.ts` to `proxy.ts`. If you place Clerk's `clerkMiddleware()` in `middleware.ts`, it silently does not run. Protected routes become publicly accessible. `auth()` throws "Clerk can't detect usage of clerkMiddleware()" errors in server components and API routes.
+The experimental session tested multiple prompt versions. Wording choices significantly affected element distribution in GPT-4o responses even for the same photo. Prompts that listed characteristics like "palma quadrada, dedos curtos = Terra" caused GPT-4o to bias toward the most prominent characteristic it could identify, ignoring others. Prompts that framed classification as "which of 4 Types does this hand match?" (Type A/B/C/D rather than Fire/Water/Earth/Air) produced more consistent multi-indicator responses.
 
 **Why it happens:**
-Clerk documentation and community examples still show `middleware.ts`. Most tutorials were written for Next.js ≤15. The rename is a breaking change that affects every auth system that hooks into Next.js middleware.
+GPT-4o's vision completion attends to text tokens before image tokens. When the prompt provides a named-element taxonomy with loaded descriptions ("Fogo = intensidade, paixao"), the model pattern-matches on the element name itself rather than doing geometric analysis. Type labels (A/B/C/D) have no pre-training associations and force the model to reason from the indicators.
 
 **How to avoid:**
 
-- Use `src/proxy.ts` (not `src/middleware.ts`)
-- Upgrade `@clerk/nextjs` to v6.35.0+ (versions that explicitly support Next.js 16 proxy)
-- Test that `auth()` resolves correctly in a protected API route after setup
+1. Use neutral type labels (A/B/C/D or Type1/Type2/Type3/Type4) in the vision prompt, not the palmistry element names
+2. Ask for 6-7 independent structural indicators (palm shape proportion, finger length ratio, knuckle visibility, finger thickness, palm width vs height, fingertip shape) separately before asking for classification
+3. Map types to elements in `deriveElement()` server-side with a lookup table — the mapping never touches GPT-4o
+4. Include `type_reasoning` as a required field so GPT-4o must justify its classification (chain-of-thought in the response structure constrains the output)
 
-```typescript
-// src/proxy.ts (NOT middleware.ts)
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-
-const isProtectedRoute = createRouteMatcher([
-  "/conta(.*)",
-  "/api/reading/new(.*)",
-  "/api/user(.*)",
-]);
-
-export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
-});
-
-export const config = {
-  matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
-  ],
-};
-```
+The Structured Outputs JSON schema must include `primary_type`, `secondary_type`, and `type_reasoning` as required fields, with the existing `element` field removed from the GPT-4o response schema entirely.
 
 **Warning signs:**
 
-- Unauthenticated users can reach `/conta/leituras` without redirect
-- `auth()` returns `{ userId: null }` in a route you expect to be protected
-- No redirect happens on login-required routes
+- The GPT-4o prompt still uses the words "Fogo", "Agua", "Terra", "Ar" in the classification section
+- The response schema still has `element: "fire" | "water" | "earth" | "air"` as a top-level required field
+- No `type_reasoning` field in the response schema
 
-**Phase to address:** Auth Setup (Phase 2 — Clerk integration)
+**Phase to address:** Phase 1 — GPT-4o prompt redesign.
 
 ---
 
-### Pitfall 4: Middleware as Sole Auth Guard — CVE-2025-29927 Pattern
+### Pitfall 4: Schema Changes Break Existing Zod Validator and HAND_ATTRIBUTES_SCHEMA
 
 **What goes wrong:**
-Relying only on `proxy.ts` / `clerkMiddleware()` to protect API routes. A single middleware check for the entire app means that if middleware is bypassed (misconfiguration, wrong matcher, edge case in Next.js router), every protected API route is fully open.
+Adding `primary_type`, `secondary_type`, `type_reasoning` to the GPT-4o response requires changes in three places: the JSON Schema sent to OpenAI (`HAND_ATTRIBUTES_SCHEMA` object in `openai.ts`), the Zod schema (`HandAttributesSchema` in `openai.ts`), and the `HandAttributes` TypeScript type in `src/types/hand-attributes.ts`. If any of these three drift from each other, TypeScript compiles but runtime behavior is undefined — GPT-4o returns data that Zod accepts but that the type system does not model, or vice versa.
+
+Adding `secondary_element` to `HandAttributes` without a matching `secondary_key` in `ReportJSON.element` causes `selectBlocks` to silently ignore the secondary element or crash on the frontend when it tries to render `element.secondary_key` that does not exist.
 
 **Why it happens:**
-Middleware feels like "one place to protect everything." Developers add `auth().protect()` in proxy.ts and consider auth done. They skip re-verifying identity inside the route handler.
+Three separate schema representations of the same data (OpenAI JSON Schema, Zod schema, TypeScript type) must be kept in sync manually. This is error-prone, especially when iterating fast on prompt design.
 
 **How to avoid:**
-Double-check auth inside every protected route handler. Treat middleware as UX (redirect unauthed users to login), not security:
 
-```typescript
-// src/app/api/user/readings/route.ts
-import { auth } from "@clerk/nextjs/server";
-
-export async function GET() {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
-  // proceed with userId — never trust client-provided user IDs
-}
-```
-
-Never accept `clerk_user_id` or `userId` from the request body. Always derive it from `auth()` on the server.
+1. Make a single source of truth: define the Zod schema first, then derive the OpenAI JSON Schema from it using a converter or by hand-writing them in the same object expression
+2. Update all three in the same commit, never in separate PRs
+3. Update `ReportJSON` in `src/types/report.ts` at the same time as `HandAttributes` — add `element.secondary_key` and `element.bridge` fields to the report type before `selectBlocks` tries to write them
+4. Add a type-level test: `const _: ReportJSON = selectBlocks(mockAttrs, "Test", "female")` in a `.test.ts` file — TypeScript will fail if the output shape diverges from the type
 
 **Warning signs:**
 
-- API routes that accept `userId` in the request body
-- Routes that only check auth via cookie without calling `auth()`
-- Any route where removing the middleware doesn't trigger an error in tests
+- `HandAttributesSchema.parse()` succeeds but TypeScript reports type error on `.secondary_element`
+- `element.secondary_key` missing from `ReportJSON.element` interface
+- `selectBlocks` return type does not include `secondary_key` in the element object
 
-**Phase to address:** Auth Setup (Phase 2) + every API route in Phase 3
+**Phase to address:** Phase 1 (GPT-4o prompt redesign) — define new schema as the very first artifact, before any implementation.
 
 ---
 
-### Pitfall 5: GPT-4o JSON Response — Unstructured Output Crashes selectBlocks
+### Pitfall 5: Backward Compatibility — Existing Readings Without secondary_element Crash Frontend
 
 **What goes wrong:**
-GPT-4o is prompted to return JSON but occasionally returns Markdown-wrapped JSON (``json { ... }`), partial JSON, or fields with wrong types (`"breaks": "none"` instead of `"breaks": 0`). `JSON.parse()` throws, `selectBlocks` receives malformed `HandAttributes`, and the reading either 500s or silently generates garbage output.
+Existing readings in the DB have `report.element = { key: "fire", intro: "...", body: "..." }` — no `secondary_key`, no `bridge`. When the frontend is updated to render mixed-element UI (secondary badge, bridge text), it tries to access `report.element.secondary_key` on old readings, gets `undefined`, and either crashes the component or renders nothing where the secondary element should be.
 
 **Why it happens:**
-GPT-4o does not guarantee strict JSON output unless you use the Structured Outputs API (`response_format: { type: "json_schema", schema: ... }`). With `response_format: { type: "json_object" }`, the model returns valid JSON but does not validate against your schema. Field types, required fields, and enum values are not enforced.
+Adding optional fields to JSONB in Postgres does not automatically populate them in existing rows. Existing `report` JSONB blobs are frozen at their creation-time schema. The frontend must handle both old format (no secondary) and new format (with secondary).
 
 **How to avoid:**
-Use OpenAI Structured Outputs with an explicit JSON Schema matching `HandAttributes`. Pin to a model snapshot that supports it (`gpt-4o-2024-08-06` or later):
 
-```typescript
-const response = await openai.chat.completions.create({
-  model: 'gpt-4o-2024-08-06',
-  response_format: {
-    type: 'json_schema',
-    json_schema: {
-      name: 'hand_attributes',
-      strict: true,
-      schema: HAND_ATTRIBUTES_SCHEMA, // derive from src/types/
-    },
-  },
-  messages: [...],
-})
-```
-
-Add a Zod parse of the response before passing to `selectBlocks`. Catch parse errors and route to the low-confidence error page.
-
-Add a fallback in `selectBlocks` for every unknown variation — return a generic safe block rather than throwing.
+1. Make `secondary_key` and `bridge` optional in the `ReportJSON.element` type (not required fields)
+2. Add a null check before rendering: `{element.secondary_key && <SecondaryElementBadge ... />}`
+3. Do NOT run a migration to backfill old readings — the cost/benefit is wrong. Old readings are "pure" element readings. Accept that only new readings show mixed elements.
+4. Add a `version` field to `ReportJSON` (optional, `"1.4"`) to distinguish report format generations if needed for future migrations
 
 **Warning signs:**
 
-- Any uncaught `JSON.parse` error in `/api/reading/capture`
-- `selectBlocks` throwing "Bloco não encontrado" (already noted in CONCERNS.md as fragile)
-- Occasional 500s on the capture route that don't reproduce deterministically
+- Frontend component accessing `element.secondary_key` without null check
+- Type definition making `secondary_key` required instead of optional
+- Reported crashes on `/ler/resultado/[id]` for old readings after v1.4 deploy
 
-**Phase to address:** GPT-4o integration (Phase 3) + selectBlocks hardening
+**Phase to address:** Phase 4 — mixed element frontend. Every render of `secondary_key` must have a null guard.
 
 ---
 
-### Pitfall 6: GPT-4o Vision — Photo Too Large, Cost Spikes, Vercel Body Limit
+### Pitfall 6: Handedness Inversion Disabled — Still in Production Code
 
 **What goes wrong:**
-A phone camera photo at full resolution (4000×3000px) is 3-8MB as JPEG, 10-15MB as base64. This causes three compounding problems:
-
-1. Vercel default body size limit is 4.5MB — the request 413s before reaching GPT-4o
-2. GPT-4o processes the image in 512×512 tiles; a 4K image becomes ~30 tiles at high detail = ~5,200 tokens = ~$0.05 per image just for the photo, not counting the response
-3. Cold Vercel functions with large payloads have higher initialization time
+The current `useCameraPipeline.ts` contains this comment: `// Handedness inversion temporarily disabled for debugging` and maps `rawHandedness === "Left" ? "left" : "right"` without the back-camera inversion logic. This means back-camera users (the default) who hold their right hand (dominant) may be told to switch to the other hand, or the correct hand passes through incorrectly. The current behavior is non-deterministic depending on camera facing mode.
 
 **Why it happens:**
-The camera pipeline captures at the device's native resolution. Base64 encoding adds ~33% overhead. Developers test with small photos locally and don't notice until production with real phone photos.
+MediaPipe assumes mirrored (selfie camera) input. For back camera (non-mirrored), the handedness label is flipped: MediaPipe "Right" = user's left hand. The inversion was disabled during debugging and never re-enabled. v1.4 must resolve this before shipping new validation logic.
 
 **How to avoid:**
-Resize and compress client-side before sending. In the camera pipeline, after canvas capture:
 
-```typescript
-// After capturing from canvas, resize to max 1024px on longest side
-const MAX_SIZE = 1024;
-const canvas = document.createElement("canvas");
-// ... resize logic ...
-const base64 = canvas.toDataURL("image/jpeg", 0.85); // 0.85 quality
-```
-
-A 1024×768 JPEG at 0.85 quality is ~80-150KB base64. GPT-4o at high detail processes it as 4 tiles = 765 tokens.
-
-Set `detail: 'high'` explicitly — do not let GPT-4o default, as it may choose `low` and miss fine palm lines.
-
-Add `maxBodySize` config in the Next.js route:
-
-```typescript
-export const config = { api: { bodyParser: { sizeLimit: "2mb" } } };
-```
+1. Restore the inversion: if `mirroredRef.current === false` (back camera), invert the handedness label before comparing to `dominantHandRef.current`
+2. Add a unit test with mock handedness data for both camera modes
+3. The fix is one line: `const userHandedness = mirroredRef.current ? (rawHandedness === "Left" ? "left" : "right") : (rawHandedness === "Left" ? "right" : "left")`
+4. Test explicitly with back camera + right hand and back camera + left hand before closing
 
 **Warning signs:**
 
-- 413 errors on `/api/reading/capture` from production
-- OpenAI costs higher than ~$0.05/reading (should be ~$0.01-0.02 at 1024px)
-- Slow response times on capture (>10s indicates large payload + GPT-4o processing)
+- The comment "temporarily disabled" is still present in the detection loop
+- Back-camera users report "mao errada" feedback when they have the correct hand
+- Handedness check passes for the wrong hand in back-camera mode
 
-**Phase to address:** GPT-4o integration (Phase 3) + camera pipeline (MediaPipe phase)
+**Phase to address:** Phase 2 — MediaPipe validation refactor. Fix before adding new validation logic.
 
 ---
 
-### Pitfall 7: Credit Debit Race Condition — Double Spend
+### Pitfall 7: Jitter Buffer Reset on Every Invalid Frame Prevents Stable State
 
 **What goes wrong:**
-Two concurrent requests to `/api/reading/new` for the same `clerk_user_id` both read `remaining = 1`, both pass the "has credits" check, both proceed to GPT-4o and debit, resulting in `remaining = -1`. User gets two premium readings for one credit. At scale with 5-credit or 10-credit packs, this is exploitable.
+The current loop calls `resetBuffers()` whenever the hand fails any check (wrong hand, angle, not open, not centered). This resets `landmarkHistoryRef`, `elementSamplesRef`, and `stabilityStartRef`. A user with a slightly tilted hand who then corrects it will restart the 1.5s stability timer from zero every time any validation check fails, even briefly. This creates a frustrating experience where the "Segura..." feedback never appears.
 
-**Why it happens:**
-The naive implementation reads balance, checks if > 0, then starts a transaction to debit. Between the read and the debit, a second request from the same user (or a script) can slip in. Even with a `$transaction`, a READ COMMITTED isolation level does not prevent this — two concurrent transactions both see `remaining = 1` before either commits.
+This is not a bug with the existing simple threshold — but when the angle threshold is tightened from 45° to 25° (v1.4 requirement), the reset-on-fail pattern becomes much more aggressive. Minor hand wobble at 24° → reset → 26° → adjusting → 24° → reset → loop forever.
 
 **How to avoid:**
-Use a single atomic UPDATE with a WHERE guard and check the affected row count:
 
-```typescript
-const result = await prisma.$executeRaw`
-  UPDATE credit_packs
-  SET remaining = remaining - 1
-  WHERE clerk_user_id = ${userId}
-    AND remaining > 0
-    AND id = (
-      SELECT id FROM credit_packs
-      WHERE clerk_user_id = ${userId} AND remaining > 0
-      ORDER BY created_at ASC
-      LIMIT 1
-    )
-  RETURNING id
-`;
-
-if (result === 0) {
-  return Response.json({ error: "Sem créditos" }, { status: 402 });
-}
-```
-
-The single UPDATE is atomic at the database level. If two requests race, only one will match the `remaining > 0` condition after the first commits. Never use a read-then-write pattern for financial operations.
-
-Alternatively, use `prisma.$transaction` with `isolationLevel: Prisma.TransactionIsolationLevel.Serializable` and SELECT FOR UPDATE — but the single-UPDATE approach above is simpler and equally safe for this use case.
+1. Separate buffer reset from state transitions. Only reset `stabilityStartRef` and `landmarkHistoryRef` when the hand fails validation. Do NOT reset if the frame was valid (angle ok, centered, open) but jitter threshold not yet met.
+2. Introduce hysteresis on the angle check: consider a hand "stable angle" if it has been under 25° for the last N frames, not just the current frame. A single-frame spike at 26° should not reset stability.
+3. The element samples (`elementSamplesRef`) should NOT reset when the hand temporarily fails validation — they are an independent running window. Resetting them means element detection needs to restart from scratch every time the user adjusts.
 
 **Warning signs:**
 
-- `remaining` column goes negative in any row
-- User reports getting a premium reading after their last credit should have been consumed
-- Two concurrent requests to `/api/reading/new` both return 200
+- Users report the camera never auto-captures despite holding still
+- "Segura..." state (camera_stable) is reached then immediately drops back to "camera_adjusting"
+- Logs show rapid state oscillation between camera_hand_detected and camera_adjusting
 
-**Phase to address:** Credits API (Phase 3 or payment phase)
+**Phase to address:** Phase 2 — MediaPipe validation refactor. Must verify stability hysteresis works at 25° threshold before shipping.
 
 ---
 
-### Pitfall 8: Neon Cold Start on First Request — User Sees 10s+ Loading
+### Pitfall 8: JPEG Quality and Resolution Regression — Existing Working Value Changed
 
 **What goes wrong:**
-Neon scales to zero after 5 minutes of inactivity (free tier). The first query after idle wakes up the compute node, which takes 500ms-3s. Combined with Vercel cold start (~200ms) and GPT-4o latency (3-8s), the first reading capture of the day can take 12+ seconds. On mobile, this causes the scan screen's progress bar to stall visually before any progress.
+The current system captures at `quality: 0.82` in `captureFrame()`. The v1.4 target spec says `JPEG 0.92, max 2048px, detail:high, body limit 4MB`. Increasing JPEG quality from 0.82 to 0.92 and resolution from 1280px capture to 2048px max increases payload size by 3-5x. The existing Vercel body limit handling in `/api/reading/capture` was tuned for the current payload size. Changing quality without verifying the body limit in the Next.js route config causes 413 errors in production.
 
 **Why it happens:**
-Neon free tier auto-suspends. The behavior is expected but invisible — no error, just latency. Prisma adapter with connection pooler (PgBouncer) masks most cold starts for subsequent queries but not the first one after a full suspend.
+Photo quality parameters look like low-risk changes. Developers increase quality without measuring the output size, and Vercel silently returns 413 before the route handler runs — the error appears as a network failure on the client, not a clear 413.
 
 **How to avoid:**
 
-- Always use the pooled `DATABASE_URL` at runtime, not the direct URL — PgBouncer maintains warm connections and absorbs most cold starts
-- For MVP: accept the first-request latency; the scan screen has a 10s ritual animation that covers it
-- If latency becomes a product problem: use Neon's `autosuspend_delay_seconds` API to extend idle timeout (requires paid tier), or add a lightweight warm-up ping on app startup
-- Do NOT try to keep Neon warm with a cron job on the free tier — this exhausts the compute hours budget
+1. Before changing JPEG quality/resolution, measure actual output size: log `base64.length * 0.75` (bytes) in the scan page for a real phone photo at both settings
+2. The body size limit config in the capture route (`export const config`) must be updated to match the new max payload
+3. If max 2048px + quality 0.92 exceeds 4MB base64 for real photos, add a client-side size check: if the base64 exceeds a threshold, downscale further before sending
+4. The `captureFrame` function currently uses the video's native resolution. Add explicit max-size logic: if `video.videoWidth > 2048`, scale the canvas down before drawing
+
+Current formula for safe payload estimate: `width * height * 3 * quality_factor * 1.33 (base64 overhead)` — a 2048x1536 JPEG at 0.92 quality is approximately 800KB-2MB depending on scene complexity.
 
 **Warning signs:**
 
-- First user of the day reports the scan taking much longer than usual
-- Pino logs showing DB query taking >2s on otherwise fast queries
-- `/api/reading/capture` P99 latency is 10-15x higher than P50
+- 413 errors on `/api/reading/capture` in staging after quality change
+- Console errors like "Request Entity Too Large" in staging logs
+- Payload size logs showing >3MB for typical phone photos
 
-**Phase to address:** Database Setup (Phase 1) — document as known behavior, not a bug
+**Phase to address:** Phase 1 — GPT-4o prompt redesign (as part of `analyzeHand` changes). Set the quality and body limit at the same time, verify in staging.
 
 ---
 
-### Pitfall 9: auth() vs currentUser() — Wrong Tool, Wrong Cost
+### Pitfall 9: mixed-element selectBlocks Changes Break the Deterministic Seed
 
 **What goes wrong:**
-`currentUser()` is called in every protected API route to get the user's name or email. Each call hits Clerk's Backend API and counts toward the Clerk API rate limit (free tier: 10 requests/second). Under load, API routes start getting 429 from Clerk, causing auth failures that look like the user was logged out.
+`selectBlocks` uses a seeded PRNG (`mulberry32`) based on `hashInputs(attributes, name, gender)`. The hash is derived from `JSON.stringify(attributes)`. When `HandAttributes` gains a new field (`secondary_element`), the JSON string changes, the hash changes, and all existing readings that are re-rendered (fetched and passed through `selectBlocks`) will produce different text variation picks than when they were originally saved.
 
-`auth()` returns only the session token claims (userId, sessionId) — no extra API call. `currentUser()` fetches the full user record from Clerk's servers.
+This does not affect stored readings (the report is stored in JSONB and never re-run through `selectBlocks`). But any code path that re-runs `selectBlocks` on existing attributes (e.g., a "regenerate" button, a preview in the account area, or a test that reconstructs a reading) will produce different output.
 
 **Why it happens:**
-Developers want the user's name for personalization or logging and use `currentUser()` as the default in every handler. The Clerk docs show both without clearly explaining the cost difference.
+The seed depends on the full attributes JSON. Any structural change to `HandAttributes` is a breaking change to the seed. Adding `secondary_element: undefined` and `secondary_element: "fire"` produce different hashes even for the same primary analysis.
 
 **How to avoid:**
 
-- Use `auth()` for all auth checks and userId extraction in API routes
-- Use `currentUser()` only when you genuinely need the user's email or name (e.g., sending a Resend email)
-- For MaosFalam: the user's name and gender are in the `leads` table. Fetch from Neon, not from Clerk, for reading-related personalization
-- Never call `currentUser()` in a route that is called frequently (e.g., credit balance check)
+1. When adding `secondary_element` to `HandAttributes`, exclude it from the seed hash. Compute the hash from a stable subset of fields (the existing fields as of v1.3).
+2. Better: add a dedicated `seed_version` field to `HandAttributes` and include it in the hash but keep the other fields stable
+3. Document in `select-blocks.ts`: "Do not add new HandAttributes fields to the hash function without considering backward compatibility"
+4. The simplest fix: hash only `{ element, heart, head, life, fate, venus, mounts, rare_signs }` explicitly (not full JSON.stringify), so new fields don't affect the seed
 
 **Warning signs:**
 
-- Clerk dashboard showing unexpectedly high API call counts
-- Intermittent 401s on authenticated routes during traffic spikes
-- API route response times spiking whenever personalized content is shown
+- Unit tests for `selectBlocks` that check exact text output start failing after adding `secondary_element`
+- Two calls to `selectBlocks` with the same attributes but one has `secondary_element` undefined and the other has it set return different text for the primary element section
 
-**Phase to address:** Auth Setup (Phase 2) — establish the rule before writing any route handlers
+**Phase to address:** Phase 3 — selectBlocks + backend changes. Fix seed before adding the field.
 
 ---
 
-### Pitfall 10: selectBlocks Has No Fallback — Unknown Variation Throws
+### Pitfall 10: ELEMENT_BRIDGE and ELEMENT_EXCLUSIVITY_MIXED Block Data Written Without Proofread
 
 **What goes wrong:**
-GPT-4o returns an attribute value not in the block lookup table (e.g., a typo, a valid-but-unmapped combination, or a confidence-partial response missing a field). `selectBlocks` calls `HEART_BLOCKS[variation]`, gets `undefined`, and throws "Bloco não encontrado". The entire reading capture 500s, the user sees the generic error screen, and one rate limit slot is wasted.
-
-This is already documented in CONCERNS.md as a fragile area — but it becomes load-bearing the moment the backend is real.
+v1.4 adds 12 `ELEMENT_BRIDGE` strings and 12 `ELEMENT_EXCLUSIVITY_MIXED` strings (one per element pair). These are brand voice copy — they need to follow the cigana voice rules exactly (no travessoes, no hedging, second person, palmistry nomenclature, etc.). If the blocks are written quickly as placeholders and shipped, they enter the DB and are served to real users. Changing text blocks after they are in the DB requires either a data migration or a code re-deploy, which is easy but creates a lag.
 
 **Why it happens:**
-The block lookup maps were written to match the palmistry spec exactly. GPT-4o is non-deterministic. Under low confidence (0.3-0.7), it may omit fields or return conservative values that don't map cleanly.
+Backend developers write placeholder copy ("Mao de Fogo com tracos de Agua. Interessante combinacao.") to test the feature and forget to replace it before the phase is marked done.
 
 **How to avoid:**
-Wrap every block lookup in a try/catch with a safe fallback:
 
-```typescript
-function getBlock(
-  map: Record<string, ReadingBlock>,
-  variation: string,
-  fallback: string,
-): ReadingBlock {
-  const block = map[variation] ?? map[fallback];
-  if (!block) throw new Error(`No block for variation: ${variation} or fallback: ${fallback}`);
-  return block;
-}
-```
-
-Define a `_fallback` key in each block map with a generic safe text. Log the unknown variation (without PII) to catch GPT-4o drift over time.
-
-Add Zod validation of `HandAttributes` after the GPT-4o response, before calling `selectBlocks`. Unknown enum values fail fast with a clear error, not a crash inside the block engine.
+1. All text blocks must be reviewed against `docs/brand-voice.md` before the phase is closed
+2. Write all 12 bridge strings and 12 exclusivity strings before implementing `buildMixedElement()` in `selectBlocks` — writing the copy forces clarity on what the feature actually says
+3. Use the brand voice checklist: second person, no travessoes, no emojis, no "energias/vibracoes", nomenclatura real, direct ("Suas maos carregam dois fios", not "Parece que...")
+4. Bridge strings must follow the format of existing crossing blocks — short (1-2 sentences), punchy, reveal-not-explain
 
 **Warning signs:**
 
-- Any 500 on `/api/reading/capture` that does not have a clear Zod or network error
-- Logs containing "Bloco não encontrado"
-- Users hitting the error screen despite having a valid photo
+- Any bridge string containing "—" (em dash), "talvez", "pode ser", or "energias"
+- Any bridge string referring to "as pessoas" instead of "voce"
+- Bridge strings that explain what mixed elements mean instead of revealing what it means for this specific person
 
-**Phase to address:** GPT-4o integration (Phase 3) — harden `selectBlocks` before wiring to real API
+**Phase to address:** Phase 3 — selectBlocks + content. All copy reviewed before the phase is marked complete.
 
 ---
 
 ## Technical Debt Patterns
 
-| Shortcut                                      | Immediate Benefit                              | Long-term Cost                                                                              | When Acceptable                                                              |
-| --------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| In-memory rate limit (Map)                    | Zero setup, works locally                      | Dies on Vercel restart; rate limiting is effectively disabled in production                 | Never in production — migrate to Upstash Redis before first public launch    |
-| `sessionStorage` flags for navigation gates   | Simple client-side gating                      | Users can skip name collection; leads table gets empty names                                | Never for lead capture — use server-signed cookies or Clerk session metadata |
-| Mock `useMock()` fallback to real API in prod | Easy dev/prod toggle                           | Obscures which path is active; debug confusion                                              | Acceptable during transition; remove mock fallback once backend is validated |
-| `tier: 'free'` default on all readings        | Safe default; never accidentally shows premium | Payment webhook must atomically upgrade tier; any webhook failure means paid user sees free | Acceptable — the default is safe. Webhook must be idempotent and retried.    |
-| Prisma `$executeRaw` for credit debit         | Atomic single-query debit                      | Raw SQL bypasses Prisma type safety                                                         | Acceptable for this one operation — document clearly, add test               |
+| Shortcut                                                                                | Immediate Benefit                         | Long-term Cost                                                                          | When Acceptable                                       |
+| --------------------------------------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Keeping `computeElementHint` in `mediapipe.ts` even after removing it from the pipeline | No code deletion, easier to revert        | Dead code confuses future developers; signals MediaPipe still does classification       | Never — delete it in Phase 2                          |
+| Sending `element_hint` to GPT-4o as a "bias" hint                                       | Seemed to reduce some variance in testing | Actually biases GPT-4o toward a possibly-wrong answer, defeating multi-indicator design | Never — remove entirely in Phase 1                    |
+| Using `element: "fire"` field name in GPT-4o JSON schema instead of `primary_type`      | Reuses existing schema structure          | Keeps non-determinism at element level; misses the deriveElement architecture           | Never — the multi-indicator schema is the whole point |
+| Making `secondary_element` required in HandAttributes from day one                      | Simpler type (no Optional)                | Breaks all existing readings and tests immediately                                      | Never — keep optional, null-guard everywhere          |
+| Writing bridge copy inline in selectBlocks as template literals                         | Fast to implement                         | Content never reviewed for brand voice; enters prod as placeholder                      | Never — content is brand-critical                     |
 
 ---
 
 ## Integration Gotchas
 
-| Integration        | Common Mistake                                   | Correct Approach                                                                          |
-| ------------------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------- |
-| Neon + Prisma      | Using direct connection URL at runtime           | Use pooled URL at runtime, direct URL in `DIRECT_URL` for CLI only                        |
-| Neon + Prisma      | Importing `ws` separately for WebSocket support  | `@prisma/adapter-neon` bundles everything — do not install `ws` separately                |
-| Clerk + Next.js 16 | Placing Clerk config in `middleware.ts`          | Use `proxy.ts`; upgrade `@clerk/nextjs` to v6.35.0+                                       |
-| Clerk              | Calling `currentUser()` in every route           | Use `auth()` for userId only; `currentUser()` only when full user record needed           |
-| GPT-4o             | Using `response_format: { type: "json_object" }` | Use `response_format: { type: "json_schema" }` with strict schema for typed output        |
-| GPT-4o             | Sending full-resolution photo as base64          | Resize to max 1024px and compress to JPEG 0.85 before encoding                            |
-| GPT-4o             | Not pinning model version                        | Always pin to `gpt-4o-2024-08-06` or later — `gpt-4o` without version may change behavior |
-| AbacatePay webhook | Trusting body values for credit amount           | Always re-fetch billing from AbacatePay API to confirm amount before crediting            |
+| Integration               | Common Mistake                                                  | Correct Approach                                                                                       |
+| ------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| GPT-4o multi-indicator    | Using element names (Fogo/Agua) in classification prompt        | Use neutral type labels (Type A/B/C/D); map to elements in `deriveElement()` server-side               |
+| GPT-4o multi-indicator    | Assuming `temperature: 0` gives deterministic output            | Design for non-determinism: observations → deriveElement, not raw element                              |
+| GPT-4o Structured Outputs | Adding fields to Zod schema without updating OpenAI JSON Schema | Both must match exactly; `strict: true` in the schema means any mismatch causes API error              |
+| MediaPipe worldLandmarks  | Using 3D coordinates for element classification                 | Only use worldLandmarks for jitter detection (movement between frames); never for shape classification |
+| MediaPipe handedness      | Not inverting label for back camera                             | Front camera (mirrored=true): label maps directly. Back camera: invert the label.                      |
+| JSONB in Postgres         | Assuming new optional fields auto-appear in old rows            | Old report JSONB is frozen; frontend must null-check all new optional fields                           |
+| Zod + TypeScript          | Keeping Zod schema and TS type separate                         | Use Zod schema as the source of truth; derive TS type with `z.infer<typeof HandAttributesSchema>`      |
 
 ---
 
 ## Performance Traps
 
-| Trap                                         | Symptoms                                                                     | Prevention                                                                    | When It Breaks                                              |
-| -------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| No Prisma singleton                          | "Too many connections" in dev; queries hang after multiple hot reloads       | Singleton pattern in `src/lib/prisma.ts` with `globalThis` guard              | Immediately in dev; on Vercel under concurrent traffic      |
-| `currentUser()` in high-frequency routes     | Intermittent 401s; Clerk rate limit errors                                   | Use `auth()` for userId; `currentUser()` only when needed                     | ~100 concurrent users hitting the same route                |
-| Full-resolution photo base64 in request body | 413 errors; $0.10+ per reading; 10-15s response time                         | Resize client-side to 1024px max before sending                               | First real phone photo in production                        |
-| In-memory rate limiter on Vercel             | Rate limiting appears to work locally but is bypassed entirely in production | Upstash Redis rate limiter from day one                                       | Every production request (Vercel = new process per request) |
-| Neon cold start on free tier                 | First request of the day takes 10s+                                          | Accept for MVP; use pooled connection to minimize; document as known behavior | Free tier after 5min idle — always                          |
+| Trap                                                                  | Symptoms                                                                                 | Prevention                                                                                    | When It Breaks                                                    |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Higher JPEG quality (0.92) without body limit update                  | 413 errors in production that look like network failures                                 | Measure payload size in staging first; update body limit in Next.js route config              | First real phone photo in prod after quality change               |
+| element sampling buffer not cleared on capture                        | Element hint from one session bleeds into next capture if user goes back and tries again | Clear `elementSamplesRef` on `capturedRef.current = true` and on unmount                      | When user taps "Tentar de novo" without page reload               |
+| Running `selectBlocks` again on fetched reading attributes            | Re-generates different text due to seed change                                           | Never re-run `selectBlocks` on stored readings; always serve the stored JSONB report directly | Anytime `HandAttributes` schema changes (every milestone)         |
+| Multi-indicator JSON schema with 6-7 indicators increases token count | GPT-4o costs go from ~$0.01 to ~$0.02/reading                                            | Design schema efficiently; `type_reasoning` as a short string not a paragraph                 | Scale: at 10K readings/month, $100 vs $200 — acceptable but track |
 
 ---
 
 ## Security Mistakes
 
-| Mistake                                        | Risk                                                                        | Prevention                                                                                               |
-| ---------------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Accepting `userId` or `tier` from request body | Attacker sets their own userId or upgrades tier for free                    | Always derive `userId` from `auth()` on server; `tier` changes only via webhook                          |
-| Skipping Zod validation on any API route input | Malformed input reaches business logic; potential injection or crash        | Zod schema first line of every route handler — reject with 400 before any DB call                        |
-| Missing idempotency on webhook handler         | Duplicate `billing.paid` events double-credit the user                      | Check `payment.status === 'paid'` before processing; use DB unique constraint on `abacatepay_billing_id` |
-| Logging `name`, `email`, or `cpf` via Pino     | Data leak in log aggregator (Vercel logs, Datadog, etc.)                    | Pino config with redact paths; only log `reading_id`, `clerk_user_id` (opaque), action name              |
-| `sessionStorage` as navigation gate            | Users skip lead capture; fake `maosfalam_pending_reading` to access results | Server-side session via Clerk metadata or signed cookie; never trust client-side flags for security      |
+| Mistake                                                                     | Risk                                                                                      | Prevention                                                                                       |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Logging `primary_type`, `secondary_type`, or `type_reasoning` at INFO level | Logs contain model's analysis chain which could be scraped to reverse-engineer the prompt | Log only `element` (derived) and `confidence` — never log the intermediate classification fields |
+| Storing the full GPT-4o reasoning chain in the reading DB                   | PII-adjacent: reasoning may mention hand characteristics that are sensitive               | Store only the final `HandAttributes` and the derived `ReportJSON`, not `type_reasoning`         |
+| Changing body size limit without reviewing CORS and security headers        | A higher body limit increases attack surface for large-payload denial-of-service          | Match body limit to realistic max photo size; add content-type validation before size check      |
 
 ---
 
 ## UX Pitfalls
 
-| Pitfall                                                            | User Impact                                                               | Better Approach                                                                                                         |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| No loading state during cold start DB query                        | Scan screen stalls at 0% for 2-3s then jumps; user thinks it crashed      | The existing 10s ritual animation on /ler/scan covers this — do not add a spinner that implies failure                  |
-| Hard error on GPT-4o low confidence without useful feedback        | User sees generic error, doesn't know what to fix                         | Route confidence < 0.3 to `/ler/erro?reason=low_confidence` with specific photo tips (light, open hand, flat surface)   |
-| Credit consumed before reading completes                           | GPT-4o times out or returns error after credit debited; user loses credit | Debit credit only after reading is successfully saved to DB; rollback on GPT-4o failure                                 |
-| `tier: 'free'` reading shown after payment, before webhook fires   | User pays, gets redirected back to free result; appears broken            | Show "Sua leitura completa está sendo preparada..." state while polling for tier upgrade; webhook fires in <5s normally |
-| No distinction between "no credits" and "not logged in" on capture | User confused about why they can't proceed                                | Check auth first (redirect to login), then check credits (redirect to /creditos) — separate error states                |
+| Pitfall                                                                   | User Impact                                                                                                          | Better Approach                                                                                                     |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Tightening angle threshold to 25° without hysteresis                      | "Camera_adjusting" fires constantly on minor hand wobble; user can never reach stable state                          | Require N consecutive valid frames at <25° before entering stable; single-frame spike should not reset              |
+| Showing secondary element badge when confidence is low                    | User with "Ar com tracos de Fogo" at confidence 0.35 gets mixed-element UI that looks authoritative but is guesswork | Only show `secondary_element` when GPT-4o `confidence >= 0.7`; below that, show primary element only                |
+| Mixed element UI without explanation anchor                               | Users see "Fogo + Agua" and don't know what the bridge means                                                         | Bridge text (`ELEMENT_BRIDGE`) must appear immediately after the secondary badge, not buried in the premium section |
+| Backward-compatible reading showing no secondary element in a new UI slot | Old readings look broken — empty slot where secondary badge should appear in new layout                              | Design new UI components to be additive: secondary badge slot only renders if `secondary_key` is present            |
 
 ---
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **Prisma singleton:** `src/lib/prisma.ts` uses `globalThis` guard — verify no second `new PrismaClient()` anywhere in `src/`
-- [ ] **Migration setup:** `DIRECT_URL` env var present and `prisma/schema.prisma` has `directUrl` — verify `prisma migrate deploy` works in CI
-- [ ] **Clerk in Next.js 16:** Auth file is `src/proxy.ts`, not `src/middleware.ts` — verify protected route returns 401 when called without token
-- [ ] **Auth double-check:** Every API route in `/api/user/*` and `/api/reading/new` calls `auth()` directly, not just relies on proxy.ts — verify by temporarily removing proxy.ts and confirming routes still reject
-- [ ] **GPT-4o Structured Outputs:** Response parsed through Zod before reaching `selectBlocks` — verify a malformed GPT-4o response returns 422, not 500
-- [ ] **Credit debit atomicity:** Single atomic UPDATE used, not read-then-write — verify with two concurrent requests in test
-- [ ] **Photo resize:** Camera pipeline sends max 1024px JPEG — verify payload size logged on capture route is under 300KB
-- [ ] **Rate limit on Vercel:** Upstash Redis (not in-memory Map) used for `/api/reading/capture` — verify rate limit persists across two separate function invocations
-- [ ] **Webhook idempotency:** Sending same `billing.paid` event twice does not double-credit — verify `remaining` count with duplicate webhook test
-- [ ] **No PII in logs:** Pino logs for a full reading flow contain no name, email, or cpf — verify by running capture flow and grepping logs
+- [ ] **Multi-indicator prompt:** GPT-4o prompt uses Type A/B/C/D labels, not Fogo/Agua/Terra/Ar — verify by reading `PROMPT` constant in `openai.ts`
+- [ ] **deriveElement server-side:** `HandAttributes.element` is computed by `deriveElement(primary_type, secondary_type)`, never taken directly from GPT-4o response — verify `analyzeHand` return path
+- [ ] **MediaPipe classification removed:** `computeElementHint` is not called in `useCameraPipeline` detection loop — verify `elementSamplesRef` is gone from the hook
+- [ ] **element_hint removed from analyzeHand:** `analyzeHand` no longer accepts `elementHint` parameter — verify function signature
+- [ ] **Handedness inversion restored:** Back camera inversion is active — verify by checking `mirroredRef.current` branch in handedness check
+- [ ] **Angle threshold at 25° with hysteresis:** Single-frame spike above 25° does not reset stability — verify with manual test (tilt slightly then straighten)
+- [ ] **secondary_element optional in type:** `HandAttributes.secondary_element` is `HandElement | undefined`, not `HandElement` — verify type definition
+- [ ] **secondary_key null-checked in frontend:** Every render of `element.secondary_key` has a null/undefined guard — verify in ElementHero and ElementSection components
+- [ ] **JPEG quality update with body limit sync:** `captureFrame` quality updated AND capture route body limit updated in the same change — verify both in one code review
+- [ ] **Brand voice on all bridge strings:** All 12 `ELEMENT_BRIDGE` strings pass the brand voice checklist — verify no travessoes, no hedging, second person, nomenclatura real
+- [ ] **Seed hash excludes secondary_element:** Adding secondary_element to an existing HandAttributes object does not change the seed hash — verify with a unit test
 
 ---
 
 ## Recovery Strategies
 
-| Pitfall                                        | Recovery Cost | Recovery Steps                                                                                                                         |
-| ---------------------------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Connection pool exhaustion (no singleton)      | LOW           | Add singleton pattern, restart dev server; no data loss                                                                                |
-| Migrations failing (no DIRECT_URL)             | LOW           | Add `DIRECT_URL` to env, re-run `prisma migrate deploy`                                                                                |
-| proxy.ts vs middleware.ts (wrong filename)     | LOW           | Rename file, restart; no data change needed                                                                                            |
-| Double-spend race condition (credits negative) | HIGH          | Audit `credit_packs` for `remaining < 0`, manually correct; add constraint `CHECK (remaining >= 0)` to schema; rewrite debit logic     |
-| GPT-4o crashes selectBlocks (no fallback)      | MEDIUM        | Add try/catch + fallback blocks; no user data lost but affected readings show as error                                                 |
-| Webhook not idempotent (double credit)         | HIGH          | Audit `credit_packs` for duplicates by `payment_id`; add unique constraint on `abacatepay_billing_id`; manually remove duplicate packs |
+| Pitfall                                              | Recovery Cost | Recovery Steps                                                                                                                           |
+| ---------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Non-deterministic element (GPT-4o raw output stored) | HIGH          | Requires schema migration to store `primary_type`/`secondary_type`; old readings lose secondary; re-derive `element` for all rows        |
+| Handedness bug shipped                               | MEDIUM        | Deploy fix immediately; affected readings are stored with wrong element in JSONB — manual correction only possible by re-running capture |
+| Bridge copy with brand voice violations shipped      | LOW           | Deploy corrected strings; only future readings get corrected text; old readings are stored in JSONB and unaffected                       |
+| Backward-compat crash on old readings                | MEDIUM        | Deploy null-guard fix; no data loss; but users on old readings saw crash in the window between deploy                                    |
+| Seed hash changed — text variations shifted          | LOW           | No data loss; stored readings unaffected; add explicit stable-field hash to prevent recurrence                                           |
+| JPEG quality increase causes 413 in prod             | LOW           | Revert quality or increase body limit; no data loss; affected capture requests returned error to user                                    |
 
 ---
 
 ## Pitfall-to-Phase Mapping
 
-| Pitfall                       | Prevention Phase             | Verification                                                                                                         |
-| ----------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Prisma singleton              | Phase 1: Database Setup      | Confirm no `new PrismaClient()` outside singleton file; run 10 hot reloads, check connection count in Neon dashboard |
-| DIRECT_URL missing            | Phase 1: Database Setup      | Run `prisma migrate deploy` from CI and verify it completes without timeout                                          |
-| proxy.ts rename               | Phase 2: Auth Setup          | Hit a protected route without token, verify 401 response (not 200 with empty userId)                                 |
-| Middleware as sole auth guard | Phase 2: Auth Setup          | Each route handler must independently verify `userId` via `auth()`                                                   |
-| auth() vs currentUser()       | Phase 2: Auth Setup          | Grep codebase for `currentUser()` calls; justify each one                                                            |
-| GPT-4o JSON structure         | Phase 3: API Routes          | Force a mock GPT-4o response with missing fields; verify Zod rejects it and route returns 422                        |
-| Photo size / Vercel 413       | Phase 3: API Routes + camera | Log payload size on every capture; alert if >500KB                                                                   |
-| Credit debit race condition   | Phase 3: API Routes          | Integration test with two concurrent requests; verify only one succeeds                                              |
-| Cold start latency            | Phase 1: Database Setup      | Document as known behavior in STATUS.md; verify pooled URL is used                                                   |
-| selectBlocks no fallback      | Phase 3: API Routes          | Unit test with unknown variation input; verify fallback block returned, not throw                                    |
+| Pitfall                               | Prevention Phase                       | Verification                                                                                         |
+| ------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| GPT-4o non-determinism (MoE)          | Phase 1: GPT-4o prompt redesign        | Same photo run 3x produces same element via deriveElement even if primary_type varies                |
+| Prompt wording biases element         | Phase 1: GPT-4o prompt redesign        | Prompt contains no element names; Type labels only                                                   |
+| Schema drift (Zod / OpenAI / TS type) | Phase 1: GPT-4o prompt redesign        | TypeScript strict build passes; Zod schema and OpenAI schema produce identical field sets            |
+| MediaPipe element hint still active   | Phase 2: MediaPipe validation refactor | `elementSamplesRef` and `computeElementHint` absent from detection loop                              |
+| Handedness inversion disabled         | Phase 2: MediaPipe validation refactor | Back camera + right hand passes handedness check; back camera + left hand fails it                   |
+| Jitter reset prevents stable state    | Phase 2: MediaPipe validation refactor | Manual test: tilted then corrected hand reaches camera_stable within 3s                              |
+| JPEG quality regression               | Phase 1 (with analyzeHand changes)     | Staging log shows payload <3MB for real phone photo at new quality settings                          |
+| Backward compat crash on old readings | Phase 4: mixed element frontend        | Load a reading from before v1.4 on the result page — no crash, no missing UI slots                   |
+| Seed hash broken by new field         | Phase 3: selectBlocks                  | Unit test: same attrs with and without secondary_element produce same primary text variation         |
+| Bridge copy brand voice violations    | Phase 3: selectBlocks + content        | Manual review against docs/brand-voice.md checklist before phase marked done                         |
+| secondary_element without null guard  | Phase 4: mixed element frontend        | Every ElementHero/ElementSection render path passes TypeScript strict with secondary_key as optional |
 
 ---
 
 ## Sources
 
-- [Neon + Prisma connection guide](https://neon.com/docs/guides/prisma) — official, HIGH confidence
-- [Prisma connection pooling docs](https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/databases-connections/connection-pool) — official, HIGH confidence
-- [Prisma singleton for Next.js](https://www.timsanteford.com/posts/how-to-fix-too-many-database-connections-opened-in-prisma-with-next-js-hot-reload/) — community verified, HIGH confidence
-- [Clerk Next.js 16 middleware.ts → proxy.ts](https://medium.com/@amitupadhyay878/next-js-16-update-middleware-js-5a020bdf9ca7) — community, MEDIUM confidence
-- [Clerk clerkMiddleware reference](https://clerk.com/docs/reference/nextjs/clerk-middleware) — official, HIGH confidence
-- [Clerk auth() reference](https://clerk.com/docs/reference/nextjs/app-router/auth) — official, HIGH confidence
-- [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) — official, HIGH confidence
-- [GPT-4o vision token costs](https://developers.openai.com/api/docs/guides/images-vision) — official, HIGH confidence
-- [Prisma transactions and isolation levels](https://www.prisma.io/docs/orm/prisma-client/queries/transactions) — official, HIGH confidence
-- [Race condition — Prisma discussion #10709](https://github.com/prisma/prisma/discussions/10709) — community verified, MEDIUM confidence
-- [Neon cold start and connection latency](https://neon.com/docs/connect/connection-latency) — official, HIGH confidence
-- [Prisma v7 migration guide](https://www.buildwithmatija.com/blog/migrate-prisma-v7-nextjs-16-turbopack-fix) — community, MEDIUM confidence
-- Project CONCERNS.md — internal audit, HIGH confidence (first-hand codebase analysis)
+- Project `src/lib/mediapipe.ts` — first-hand codebase analysis, HIGH confidence
+- Project `src/hooks/useCameraPipeline.ts` — handedness inversion disabled, comment in code, HIGH confidence
+- Project `src/server/lib/openai.ts` — current `analyzeHand` with `elementHint` bias, HIGH confidence
+- Project `src/server/lib/select-blocks.ts` — seeded PRNG and hash function, HIGH confidence
+- Project `.planning/PROJECT.md` — documented experimental session findings ("GPT-4o classifica mas non-deterministic. MediaPipe landmarks nao serve pra classificar. Sessao experimental extensa em git stash."), HIGH confidence
+- [OpenAI GPT-4o Sparse MoE architecture](https://openai.com/index/hello-gpt-4o/) — temperature=0 does not guarantee determinism for MoE models, MEDIUM confidence (architectural fact, not explicitly documented as user-facing behavior)
+- [OpenAI Structured Outputs strict mode](https://platform.openai.com/docs/guides/structured-outputs) — `strict: true` requires schema and response to match exactly, HIGH confidence
+- [MediaPipe Hand Landmarker handedness docs](https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker) — front vs back camera handedness behavior, HIGH confidence
+- `docs/palmistry.md` — element classification criteria (shape + proportion, not frame geometry), HIGH confidence
+- `docs/brand-voice.md` — validation checklist for all user-facing text, HIGH confidence
 
 ---
 
-_Pitfalls research for: MaosFalam backend — Neon + Prisma v7 + Clerk + GPT-4o_
-_Researched: 2026-04-10_
+_Pitfalls research for: MaosFalam v1.4 — GPT-4o multi-indicator classification, MediaPipe validation, mixed-element support_
+_Researched: 2026-04-18_

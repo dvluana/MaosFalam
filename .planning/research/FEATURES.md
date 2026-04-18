@@ -1,205 +1,226 @@
-# Feature Research
+# Feature Landscape
 
-**Domain:** Freemium AI-powered consumer reading app (quiromancy / palmistry)
-**Researched:** 2026-04-10
-**Confidence:** HIGH — architecture fully documented, frontend complete, domain well-defined
-
----
-
-## Feature Landscape
-
-### Table Stakes (Users Expect These)
-
-Features users assume exist. Missing these = product feels incomplete or broken.
-
-| Feature                       | Why Expected                                                                                            | Complexity | Notes                                                                                                       |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
-| Lead capture with persistence | User entered name + email before the reading; losing it means losing retargeting and email recovery     | LOW        | POST /api/lead/register. Unauthenticated. Zod validation. Rate limit 10/h per IP.                           |
-| Photo > AI analysis pipeline  | Core product value. If the photo doesn't produce a real reading, nothing else matters                   | HIGH       | POST /api/reading/capture. GPT-4o with structured JSON output. Confidence threshold 0.3. Cost ~R$0.07/call. |
-| Reading persistence           | User exits, returns — reading must still be there. Without this, share links are broken                 | LOW        | Readings saved as JSONB in Neon. UUID primary key doubles as share token.                                   |
-| GET /api/reading/[id]         | Every result page needs to fetch the reading. SSR or client hydration both require it                   | LOW        | Public endpoint. No auth. Returns full report JSON; frontend decides what to blur.                          |
-| Tier enforcement server-side  | Free vs premium must be enforced on server, not just CSS blur. Otherwise anyone can inspect and unlock  | MEDIUM     | `tier` field on reading row. Only webhook can flip it to 'premium'. No client endpoint accepts tier change. |
-| Confidence-based rejection    | Bad photos must be rejected gracefully. A low-confidence GPT response producing bad copy destroys trust | LOW        | Threshold < 0.3 → 422 with cigana error message. Partial (0.3–0.7) → conservative read, no rare signs.      |
-| Auth session (Clerk)          | Account area, reading history, credit debit — all require knowing who the user is                       | MEDIUM     | Clerk middleware on /conta/\* and authenticated API routes. Google OAuth + email/senha built-in.            |
-| Reading history per user      | Users who paid expect to find their readings again. No history = paid and lost = chargeback             | LOW        | GET /api/user/readings. Returns list ordered by date. Requires auth.                                        |
-| User profile read/update      | Clerk owns name/email/photo. Neon owns CPF and abacatepay_customer_id. Profile must surface both        | LOW        | GET+PUT /api/user/profile. CPF never logged or returned publicly.                                           |
-| Account deletion              | LGPD compliance in Brazil. Users must be able to request removal                                        | LOW        | DELETE /api/user/account. Soft delete (is_active = false).                                                  |
-| Input validation everywhere   | Malformed payloads must be rejected at the door. Zod on every API route                                 | LOW        | Pattern already established in architecture. Apply uniformly.                                               |
-| Security headers              | Browser security baseline. Missing headers = easy attack surface on mobile webviews                     | LOW        | X-Frame-Options, HSTS, X-Content-Type-Options, Permissions-Policy (camera=self).                            |
-| PII never in logs             | LGPD. Name, email, CPF in logs = compliance risk + data breach amplifier                                | LOW        | Pino logger. Log only IDs and action codes. Never log photo data.                                           |
-| Photo never stored            | LGPD + trust. Users sharing palm photos expect them to be ephemeral                                     | LOW        | Process base64 in memory, pass to GPT-4o, discard. Never write to disk or object storage.                   |
-| Rate limiting on capture      | GPT-4o costs real money. No limit = one bad actor drains the OpenAI budget in minutes                   | LOW        | 5/h per IP. In-memory Map for MVP, Upstash when scaling.                                                    |
+**Domain:** AI palmistry reading app — element classification accuracy milestone (v1.4)
+**Researched:** 2026-04-18
+**Confidence:** HIGH — codebase fully read, milestone scope from PROJECT.md, prior art in git stash described in context
 
 ---
 
-### Differentiators (Competitive Advantage)
+## Scope Note
 
-Features that set MaosFalam apart from generic AI apps and palmistry competitors.
-
-| Feature                                               | Value Proposition                                                                                                                | Complexity | Notes                                                                                                                                   |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Gender-concordant reading text                        | Reading feels written specifically for you, not a generic copy. Portuguese grammatical gender markers resolved per target        | MEDIUM     | GENDER_MAP + replaceGender() in select-blocks.ts. Already implemented server-side. Markers like {{inteira}} resolve to inteira/inteiro. |
-| Deterministic text variation per reading              | Same reading always shows the same text variant. Prevents the "it changed" confusion on refresh or share                         | LOW        | selectBlocks() seeded by reading.id. Already implemented.                                                                               |
-| Reading for another person                            | Doubles revenue opportunity per user. Viral: "I read your hand" sharing pattern                                                  | LOW        | POST /api/reading/new with target_name + target_gender. Credit debit FIFO. Report addressed in second person to the target.             |
-| Lead capture before reading (not after)               | Standard funnel captures email after value delivery. MaosFalam captures before, enabling abandoned-funnel recovery emails        | LOW        | /api/lead/register called before camera. Email stored, opt-in flag for LGPD.                                                            |
-| Complete report stored in full, tier controls display | Report is generated once. Upgrading only flips a flag — no re-analysis, no delay, instant unlock                                 | LOW        | `report` JSONB contains full content. `tier` field gates frontend display. Webhook flips tier on payment confirmation.                  |
-| MediaPipe pre-hint to GPT-4o                          | Client-side hand type calculation (element) sent as pre-hint improves GPT-4o accuracy and reduces token cost on ambiguous photos | LOW        | landmarks[] proportions → element pre-calculation → included in capture payload.                                                        |
-| Share links as permanent acquisition channel          | UUID-based share links never expire. Every shared reading is a persistent acquisition entry point                                | LOW        | /compartilhar/[reading_id] — public, no auth, partial display. Old links that convert = free revenue.                                   |
+This is a **subsequent milestone** research file. The features below address only what is NEW in v1.4.
+Existing features (GPT-4o pipeline, selectBlocks engine, MediaPipe hand detection, camera UI, credit system, auth) are already built and validated.
 
 ---
 
-### Anti-Features (Commonly Requested, Often Problematic)
+## Table Stakes
 
-| Feature                              | Why Requested                                 | Why Problematic                                                                                                                                                                                   | Alternative                                                                                                                               |
-| ------------------------------------ | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Store palm photos                    | "For re-analysis", "user gallery"             | LGPD liability, storage cost, security surface, breaks user trust in a product that processes biometric-adjacent data                                                                             | Process and discard. GPT-4o attributes saved as JSONB — re-reading from attributes is free.                                               |
-| Client-controlled tier upgrade       | "Simpler flow"                                | Any user can inspect the network request and flip themselves to premium without paying. Entire revenue model collapses                                                                            | Tier only changes via authenticated webhook from AbacatePay. Server owns tier state.                                                      |
-| Credit expiration                    | "Urgency mechanics", "revenue predictability" | Credits are pre-paid. Expiring them after purchase is a consumer protection issue in Brazil (CDC). Creates support tickets and chargebacks                                                        | Credits don't expire per PROJECT.md decision. Urgency comes from the reading experience, not expiry threats.                              |
-| Admin dashboard (MVP)                | "Visibility into business"                    | Entire separate product to build and secure. Pulls engineering time from the actual user funnel                                                                                                   | Query Neon directly via Prisma Studio or psql for MVP metrics. Build admin after PMF.                                                     |
-| Real-time photo analysis (streaming) | "Better UX, faster feel"                      | GPT-4o vision does not support streaming structured JSON. Streaming partial JSON is not parseable. 10s scan ritual is already designed into the product                                           | Scan page is a ritual. The wait is intentional. Single synchronous call to GPT-4o.                                                        |
-| Multi-device session sync            | "User switches phone"                         | Clerk handles auth session natively. Building additional sync logic creates race conditions and doubles auth complexity                                                                           | Clerk session cookies work cross-device automatically. Reading history via /api/user/readings is the sync.                                |
-| Webhook retry queue                  | "Reliability"                                 | AbacatePay retries on its end. A retry queue on our end adds infrastructure complexity (Redis/Queue) for MVP edge cases                                                                           | Idempotent webhook handler is sufficient. billing_id deduplication catches retries. Migrate to queue if retry failures become measurable. |
-| User-uploaded photos (skip camera)   | "Accessibility fallback"                      | Already exists as camera_fallback_upload state in the camera pipeline for MediaPipe failures. Making it a first-class upload flow encourages low-quality photos that produce low-confidence reads | Keep upload as MediaPipe fallback only. Surface it only when camera/MediaPipe fails.                                                      |
+Features required for the milestone to be considered correct. Missing any of these = element classification is still unreliable.
+
+| Feature                                                                      | Why Required                                                                                                                                                                                             | Complexity | Depends On                                                            |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------- |
+| GPT-4o multi-indicator prompt                                                | Single `element` field from current prompt is non-deterministic. Multi-indicator prompt (Types A/B/C/D x 6-7 visual indicators) produces consistent, auditable results                                   | HIGH       | openai.ts, HandAttributes type                                        |
+| `primary_type` + `secondary_type` in GPT-4o output                           | Captures ambiguous hands (many hands are blends). Enables mixed-element reading path                                                                                                                     | MEDIUM     | HandAttributes schema, Zod schema, JSON schema for Structured Outputs |
+| `type_reasoning` field (optional, internal)                                  | Debugging only — lets developer audit GPT-4o classification logic without re-running. Never shown to user                                                                                                | LOW        | HandAttributes type                                                   |
+| `deriveElement()` server-side function                                       | Converts GPT-4o's raw type label (A/B/C/D) to domain element (fire/water/earth/air) deterministically on server. GPT-4o no longer returns `element` directly — it returns `primary_type`                 | MEDIUM     | select-blocks.ts or openai.ts                                         |
+| Remove `computeElementHint` from camera pipeline                             | MediaPipe landmarks cannot reliably classify hand type (palm/finger proportions are screen-space, not anatomy). The existing hint corrupts GPT-4o when it conflicts. Removing it simplifies the pipeline | LOW        | mediapipe.ts, useCameraPipeline.ts, photo-store.ts                    |
+| Jitter threshold tightened to 2.5%                                           | Current JITTER_THRESHOLD = 0.025 is already 2.5%. Confirm this is correct and the 5-frame buffer (STABLE_FRAMES_REQUIRED) is sufficient for mobile                                                       | LOW        | useCameraPipeline.ts                                                  |
+| Angle validation tightened to 25 degrees                                     | Current MAX_ANGLE_DEG = 45. Reducing to 25 means only nearly-vertical palms pass. Fewer captures of tilted hands = better GPT-4o accuracy on lines                                                       | LOW        | useCameraPipeline.ts                                                  |
+| JPEG quality raised to 0.92                                                  | Current captureFrame() uses quality 0.82. GPT-4o line detection improves with higher quality. Still within 4MB body limit at mobile resolutions                                                          | LOW        | mediapipe.ts captureFrame()                                           |
+| Max image dimension 2048px                                                   | Mobile cameras can produce 4000+ px images. Downscale before base64 encoding to keep payload within body limit and reduce GPT-4o latency                                                                 | MEDIUM     | mediapipe.ts captureFrame() — needs canvas resize logic               |
+| GPT-4o `detail: "high"` confirmed                                            | Already set. Ensure it stays set after prompt refactor. Low detail loses line information                                                                                                                | LOW        | openai.ts                                                             |
+| API body limit raised to 4MB                                                 | Current limit unknown. Base64 of 2048px JPEG at 0.92 quality = ~1.5-2MB. Need headroom                                                                                                                   | LOW        | next.config.ts or API route                                           |
+| `HandAttributes.secondary_element` field                                     | New optional field. Present when GPT-4o identifies secondary_type. Absent on pure hands and on all legacy readings                                                                                       | MEDIUM     | hand-attributes.ts, HandAttributesSchema                              |
+| Backward compatibility: readings without `secondary_element` render normally | All existing readings in Neon have no secondary_element. Frontend must handle undefined gracefully                                                                                                       | LOW        | Reading components, ReportJSON type                                   |
+
+---
+
+## Differentiators
+
+Features that improve the product experience beyond classification correctness.
+
+| Feature                                                    | Value Proposition                                                                                                                                                                      | Complexity | Depends On                                     |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------- |
+| Mixed-element reading blocks (ELEMENT_BRIDGE)              | 12 strings that acknowledge the secondary element in the reading narrative. Example: "Fogo com traços de Água. Você sente mais do que aparenta." Pure-element hands skip this entirely | MEDIUM     | data/blocks/element.ts, selectBlocks()         |
+| Mixed-element exclusivity copy (ELEMENT_EXCLUSIVITY_MIXED) | 12 strings for the portrait.exclusivity field when secondary is present. Replaces the generic pure-element exclusivity copy                                                            | LOW        | data/blocks/element.ts, selectBlocks()         |
+| `ReportJSON.element.secondary_key` field                   | Exposes secondary element to frontend for display in ElementHero and HandSummary. Optional, absent on pure hands                                                                       | LOW        | report.ts ReportJSON type                      |
+| `ReportJSON.element.bridge` field                          | Rendered ELEMENT_BRIDGE text. Optional, absent when no secondary                                                                                                                       | LOW        | report.ts ReportJSON interface                 |
+| ElementHero/ElementSection with secondary display          | Visual: secondary element badge or secondary label alongside primary. Only shows when secondary_key is present                                                                         | MEDIUM     | components/reading/ElementHero, ElementSection |
+| HandSummary with mixed exclusivity                         | When secondary_element is present, HandSummary shows mixed exclusivity copy instead of pure-element copy                                                                               | LOW        | components/reading/HandSummary or equivalent   |
+
+---
+
+## Anti-Features
+
+Features to explicitly NOT build in this milestone.
+
+| Feature                                                      | Why Requested                           | Why Problematic                                                                                                                                                                                                        | Alternative                                                                                                                          |
+| ------------------------------------------------------------ | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| MediaPipe element classification (keep `computeElementHint`) | "It was already built, might be useful" | Screen-space landmark ratios do not reflect actual palm anatomy. Camera angle, distance, and phone hold all distort measurements. The hint has been observed to conflict with GPT-4o and bias it toward wrong elements | Remove entirely. GPT-4o with multi-indicator prompt on high-quality image is more accurate than geometric heuristics on 2D landmarks |
+| Tertiary element                                             | "Some hands have three influences"      | Three-element classification has no established palmistry basis. It fragments the reading narrative with no clear content to back it up. Primary + secondary covers the range                                          | Keep secondary optional. If secondary is absent, reading is pure-element                                                             |
+| Re-run GPT-4o if confidence is low on element field          | "Auto-retry for better accuracy"        | Each call costs ~R$0.07 and adds 5-10s latency. Confidence is already checked post-parse. Low-confidence images need better photos, not more API calls                                                                 | Reject below threshold (existing behavior). Improve capture quality via angle/jitter constraints                                     |
+| Store `type_reasoning` in Neon                               | "Could be useful for analytics"         | JSONB payload in `readings.attributes` grows. Reasoning is debugging text, not product data. It would be queried zero times in practice                                                                                | Log type_reasoning in server log (Pino, no PII) at debug level only. Do not persist                                                  |
+| Client-side element pre-hint to GPT-4o                       | "Speed up classification"               | The whole point of removing computeElementHint is that client-side geometric classification is unreliable. Sending it as a hint anchors GPT-4o to a potentially wrong answer                                           | Let GPT-4o classify independently from the image                                                                                     |
+| UI badge for element type codes (A/B/C/D)                    | "Show users the type"                   | Internal classification types (A/B/C/D) are implementation details. Users see Fire/Water/Earth/Air. Exposing internal codes breaks the mystique                                                                        | Map types to elements on server. Frontend never sees type codes                                                                      |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[Lead Capture — /api/lead/register]
-    └──provides session_id──> [Reading Capture — /api/reading/capture]
-                                  └──produces reading_id──> [GET /api/reading/[id]]
-                                  └──produces reading_id──> [Share Link — /compartilhar/[id]]
+[GPT-4o multi-indicator prompt]
+    requires: updated HAND_ATTRIBUTES_SCHEMA (JSON schema for Structured Outputs)
+    requires: updated HandAttributesSchema (Zod)
+    requires: updated HandAttributes type (primary_type, secondary_type, type_reasoning)
+    produces: primary_type + secondary_type + type_reasoning in analyzed attributes
 
-[Auth — Clerk middleware]
-    └──provides clerk_user_id──> [Reading History — GET /api/user/readings]
-    └──provides clerk_user_id──> [User Profile — GET/PUT /api/user/profile]
-    └──provides clerk_user_id──> [New Reading (auth) — POST /api/reading/new]
-    └──provides clerk_user_id──> [Credit Balance — GET /api/user/credits]
-    └──provides clerk_user_id──> [Account Deletion — DELETE /api/user/account]
+[deriveElement() server function]
+    requires: primary_type from GPT-4o output
+    produces: HandAttributes.element (mapped from type code)
+    consumed by: selectBlocks()
 
-[POST /api/reading/new (auth)]
-    └──requires──> [Auth — Clerk middleware]
-    └──requires──> [Credit Balance > 0]
-    └──produces──> [Reading Capture — same pipeline as /capture but credit-gated]
+[HandAttributes.secondary_element]
+    requires: secondary_type from GPT-4o output
+    requires: deriveElement() to map type code to element
+    produces: optional secondary_element on HandAttributes
+    consumed by: selectBlocks() for ELEMENT_BRIDGE and ELEMENT_EXCLUSIVITY_MIXED
 
-[Rate Limiting]
-    └──guards──> [Reading Capture]
-    └──guards──> [Lead Capture]
+[selectBlocks() — mixed element path]
+    requires: HandAttributes.secondary_element (optional)
+    requires: ELEMENT_BRIDGE blocks (12 strings)
+    requires: ELEMENT_EXCLUSIVITY_MIXED blocks (12 strings)
+    produces: ReportJSON.element.secondary_key (optional)
+    produces: ReportJSON.element.bridge (optional)
+    produces: portrait.exclusivity = mixed copy when secondary present
 
-[Confidence Threshold]
-    └──gates──> [Block Selection — selectBlocks()]
-                    └──gates──> [Reading Persistence]
+[ReportJSON.element.secondary_key + bridge]
+    consumed by: ElementHero component (secondary badge)
+    consumed by: HandSummary component (mixed exclusivity text)
+    backward compat: undefined = pure element, existing components render normally
 
-[Security Headers]
-    └──no dependency, applied globally via middleware]
+[captureFrame() improvements]
+    requires: canvas resize logic for max 2048px
+    requires: quality 0.92 instead of 0.82
+    produces: better image quality for GPT-4o line detection
 
-[PII-free Logging]
-    └──cross-cuts all API routes]
+[Remove computeElementHint]
+    requires: remove setElementHint call from useCameraPipeline
+    requires: remove elementHint from photo-store reads
+    requires: remove elementHintText from openai.ts analyzeHand()
+    requires: update HandElement export (no longer used by camera)
+    no downstream dependencies after removal
+
+[Angle validation 25deg]
+    requires: MAX_ANGLE_DEG = 25 in useCameraPipeline.ts
+    produces: fewer tilted-palm captures
+
+[Jitter threshold 5-frame buffer]
+    already at JITTER_THRESHOLD = 0.025, STABLE_FRAMES_REQUIRED = 5
+    verify no change needed (likely already correct)
+
+[Backward compatibility]
+    secondary_element is optional in HandAttributes (undefined on old readings)
+    secondary_key is optional in ReportJSON.element
+    all reading components must handle undefined gracefully (no crash, no visual artifact)
 ```
 
-### Dependency Notes
+---
 
-- **Lead Capture requires nothing upstream:** It is the entry point. session_id is generated client-side.
-- **Reading Capture requires Lead registration:** The session_id ties the reading to a lead for email follow-up. Reading can be created without a lead if session_id is new, but email recovery is lost.
-- **Auth must exist before any /api/user/\* or /api/reading/new:** Clerk middleware runs first. Without it, clerk_user_id is undefined and FIFO debit cannot be attributed.
-- **Tier enforcement has no dependency but must precede payment integration:** The flag exists from creation (default 'free'). Payment webhook flips it. Building tier enforcement before payment ensures the gate is real before money flows.
-- **Credit debit (FIFO) requires credit_packs rows to exist:** Out of scope for this milestone (payment deferred). Credit debit route (/api/reading/new) can be built and tested with seeded credit rows; actual purchase flow comes later.
+## MVP Definition for This Milestone
+
+### Launch With (v1.4)
+
+- [ ] Updated GPT-4o prompt: semantic multi-indicator (Types A/B/C/D x 6-7 visual indicators)
+- [ ] Updated HAND_ATTRIBUTES_SCHEMA (JSON schema): primary_type, secondary_type, type_reasoning fields
+- [ ] Updated HandAttributesSchema (Zod): parse primary_type, secondary_type, type_reasoning
+- [ ] Updated HandAttributes type: primary_type, secondary_type?, type_reasoning? fields
+- [ ] `deriveElement()` function: maps primary_type A/B/C/D to fire/water/earth/air
+- [ ] HandAttributes.secondary_element: derived from secondary_type via deriveElement(), optional
+- [ ] Remove `computeElementHint` from mediapipe.ts (function deleted)
+- [ ] Remove `setElementHint` from useCameraPipeline.ts
+- [ ] Remove `getElementHint()` from scan page and photo-store reads
+- [ ] Remove `elementHintText` from openai.ts analyzeHand()
+- [ ] captureFrame() quality 0.92, max 2048px resize
+- [ ] MAX_ANGLE_DEG = 25 in useCameraPipeline.ts
+- [ ] ELEMENT_BRIDGE blocks: 12 strings covering all 12 primary+secondary combos (fire+water, fire+earth, fire+air, water+fire, etc.)
+- [ ] ELEMENT_EXCLUSIVITY_MIXED blocks: 12 strings
+- [ ] selectBlocks() mixed-element path: populates element.secondary_key, element.bridge, mixed exclusivity
+- [ ] ReportJSON.element type updated: secondary_key?, bridge? (optional)
+- [ ] ElementHero/ElementSection: renders secondary_key when present (badge or label)
+- [ ] HandSummary or equivalent: renders mixed exclusivity when secondary present
+- [ ] All reading components: handle undefined secondary_key without crashing
+
+### Defer to Later
+
+- [ ] Upstash rate limiting migration — in-memory Map still sufficient
+- [ ] AbacatePay payment — separate milestone, already deferred
+- [ ] Resend email — separate milestone, already deferred
+- [ ] Left vs right comparative reading — v3+
 
 ---
 
-## MVP Definition
+## Complexity Notes
 
-This milestone is backend infrastructure. Payment and email are explicitly out of scope (deferred). MVP here = "frontend mocks replaced by real API, reading persisted, auth working."
-
-### Launch With (v1 — this milestone)
-
-- [ ] Prisma schema + Neon connection — all 5 tables: leads, user_profiles, readings, credit_packs, payments
-- [ ] Clerk auth middleware — Google OAuth + email/senha, server-side helpers
-- [ ] POST /api/lead/register — name, email, gender, session_id, email_opt_in
-- [ ] POST /api/reading/capture — photo > GPT-4o > selectBlocks > persist > return report
-- [ ] GET /api/reading/[id] — fetch reading by UUID, public
-- [ ] POST /api/reading/new — auth-gated, credit debit FIFO, triggers capture pipeline
-- [ ] GET /api/user/credits — credit balance from credit_packs, auth required
-- [ ] GET /api/user/readings — reading history, auth required
-- [ ] GET/PUT /api/user/profile — profile read/update, auth required
-- [ ] DELETE /api/user/account — soft delete, auth required
-- [ ] GPT-4o wrapper (openai.ts) — structured JSON output, confidence field, system prompt from palmistry.md
-- [ ] Pino logger — no PII, reading IDs and action codes only
-- [ ] Rate limiting (in-memory Map) — 5/h per IP on capture, 10/h on lead register
-- [ ] Security headers — all 6 headers from architecture.md
-- [ ] Zod validation — on every API route
-- [ ] Frontend adapters — reading-client.ts, user-client.ts transition from mock to real API
-
-### Add After Validation (v1.x — next milestone)
-
-- [ ] AbacatePay integration — POST /api/credits/purchase, POST /api/webhook/abacatepay. Unblocked once AbacatePay v2 webhook documentation is confirmed.
-- [ ] Resend email — transactional emails (lead created, payment confirmed, reading for third party). Unblocked once domain is configured.
-- [ ] Lead-to-account linking — when a lead creates a Clerk account, tie lead_id to clerk_user_id.
-
-### Future Consideration (v2+)
-
-- [ ] Upstash rate limiting — migrate from in-memory Map when multi-instance Vercel deployment makes per-process state unreliable
-- [ ] Hand comparison / left vs right reading — second reading per user correlated to same hand attributes
-- [ ] Compatibility between two readings — requires reading relationship table
-- [ ] Monthly subscription model — requires recurring billing support in AbacatePay
-- [ ] Admin dashboard — after PMF, when business metrics justify the engineering investment
-- [ ] Push notifications — requires native app or PWA notification permission flow
+| Area                             | Complexity | Reason                                                                                                                                                                                                                                                     |
+| -------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GPT-4o prompt rewrite            | HIGH       | Structured Outputs JSON schema must be updated in lockstep with Zod schema and TypeScript types. Three files must be consistent or runtime parse fails silently. Multi-indicator prompt requires palmistry domain knowledge to phrase indicators correctly |
+| deriveElement() mapping          | LOW        | Pure deterministic function. Types A/B/C/D map 1:1 to elements. No logic branching                                                                                                                                                                         |
+| Remove computeElementHint        | LOW        | Delete function, remove callers, remove field from photo-store. No data migration needed                                                                                                                                                                   |
+| captureFrame() image resize      | MEDIUM     | Canvas 2D resize is straightforward but must preserve aspect ratio, handle portrait vs landscape, and not introduce EXIF rotation bugs on iOS                                                                                                              |
+| ELEMENT_BRIDGE copy (12 strings) | MEDIUM     | Content work. Each of 12 primary+secondary pairs needs a distinct, authentic-sounding cigana voice line. Formulaic pairs that feel copy-pasted will be obvious                                                                                             |
+| Mixed-element frontend           | MEDIUM     | Secondary badge is additive (no redesign). HandSummary conditional is low-risk. Main concern is backward compat with undefined secondary_key on old readings                                                                                               |
+| Angle validation change          | LOW        | One constant in useCameraPipeline.ts. Already have the validation logic                                                                                                                                                                                    |
 
 ---
 
-## Feature Prioritization Matrix
+## Edge Cases and Expected Behaviors
 
-| Feature                      | User Value             | Implementation Cost | Priority            |
-| ---------------------------- | ---------------------- | ------------------- | ------------------- |
-| GPT-4o analysis pipeline     | HIGH                   | HIGH                | P1                  |
-| Reading persistence + GET    | HIGH                   | LOW                 | P1                  |
-| Lead capture                 | HIGH                   | LOW                 | P1                  |
-| Clerk auth                   | HIGH                   | MEDIUM              | P1                  |
-| Rate limiting on capture     | HIGH (cost protection) | LOW                 | P1                  |
-| Zod validation everywhere    | HIGH (security)        | LOW                 | P1                  |
-| Security headers             | HIGH (security)        | LOW                 | P1                  |
-| Photo discard (no storage)   | HIGH (trust + LGPD)    | LOW                 | P1                  |
-| Tier enforcement server-side | HIGH                   | LOW                 | P1                  |
-| User reading history         | MEDIUM                 | LOW                 | P1                  |
-| User profile CRUD            | MEDIUM                 | LOW                 | P1                  |
-| POST /api/reading/new (auth) | MEDIUM                 | LOW                 | P1                  |
-| Credit balance endpoint      | MEDIUM                 | LOW                 | P1                  |
-| Account deletion             | LOW (LGPD compliance)  | LOW                 | P1                  |
-| Pino logger (no PII)         | MEDIUM (ops)           | LOW                 | P1                  |
-| Frontend adapter transition  | HIGH                   | LOW                 | P1                  |
-| AbacatePay payment           | HIGH                   | MEDIUM              | P2 (next milestone) |
-| Resend email                 | MEDIUM                 | LOW                 | P2 (next milestone) |
-| Lead-to-account linking      | MEDIUM                 | LOW                 | P2 (next milestone) |
-| Upstash rate limit migration | LOW                    | LOW                 | P3                  |
-| Admin dashboard              | LOW                    | HIGH                | P3                  |
+### Classification edge cases
 
----
+- **Pure hand (no secondary):** GPT-4o returns secondary_type = null or omits it. Zod schema must allow optional. HandAttributes.secondary_element = undefined. selectBlocks() skips bridge and mixed exclusivity. ReportJSON.element has no secondary_key or bridge fields. Frontend renders pure-element reading.
 
-## Competitor Feature Analysis
+- **Ambiguous photo (low confidence + mixed types):** Confidence < 0.3 → reject (existing behavior). Confidence 0.3-0.7 with mixed types → use primary only, skip secondary to avoid compounding uncertainty. Only include secondary when confidence >= 0.7 and secondary_type is present.
 
-| Feature             | Astrology & Palmistry Coach (US)      | Generic AI reading apps   | Our Approach                                                        |
-| ------------------- | ------------------------------------- | ------------------------- | ------------------------------------------------------------------- |
-| AI analysis method  | Unknown; likely proprietary CV or LLM | Form-based, not photo     | GPT-4o vision on actual palm photo — real analysis, not form        |
-| Lead capture timing | After value delivery (standard)       | After value delivery      | Before value delivery — enables abandoned-funnel recovery           |
-| Report persistence  | Cloud-synced, requires account        | Session only or cloud     | UUID-based, no account required. Account optional (adds history)    |
-| Gender in text      | Not applicable (English)              | Not applicable            | Gender-concordant Portuguese copy — differentiator in BR market     |
-| Share mechanic      | Social sharing (generic)              | Minimal                   | Partial-reveal share card designed for stories virality             |
-| Credit model        | Subscription (monthly)                | Per-query or subscription | One-time credit packs — lower commitment, impulse purchase          |
-| Payment methods     | Credit card (Stripe)                  | Credit card               | PIX + cartão via AbacatePay — PIX is dominant in Brazil B/C classes |
-| Photo storage       | Unknown                               | Unknown                   | Never stored — explicit trust signal, LGPD-correct                  |
+- **Same element primary and secondary:** GPT-4o could return primary_type = "A" (fire) and secondary_type = "A" (also fire). deriveElement() produces same element for both. This is a pure hand. Treat as pure, skip bridge.
+
+- **Legacy readings:** All readings before v1.4 have no secondary_element in stored attributes JSONB. GET /api/reading/[id] returns them as-is. Frontend must not crash when element.secondary_key is undefined.
+
+- **Upload path (no MediaPipe):** Without computeElementHint, the upload path sends photo with no element pre-hint. GPT-4o classifies purely from image. This was already the intended behavior. Remove any remaining elementHint handling from the upload code path too.
+
+### Camera validation edge cases
+
+- **Hand at exactly 25 degrees:** Angle validation is `angleDeg > MAX_ANGLE_DEG`. At exactly 25 degrees the hand is accepted. This is correct boundary behavior.
+
+- **Hand oscillating near 25 degrees:** User holds hand slightly tilted and it wobbles between 24-26 degrees. Jitter detection will catch the movement (positions changing) so camera_stable won't trigger. User must hold still long enough for 5 consecutive frames at valid angle.
+
+- **Very small hands:** Younger users or small-handed users. 2048px max dimension and 0.92 quality should provide sufficient detail. MediaPipe landmarks still work at full resolution before downscale.
+
+- **Very dark skin:** High contrast lines are harder for GPT-4o. Brightness validation (if implemented) helps. The angle constraint (25 deg) also helps because it ensures the palm faces the camera more directly, improving line visibility.
+
+### Mixed-element content edge cases
+
+- **All 12 primary+secondary combos must have content:** fire+water, fire+earth, fire+air, water+fire, water+earth, water+air, earth+fire, earth+water, earth+air, air+fire, air+water, air+earth. Asymmetric pairs (fire+water vs water+fire) need distinct copy because the dominant element changes meaning.
+
+- **Bridge text length:** Should be 1-2 sentences, same length as ELEMENT_BODY modifiers. Too long and it overwhelms the pure-element content. Too short and it feels like an afterthought.
+
+- **Secondary element display in UI:** The secondary badge should be visually subordinate to primary. Same color palette but at reduced opacity or smaller size. If the UI promotes secondary too strongly, users may feel they got "two elements" and expect two full readings.
 
 ---
 
 ## Sources
 
-- `docs/architecture.md` — schema, API routes, security, GPT-4o prompt, rate limit design
-- `docs/product.md` — market sizing, monetization model, credit packs, funnel stages
-- `docs/palmistry.md` — confidence thresholds, JSON schema, what GPT-4o analyzes
-- `.planning/PROJECT.md` — milestone scope, out-of-scope decisions, constraints
-- `.planning/codebase/ARCHITECTURE.md` — existing frontend patterns, data flow, error handling
+- `.planning/PROJECT.md` — milestone target features, what's already built, constraints
+- `src/server/lib/openai.ts` — current GPT-4o prompt, HAND_ATTRIBUTES_SCHEMA, analyzeHand() signature
+- `src/lib/mediapipe.ts` — computeElementHint() implementation, captureFrame() quality
+- `src/hooks/useCameraPipeline.ts` — JITTER_THRESHOLD, STABLE_FRAMES_REQUIRED, MAX_ANGLE_DEG
+- `src/lib/photo-store.ts` — elementHint storage that will be removed
+- `src/types/hand-attributes.ts` — current HandAttributes interface
+- `src/types/report.ts` — current ReportJSON interface, element shape
+- `src/data/blocks/element.ts` — existing ELEMENT_INTRO, ELEMENT_BODY, ELEMENT_IMPACT blocks
+- `src/server/lib/select-blocks.ts` — selectBlocks() imports and structure
+- `docs/palmistry.md` — hand type classification table (fire/water/earth/air by palm and finger proportions)
 
 ---
 
-_Feature research for: MaosFalam backend — freemium AI palmistry reading app_
-_Researched: 2026-04-10_
+_Feature research for: MaosFalam v1.4 — Element Classification_
+_Researched: 2026-04-18_

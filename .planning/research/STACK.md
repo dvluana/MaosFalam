@@ -1,313 +1,356 @@
 # Stack Research
 
-**Domain:** Next.js 16 App Router backend — database, auth, AI vision, payments, email
-**Researched:** 2026-04-10
-**Confidence:** HIGH (verified against official docs and current codebase)
+**Domain:** MaosFalam v1.4 — Element Classification, MediaPipe Validation, Mixed-Hand Support
+**Researched:** 2026-04-18
+**Confidence:** HIGH (all claims verified against official docs and existing codebase)
 
 ---
 
 ## Context
 
-This is an additive research document. The frontend stack (Next.js 16.2.3, React 19.2.4,
-Tailwind v4, Framer Motion 12) is already established and not re-researched here. The
-codebase already has the backend libraries installed and partially configured. Research
-focus: verify the installed versions are correct, document the exact setup patterns for
-each integration, and surface gotchas discovered via official docs.
+This is an ADDITIVE research document for milestone v1.4. The full stack is already established
+(Next.js 16.2.3, React 19, Tailwind v4, GPT-4o raw fetch, MediaPipe 0.10.34, Prisma 7, Clerk v7,
+Zod v4). No new packages are required for any v1.4 feature.
+
+Research focus: what changes to how the EXISTING stack is used, not what to add.
 
 ---
 
-## Recommended Stack
+## What v1.4 Changes (and What It Does Not)
 
-### Core Technologies
+| Feature                                           | What changes                                                      | Package impact                                |
+| ------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------- |
+| GPT-4o multi-indicator classification             | Prompt text + JSON schema shape + Zod schema                      | None — raw fetch stays                        |
+| MediaPipe validation improvements (jitter, angle) | Constants in `useCameraPipeline.ts` + remove `computeElementHint` | None — same `@mediapipe/tasks-vision@0.10.34` |
+| Image quality optimization                        | `captureFrame()` quality param + canvas resize logic              | None — browser Canvas API                     |
+| Mixed-hand element support                        | TypeScript types + `selectBlocks` data blocks                     | None                                          |
+| Body size limit 4MB                               | `next.config.ts` configuration                                    | None                                          |
 
-| Technology                    | Version (installed) | Purpose                | Why Recommended                                                                                                                                                                                                                                           |
-| ----------------------------- | ------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Next.js App Router API routes | 16.2.3              | API layer              | Co-located server functions with no separate server process. Vercel deploys each route as an isolated serverless function.                                                                                                                                |
-| Prisma ORM                    | 7.7.0               | Database ORM           | Rust-free architecture in v7 makes it lighter in serverless. Type-safe queries from schema. Driver adapter pattern is the required approach for Neon.                                                                                                     |
-| @prisma/adapter-neon          | 7.7.0               | Neon connection driver | Official adapter that bundles everything needed for Neon serverless WebSocket connections. Replaces the need for a separate pg or @neondatabase/serverless dependency.                                                                                    |
-| @clerk/nextjs                 | 7.0.12              | Auth provider          | 50K users free. Google OAuth + email/password built-in. Session management and JWT validation handled by SDK — zero custom auth code. `clerkMiddleware()` works in both `middleware.ts` (Clerk routes) and the new `proxy.ts` (Next.js 16 network proxy). |
-| Zod                           | 4.3.6               | Input validation       | TypeScript-first schema validation. v4 is a breaking change from v3 — the installed version is v4. Every API route input must pass a Zod schema before reaching business logic.                                                                           |
-| Pino                          | 10.3.1              | Structured logging     | JSON-format logs in production, colored output in dev via pino-pretty. Fastest Node.js logger. Never log names, emails, CPF — only IDs and actions.                                                                                                       |
-
-### AI Vision
-
-| Technology             | Version              | Purpose              | Why Recommended                                                                                                                                                                                                                                          |
-| ---------------------- | -------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OpenAI API (raw fetch) | — (no SDK installed) | GPT-4o palm analysis | The codebase correctly uses a raw `fetch` wrapper rather than the `openai` npm SDK. For a single structured-output call, the SDK adds ~150KB of weight with no benefit. The existing `analyzeHand()` in `src/server/lib/openai.ts` is the right pattern. |
-| gpt-4o                 | current              | Palm image analysis  | Best multimodal model for detecting fine lines in a JPEG. Use `response_format: { type: "json_object" }` with system prompt containing the JSON schema. Set `detail: "high"` on the image for line detection accuracy.                                   |
-
-### Database
-
-| Technology      | Version              | Purpose           | Why Recommended                                                                                                                                                                                                         |
-| --------------- | -------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Neon PostgreSQL | — (external service) | Primary database  | Serverless Postgres with branching for dev/staging. Free tier covers MVP. Connection pooling built in to the adapter.                                                                                                   |
-| Prisma Migrate  | (via Prisma 7.7.0)   | Schema migrations | Use `npx prisma migrate dev` for local, `npx prisma migrate deploy` in CI. `prisma.config.ts` must point `datasource.url` to `DIRECT_URL` (unpooled) — Prisma Migrate requires a direct connection, not the pooled one. |
-
-### Payments (deferred, pattern documented)
-
-| Technology    | Version              | Purpose             | Why Recommended                                                                                                                                                                                                            |
-| ------------- | -------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AbacatePay v2 | — (external service) | PIX + card payments | Brazilian payment processor. The codebase uses a custom fetch wrapper in `src/server/lib/abacatepay.ts`. Base URL: `https://api.abacatepay.com/v2`. Bearer token auth. Webhook validation via HMAC SHA256 on request body. |
-
-### Email (deferred, pattern documented)
-
-| Technology | Version | Purpose             | Why Recommended                                                                                      |
-| ---------- | ------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
-| Resend SDK | 6.10.0  | Transactional email | Simple REST SDK. Never blocks main flow on failure. `From` must use verified domain once configured. |
-
-### Rate Limiting
-
-| Technology    | Version    | Purpose           | Why Recommended                                                                                                                                                                                                                            |
-| ------------- | ---------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| In-memory Map | — (custom) | MVP rate limiting | `src/server/lib/rate-limit.ts`. Zero dependencies, zero latency. Sufficient for MVP since each Vercel function instance is isolated and limits are per-instance. Migrate to `@upstash/ratelimit` + Redis when scaling to multiple regions. |
+**No new npm packages. No version bumps. No new services.**
 
 ---
 
-## Critical Gotchas (verified against official docs)
+## Recommended Stack (v1.4 additions only)
 
-### 1. Prisma 7: `@neondatabase/serverless` is a redundant dependency
+### Core Technologies (unchanged — documented for reference)
 
-**Finding:** `@neondatabase/serverless ^1.0.2` is in `package.json` as a separate dependency. Per Prisma 7 + Neon official docs, `@prisma/adapter-neon` bundles everything needed. Installing `@neondatabase/serverless` separately is harmless but unnecessary weight.
+| Technology                | Version             | Purpose                                       | Status                                 |
+| ------------------------- | ------------------- | --------------------------------------------- | -------------------------------------- |
+| `@mediapipe/tasks-vision` | 0.10.34             | Hand detection client-side                    | No change needed                       |
+| OpenAI GPT-4o (raw fetch) | `gpt-4o-2024-08-06` | Palm analysis with Structured Outputs         | Prompt changes only                    |
+| Zod                       | 4.3.6               | Input validation + GPT-4o response safety net | Schema additions only                  |
+| Next.js App Router        | 16.2.3              | API routes + config                           | `next.config.ts` change for body limit |
 
-**Action:** Remove `@neondatabase/serverless` from `dependencies` when convenient. Not urgent — it causes no runtime errors, just package bloat.
+### Supporting Libraries (unchanged)
 
-**Confidence:** HIGH — verified at [neon.com/docs/guides/prisma](https://neon.com/docs/guides/prisma)
+All currently installed. No additions for v1.4.
 
 ---
 
-### 2. Prisma 7: `prisma.config.ts` needs `DIRECT_URL` for migrations
+## GPT-4o: Multi-Indicator Classification Changes
 
-**Finding:** The current `prisma.config.ts` points `datasource.url` to `process.env["DATABASE_URL"]`. Neon provides two connection strings: a pooled URL (with `-pooler` in hostname, for app runtime) and a direct URL (no pooler, for Prisma CLI/migrations).
+### What changes in `src/server/lib/openai.ts`
 
-**Current state:** Schema only has `DATABASE_URL`. Prisma Migrate will fail at deploy time if `DATABASE_URL` is the pooled URL, because Neon's connection pooler (PgBouncer) does not support the `CREATE DATABASE` and DDL transactions that Prisma Migrate uses.
+**Current approach:** GPT-4o receives a single `element` field: `"fire" | "water" | "earth" | "air"`.
+The model produces one output, non-deterministically. MediaPipe element hint is passed as a note in
+the prompt but the schema still asks for a single `element` string.
 
-**Fix needed:** Add `DIRECT_URL` env var pointing to Neon's unpooled connection string. Update `prisma.config.ts`:
+**v1.4 approach:** The JSON schema changes to capture _how_ the model classifies:
 
 ```typescript
-import "dotenv/config";
-import { defineConfig } from "prisma/config";
-
-export default defineConfig({
-  schema: "prisma/schema.prisma",
-  migrations: {
-    path: "prisma/migrations",
-  },
-  datasource: {
-    url: process.env["DIRECT_URL"], // unpooled — for migrations
-  },
-});
+// New schema fields (added to HAND_ATTRIBUTES_SCHEMA)
+primary_type: { type: "string", enum: ["A", "B", "C", "D"] },
+secondary_type: { type: "string", enum: ["A", "B", "C", "D", "none"] },
+type_reasoning: { type: "string" }   // free-form, for debugging
 ```
 
-The application's `PrismaNeon` adapter in `src/server/lib/prisma.ts` should continue using `DATABASE_URL` (pooled) at runtime.
-
-**Confidence:** HIGH — verified at [neon.com/docs/guides/prisma](https://neon.com/docs/guides/prisma) and [prisma.io/docs upgrading to v7](https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7)
-
----
-
-### 3. Prisma 7: import path is `@/generated/prisma/client`, NOT `@prisma/client`
-
-**Finding (already correct):** The codebase correctly imports from `@/generated/prisma/client`. In Prisma 7, `PrismaClient` is no longer generated into `node_modules/@prisma/client`. The `schema.prisma` correctly sets `output = "../src/generated/prisma"`.
-
-**Status:** Already correct. Document this to prevent accidental regression if a developer writes `import { PrismaClient } from "@prisma/client"` — that import will silently not have the schema types.
-
-**Confidence:** HIGH — verified at [prisma.io upgrade guide](https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7)
-
----
-
-### 4. Next.js 16: `middleware.ts` is deprecated, `proxy.ts` is the new network boundary
-
-**Finding:** Next.js 16 introduced `proxy.ts` to replace `middleware.ts`. Key distinction:
-
-- `proxy.ts` — Node.js runtime, for network-level rewrites/redirects/headers. Runs before the app router.
-- `middleware.ts` — still supported but deprecated. Will be removed in a future version. Edge runtime use cases only.
-
-**Current state:** The codebase has both files:
-
-- `src/middleware.ts` — Clerk authentication protection (correct, needed for auth logic)
-- `src/proxy.ts` — static HTML rewrite for `/manifesto` (correct use of proxy pattern)
-
-The Clerk `clerkMiddleware()` currently lives in `middleware.ts`. Per Clerk docs, for Next.js 16+ this should live in `proxy.ts`. However, the current setup works — `middleware.ts` is still supported, just deprecated. The `proxy.ts` takes precedence for network-level operations.
-
-**Action for later:** When `middleware.ts` is eventually removed by Next.js, migrate `clerkMiddleware()` into `proxy.ts` alongside the static rewrites. The implementation code is identical — only the file changes.
-
-**Confidence:** HIGH — verified at [nextjs.org/blog/next-16](https://nextjs.org/blog/next-16)
-
----
-
-### 5. Next.js 16: `revalidateTag()` now requires second argument
-
-**Finding:** `revalidateTag(tag)` single-argument form is deprecated. Now requires a `cacheLife` profile: `revalidateTag('tag', 'max')`. This only matters when cache invalidation is used.
-
-**Status:** Not yet relevant — no caching implemented. Document for when it's added.
-
-**Confidence:** HIGH — verified at [nextjs.org/blog/next-16](https://nextjs.org/blog/next-16)
-
----
-
-### 6. Zod v4: breaking changes from v3
-
-**Finding:** The installed Zod is `^4.3.6` — Zod v4. Critical breaking changes vs v3:
-
-- `z.string().email()` → use `z.email()` (method became top-level)
-- `z.string().uuid()` → use `z.guid()` (v4's `z.uuid()` enforces RFC 4122, different from v3)
-- `error.errors` → `error.issues`
-- `z.record()` now requires two arguments: `z.record(keySchema, valueSchema)`
-- Error param replaces `message` param (backward compatible, `message` still works but deprecated)
-
-**Action:** API routes using Zod must use v4 syntax. Do not mix v3 patterns.
-
-**Confidence:** HIGH — verified at [zod.dev/v4/changelog](https://zod.dev/v4/changelog)
-
----
-
-### 7. OpenAI: raw fetch is correct, SDK not needed
-
-**Finding:** The current `analyzeHand()` uses raw `fetch` to `https://api.openai.com/v1/chat/completions`. The `openai` npm SDK (latest: 6.34.0) is NOT installed, which is correct for this use case.
-
-**Rationale:** The codebase makes a single type of call — structured JSON output from a vision model. Adding the SDK for this adds package weight and complexity without benefit. The existing pattern is correct.
-
-**One improvement:** Put the instruction text before the image in the `content` array. The model processes content sequentially — text-first primes it for what to extract and measurably improves extraction accuracy per OpenAI docs.
-
-**Current order (suboptimal):**
-
-```
-content: [{ type: "image_url", ... }, { type: "text", text: "Analise..." }]
-```
-
-**Recommended order:**
-
-```
-content: [{ type: "text", text: "Analise esta palma." }, { type: "image_url", ... }]
-```
-
-**Confidence:** MEDIUM — verified at [developers.openai.com/api/docs/guides/images-vision](https://developers.openai.com/api/docs/guides/images-vision)
-
----
-
-### 8. Clerk v7: `auth()` is async in Next.js App Router
-
-**Finding:** In `@clerk/nextjs` v7 with Next.js App Router, `auth()` must be called with `await`:
+The `element` field is removed from the GPT-4o schema. Instead, a server-side function
+`deriveElement(primary_type, secondary_type)` maps types to elements:
 
 ```typescript
-const { userId } = await auth(); // v7 pattern
+// Type → element mapping (server-side, deterministic)
+// A = square palm + short fingers = Earth
+// B = square palm + long fingers = Air
+// C = long palm + short fingers = Fire
+// D = long palm + long fingers = Water
 ```
 
-**Also confirmed:** `clerkMiddleware()` from `@clerk/nextjs/server` is the correct export. The existing `src/middleware.ts` uses this correctly with `createRouteMatcher`.
+This makes classification more robust because:
 
-**Confidence:** HIGH — verified at [clerk.com/docs/reference/nextjs/clerk-middleware](https://clerk.com/docs/reference/nextjs/clerk-middleware)
+- Multi-indicator prompt gives GPT-4o 6-7 visual anchors per type (not just "classify fire/water/earth/air")
+- `primary_type + secondary_type` captures "mostly Fire but with Air tendencies" for mixed-hand support
+- `type_reasoning` is logged for debugging without any PII (just palm geometry observations)
+
+**Structured Outputs compatibility:** The existing `response_format: { type: "json_schema", json_schema: { strict: true } }`
+pattern is preserved. Strict mode requires all new fields in `required[]` and `additionalProperties: false` — already
+enforced by the current implementation. Adding fields follows the same pattern.
+
+**Confidence:** HIGH — OpenAI Structured Outputs schema requirements verified, strict: true
+requires `additionalProperties: false` on all nested objects. Current code already follows this.
+
+### What changes in the prompt text
+
+The system prompt in `PROMPT` constant gains the multi-indicator instruction block describing
+what "Type A/B/C/D" means visually (palm shape ratio, finger length ratio, knuckle visibility,
+skin texture, finger taper, etc.). The model is asked to evaluate 6-7 indicators per type and
+output which type best matches, plus a secondary type if significant divergence exists.
+
+The `elementHintText` path changes: instead of "element already determined, skip classification",
+it becomes "MediaPipe measured palm ratio X, finger ratio Y — use this as your primary geometric
+indicator alongside the visual ones." This way MediaPipe geometry informs but does not override.
+
+### What changes in `deriveElement()` server-side
+
+New function in `src/server/lib/openai.ts` (or `src/server/lib/element-classifier.ts`):
+
+```typescript
+export function deriveElement(
+  primaryType: "A" | "B" | "C" | "D",
+  secondaryType: "A" | "B" | "C" | "D" | "none",
+): { primary_element: HandElement; secondary_element: HandElement | null };
+```
+
+This is a pure lookup function, deterministic, zero I/O. Same performance contract as `selectBlocks`.
+
+---
+
+## MediaPipe: Validation Improvements
+
+### What changes in `src/lib/mediapipe.ts`
+
+**Remove `computeElementHint`** — with the multi-indicator GPT-4o approach, the binary element
+hint from landmark geometry is replaced by passing raw ratios to the prompt. The function is
+deleted (not just unused — removing prevents accidental re-use).
+
+The landmark geometry ratios (palmRatio, fingerRatio) are still useful as _inputs to the prompt_,
+so a new lightweight function replaces it:
+
+```typescript
+export function computePalmRatios(
+  worldLandmarks: Array<{ x: number; y: number; z: number }>,
+): { palmRatio: number; fingerRatio: number } | undefined;
+```
+
+This returns raw measurements rather than a classified element. The camera pipeline passes these
+to the photo-store or directly to the capture POST payload.
+
+**Jitter buffer size:** Current `STABLE_FRAMES_REQUIRED = 5` and `JITTER_THRESHOLD = 0.025`.
+Per PROJECT.md, target is "buffer 5 frames, jitter 2.5%" — these are already correct. No change
+needed to constants.
+
+**Angle threshold:** Current `MAX_ANGLE_DEG = 45`. Per PROJECT.md, target is "angle < 25°".
+Change `MAX_ANGLE_DEG` from 45 to 25 in `useCameraPipeline.ts`. This is a single constant change.
+
+**Confidence:** HIGH — both thresholds are pure numeric constants, no API involved.
+
+### What does NOT change in `@mediapipe/tasks-vision`
+
+- `HandLandmarker` configuration (same model, same WASM URL, same GPU delegate)
+- `validateLandmarks()` (isOpen, isCentered checks unchanged)
+- `detectHandedness()` (unchanged)
+- `drawHandLandmarks()` (unchanged)
+- `captureFrame()` (quality change, see below)
+- Library version stays at 0.10.34 (latest as of 2026-04-18, confirmed via npm)
+
+---
+
+## Image Quality: Optimization Changes
+
+### What changes in `captureFrame()` (src/lib/mediapipe.ts)
+
+**Current quality:** `0.82` (hardcoded default parameter)
+**Target quality:** `0.92`
+
+The `captureFrame` function signature already accepts a `quality` parameter. The change is
+updating the default from `0.82` to `0.92` and updating the call site in `useCameraPipeline.ts`.
+
+**Why 0.92 matters for classification:** GPT-4o `detail: "high"` processes images by tiling.
+Fine palm lines (1-3px wide) sit at the boundary of tile resolution. Higher JPEG quality reduces
+compression artifacts on line edges, improving detection accuracy for faint lines and rare signs.
+
+### What changes for max 2048px
+
+**Current:** `captureFrame` draws the full video resolution to canvas (typically 1280x960 from
+`getUserMedia` constraints). At 0.92 quality, 1280x960 produces ~250KB base64. Acceptable.
+
+If a device captures at higher than 2048px (rare on current constraint of 1280px), the canvas
+should cap the longest dimension at 2048px before encoding. Implementation: check
+`video.videoWidth` and `video.videoHeight` before drawing; if either exceeds 2048, scale down.
+Use the browser's native Canvas 2D drawImage scaling (no new library needed — canvas scales by
+default when `canvas.width` is set smaller than the source).
+
+```typescript
+// Inside captureFrame(), before ctx.drawImage:
+const MAX_DIM = 2048;
+const scale = Math.min(1, MAX_DIM / Math.max(video.videoWidth, video.videoHeight));
+canvas.width = Math.round(video.videoWidth * scale);
+canvas.height = Math.round(video.videoHeight * scale);
+```
+
+**Why NOT to use createImageBitmap for resizing:** `createImageBitmap` with resize options has
+inconsistent browser support (Firefox bug 1363861, resizeQuality still limited). Plain canvas
+`drawImage` with scaled dimensions is universally supported and synchronous — no async overhead.
+
+**Why NOT to use the `pica` library:** `pica` is a high-quality Lanczos resizing library. It's
+overkill here — the camera is already outputting at a human-readable scale; we're capping at
+2048px as a safeguard, not resizing aggressively. Canvas bilinear scaling at these dimensions
+is imperceptibly different from Lanczos for JPEG palm photos.
+
+**Confidence:** HIGH — Canvas 2D API, universally supported.
+
+### What changes for body size limit 4MB
+
+**Current:** The route has a manual `2MB` check (`bodyStr.length > 2 * 1024 * 1024`).
+**Target:** 4MB to accommodate `detail: "high"` with 2048px at 0.92 quality (~500KB base64).
+
+Two changes needed:
+
+1. Update the manual check in `src/app/api/reading/capture/route.ts` from `2 * 1024 * 1024` to `4 * 1024 * 1024`
+
+2. Add body size limit in `next.config.ts` for the App Router. App Router uses
+   `experimental.serverActions.bodySizeLimit`, but for API routes (not Server Actions), the limit
+   is controlled differently. In Next.js App Router, `route.ts` API routes use
+   `export const config = { api: { bodyParser: { sizeLimit: '4mb' } } }` — but this is Pages
+   Router syntax and does NOT work in App Router.
+
+For App Router API routes, the request body is read via `req.json()` — there is no built-in
+body size config per-route. The manual check (`bodyStr.length > 4MB`) IS the size limit.
+Next.js App Router does not enforce a default body size limit on route.ts handlers at the
+application level (Vercel may have a 4.5MB serverless function payload limit at the platform
+level, which is already our ceiling).
+
+**Conclusion:** The only needed change is updating the manual size check from 2MB to 4MB.
+No `next.config.ts` change required for API routes.
+
+**Confidence:** MEDIUM — confirmed via Next.js GitHub discussions (issue #57501, #53087) that
+App Router API routes (`route.ts`) do not have equivalent bodyParser config. The manual check
+is the correct mechanism.
+
+---
+
+## Mixed-Hand Element Support
+
+### What changes in `src/types/hand-attributes.ts`
+
+```typescript
+// Add to HandAttributes interface
+secondary_element?: "fire" | "water" | "earth" | "air" | null;
+```
+
+The field is optional for backward compatibility — existing readings stored as JSONB in Neon
+will not have `secondary_element`. The frontend renders as pure primary when the field is absent.
+
+### What changes in `src/types/report.ts` (or wherever ReportJSON is defined)
+
+```typescript
+// In the element section of ReportJSON
+element: {
+  key: "fire" | "water" | "earth" | "air";
+  secondary_key?: "fire" | "water" | "earth" | "air" | null;
+  // ... existing fields
+}
+```
+
+### What changes in `src/data/blocks/`
+
+Two new content block arrays, no new schema shape:
+
+- `ELEMENT_BRIDGE` — 12 strings (3 per element × 4 elements), used when `secondary_element` exists.
+  Renders in `ElementSection` between primary and secondary descriptions.
+- `ELEMENT_EXCLUSIVITY_MIXED` — 12 strings, describes the mix as a character trait.
+  Used in `HandSummary` when `secondary_element` is present and differs from primary.
+
+These are static data, no new type needed — same pattern as existing `ELEMENT_LABELS`, `ELEMENT_INTROS`, etc.
+
+### What changes in `src/server/lib/select-blocks.ts`
+
+`selectBlocks()` gains awareness of `secondary_element`. When present, it selects from
+`ELEMENT_BRIDGE` and `ELEMENT_EXCLUSIVITY_MIXED` arrays (by seed based on reading ID) and
+includes them in the report. When absent, report is identical to current behavior.
+
+### Backward compatibility guarantee
+
+Old readings in Neon have `attributes.element` but no `attributes.secondary_element`. The type
+uses `?` optional field. Every component that reads `secondary_element` must guard:
+
+```typescript
+// Frontend pattern
+const secondary = reading.report.element.secondary_key ?? null;
+if (secondary && secondary !== primary) {
+  // render mixed UI
+}
+```
+
+No database migration required — JSONB fields are schema-free in Postgres. Old rows simply
+lack the key, new rows include it. `Prisma.JsonValue` typing handles this correctly.
+
+---
+
+## What NOT to Add
+
+| Avoid                                                    | Why                                                                                           | Use Instead                                                       |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `openai` npm SDK                                         | Adds ~150KB for a single endpoint call. Already using raw fetch correctly.                    | Continue with raw fetch to `/v1/chat/completions`                 |
+| `pica` or `sharp`                                        | Image resizing is a single safeguard cap at 2048px. Canvas drawImage handles it natively.     | Browser Canvas 2D `drawImage` with scaled dimensions              |
+| `createImageBitmap` for resize                           | Inconsistent browser support for `resizeWidth`/`resizeHeight` options                         | Canvas 2D synchronous scaling                                     |
+| New MediaPipe version bump                               | 0.10.34 is the current npm latest. No breaking changes needed, no new APIs required for v1.4. | Stay at 0.10.34                                                   |
+| Separate element classifier service                      | `deriveElement()` is a pure lookup, runs in <1ms, fits naturally in `openai.ts`               | Keep in-process                                                   |
+| `additionalProperties: true` on new GPT-4o schema fields | Breaks Structured Outputs strict mode — model will fail validation                            | Always add to `required[]` and keep `additionalProperties: false` |
 
 ---
 
 ## Alternatives Considered
 
-| Recommended                     | Alternative        | Why Not                                                                                                                                                                                                                         |
-| ------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Prisma 7 + @prisma/adapter-neon | Drizzle ORM        | Drizzle is lighter but less mature type inference for JSONB columns. Prisma's type safety for the `attributes` and `report` JSONB fields is better.                                                                             |
-| Prisma 7 + @prisma/adapter-neon | Prisma Accelerate  | Accelerate is Prisma's global connection pool CDN — useful at scale, not needed for MVP. The direct Neon adapter is sufficient.                                                                                                 |
-| Clerk                           | Auth.js (NextAuth) | Auth.js requires building your own OAuth flows and session storage. Clerk handles Google OAuth, email/password, magic links, and session management with zero custom code. 50K free users covers MVP.                           |
-| Clerk                           | Supabase Auth      | Already using Neon, not Supabase. Using Supabase just for auth without Supabase DB creates unnecessary coupling.                                                                                                                |
-| Raw fetch for OpenAI            | openai npm SDK     | SDK adds ~150KB for a single endpoint. No streaming needed. No benefit over fetch for this use case.                                                                                                                            |
-| In-memory rate limiting         | @upstash/ratelimit | Upstash requires a Redis instance (free tier available). In-memory is sufficient for MVP — Vercel function instances are short-lived and the limits (5 req/hour per IP) tolerate some drift across instances. Migrate at scale. |
-| Pino                            | Winston            | Pino is 5-7x faster than Winston for high-throughput JSON logging. Better fit for serverless cold starts.                                                                                                                       |
-
----
-
-## What NOT to Use
-
-| Avoid                                               | Why                                                                                                                                 | Use Instead                                                                                                  |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `import { PrismaClient } from "@prisma/client"`     | Prisma 7 no longer generates to node_modules — this import will have no schema types                                                | `import { PrismaClient } from "@/generated/prisma/client"`                                                   |
-| `@neondatabase/serverless` directly                 | Bundled inside `@prisma/adapter-neon` in Prisma 7. Using it directly creates version conflicts and duplicates the connection logic. | Let `@prisma/adapter-neon` manage it                                                                         |
-| Pooled `DATABASE_URL` in `prisma.config.ts`         | Prisma Migrate fails against PgBouncer (Neon's connection pooler) — DDL transactions are not supported                              | Add `DIRECT_URL` (unpooled) for `prisma.config.ts`, keep `DATABASE_URL` (pooled) for the app's Prisma client |
-| `middleware.ts` for new auth logic (long-term)      | Deprecated in Next.js 16, will be removed in a future version                                                                       | Migrate Clerk logic to `proxy.ts` when feasible                                                              |
-| `z.string().email()` / `z.string().uuid()`          | Zod v3 patterns — these methods moved in v4                                                                                         | `z.email()`, `z.guid()`                                                                                      |
-| Storing `OPENAI_API_KEY` in any `NEXT_PUBLIC_*` var | Exposes key to client bundle                                                                                                        | Server-only env var, never prefixed with `NEXT_PUBLIC_`                                                      |
+| Decision                                               | Alternative                                                   | Why Not                                                                                                                                                                   |
+| ------------------------------------------------------ | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Remove `computeElementHint`, pass raw ratios to prompt | Keep `computeElementHint` and pass classified element as hint | The multi-indicator prompt needs raw geometry, not a pre-classified label that collapses 6 indicators into 1. Pre-classification loses signal.                            |
+| `deriveElement()` server-side pure function            | Keep element in GPT-4o output                                 | GPT-4o non-determinism on element classification was the motivating problem. Moving derivation server-side via type mapping makes it deterministic once types are stable. |
+| Canvas drawImage for 2048px cap                        | `createImageBitmap` with resize options                       | Browser support gaps in Firefox (bug 1363861). Canvas drawImage is universally supported and synchronous.                                                                 |
+| Optional `secondary_element` with null guard           | Separate `HandAttributesV2` type                              | Optional field avoids needing a discriminated union or version field. JSONB handles absent keys naturally.                                                                |
 
 ---
 
 ## Version Compatibility
 
-| Package                       | Compatible With                                             | Notes                                                                                                                           |
-| ----------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `@clerk/nextjs ^7.0.12`       | Next.js 16.x, React 19                                      | v7 is compatible. `auth()` is async. File should be `proxy.ts` in Next.js 16 but `middleware.ts` still works (deprecated).      |
-| `@prisma/adapter-neon ^7.7.0` | `@prisma/client ^7.7.0`                                     | Versions must match exactly. Both are `^7.7.0` — correct.                                                                       |
-| `@prisma/adapter-neon ^7.7.0` | `@neondatabase/serverless ^1.0.2`                           | Adapter bundles its own version of the Neon driver. The separately installed `@neondatabase/serverless` is unused but harmless. |
-| `zod ^4.3.6`                  | No `@hookform/resolvers` or `zod-to-json-schema` in project | If adding form validation libraries later, verify they support Zod v4 (tRPC v11+, `@hookform/resolvers v4+` required).          |
-| `next 16.2.3`                 | Node.js 20.9+                                               | Next.js 16 dropped Node.js 18 support. Current requirement is Node.js 20.9.0 LTS minimum.                                       |
-| `pino ^10.3.1`                | `pino-pretty ^13.1.3`                                       | Compatible. Use `pino-pretty` only in dev — set via `transport` option, not in production.                                      |
+| Package                           | Compatible With        | Notes                                                                                                                                     |
+| --------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `@mediapipe/tasks-vision 0.10.34` | Browser Canvas 2D API  | No conflicts. WASM + GPU delegate path unchanged.                                                                                         |
+| OpenAI `gpt-4o-2024-08-06`        | Zod 4.3.6              | Structured Outputs strict mode requires all schema fields in `required[]`. Zod schema must mirror the JSON schema.                        |
+| `zod ^4.3.6`                      | TypeScript strict      | New `primary_type`, `secondary_type`, `type_reasoning` fields added to `HandAttributesSchema`. Use `z.enum(["A","B","C","D"])` for types. |
+| Next.js 16.2.3 App Router         | Manual body size check | App Router `route.ts` does not support `bodyParser.sizeLimit` config. Manual `bodyStr.length` check is the mechanism.                     |
 
 ---
 
 ## Installation
 
-All packages are already installed. No new packages required for the backend milestone.
+No new packages. All changes are to existing code.
 
 ```bash
-# Already installed — listed for documentation
+# Nothing to install for v1.4
 
-# Core backend
-npm install @clerk/nextjs @prisma/adapter-neon @prisma/client prisma zod pino pino-pretty
+# After TypeScript type changes, verify:
+npm run type-check
 
-# Prisma code generation (must run after schema changes)
-npx prisma generate
+# After data block additions, run tests:
+npm test -- --run
 
-# Migrations (uses DIRECT_URL from prisma.config.ts)
-npx prisma migrate dev --name init
-
-# Production migration (CI)
-npx prisma migrate deploy
-```
-
-If adding email or payments later:
-
-```bash
-# Already installed
-npm install resend
-# No SDK for OpenAI or AbacatePay — raw fetch wrappers are the correct pattern
-```
-
----
-
-## Environment Variables (complete list)
-
-```env
-# Clerk (auth)
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...   # client-safe, public
-CLERK_SECRET_KEY=sk_...                     # server-only
-
-# OpenAI (vision)
-OPENAI_API_KEY=sk-...                       # server-only
-
-# Neon PostgreSQL
-DATABASE_URL=postgresql://...-pooler...     # pooled — for Prisma client runtime
-DIRECT_URL=postgresql://...                 # direct (no -pooler) — for Prisma migrations
-
-# Payments (deferred)
-ABACATEPAY_API_KEY=...                      # server-only
-ABACATEPAY_WEBHOOK_SECRET=...              # server-only
-
-# Email (deferred)
-RESEND_API_KEY=re_...                       # server-only
-
-# App
-NEXT_PUBLIC_BASE_URL=http://localhost:3000  # client-safe, public
-LOG_LEVEL=debug                             # optional, default: info
+# Full check before pushing:
+npm run check
 ```
 
 ---
 
 ## Sources
 
-- [neon.com/docs/guides/prisma](https://neon.com/docs/guides/prisma) — Prisma 7 + Neon adapter setup, two-URL requirement, no separate @neondatabase/serverless. HIGH confidence.
-- [prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7](https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7) — Prisma 7 breaking changes: import path, prisma.config.ts, driver adapter requirement. HIGH confidence.
-- [nextjs.org/blog/next-16](https://nextjs.org/blog/next-16) — proxy.ts vs middleware.ts deprecation, revalidateTag signature change, Node.js 20.9+ requirement. HIGH confidence.
-- [clerk.com/docs/reference/nextjs/clerk-middleware](https://clerk.com/docs/reference/nextjs/clerk-middleware) — clerkMiddleware in Next.js 16 proxy.ts, async auth(). HIGH confidence.
-- [clerk.com/docs/nextjs/getting-started/quickstart](https://clerk.com/docs/nextjs/getting-started/quickstart) — @clerk/nextjs v7 setup. HIGH confidence.
-- [zod.dev/v4/changelog](https://zod.dev/v4/changelog) — Zod v4 breaking changes vs v3. HIGH confidence.
-- [developers.openai.com/api/docs/guides/images-vision](https://developers.openai.com/api/docs/guides/images-vision) — Base64 vision input, content array ordering. MEDIUM confidence.
-- Codebase audit (`src/server/lib/`, `prisma/schema.prisma`, `prisma.config.ts`, `src/middleware.ts`, `src/proxy.ts`, `package.json`) — current state verification. HIGH confidence.
+- OpenAI Structured Outputs docs — `strict: true`, `additionalProperties: false`, `required[]` requirements. HIGH confidence. [developers.openai.com/api/docs/guides/structured-outputs](https://developers.openai.com/docs/guides/structured-outputs)
+- OpenAI Vision docs — `detail: "high"` tiles at 512px, token cost scaling. MEDIUM confidence. [openai-hd4n6.mintlify.app/docs/guides/images](https://openai-hd4n6.mintlify.app/docs/guides/images)
+- npm registry — `@mediapipe/tasks-vision` latest is 0.10.34 as of 2026-04-18. HIGH confidence. [npmjs.com/package/@mediapipe/tasks-vision](https://www.npmjs.com/package/@mediapipe/tasks-vision)
+- MDN Canvas API — `drawImage` scaling behavior, universally supported. HIGH confidence.
+- Next.js GitHub discussions #57501, #53087, #68409 — App Router `route.ts` does not support `bodyParser.sizeLimit`. Manual check is the mechanism. MEDIUM confidence.
+- Existing codebase audit — `src/lib/mediapipe.ts`, `src/server/lib/openai.ts`, `src/hooks/useCameraPipeline.ts`, `src/types/hand-attributes.ts`, `package.json`. HIGH confidence.
+- Firefox bug 1363861 — `createImageBitmap` resize options incomplete support. HIGH confidence.
 
 ---
 
-_Stack research for: MaosFalam backend (Next.js 16 App Router + Neon + Clerk + GPT-4o)_
-_Researched: 2026-04-10_
+_Stack research for: MaosFalam v1.4 (element classification, MediaPipe validation, mixed-hand, image quality)_
+_Researched: 2026-04-18_
