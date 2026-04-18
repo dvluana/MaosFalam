@@ -21,6 +21,8 @@ export interface ReportJSON {
     key: HandElement;
     intro: string;
     body: string;
+    secondary_key?: HandElement; // ausente se nao misto
+    bridge?: string; // ausente se nao misto
   };
 
   portrait: {

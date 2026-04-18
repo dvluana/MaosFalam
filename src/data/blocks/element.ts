@@ -1,6 +1,127 @@
 import type { TextBlock } from "@/types/blocks";
 import type { HandElement } from "@/types/report";
 
+// ---------------------------------------------------------------------------
+// ELEMENT_BRIDGE — 12 pares direcionais (primary → secondary)
+// Fogo→Agua diferente de Agua→Fogo. 3 variacoes por par.
+// Voz da cigana: segunda pessoa, zero travessoes, zero palavras proibidas.
+// ---------------------------------------------------------------------------
+
+type ElementBridgeRecord = Record<HandElement, Partial<Record<HandElement, TextBlock>>>;
+
+export const ELEMENT_BRIDGE: ElementBridgeRecord = {
+  fire: {
+    water: {
+      content:
+        "Mas tem agua tambem, {{name}}. Voce sente mais do que deixa aparecer. O fogo esconde, a agua guarda. Juntos, explodem.",
+      alt: "Tem uma corrente fria sob o fogo. Agua secundaria. Isso explica por que voce para antes de queimar o que ama. So as vezes.",
+      alt2: "Fogo com traco de Agua. Voce age com forca, mas sente a consequencia depois, sozinha. E isso nao e fraqueza.",
+    },
+    earth: {
+      content:
+        "Terra secundaria. Voce tem mais paciencia do que aparenta. Age rapido, mas nao abandona o que construiu. Isso e raro em maos de Fogo.",
+      alt: "Fogo que conhece o peso. Voce queima e planta ao mesmo tempo. A maioria faz so um dos dois.",
+      alt2: "Tem raiz aqui, {{name}}. Fogo com Terra. Voce avanca, mas nao solta o que importa. Sabe onde voltar.",
+    },
+    air: {
+      content:
+        "Ar secundario. Sua acao tem pensamento. Voce decide rapido, mas nao aleatoriamente. Ha um calculo que os outros nao veem.",
+      alt: "Fogo que pensa antes de arder. Ar nos dedos. Voce discute ideias com a mesma intensidade que toma decisoes.",
+      alt2: "Fogo e Ar juntos, {{name}}. Voce persuade enquanto age. Nao e sobre ter razao. E sobre nao parar.",
+    },
+  },
+  water: {
+    fire: {
+      content:
+        "Fogo secundario. Ha uma urgencia aqui que voce controla mal. Sente fundo e age impulsivamente. A combinacao cansa.",
+      alt: "Agua com fogo dentro. Voce e calma por fora e intensa por dentro. Quem te conhece de verdade sabe.",
+      alt2: "Tem chama aqui, {{name}}. Agua dominante, Fogo como sombra. Voce explode quando menos se espera. E passa rapido. Mas passa.",
+    },
+    earth: {
+      content:
+        "Terra secundaria. Voce nao so sente. Voce constroi com o que sente. Isso te diferencia de quase toda Agua que ja li.",
+      alt: "Agua que nao perde o chao. Terra nos dedos. Sua sensibilidade tem estrutura. Nao e so sentir, e fazer.",
+      alt2: "Agua com raiz, {{name}}. Voce suporta mais do que parece. A sensibilidade nao te afunda porque tem Terra embaixo.",
+    },
+    air: {
+      content:
+        "Ar secundario. Sua intuiticao tem vocabulario. Voce nomeia o que sente com precisao que poucos tem.",
+      alt: "Agua que pensa o que sente. Ar no fundo. Voce analisa as proprias emocoes enquanto as vive. E exaustivo.",
+      alt2: "Agua e Ar, {{name}}. Voce e sensivel e articulada. Isso e poder. Tambem e responsabilidade sobre o que fala.",
+    },
+  },
+  earth: {
+    fire: {
+      content:
+        "Fogo secundario. Voce tem urgencias que esconde bem. Por fora, firmeza. Por dentro, uma impaciencia que poucos veem.",
+      alt: "Terra com fogo no fundo. Voce constroi devagar e decide rapido quando precisa. A combinacao e mais eficaz do que parece.",
+      alt2: "Tem chama aqui, {{name}}. Terra dominante, Fogo como impulso. Quando voce decide ir, vai sem avisar.",
+    },
+    water: {
+      content:
+        "Agua secundaria. Voce constroe e sente ao mesmo tempo. A maioria ou faz um ou faz o outro. Voce faz os dois.",
+      alt: "Terra com profundidade. Agua nos dedos. Voce absorve mais do que mostra. E guarda mais do que processa.",
+      alt2: "Terra e Agua, {{name}}. Voce e confiavel e sensivel. Isso atrai pessoas que precisam de amparo. Nem sempre e reciproco.",
+    },
+    air: {
+      content:
+        "Ar secundario. Voce pensa antes de agir, mais do que a maioria das Terras. Isso te protege de erros que os outros cometem.",
+      alt: "Terra que questiona. Ar no fundo. Voce nao aceita instrucao sem entender o motivo. Isso atrasa e aprimora.",
+      alt2: "Terra e Ar, {{name}}. Voce e solida e curiosa. Constroi com proposito. Nao faz coisa sem sentido.",
+    },
+  },
+  air: {
+    fire: {
+      content:
+        "Fogo secundario. Voce nao so pensa. Voce age sobre o que pensa, mais rapido do que a maioria dos Ares. Isso assusta quem nao te conhece.",
+      alt: "Ar com velocidade. Fogo no fundo. Sua mente decide e seu corpo segue sem hesitar. A combinacao e rara.",
+      alt2: "Ar e Fogo, {{name}}. Voce convence e age. Nao fica so na teoria. Isso te diferencia de quase todo Ar que ja vi.",
+    },
+    water: {
+      content:
+        "Agua secundaria. Sua logica tem emocao. Voce entende as pessoas nao so pela razao, mas por algo que nao consegue nomear.",
+      alt: "Ar que sente. Agua nos dedos. Voce analisa e intuiu ao mesmo tempo. Soa contraditorio. Nao e.",
+      alt2: "Ar e Agua, {{name}}. Voce e inteligente e empatica. Isso te faz ouvir o que os outros nao conseguem esconder.",
+    },
+    earth: {
+      content:
+        "Terra secundaria. Voce tem mais persistencia do que o Ar costuma ter. Sua mente nao so explora, ela termina o que comeca.",
+      alt: "Ar com raiz. Terra no fundo. Voce tem ideias e tambem tem o que e preciso pra colocar elas no mundo.",
+      alt2: "Ar e Terra, {{name}}. Voce pensa e produz. Nao e so teoria. Ha resultado no final. Isso e mais do que a maioria dos Ares entrega.",
+    },
+  },
+};
+
+// ---------------------------------------------------------------------------
+// ELEMENT_EXCLUSIVITY_MIXED — 12 strings pra maos mistas
+// Percentagens ficticias coerentes (4% a 12%). Brand voice: cigana direta.
+// ---------------------------------------------------------------------------
+
+type ElementExclusivityMixedRecord = Record<HandElement, Partial<Record<HandElement, string>>>;
+
+export const ELEMENT_EXCLUSIVITY_MIXED: ElementExclusivityMixedRecord = {
+  fire: {
+    water: "Apenas 7% das maos que eu ja li tem Fogo com traco de Agua.",
+    earth: "Apenas 9% das maos que eu ja li tem Fogo com traco de Terra.",
+    air: "Apenas 8% das maos que eu ja li tem Fogo com traco de Ar.",
+  },
+  water: {
+    fire: "Apenas 6% das maos que eu ja li tem Agua com traco de Fogo.",
+    earth: "Apenas 11% das maos que eu ja li tem Agua com traco de Terra.",
+    air: "Apenas 10% das maos que eu ja li tem Agua com traco de Ar.",
+  },
+  earth: {
+    fire: "Apenas 5% das maos que eu ja li tem Terra com traco de Fogo.",
+    water: "Apenas 12% das maos que eu ja li tem Terra com traco de Agua.",
+    air: "Apenas 8% das maos que eu ja li tem Terra com traco de Ar.",
+  },
+  air: {
+    fire: "Apenas 4% das maos que eu ja li tem Ar com traco de Fogo.",
+    water: "Apenas 9% das maos que eu ja li tem Ar com traco de Agua.",
+    earth: "Apenas 11% das maos que eu ja li tem Ar com traco de Terra.",
+  },
+};
+
 export const ELEMENT_IMPACT: Record<HandElement, TextBlock> = {
   fire: {
     content: "Suas mãos queimam, {{name}}. Eu sei antes de olhar.",

@@ -54,6 +54,7 @@ export type RareSignKey =
 
 export interface HandAttributes {
   element: "fire" | "water" | "earth" | "air";
+  secondary_element?: "fire" | "water" | "earth" | "air"; // ausente quando mao nao e mista
 
   heart: {
     variation: HeartVariation;
