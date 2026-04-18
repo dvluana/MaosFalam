@@ -247,20 +247,11 @@ export default function useCameraPipeline({
       }
 
       // ---- Handedness check ----
-      // MediaPipe assumes mirrored (selfie/front camera) input by default.
-      // Front camera (mirrored=true): labels map directly to user's hand.
-      // Back camera (mirrored=false): labels are inverted — MediaPipe "Left" = user's right hand.
-      // (Upload/photo path inverts separately — see useUploadValidation.)
+      // MediaPipe Hand Landmarker returns handedness labels that map directly
+      // to the user's actual hand regardless of camera facing mode.
+      // No inversion needed for either front or back camera.
       const rawHandedness = detectHandedness(result.handednesses[0]);
-      // Back camera (mirrored=false): MediaPipe labels are inverted relative to user's hand.
-      // Front camera (mirrored=true): labels map directly.
-      const userHandedness: "left" | "right" = mirroredRef.current
-        ? rawHandedness === "Left"
-          ? "left"
-          : "right"
-        : rawHandedness === "Left"
-          ? "right"
-          : "left";
+      const userHandedness: "left" | "right" = rawHandedness === "Left" ? "left" : "right";
 
       const expectedHand = dominantHandRef.current;
       if (userHandedness !== expectedHand) {
