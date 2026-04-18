@@ -100,7 +100,11 @@ Plans:
 3. Mao inclinada mais de 25 graus mostra estado adjusting; ao endireitar a mao o estado stable e alcancado dentro de 3 segundos
 4. Countdown visual aparece durante o periodo de estabilidade enquanto o timer conta
 5. Jitter acima de 2.5% em 5 frames reseta o contador de estabilidade sem travar o usuario em loop
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 17-01-PLAN.md — Remove element classification, fix handedness, 25 deg hysteresis + countdown
 
 ### Phase 18: Block Engine e Conteudo Misto
 
@@ -142,6 +146,6 @@ Phase 16 → 17 (parallel com 18) → 18 → 19
 | 14. Email & Hardening             | v2        | 1/1            | Complete    | 2026-04-14 |
 | 15. Bug Fixes                     | v2        | 1/1            | Complete    | 2026-04-14 |
 | 16. GPT-4o Schema e Image Quality | v1.4      | 1/2            | In Progress |            |
-| 17. MediaPipe Validation Refactor | v1.4      | 0/TBD          | Not started | -          |
+| 17. MediaPipe Validation Refactor | v1.4      | 0/1            | Not started | -          |
 | 18. Block Engine e Conteudo Misto | v1.4      | 0/TBD          | Not started | -          |
 | 19. Frontend Mao Mista            | v1.4      | 0/TBD          | Not started | -          |
