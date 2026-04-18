@@ -11,7 +11,13 @@ export {
   LIFE_MEASUREMENTS,
   FATE_MEASUREMENTS,
 } from "./measurements";
-export { ELEMENT_IMPACT, ELEMENT_INTRO, ELEMENT_BODY } from "./element";
+export {
+  ELEMENT_IMPACT,
+  ELEMENT_INTRO,
+  ELEMENT_BODY,
+  ELEMENT_BRIDGE,
+  ELEMENT_EXCLUSIVITY_MIXED,
+} from "./element";
 export { HEART_BLOCKS, HEART_MODIFIERS } from "./heart";
 export { HEAD_BLOCKS, HEAD_MODIFIERS } from "./head";
 export { LIFE_BLOCKS } from "./life";

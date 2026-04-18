@@ -52,21 +52,9 @@ export type RareSignKey =
   | "intuition_line"
   | "protection_marks";
 
-/** GPT-4o hand type code — neutral labels to avoid bias from element names */
-export type HandType = "A" | "B" | "C" | "D";
-
-/** Palmistry element derived server-side from HandType */
-export type HandElement = "fire" | "water" | "earth" | "air";
-
 export interface HandAttributes {
-  // Multi-indicator classification (GPT-4o returns A/B/C/D, never element names)
-  primary_type: HandType;
-  secondary_type: HandType | "none";
-  type_reasoning: string;
-
-  // Derived server-side (not from GPT-4o, injected by analyzeHand after Zod parse)
-  element: HandElement;
-  secondary_element?: HandElement;
+  element: "fire" | "water" | "earth" | "air";
+  secondary_element?: "fire" | "water" | "earth" | "air"; // ausente quando mao nao e mista
 
   heart: {
     variation: HeartVariation;

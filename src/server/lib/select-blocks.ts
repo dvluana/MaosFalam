@@ -12,6 +12,8 @@ import {
   ELEMENT_IMPACT,
   ELEMENT_INTRO,
   ELEMENT_BODY,
+  ELEMENT_BRIDGE,
+  ELEMENT_EXCLUSIVITY_MIXED,
   HEART_BLOCKS,
   HEART_MODIFIERS,
   HEAD_BLOCKS,
@@ -59,7 +61,19 @@ function mulberry32(seed: number): () => number {
 }
 
 function hashInputs(attrs: HandAttributes, name: string, gender: string): number {
-  const str = JSON.stringify(attrs) + "|" + name + "|" + gender;
+  // Serialize only stable fields — exclude secondary_element (optional, added later)
+  // and any free-text reasoning fields to keep seed stable across schema changes.
+  const stable = {
+    element: attrs.element,
+    heart: attrs.heart,
+    head: attrs.head,
+    life: attrs.life,
+    fate: attrs.fate,
+    venus: attrs.venus,
+    mounts: attrs.mounts,
+    rare_signs: attrs.rare_signs,
+  };
+  const str = JSON.stringify(stable) + "|" + name + "|" + gender;
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
@@ -199,18 +213,31 @@ export function selectBlocks(
   // --- Opening ---
   const opening = pickRandom(REPORT_OPENING, rng);
 
+  // --- Bridge (mao mista) — consumido APOS opening, ANTES das secoes de linhas ---
+  // Posicionado aqui para nao deslocar o rng de elementIntro/elementBody/opening
+  // quando secondary_element esta ausente (nenhum rng consumido se nao misto).
+  const bridgeBlock = attributes.secondary_element
+    ? ELEMENT_BRIDGE[el]?.[attributes.secondary_element]
+    : undefined;
+  const bridge = bridgeBlock ? pickRandom(bridgeBlock, rng) : undefined;
+
   // --- Portrait ---
   const dominantMount = resolveDominantMount(attributes.mounts);
   const nonFlatCount = Object.values(attributes.mounts).filter((s) => s !== "flat").length;
   const rareCount = Object.values(attributes.rare_signs).filter(Boolean).length;
   const pct = ELEMENT_EXCLUSIVITY[el];
 
+  const exclusivity = attributes.secondary_element
+    ? (ELEMENT_EXCLUSIVITY_MIXED[el]?.[attributes.secondary_element] ??
+      `${pct}% das maos que eu ja li sao ${ELEMENT_LABELS[el]}`)
+    : `${pct}% das maos que eu ja li sao ${ELEMENT_LABELS[el]}`;
+
   const portrait = {
     dominant_mount: MOUNT_NAMES[dominantMount],
     lines_detected: "4/4",
     mounts_mapped: `${nonFlatCount}/8`,
     rare_signs_found: `${rareCount}/9`,
-    exclusivity: `${pct}% das maos que eu ja li sao ${ELEMENT_LABELS[el]}`,
+    exclusivity,
   };
 
   // --- Sections (heart, head, life, fate) ---
@@ -273,7 +300,14 @@ export function selectBlocks(
   const report: ReportJSON = {
     opening,
     impact_phrase: impactPhrase,
-    element: { key: el, intro: elementIntro, body: elementBody },
+    element: {
+      key: el,
+      intro: elementIntro,
+      body: elementBody,
+      ...(attributes.secondary_element && bridge
+        ? { secondary_key: attributes.secondary_element, bridge }
+        : {}),
+    },
     portrait,
     sections: [heartSection, headSection, lifeSection, fateSection],
     venus,
