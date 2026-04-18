@@ -41,7 +41,7 @@ const nameGlow: Record<HandElement, string> = {
 };
 
 interface Props {
-  element: { key: HandElement };
+  element: { key: HandElement; secondary_key?: HandElement };
   impactPhrase: string;
   targetName?: string;
 }
@@ -208,6 +208,20 @@ export default function ElementHero({ element, impactPhrase, targetName }: Props
             }}
           />
         </motion.div>
+
+        {/* Secondary element badge — subordinado, so aparece quando presente */}
+        {element.secondary_key && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.35, duration: 0.9 }}
+            className="flex items-center gap-2 -mt-2"
+          >
+            <span className="font-jetbrains text-[10px] tracking-[1.5px] uppercase text-bone-dim">
+              Com tracos de {elementLabel[element.secondary_key]}
+            </span>
+          </motion.div>
+        )}
 
         {/* Impact phrase */}
         <motion.p

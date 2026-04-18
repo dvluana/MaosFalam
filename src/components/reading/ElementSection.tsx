@@ -27,10 +27,13 @@ export default function ElementSection({ element, impactPhrase }: Props) {
         <Badge variant="gold">Elemento</Badge>
         <Badge variant="bone">{elementLabel[element.key]}</Badge>
       </div>
-      <h2 className="font-cinzel text-[18px] text-bone mb-4">
-        {elementLabel[element.key]}
-      </h2>
+      <h2 className="font-cinzel text-[18px] text-bone mb-4">{elementLabel[element.key]}</h2>
       <p className="font-raleway text-[15px] leading-[1.85] text-bone mb-6">{element.body}</p>
+      {element.bridge && (
+        <p className="font-cormorant italic text-[17px] sm:text-[19px] text-bone leading-[1.45] mt-4 mb-4">
+          {element.bridge}
+        </p>
+      )}
       <p className="font-cormorant italic text-xl text-gold leading-snug">
         &ldquo;{personalize(impactPhrase, name)}&rdquo;
       </p>

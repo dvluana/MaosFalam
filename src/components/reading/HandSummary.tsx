@@ -10,9 +10,10 @@ interface Props {
   element: HandElement;
   elementName: string;
   portrait: ReportJSON["portrait"];
+  secondaryKey?: HandElement;
 }
 
-export default function HandSummary({ element, elementName, portrait }: Props) {
+export default function HandSummary({ element, elementName, portrait, secondaryKey }: Props) {
   const stats: Array<{ label: string; value: string }> = [
     { label: "Linhas", value: portrait.lines_detected },
     { label: "Montes", value: portrait.mounts_mapped },
@@ -125,9 +126,15 @@ export default function HandSummary({ element, elementName, portrait }: Props) {
         className="relative mt-7 pt-5"
         style={{ borderTop: "1px solid rgba(201,162,74,0.12)" }}
       >
+        {/* Mao mista: exclusivity ja e frase completa do motor. Pura: anexa nome do elemento em gold. */}
         <p className="font-cormorant italic text-[15px] sm:text-[17px] text-bone leading-[1.3]">
-          {portrait.exclusivity}{" "}
-          <span className="text-gold">{elementName}</span>
+          {secondaryKey ? (
+            portrait.exclusivity
+          ) : (
+            <>
+              {portrait.exclusivity} <span className="text-gold">{elementName}</span>
+            </>
+          )}
         </p>
       </motion.div>
     </motion.section>

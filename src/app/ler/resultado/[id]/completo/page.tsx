@@ -75,7 +75,7 @@ function CompletoInner({ id }: { id: string }) {
   return (
     <main className="min-h-dvh bg-black pb-24">
       <ElementHero
-        element={{ key: element }}
+        element={{ key: element, secondary_key: report.element.secondary_key }}
         impactPhrase={report.impact_phrase}
         targetName={data.target_name}
       />
@@ -86,6 +86,7 @@ function CompletoInner({ id }: { id: string }) {
           element={element}
           elementName={ELEMENT_LABEL[element]}
           portrait={report.portrait}
+          secondaryKey={report.element.secondary_key}
         />
       </div>
 

@@ -173,7 +173,7 @@ function ResultadoInner({ id }: { id: string }) {
   return (
     <main className="min-h-dvh bg-black pb-24">
       <ElementHero
-        element={{ key: element }}
+        element={{ key: element, secondary_key: report.element.secondary_key }}
         impactPhrase={report.impact_phrase}
         targetName={reading.target_name}
       />
