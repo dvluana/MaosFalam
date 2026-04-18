@@ -35,7 +35,7 @@ export const CAM_FEEDBACK: Record<CamState, string> = {
   loading_mediapipe: "Preciso ver melhor.",
   camera_active_no_hand: "Posicione sua mão na moldura.",
   camera_hand_detected: "Segure assim.",
-  camera_adjusting: "Abra mais os dedos. Preciso ver as linhas.",
+  camera_adjusting: "Ajuste a posicao da mao.",
   camera_wrong_hand: "Essa não é a mão que eu pedi. Me mostra a outra.",
   camera_stable: "Segure.",
   camera_capturing: "",
