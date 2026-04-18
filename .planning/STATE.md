@@ -17,17 +17,17 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-14)
+See: .planning/PROJECT.md (updated 2026-04-18)
 
 **Core value:** Foto da palma entra, leitura personalizada sai. Monetizacao via creditos AbacatePay.
-**Current focus:** Phase 12 — AbacatePay v2 Backend
+**Current focus:** Milestone v1.4 — Classificação de Elemento
 
 ## Current Position
 
-Phase: 12 — AbacatePay v2 Backend
-Plan: 2 of 2
-Status: Plan 12-01 complete, 12-02 next
-Last activity: 2026-04-14
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-18 — Milestone v1.4 started
 
 ## Performance Metrics
 

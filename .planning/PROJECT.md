@@ -8,19 +8,19 @@ Webapp de quiromancia com IA. Mobile-first. Foto da palma entra, leitura persona
 
 A foto da palma entra, a leitura personalizada sai. Monetizacao: primeira leitura (Coracao) gratis, leitura completa requer credito comprado via AbacatePay.
 
-## Current Milestone: v2 Monetizacao
+## Current Milestone: v1.4 Classificação de Elemento
 
-**Goal:** Pagamento real funcionando end-to-end. Usuario compra creditos via AbacatePay (checkout hosted), webhook credita, leitura premium desbloqueia. Email transacional via Resend confirma pagamento. Bugs de UX pendentes resolvidos.
+**Goal:** Classificação de elemento correta e consistente. GPT-4o classifica com prompt multi-indicador (Types A/B/C/D × 6-7 indicadores visuais). MediaPipe valida posição/ângulo/estabilidade (sem classificar elemento). Suporte a mãos mistas (primary + secondary element).
 
 **Target features:**
 
-- AbacatePay v2: migrar wrapper de v1 pra v2 (produtos como entidades, checkout hosted, webhook checkout.completed)
-- /creditos page: remover PIX hardcoded, chamar API real, redirect pra checkout AbacatePay
-- Frontend payment flow: initiatePurchase(), checkout intent wiring, UpsellSection funcional
-- CPF collection e validacao no primeiro pagamento
-- Webhook: checkout.completed com signature por chave publica fixa
-- Resend: emails transacionais (pagamento confirmado, boas-vindas, leitura pronta)
-- Bug fixes: manifesto acentos, camera handedness, revelacao corta em telas pequenas
+- GPT-4o multi-indicator: prompt semântico com 4 tipos × 6-7 indicadores, primary_type + secondary_type, type_reasoning, deriveElement server-side
+- MediaPipe validation only: estabilidade de movimento (buffer 5 frames, jitter 2.5%), ângulo < 25°, remover computeElementHint
+- Imagem quality: JPEG 0.92, max 2048px, detail:high, body limit 4MB
+- Mãos mistas tipos: HandAttributes.secondary_element, ReportJSON.element.secondary_key + bridge
+- Mãos mistas blocos: ELEMENT_BRIDGE (12 strings), ELEMENT_EXCLUSIVITY_MIXED (12 strings)
+- Mãos mistas frontend: ElementHero/ElementSection com secondary, HandSummary com exclusivity mista
+- Backward compatible: leituras antigas sem secondary renderizam normal
 
 ## Requirements
 
@@ -65,7 +65,9 @@ A foto da palma entra, a leitura personalizada sai. Monetizacao: primeira leitur
 - AbacatePay wrapper existe mas usa API v1 (v2 mudou endpoints, payload, webhook)
 - /creditos page tem UI mas QR PIX e hardcoded e form de cartao nao faz nada
 - Resend wrapper existe com templates reais mas dominio nao verificado
-- 107+ testes, build green, staging ativo
+- 162+ testes, build green, staging ativo
+- v2 Monetizacao completo (AbacatePay v2, Resend, bug fixes)
+- Elemento: GPT-4o classifica mas non-deterministic. MediaPipe landmarks não serve pra classificar. Sessão experimental extensa em git stash com prompt multi-indicador testado.
 
 ## Constraints
 
@@ -114,4 +116,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-14 after milestone v2 start_
+_Last updated: 2026-04-18 after milestone v1.4 start_
