@@ -85,7 +85,7 @@ All 6 plans completed. See `.planning/archive/v2/` for history.
 **Plans**: 2 plans
 Plans:
 
-- [ ] 16-01-PLAN.md — Triple-schema sync: HandAttributes type + openai.ts prompt multi-indicador + deriveElement()
+- [x] 16-01-PLAN.md — Triple-schema sync: HandAttributes type + openai.ts prompt multi-indicador + deriveElement()
 - [ ] 16-02-PLAN.md — Image quality: captureFrame 0.92, normalizeImage 2048px, body limit 4MB, remover element_hint pipeline
 
 ### Phase 17: MediaPipe Validation Refactor
@@ -141,7 +141,7 @@ Phase 16 → 17 (parallel com 18) → 18 → 19
 | 13. Frontend Payment Flow         | v2        | 2/2            | Complete    | 2026-04-14 |
 | 14. Email & Hardening             | v2        | 1/1            | Complete    | 2026-04-14 |
 | 15. Bug Fixes                     | v2        | 1/1            | Complete    | 2026-04-14 |
-| 16. GPT-4o Schema e Image Quality | v1.4      | 0/2            | Not started | -          |
+| 16. GPT-4o Schema e Image Quality | v1.4      | 1/2            | In Progress |            |
 | 17. MediaPipe Validation Refactor | v1.4      | 0/TBD          | Not started | -          |
 | 18. Block Engine e Conteudo Misto | v1.4      | 0/TBD          | Not started | -          |
 | 19. Frontend Mao Mista            | v1.4      | 0/TBD          | Not started | -          |

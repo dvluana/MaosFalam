@@ -7,12 +7,12 @@
 
 ### GPT-4o Classification
 
-- [ ] **ELEM-01**: GPT-4o classifica mao em Types A/B/C/D com 6-7 indicadores visuais por tipo
-- [ ] **ELEM-02**: Schema inclui primary_type, secondary_type, type_reasoning como campos obrigatorios
-- [ ] **ELEM-03**: deriveElement() no server mapeia A=earth, B=air, C=fire, D=water
-- [ ] **ELEM-04**: deriveSecondaryElement() retorna element ou null quando "none"
-- [ ] **ELEM-05**: Model pinned (gpt-4o-2024-08-06), detail:high, temperature:0
-- [ ] **ELEM-06**: 3 schemas em sync (OpenAI JSON Schema, Zod, TypeScript HandAttributes)
+- [x] **ELEM-01**: GPT-4o classifica mao em Types A/B/C/D com 6-7 indicadores visuais por tipo
+- [x] **ELEM-02**: Schema inclui primary_type, secondary_type, type_reasoning como campos obrigatorios
+- [x] **ELEM-03**: deriveElement() no server mapeia A=earth, B=air, C=fire, D=water
+- [x] **ELEM-04**: deriveSecondaryElement() retorna element ou null quando "none"
+- [x] **ELEM-05**: Model pinned (gpt-4o-2024-08-06), detail:high, temperature:0
+- [x] **ELEM-06**: 3 schemas em sync (OpenAI JSON Schema, Zod, TypeScript HandAttributes)
 
 ### MediaPipe Validation
 
@@ -56,29 +56,29 @@
 
 ## Traceability
 
-| REQ-ID   | Phase    | Status  |
-| -------- | -------- | ------- |
-| ELEM-01  | Phase 16 | Pending |
-| ELEM-02  | Phase 16 | Pending |
-| ELEM-03  | Phase 16 | Pending |
-| ELEM-04  | Phase 16 | Pending |
-| ELEM-05  | Phase 16 | Pending |
-| ELEM-06  | Phase 16 | Pending |
-| IMG-01   | Phase 16 | Pending |
-| IMG-02   | Phase 16 | Pending |
-| IMG-03   | Phase 16 | Pending |
-| MEDIA-01 | Phase 17 | Pending |
-| MEDIA-02 | Phase 17 | Pending |
-| MEDIA-03 | Phase 17 | Pending |
-| MEDIA-04 | Phase 17 | Pending |
-| MEDIA-05 | Phase 17 | Pending |
-| MIX-01   | Phase 18 | Pending |
-| MIX-02   | Phase 18 | Pending |
-| MIX-03   | Phase 18 | Pending |
-| MIX-04   | Phase 18 | Pending |
-| MIX-05   | Phase 18 | Pending |
-| MIX-06   | Phase 18 | Pending |
-| MIX-07   | Phase 19 | Pending |
-| MIX-08   | Phase 19 | Pending |
-| MIX-09   | Phase 19 | Pending |
-| MIX-10   | Phase 19 | Pending |
+| REQ-ID   | Phase    | Status   |
+| -------- | -------- | -------- |
+| ELEM-01  | Phase 16 | Complete |
+| ELEM-02  | Phase 16 | Complete |
+| ELEM-03  | Phase 16 | Complete |
+| ELEM-04  | Phase 16 | Complete |
+| ELEM-05  | Phase 16 | Complete |
+| ELEM-06  | Phase 16 | Complete |
+| IMG-01   | Phase 16 | Pending  |
+| IMG-02   | Phase 16 | Pending  |
+| IMG-03   | Phase 16 | Pending  |
+| MEDIA-01 | Phase 17 | Pending  |
+| MEDIA-02 | Phase 17 | Pending  |
+| MEDIA-03 | Phase 17 | Pending  |
+| MEDIA-04 | Phase 17 | Pending  |
+| MEDIA-05 | Phase 17 | Pending  |
+| MIX-01   | Phase 18 | Pending  |
+| MIX-02   | Phase 18 | Pending  |
+| MIX-03   | Phase 18 | Pending  |
+| MIX-04   | Phase 18 | Pending  |
+| MIX-05   | Phase 18 | Pending  |
+| MIX-06   | Phase 18 | Pending  |
+| MIX-07   | Phase 19 | Pending  |
+| MIX-08   | Phase 19 | Pending  |
+| MIX-09   | Phase 19 | Pending  |
+| MIX-10   | Phase 19 | Pending  |

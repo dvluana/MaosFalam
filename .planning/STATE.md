@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Classificacao de Elemento
-status: not_started
-stopped_at: Roadmap defined
-last_updated: "2026-04-18T00:00:00.000Z"
-last_activity: 2026-04-18
+status: Roadmap defined, ready for Phase 16
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-04-18T04:49:19.949Z"
+last_activity: 2026-04-18 — Roadmap v1.4 created
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -70,6 +70,7 @@ _Updated after each plan completion_
 | Phase 13-frontend-payment-flow P02 | 2m | 3 tasks | 3 files |
 | Phase 14 P01 | 4m | 3 tasks | 7 files |
 | Phase 15-bug-fixes P01 | 7m | 3 tasks | 3 files |
+| Phase 16-gpt4o-schema-image-quality P01 | 4m | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -145,6 +146,7 @@ _Updated after each plan completion_
 - [260417-u26]: computeElementHint uses worldLandmarks (3D meters) + dist3D — no aspect ratio correction needed
 - [260417-u26]: angleDeg in validateLandmarks uses WRIST→MIDDLE_MCP vector in screen-space (normalized coords)
 - [260417-u26]: Camera jitter: JITTER_THRESHOLD=0.025, STABLE_FRAMES_REQUIRED=5, ELEMENT_SAMPLES_REQUIRED=8
+- [Phase 16-01]: Neutral type codes A/B/C/D prevent GPT-4o element name bias; deriveElement() maps server-side
 
 ### Pending Todos
 
@@ -168,5 +170,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-18 — Roadmap v1.4 created (phases 16-19)
-Stopped at: Roadmap defined
+Stopped at: Completed 16-01-PLAN.md
 Resume file: None
