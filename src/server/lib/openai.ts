@@ -1,69 +1,26 @@
 import { z } from "zod";
 
-import type { HandAttributes } from "@/types/hand-attributes";
+import type { HandAttributes, HandElement } from "@/types/hand-attributes";
 
 import { logger } from "./logger";
 
-const PROMPT = `Voce e um analisador especializado em quiromancia. Analise esta foto de palma e retorne APENAS JSON valido seguindo o schema abaixo. Nao inclua markdown, backticks, nem texto fora do JSON.
+// System prompt in English — neutral terms avoid cultural bias in element classification
+const PROMPT = `You are a hand shape classifier for palmistry analysis.
 
-Schema esperado:
-{
-  "element": "fire" | "water" | "earth" | "air",
+Examine the palm photo and classify the hand into ONE of four structural types based on observable geometric features. Use ONLY the visual indicators listed below. Do not use palmistry knowledge, element names, or cultural associations.
 
-  "heart": {
-    "variation": "long_straight" | "long_curved" | "long_deep_curved" | "short_straight" | "short_curved" | "medium_straight" | "medium_curved" | "faint",
-    "modifiers": ["fork_end", "island", "break", "ends_index", "ends_middle", "deep"]
-  },
+TYPE A — Square and robust palm, short thick fingers, short or no visible knuckle nodes, wide thick palm
+TYPE B — Square palm proportions, noticeably long fingers with visible prominent knuckle joints, finger length clearly exceeds palm width
+TYPE C — Square palm (width roughly equals length), fingers short relative to palm (finger length under 75% of palm length), NOT thick/robust
+TYPE D — Visibly rectangular palm (palm length clearly greater than width), fingers long and thin, narrow palm
 
-  "head": {
-    "variation": "long_straight" | "long_curved" | "long_deep_curved" | "short_straight" | "short_curved" | "medium_straight" | "medium_curved" | "faint",
-    "modifiers": ["fork_moon", "touches_life", "island", "break"]
-  },
+For each type, count how many of its indicators you can see in the photo.
 
-  "life": {
-    "variation": "long_deep" | "long_faint" | "short_deep" | "short_faint" | "curved_wide" | "curved_tight" | "broken_restart" | "chained"
-  },
+Also analyze the four major palm lines and other features as instructed in the schema.
 
-  "fate": {
-    "variation": "present_deep" | "present_faint" | "broken" | "multiple" | "late_start" | "absent"
-  },
-
-  "venus": {
-    "mount": "pronounced" | "flat",
-    "cinturao": true | false
-  },
-
-  "mounts": {
-    "jupiter": "pronounced" | "normal" | "flat",
-    "saturn": "pronounced" | "normal" | "flat",
-    "apollo": "pronounced" | "normal" | "flat",
-    "mercury": "pronounced" | "normal" | "flat",
-    "mars": "pronounced" | "normal" | "flat",
-    "moon": "pronounced" | "normal" | "flat"
-  },
-
-  "rare_signs": {
-    "star_jupiter": true | false,
-    "mystic_cross": true | false,
-    "ring_solomon": true | false,
-    "sun_line": true | false,
-    "intuition_line": true | false,
-    "protection_marks": true | false
-  },
-
-  "confidence": 0.0 a 1.0
-}
-
-Regras:
-- heart.variation: combine comprimento (short/medium/long) + curvatura (straight/curved/deep_curved). Se profundidade fraca, use "faint"
-- heart.modifiers: inclua apenas os presentes. fork_end=bifurcacao no final, island=ilhas, break=interrupcoes, ends_index/ends_middle=onde termina, deep=profundidade acentuada
-- head.variation: mesma logica do coracao. deep_curved=queda pro Monte da Lua
-- head.modifiers: fork_moon=bifurcacao pro Monte da Lua, touches_life=toca linha da vida
-- life.variation: combine comprimento+profundidade. curved_wide/tight=arco. broken_restart=interrupcao com recomeço. chained=encadeada
-- fate.variation: absent se nao presente. late_start=comeca no meio da palma. multiple=varias linhas
-- mounts: avalie por volume aparente e sombras
-- rare_signs: so reporte com confianca media-alta. Falso positivo pior que falso negativo
-- confidence: baseado na qualidade da foto`;
+Return the type with the most matching indicators as primary_type.
+Return the type with the second-most matching indicators as secondary_type (or "none" if clearly dominated by primary).
+Include your indicator count reasoning in type_reasoning (e.g. "A:4 B:1 C:1 D:2").`;
 
 // --- JSON Schema (for GPT-4o Structured Outputs) ---
 // Record<MountKey, MountState> and Record<RareSignKey, boolean> must be expanded
@@ -74,7 +31,9 @@ const MOUNT_STATE_ENUM = ["pronounced", "normal", "flat"] as const;
 const HAND_ATTRIBUTES_SCHEMA = {
   type: "object",
   properties: {
-    element: { type: "string", enum: ["fire", "water", "earth", "air"] },
+    primary_type: { type: "string", enum: ["A", "B", "C", "D"] },
+    secondary_type: { type: "string", enum: ["A", "B", "C", "D", "none"] },
+    type_reasoning: { type: "string" },
     heart: {
       type: "object",
       properties: {
@@ -202,7 +161,9 @@ const HAND_ATTRIBUTES_SCHEMA = {
     confidence: { type: "number" },
   },
   required: [
-    "element",
+    "primary_type",
+    "secondary_type",
+    "type_reasoning",
     "heart",
     "head",
     "life",
@@ -216,10 +177,13 @@ const HAND_ATTRIBUTES_SCHEMA = {
 } as const;
 
 // --- Zod schema (safety net after GPT-4o response) ---
+// Mirrors HAND_ATTRIBUTES_SCHEMA exactly — no element field (injected server-side after parse)
 const MountStateSchema = z.enum(["pronounced", "normal", "flat"]);
 
 export const HandAttributesSchema = z.object({
-  element: z.enum(["fire", "water", "earth", "air"]),
+  primary_type: z.enum(["A", "B", "C", "D"]),
+  secondary_type: z.enum(["A", "B", "C", "D", "none"]),
+  type_reasoning: z.string(),
   heart: z.object({
     variation: z.enum([
       "long_straight",
@@ -293,18 +257,40 @@ export const HandAttributesSchema = z.object({
   confidence: z.number().min(0).max(1),
 });
 
+// --- Type → Element mapping ---
+const TYPE_TO_ELEMENT: Record<"A" | "B" | "C" | "D", HandElement> = {
+  A: "earth",
+  B: "air",
+  C: "fire",
+  D: "water",
+};
+
+/** Maps GPT-4o type code to palmistry element. Deterministic — same type always same element. */
+export function deriveElement(primaryType: "A" | "B" | "C" | "D"): HandElement {
+  return TYPE_TO_ELEMENT[primaryType];
+}
+
+/**
+ * Returns secondary element or null.
+ * null when secondary_type is "none" or matches primary (degenerate case).
+ * Only inject into HandAttributes when not null.
+ */
+export function deriveSecondaryElement(
+  secondaryType: "A" | "B" | "C" | "D" | "none",
+  primaryType: "A" | "B" | "C" | "D",
+): HandElement | null {
+  if (secondaryType === "none") return null;
+  if (secondaryType === primaryType) return null;
+  return TYPE_TO_ELEMENT[secondaryType];
+}
+
 // --- analyzeHand ---
 export async function analyzeHand(
   photoBase64: string,
   dominantHand: "right" | "left",
-  elementHint?: "fire" | "water" | "earth" | "air",
 ): Promise<HandAttributes> {
   const handLabel = dominantHand === "right" ? "direita" : "esquerda";
   const dominanceContext = `Esta e a mao ${handLabel} da pessoa. E a mao dominante (a que ela escreve com). Analise considerando a orientacao correta da palma. Ignore tatuagens, henna, nail art, aneis, pulseiras e qualquer acessorio visivel. Analise APENAS as linhas naturais da palma, montes, e sinais quiromanticos.`;
-
-  const elementHintText = elementHint
-    ? `Elemento da mao ja determinado por landmarks: ${elementHint}. Nao precisa classificar elemento — foque nas linhas, montes e sinais.`
-    : null;
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -321,10 +307,8 @@ export async function analyzeHand(
           content: [
             // dominanceContext first: hand orientation + accessory exclusion (dynamic, per-request)
             { type: "text" as const, text: dominanceContext },
-            // optional element hint from MediaPipe landmark geometry (pre-analysis)
-            ...(elementHintText ? [{ type: "text" as const, text: elementHintText }] : []),
             // text-before-image: primes extraction (per OpenAI vision docs)
-            { type: "text" as const, text: "Analise esta palma." },
+            { type: "text" as const, text: "Analyze this palm." },
             {
               type: "image_url" as const,
               image_url: { url: `data:image/jpeg;base64,${photoBase64}`, detail: "high" as const },
@@ -332,7 +316,7 @@ export async function analyzeHand(
           ],
         },
       ],
-      max_tokens: 1500,
+      max_tokens: 2000,
       temperature: 0,
       response_format: {
         type: "json_schema",
@@ -374,9 +358,19 @@ export async function analyzeHand(
     throw new Error("Invalid hand attributes from GPT-4o");
   }
 
-  const attributes = parsed.data;
+  const raw = parsed.data;
 
-  // AI-04: log only element and confidence
+  // Derive element server-side — never crosses GPT-4o
+  const element = deriveElement(raw.primary_type);
+  const secondaryElement = deriveSecondaryElement(raw.secondary_type, raw.primary_type);
+
+  const attributes: HandAttributes = {
+    ...raw,
+    element,
+    ...(secondaryElement !== null ? { secondary_element: secondaryElement } : {}),
+  };
+
+  // AI-04: log only element and confidence (not primary_type/reasoning — intermediate data)
   logger.info({ element: attributes.element, confidence: attributes.confidence }, "Hand analyzed");
 
   return attributes;

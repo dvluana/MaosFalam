@@ -12,7 +12,9 @@ function makeValidGptResponse() {
         message: {
           refusal: null,
           content: JSON.stringify({
-            element: "fire",
+            primary_type: "C",
+            secondary_type: "none",
+            type_reasoning: "C:4 A:1 B:1 D:1",
             heart: { variation: "long_straight", modifiers: ["fork_end"] },
             head: { variation: "medium_curved", modifiers: [] },
             life: { variation: "long_deep" },
@@ -91,24 +93,7 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     expect(userContent[0].text).toContain("mao");
   });
 
-  it("injects elementHint text when provided", async () => {
-    const fetchSpy = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(new Response(JSON.stringify(makeValidGptResponse()), { status: 200 }));
-
-    const { analyzeHand } = await import("../openai");
-    await analyzeHand("base64photodata", "right", "fire");
-
-    const body = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
-    const userContent = body.messages[1].content as Array<{ type: string; text?: string }>;
-    // Should have 4 items: dominanceContext, elementHint, "Analise esta palma.", image_url
-    expect(userContent).toHaveLength(4);
-    expect(userContent[1].text).toContain("fire");
-    expect(userContent[1].text).toContain("Elemento da mao ja determinado");
-    expect(userContent[3].type).toBe("image_url");
-  });
-
-  it("omits elementHint text when not provided", async () => {
+  it("user content has exactly 3 items: dominanceContext, text, image_url", async () => {
     const fetchSpy = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(new Response(JSON.stringify(makeValidGptResponse()), { status: 200 }));
@@ -143,19 +128,19 @@ describe("analyzeHand — AI-01, AI-02, AI-03, AI-04", () => {
     expect(result.success).toBe(true);
   });
 
-  it("AI-02: HandAttributesSchema rejects unknown element enum", async () => {
+  it("AI-02: HandAttributesSchema rejects unknown primary_type enum", async () => {
     const { HandAttributesSchema } = await import("../openai");
     const bad = JSON.parse(makeValidGptResponse().choices[0].message.content!);
-    bad.element = "unknown_element";
+    bad.primary_type = "Z";
     const result = HandAttributesSchema.safeParse(bad);
     expect(result.success).toBe(false);
   });
 
   it("AI-02: throws when GPT-4o response fails Zod validation", async () => {
     const badResponse = makeValidGptResponse();
-    // Break the response: invalid element
+    // Break the response: invalid primary_type
     const badContent = JSON.parse(badResponse.choices[0].message.content!);
-    badContent.element = "invalid_element";
+    badContent.primary_type = "invalid_type";
     badResponse.choices[0].message.content = JSON.stringify(badContent);
 
     vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(

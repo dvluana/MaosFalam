@@ -63,6 +63,9 @@ function makeRequest(body: unknown, ip = "1.2.3.4") {
 }
 
 const validAttributes: HandAttributes = {
+  primary_type: "C",
+  secondary_type: "none",
+  type_reasoning: "C:4 A:1 B:1 D:1",
   element: "fire",
   heart: { variation: "long_straight", modifiers: [] },
   head: { variation: "medium_curved", modifiers: [] },

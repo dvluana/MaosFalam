@@ -14,6 +14,9 @@ import { logger } from "../logger";
 import { selectBlocks } from "../select-blocks";
 
 const VALID_ATTRIBUTES: HandAttributes = {
+  primary_type: "C",
+  secondary_type: "none",
+  type_reasoning: "C:4 A:1 B:1 D:1",
   element: "fire",
   heart: { variation: "long_straight", modifiers: [] },
   head: { variation: "medium_curved", modifiers: [] },

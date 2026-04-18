@@ -3,6 +3,9 @@ import type { HandElement } from "@/types/report";
 
 export const MOCK_ATTRIBUTES: Record<HandElement, HandAttributes> = {
   fire: {
+    primary_type: "C",
+    secondary_type: "A",
+    type_reasoning: "C:4 A:2 B:1 D:1",
     element: "fire",
     heart: { variation: "long_straight", modifiers: ["ends_index", "deep"] },
     head: { variation: "long_curved", modifiers: ["fork_moon"] },
@@ -28,6 +31,9 @@ export const MOCK_ATTRIBUTES: Record<HandElement, HandAttributes> = {
     confidence: 0.85,
   },
   water: {
+    primary_type: "D",
+    secondary_type: "none",
+    type_reasoning: "D:5 A:1 B:1 C:1",
     element: "water",
     heart: { variation: "long_curved", modifiers: ["island"] },
     head: { variation: "long_deep_curved", modifiers: [] },
@@ -53,6 +59,9 @@ export const MOCK_ATTRIBUTES: Record<HandElement, HandAttributes> = {
     confidence: 0.82,
   },
   earth: {
+    primary_type: "A",
+    secondary_type: "C",
+    type_reasoning: "A:4 C:2 B:1 D:1",
     element: "earth",
     heart: { variation: "medium_straight", modifiers: ["ends_middle"] },
     head: { variation: "short_straight", modifiers: ["break"] },
@@ -78,6 +87,9 @@ export const MOCK_ATTRIBUTES: Record<HandElement, HandAttributes> = {
     confidence: 0.88,
   },
   air: {
+    primary_type: "B",
+    secondary_type: "none",
+    type_reasoning: "B:5 A:1 C:1 D:1",
     element: "air",
     heart: { variation: "faint", modifiers: ["fork_end"] },
     head: { variation: "long_straight", modifiers: ["touches_life"] },
