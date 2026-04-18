@@ -31,6 +31,7 @@ function CameraPageInner() {
   type UploadStep = "instruction" | "validating" | "confirm";
   const [uploadStep, setUploadStep] = useState<UploadStep>("instruction");
   const [mirrored, setMirrored] = useState(false);
+  const [stabilityProgress, setStabilityProgress] = useState(0);
   const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
   const [cameraKey, setCameraKey] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -104,6 +105,7 @@ function CameraPageInner() {
     onMirroredChange: setMirrored,
     preferredFacing: facingMode,
     cameraKey,
+    onStabilityProgress: setStabilityProgress,
   });
 
   const handleUploadFileSelected = useCallback(
@@ -345,7 +347,10 @@ function CameraPageInner() {
 
       {!errorState && state !== "camera_capturing" && (
         <div className="relative">
-          <CameraFeedback text="" />
+          <CameraFeedback
+            text=""
+            stabilityProgress={state === "camera_stable" ? stabilityProgress : undefined}
+          />
           {/* Method switch suggestion after 3 failures */}
           {suggestMethodSwitch && (
             <p className="font-cormorant italic text-[15px] text-bone-dim text-center max-w-xs mt-2">

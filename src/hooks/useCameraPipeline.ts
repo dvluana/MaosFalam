@@ -50,6 +50,8 @@ interface Params {
   preferredFacing?: "environment" | "user";
   /** Increment to force camera re-initialization (e.g., on camera switch). */
   cameraKey?: number;
+  /** Called each loop iteration during camera_stable with progress 0.0–1.0. Reset to 0 on stability loss. */
+  onStabilityProgress?: (progress: number) => void;
 }
 
 /**
@@ -75,6 +77,7 @@ export default function useCameraPipeline({
   onMirroredChange,
   preferredFacing,
   cameraKey,
+  onStabilityProgress,
 }: Params): void {
   const landmarkerRef = useRef<HandLandmarker | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -235,6 +238,7 @@ export default function useCameraPipeline({
         // No hand visible — reset to no_hand and clear stability
         stabilityStartRef.current = null;
         angleConsecutiveRef.current = 0;
+        onStabilityProgress?.(0);
         if (currentState !== "camera_active_no_hand") {
           setState("camera_active_no_hand");
         }
@@ -262,6 +266,7 @@ export default function useCameraPipeline({
       if (userHandedness !== expectedHand) {
         stabilityStartRef.current = null;
         angleConsecutiveRef.current = 0;
+        onStabilityProgress?.(0);
         if (currentState !== "camera_wrong_hand") {
           setState("camera_wrong_hand");
         }
@@ -279,6 +284,7 @@ export default function useCameraPipeline({
       if (!isOpen || !isCentered) {
         stabilityStartRef.current = null;
         angleConsecutiveRef.current = 0;
+        onStabilityProgress?.(0);
         if (currentState !== "camera_adjusting") {
           setState("camera_adjusting");
         }
@@ -292,6 +298,7 @@ export default function useCameraPipeline({
       // accumulate. A single spike above threshold resets the counter but not the timer.
       if (angleDeg > MAX_ANGLE_DEG) {
         angleConsecutiveRef.current = 0;
+        onStabilityProgress?.(0);
         if (currentState !== "camera_adjusting") {
           setState("camera_adjusting");
         }
@@ -326,6 +333,9 @@ export default function useCameraPipeline({
       }
 
       const elapsed = now - stabilityStartRef.current;
+
+      // Emit stability progress during accumulation window
+      onStabilityProgress?.(Math.min(elapsed / STABILITY_MS, 1));
 
       if (elapsed < STABILITY_MS) {
         if (currentState !== "camera_hand_detected") {
