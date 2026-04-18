@@ -64,7 +64,7 @@ All 6 plans completed. See `.planning/archive/v2/` for history.
 
 - [ ] **Phase 16: GPT-4o Schema e Image Quality** - Prompt multi-indicador, deriveElement(), triple-schema sync, JPEG 0.92, body limit 4MB
 - [ ] **Phase 17: MediaPipe Validation Refactor** - Remove computeElementHint, restaura handedness traseira, angulo 25 graus com hysteresis, jitter detection
-- [ ] **Phase 18: Block Engine e Conteudo Misto** - secondary_element no motor, ELEMENT_BRIDGE, ELEMENT_EXCLUSIVITY_MIXED, seed hash fix
+- [x] **Phase 18: Block Engine e Conteudo Misto** - secondary_element no motor, ELEMENT_BRIDGE, ELEMENT_EXCLUSIVITY_MIXED, seed hash fix (completed 2026-04-18)
 - [ ] **Phase 19: Frontend Mao Mista** - ElementHero/ElementSection com secondary, backward compat verificado
 
 ## Phase Details
@@ -122,7 +122,7 @@ Plans:
 
 Plans:
 
-- [ ] 18-01-PLAN.md — Fix seed hash + types + ELEMENT_BRIDGE/EXCLUSIVITY_MIXED + bridge injection
+- [x] 18-01-PLAN.md — Fix seed hash + types + ELEMENT_BRIDGE/EXCLUSIVITY_MIXED + bridge injection
 
 ### Phase 19: Frontend Mao Mista
 
@@ -151,5 +151,5 @@ Phase 16 → 17 (parallel com 18) → 18 → 19
 | 15. Bug Fixes                     | v2        | 1/1            | Complete    | 2026-04-14 |
 | 16. GPT-4o Schema e Image Quality | v1.4      | 1/2            | In Progress |            |
 | 17. MediaPipe Validation Refactor | v1.4      | 0/1            | Planned     |            |
-| 18. Block Engine e Conteudo Misto | v1.4      | 0/TBD          | Not started | -          |
+| 18. Block Engine e Conteudo Misto | v1.4      | 1/1            | Complete    | 2026-04-18 |
 | 19. Frontend Mao Mista            | v1.4      | 0/TBD          | Not started | -          |

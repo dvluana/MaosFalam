@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Classificacao de Elemento
 status: Roadmap defined, ready for Phase 16
-stopped_at: Completed 17-01-PLAN.md
-last_updated: "2026-04-18T05:10:48.165Z"
+stopped_at: Completed 18-01-PLAN.md
+last_updated: "2026-04-18T05:24:08.867Z"
 last_activity: 2026-04-18 — Roadmap v1.4 created
 progress:
   total_phases: 4
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 2
+  completed_phases: 3
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # Project State
@@ -73,6 +73,7 @@ _Updated after each plan completion_
 | Phase 16-gpt4o-schema-image-quality P01 | 4m | 2 tasks | 6 files |
 | Phase 16 P02 | 8m | 2 tasks | 10 files |
 | Phase 17-mediapipe-validation-refactor P01 | 18m | 3 tasks | 5 files |
+| Phase 18-block-engine-conteudo-misto P01 | 4m | 4 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -151,6 +152,8 @@ _Updated after each plan completion_
 - [Phase 16-01]: Neutral type codes A/B/C/D prevent GPT-4o element name bias; deriveElement() maps server-side
 - [Phase 16-gpt4o-schema-image-quality]: element_hint removed end-to-end: GPT-4o classifies element via neutral type codes, no client override needed
 - [Phase 17-01]: angleDeg computed from WRIST->MIDDLE_MCP vector vs vertical; angleConsecutiveRef resets in all failure branches; mediapipe is validation-only, GPT-4o is sole element classifier
+- [Phase 18-block-engine-conteudo-misto]: bridge posicionado apos opening no rng para preservar seed de mao pura
+- [Phase 18-block-engine-conteudo-misto]: hashInputs serializa subset explicito excluindo secondary_element e confidence
 
 ### Pending Todos
 
@@ -174,5 +177,5 @@ None.
 ## Session Continuity
 
 Last activity: 2026-04-18 — Roadmap v1.4 created (phases 16-19)
-Stopped at: Completed 17-01-PLAN.md
+Stopped at: Completed 18-01-PLAN.md
 Resume file: None

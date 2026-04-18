@@ -30,12 +30,12 @@
 
 ### Mixed Hands
 
-- [ ] **MIX-01**: HandAttributes.secondary_element (optional)
-- [ ] **MIX-02**: ReportJSON.element.secondary_key + bridge (optional)
-- [ ] **MIX-03**: ELEMENT_BRIDGE com 12 strings (4 elementos x 3 variacoes)
-- [ ] **MIX-04**: ELEMENT_EXCLUSIVITY_MIXED com 12 combinacoes
-- [ ] **MIX-05**: selectBlocks() inclui bridge quando secondary existe
-- [ ] **MIX-06**: Seed hash do selectBlocks exclui secondary_element
+- [x] **MIX-01**: HandAttributes.secondary_element (optional)
+- [x] **MIX-02**: ReportJSON.element.secondary_key + bridge (optional)
+- [x] **MIX-03**: ELEMENT_BRIDGE com 12 strings (4 elementos x 3 variacoes)
+- [x] **MIX-04**: ELEMENT_EXCLUSIVITY_MIXED com 12 combinacoes
+- [x] **MIX-05**: selectBlocks() inclui bridge quando secondary existe
+- [x] **MIX-06**: Seed hash do selectBlocks exclui secondary_element
 - [ ] **MIX-07**: ElementHero mostra "Com tracos de [secundario]"
 - [ ] **MIX-08**: ElementSection insere bridge text apos body primario
 - [ ] **MIX-09**: HandSummary usa exclusivity mista
@@ -72,12 +72,12 @@
 | MEDIA-03 | Phase 17 | Complete |
 | MEDIA-04 | Phase 17 | Complete |
 | MEDIA-05 | Phase 17 | Complete |
-| MIX-01   | Phase 18 | Pending  |
-| MIX-02   | Phase 18 | Pending  |
-| MIX-03   | Phase 18 | Pending  |
-| MIX-04   | Phase 18 | Pending  |
-| MIX-05   | Phase 18 | Pending  |
-| MIX-06   | Phase 18 | Pending  |
+| MIX-01   | Phase 18 | Complete |
+| MIX-02   | Phase 18 | Complete |
+| MIX-03   | Phase 18 | Complete |
+| MIX-04   | Phase 18 | Complete |
+| MIX-05   | Phase 18 | Complete |
+| MIX-06   | Phase 18 | Complete |
 | MIX-07   | Phase 19 | Pending  |
 | MIX-08   | Phase 19 | Pending  |
 | MIX-09   | Phase 19 | Pending  |
