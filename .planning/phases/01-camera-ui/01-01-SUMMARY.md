@@ -44,11 +44,11 @@ SVG palm outline with scaleX(-1) mirroring, pre-viewfinder instruction overlay, 
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Create HandOutlineSVG component | fd1c288 | src/components/camera/HandOutlineSVG.tsx |
-| 2 | Create HandInstructionOverlay component | af2e780 | src/components/camera/HandInstructionOverlay.tsx |
-| 3 | Create HandExpectedBadge component | 30bf25d | src/components/camera/HandExpectedBadge.tsx |
+| Task | Name                                    | Commit  | Files                                            |
+| ---- | --------------------------------------- | ------- | ------------------------------------------------ |
+| 1    | Create HandOutlineSVG component         | fd1c288 | src/components/camera/HandOutlineSVG.tsx         |
+| 2    | Create HandInstructionOverlay component | af2e780 | src/components/camera/HandInstructionOverlay.tsx |
+| 3    | Create HandExpectedBadge component      | 30bf25d | src/components/camera/HandExpectedBadge.tsx      |
 
 ## What Was Built
 

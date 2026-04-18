@@ -31,10 +31,10 @@ metrics:
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-| ---- | ---- | ------ | ----- |
-| 1 | Toast de erro em /conta/leituras quando API falha | 859bf29 | src/app/conta/leituras/page.tsx |
-| 2 | Diferenciar 404 de 500 em /ler/resultado/[id] | d385d69 | src/app/ler/resultado/[id]/page.tsx |
+| Task | Name                                              | Commit  | Files                               |
+| ---- | ------------------------------------------------- | ------- | ----------------------------------- |
+| 1    | Toast de erro em /conta/leituras quando API falha | 859bf29 | src/app/conta/leituras/page.tsx     |
+| 2    | Diferenciar 404 de 500 em /ler/resultado/[id]     | d385d69 | src/app/ler/resultado/[id]/page.tsx |
 
 ## What Was Built
 

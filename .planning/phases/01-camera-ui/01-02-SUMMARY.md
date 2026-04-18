@@ -57,12 +57,12 @@ WrongHandFeedback toast + hand_instruction state + HandExpectedBadge/HandOutline
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Create WrongHandFeedback and add hand_instruction state | b3f85d7 | WrongHandFeedback.tsx, camera.ts |
-| 2 | Update CameraViewport with badge, outline, camera switch | 83e2b0c | CameraViewport.tsx |
-| 3 | Wire everything into camera page | 74889fc | page.tsx, useCameraPipeline.ts |
-| fix | Fix import order lint errors | be0fae8 | WrongHandFeedback.tsx, CameraViewport.tsx, HandExpectedBadge.tsx, HandInstructionOverlay.tsx |
+| Task | Name                                                     | Commit  | Files                                                                                        |
+| ---- | -------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| 1    | Create WrongHandFeedback and add hand_instruction state  | b3f85d7 | WrongHandFeedback.tsx, camera.ts                                                             |
+| 2    | Update CameraViewport with badge, outline, camera switch | 83e2b0c | CameraViewport.tsx                                                                           |
+| 3    | Wire everything into camera page                         | 74889fc | page.tsx, useCameraPipeline.ts                                                               |
+| fix  | Fix import order lint errors                             | be0fae8 | WrongHandFeedback.tsx, CameraViewport.tsx, HandExpectedBadge.tsx, HandInstructionOverlay.tsx |
 
 ## What Was Built
 
@@ -81,6 +81,7 @@ WrongHandFeedback toast + hand_instruction state + HandExpectedBadge/HandOutline
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] setState-in-effect lint violation in WrongHandFeedback**
+
 - **Found during:** Task 3 lint check
 - **Issue:** react-hooks/set-state-in-effect rule blocks `setShow(true)` called synchronously in useEffect
 - **Fix:** Used render-time rising-edge detection — compare `visible` to `prevVisibleRef.current` during render to call `setShow` outside effects. Timer for auto-hide remains in useEffect keyed on `showCount`.
@@ -88,6 +89,7 @@ WrongHandFeedback toast + hand_instruction state + HandExpectedBadge/HandOutline
 - **Commit:** be0fae8
 
 **2. [Rule 1 - Bug] Import order lint errors in Wave 1 components**
+
 - **Found during:** Post-task-3 lint check
 - **Issue:** HandExpectedBadge (framer-motion after react), HandInstructionOverlay (missing blank line between groups), CameraViewport (react type import in wrong position)
 - **Fix:** Reordered imports to match project ESLint import/order rules

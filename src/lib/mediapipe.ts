@@ -36,6 +36,8 @@ export interface ValidLandmarkResult {
   isOpen: boolean;
   isCentered: boolean;
   detectedHandedness: "Left" | "Right";
+  /** Deviation from vertical in degrees (0 = hand straight up/down, 90 = horizontal). */
+  angleDeg: number;
 }
 
 // Landmark indices (MediaPipe 21-point hand model)
@@ -49,11 +51,26 @@ const PINKY_TIP = 20;
 
 /**
  * Euclidean distance between two normalized landmarks (x, y only).
+ * Used for screen-space checks (isOpen, isCentered).
  */
 function dist(a: NormalizedLandmark, b: NormalizedLandmark): number {
   const dx = a.x - b.x;
   const dy = a.y - b.y;
   return Math.sqrt(dx * dx + dy * dy);
+}
+
+/**
+ * Euclidean distance between two 3D world landmarks (x, y, z in meters).
+ * Used for element classification from worldLandmarks.
+ */
+function dist3D(
+  a: { x: number; y: number; z: number },
+  b: { x: number; y: number; z: number },
+): number {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  const dz = a.z - b.z;
+  return Math.sqrt(dx * dx + dy * dy + dz * dz);
 }
 
 /**
@@ -68,7 +85,7 @@ export function validateLandmarks(
   const isHandPresent = landmarks.length >= 21;
 
   if (!isHandPresent) {
-    return { isHandPresent: false, isOpen: false, isCentered: false };
+    return { isHandPresent: false, isOpen: false, isCentered: false, angleDeg: 0 };
   }
 
   // isOpen: spread between THUMB_TIP and PINKY_TIP must be > 0.35 * palm height
@@ -89,7 +106,13 @@ export function validateLandmarks(
     middleMcp.y >= 0.1 &&
     middleMcp.y <= 0.9;
 
-  return { isHandPresent, isOpen, isCentered };
+  // angleDeg: deviation from vertical using WRIST → MIDDLE_MCP vector
+  // 0 = hand pointing straight up/down, 90 = horizontal
+  const dx = middleMcp.x - wrist.x;
+  const dy = middleMcp.y - wrist.y;
+  const angleDeg = (Math.atan2(Math.abs(dx), Math.abs(dy)) * 180) / Math.PI;
+
+  return { isHandPresent, isOpen, isCentered, angleDeg };
 }
 
 /**
@@ -107,30 +130,42 @@ export function detectHandedness(handedness: Category[]): "Left" | "Right" {
 }
 
 /**
- * Captures a video frame to a canvas and returns raw base64 JPEG.
- * If mirrored (front camera), the canvas is un-mirrored so GPT-4o sees the natural orientation.
- */
-type HandElement = "fire" | "water" | "earth" | "air";
-
-/**
- * Computes hand element type from MediaPipe normalized landmarks.
- * Uses palm aspect ratio (palmHeight/palmWidth) and finger-to-palm length ratio.
- * Returns undefined if landmarks are insufficient or geometry is degenerate.
- *
+ * Hand element type derived from palm/finger proportions.
  * AUTHORITATIVE source for element classification on the camera path.
  * GPT-4o element is only used as fallback for the upload path (no MediaPipe).
  */
-export function computeElementHint(landmarks: NormalizedLandmark[]): HandElement | undefined {
-  if (landmarks.length < 21) return undefined;
+export type HandElement = "fire" | "water" | "earth" | "air";
 
-  const palmWidth = dist(landmarks[INDEX_MCP], landmarks[PINKY_MCP]); // INDEX_MCP → PINKY_MCP
-  const palmHeight = dist(landmarks[WRIST], landmarks[MIDDLE_MCP]); // WRIST → MIDDLE_MCP
-  const fingerLength = dist(landmarks[MIDDLE_MCP], landmarks[MIDDLE_TIP]); // MIDDLE_MCP → MIDDLE_TIP
+/**
+ * Captures a video frame to a canvas and returns raw base64 JPEG.
+ * If mirrored (front camera), the canvas is un-mirrored so GPT-4o sees the natural orientation.
+ */
 
-  if (palmWidth < 0.01 || palmHeight < 0.01) return undefined;
+/**
+ * Computes hand element type from MediaPipe worldLandmarks (3D real-world coordinates in meters).
+ * Uses palm aspect ratio (palmHeight/palmWidth) and finger-to-palm length ratio.
+ * Returns undefined if worldLandmarks are insufficient or geometry is degenerate.
+ *
+ * worldLandmarks provide aspect-ratio-independent 3D coordinates, eliminating any
+ * distortion from screen pixel aspect ratios.
+ *
+ * Thresholds:
+ *   palmRatio > 1.1 → rectangular (long) palm
+ *   fingerRatio >= 0.75 → long fingers
+ */
+export function computeElementHint(
+  worldLandmarks: Array<{ x: number; y: number; z: number }>,
+): HandElement | undefined {
+  if (worldLandmarks.length < 21) return undefined;
+
+  const palmWidth = dist3D(worldLandmarks[INDEX_MCP], worldLandmarks[PINKY_MCP]); // INDEX_MCP → PINKY_MCP
+  const palmHeight = dist3D(worldLandmarks[WRIST], worldLandmarks[MIDDLE_MCP]); // WRIST → MIDDLE_MCP
+  const fingerLength = dist3D(worldLandmarks[MIDDLE_MCP], worldLandmarks[MIDDLE_TIP]); // MIDDLE_MCP → MIDDLE_TIP
+
+  if (palmWidth < 0.001 || palmHeight < 0.001) return undefined;
 
   const isLongPalm = palmHeight / palmWidth > 1.1;
-  const isLongFingers = fingerLength / palmHeight > 0.95;
+  const isLongFingers = fingerLength / palmHeight >= 0.75;
 
   if (!isLongPalm && isLongFingers) return "air";
   if (!isLongPalm && !isLongFingers) return "earth";

@@ -5,7 +5,8 @@ subsystem: types-hooks
 tags: [reading-context, session-storage, credits, hooks]
 dependency_graph:
   requires: []
-  provides: [ReadingContext, saveReadingContext, loadReadingContext, clearReadingContext, useCredits]
+  provides:
+    [ReadingContext, saveReadingContext, loadReadingContext, clearReadingContext, useCredits]
   affects: [src/app/ler/nome, src/app/ler/camera, src/hooks/useCredits]
 tech_stack:
   added: []
@@ -55,6 +56,7 @@ Returns `{ balance, reading_count, loading, refetch }`. For visitors (`user === 
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Lint Fix] Restructured useCredits useEffect to satisfy react-hooks/set-state-in-effect**
+
 - **Found during:** Task 2 lint run
 - **Issue:** `void fetchData()` in useEffect triggered `react-hooks/set-state-in-effect` rule (from eslint-config-next) even though fetchData is async
 - **Fix:** Separated the effect into two: one to sync refetchRef, one to trigger the initial fetch. Added eslint-disable-next-line for the deps array since hydrated+user covers the correct trigger conditions

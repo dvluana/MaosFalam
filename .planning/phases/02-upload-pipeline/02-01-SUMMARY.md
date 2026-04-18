@@ -79,6 +79,7 @@ completed: 2026-04-11
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Import order violation fixed before commit**
+
 - **Found during:** Task 1 (lint check after creation)
 - **Issue:** `Button` (ui/) was imported before `HandOutlineSVG` (camera/) — ESLint `import/order` error
 - **Fix:** Swapped import lines to put camera import first (alphabetically correct by path group)
@@ -106,8 +107,9 @@ None - no external service configuration required.
 - `onBack` callback is the integration point for returning to MethodChoice state
 
 ---
-*Phase: 02-upload-pipeline*
-*Completed: 2026-04-11*
+
+_Phase: 02-upload-pipeline_
+_Completed: 2026-04-11_
 
 ## Self-Check: PASSED
 

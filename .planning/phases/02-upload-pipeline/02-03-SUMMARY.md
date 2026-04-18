@@ -36,14 +36,15 @@ Connected the three upload components from plans 02-01 and 02-02 into camera/pag
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-| ---- | ---- | ------ | ----- |
-| 1 | Rewire camera page to multi-step upload flow | 41fa77a | src/app/ler/camera/page.tsx |
-| 2 | Stub UploadPreview + final build | 5776215 | src/components/camera/UploadPreview.tsx |
+| Task | Name                                         | Commit  | Files                                   |
+| ---- | -------------------------------------------- | ------- | --------------------------------------- |
+| 1    | Rewire camera page to multi-step upload flow | 41fa77a | src/app/ler/camera/page.tsx             |
+| 2    | Stub UploadPreview + final build             | 5776215 | src/components/camera/UploadPreview.tsx |
 
 ## Key Changes
 
 **camera/page.tsx:**
+
 - Removed `UploadPreview` import, added `UploadConfirmScreen`, `UploadInstructionScreen`, `UploadValidationScreen`, `useUploadValidation`
 - Removed `type ChangeEvent` import (unused after refactor)
 - Added `uploadStep` state (`"instruction" | "validating" | "confirm"`)
@@ -58,6 +59,7 @@ Connected the three upload components from plans 02-01 and 02-02 into camera/pag
 - Renamed old `handleUploadSelected` to `handleUploadSelectedFromError` for use by `CameraErrorState`
 
 **UploadPreview.tsx:**
+
 - Replaced full 117-line component with 7-line null-returning stub
 - Kept file to avoid breaking any potential residual imports
 

@@ -11,11 +11,12 @@ import {
   loadHandLandmarker,
   validateLandmarks,
 } from "@/lib/mediapipe";
+import type { HandElement } from "@/lib/mediapipe";
 import { setElementHint } from "@/lib/photo-store";
 import { loadReadingContext } from "@/lib/reading-context";
 import type { CamState } from "@/types/camera";
 
-import type { HandLandmarker, NormalizedLandmark } from "@mediapipe/tasks-vision";
+import type { HandLandmarker } from "@mediapipe/tasks-vision";
 import type React from "react";
 
 // States where the detection rAF loop should run
@@ -31,6 +32,14 @@ const DETECTION_STATES: ReadonlySet<CamState> = new Set([
 const STABILITY_MS = 1500;
 // Delay after entering camera_stable before capturing (ms)
 const STABLE_TO_CAPTURE_DELAY_MS = 500;
+// Max frame-to-frame movement (normalized coords) to be considered "still"
+const JITTER_THRESHOLD = 0.025;
+// Number of consecutive frames that must be still to confirm stability
+const STABLE_FRAMES_REQUIRED = 5;
+// Number of element samples to collect before picking mode
+const ELEMENT_SAMPLES_REQUIRED = 8;
+// Max hand tilt angle (degrees) — above this triggers camera_adjusting
+const MAX_ANGLE_DEG = 45;
 
 interface Params {
   state: CamState;
@@ -56,7 +65,7 @@ interface Params {
  *   loading_mediapipe → getUserMedia + loadHandLandmarker
  *     → camera_active_no_hand
  *     → (detect loop) → camera_hand_detected / camera_adjusting / camera_wrong_hand
- *     → camera_stable (1.5s of valid frames)
+ *     → camera_stable (1.5s of valid + still frames, element samples collected)
  *     → camera_capturing → onCaptured(base64)
  *
  * forced=true skips all logic (dev preview mode).
@@ -81,7 +90,13 @@ export default function useCameraPipeline({
   const stabilityStartRef = useRef<number | null>(null);
   const capturedRef = useRef<boolean>(false);
   const stateRef = useRef<CamState>(state);
-  const lastLandmarksRef = useRef<NormalizedLandmark[] | null>(null);
+
+  // Jitter detection: tracks WRIST and MIDDLE_MCP positions across frames
+  const landmarkHistoryRef = useRef<
+    Array<{ wristX: number; wristY: number; middleX: number; middleY: number }>
+  >([]);
+  // Element samples collected across stable frames
+  const elementSamplesRef = useRef<Array<HandElement>>([]);
 
   // Keep stateRef in sync so the rAF callback reads fresh state
   useEffect(() => {
@@ -201,6 +216,56 @@ export default function useCameraPipeline({
 
     if (!landmarker || !video || !canvas) return;
 
+    /**
+     * Returns true if the landmark history shows the hand is not jittering.
+     * Requires >= STABLE_FRAMES_REQUIRED entries and all frame-to-frame deltas
+     * below JITTER_THRESHOLD.
+     */
+    function isHandStill(): boolean {
+      const history = landmarkHistoryRef.current;
+      if (history.length < STABLE_FRAMES_REQUIRED) return false;
+      for (let i = 1; i < history.length; i++) {
+        const prev = history[i - 1];
+        const curr = history[i];
+        const maxDelta = Math.max(
+          Math.abs(curr.wristX - prev.wristX),
+          Math.abs(curr.wristY - prev.wristY),
+          Math.abs(curr.middleX - prev.middleX),
+          Math.abs(curr.middleY - prev.middleY),
+        );
+        if (maxDelta > JITTER_THRESHOLD) return false;
+      }
+      return true;
+    }
+
+    /**
+     * Returns the most frequently occurring element in the samples array.
+     * Returns undefined if fewer than 3 samples are available.
+     */
+    function elementMode(samples: HandElement[]): HandElement | undefined {
+      if (samples.length < 3) return undefined;
+      const counts: Partial<Record<HandElement, number>> = {};
+      for (const el of samples) {
+        counts[el] = (counts[el] ?? 0) + 1;
+      }
+      let best: HandElement | undefined;
+      let bestCount = 0;
+      for (const [el, count] of Object.entries(counts) as [HandElement, number][]) {
+        if (count > bestCount) {
+          bestCount = count;
+          best = el;
+        }
+      }
+      return best;
+    }
+
+    /** Resets all stability and sampling buffers. */
+    function resetBuffers() {
+      stabilityStartRef.current = null;
+      landmarkHistoryRef.current = [];
+      elementSamplesRef.current = [];
+    }
+
     function loop() {
       const currentState = stateRef.current;
       if (!DETECTION_STATES.has(currentState)) return;
@@ -228,8 +293,8 @@ export default function useCameraPipeline({
       }
 
       if (!hasHand) {
-        // No hand visible — reset to no_hand and clear stability
-        stabilityStartRef.current = null;
+        // No hand visible — reset all buffers and go to no_hand
+        resetBuffers();
         if (currentState !== "camera_active_no_hand") {
           setState("camera_active_no_hand");
         }
@@ -248,7 +313,7 @@ export default function useCameraPipeline({
 
       const expectedHand = dominantHandRef.current;
       if (userHandedness !== expectedHand) {
-        stabilityStartRef.current = null;
+        resetBuffers();
         if (currentState !== "camera_wrong_hand") {
           setState("camera_wrong_hand");
         }
@@ -256,15 +321,16 @@ export default function useCameraPipeline({
         return;
       }
 
-      // ---- Landmark validation ----
-      const { isOpen, isCentered } = validateLandmarks(
+      // ---- Landmark validation (screen-space checks) ----
+      const { isOpen, isCentered, angleDeg } = validateLandmarks(
         result.landmarks[0],
         vid.videoWidth,
         vid.videoHeight,
       );
 
-      if (!isOpen || !isCentered) {
-        stabilityStartRef.current = null;
+      // ---- Angle check ----
+      if (angleDeg > MAX_ANGLE_DEG) {
+        resetBuffers();
         if (currentState !== "camera_adjusting") {
           setState("camera_adjusting");
         }
@@ -272,10 +338,57 @@ export default function useCameraPipeline({
         return;
       }
 
+      if (!isOpen || !isCentered) {
+        resetBuffers();
+        if (currentState !== "camera_adjusting") {
+          setState("camera_adjusting");
+        }
+        rafIdRef.current = requestAnimationFrame(loop);
+        return;
+      }
+
+      // ---- Valid frame: update landmark history for jitter detection ----
+      const wrist = result.landmarks[0][0];
+      const middleMcp = result.landmarks[0][9];
+      const history = landmarkHistoryRef.current;
+      history.push({
+        wristX: wrist.x,
+        wristY: wrist.y,
+        middleX: middleMcp.x,
+        middleY: middleMcp.y,
+      });
+      if (history.length > STABLE_FRAMES_REQUIRED) {
+        history.splice(0, history.length - STABLE_FRAMES_REQUIRED);
+      }
+
+      // ---- Element hint sampling from worldLandmarks ----
+      const worldLm = result.worldLandmarks?.[0];
+      if (worldLm && worldLm.length >= 21) {
+        const el = computeElementHint(worldLm);
+        if (el !== undefined) {
+          elementSamplesRef.current.push(el);
+          if (elementSamplesRef.current.length > ELEMENT_SAMPLES_REQUIRED) {
+            elementSamplesRef.current.splice(
+              0,
+              elementSamplesRef.current.length - ELEMENT_SAMPLES_REQUIRED,
+            );
+          }
+        }
+      }
+
+      // ---- Jitter check ----
+      if (!isHandStill()) {
+        // Hand is moving — reset stability timer but keep jitter history accumulating
+        stabilityStartRef.current = null;
+        if (currentState !== "camera_hand_detected") {
+          setState("camera_hand_detected");
+        }
+        rafIdRef.current = requestAnimationFrame(loop);
+        return;
+      }
+
       // ---- Stability accumulation ----
       const now = Date.now();
-      // Valid frame — keep track of landmarks for element hint computation
-      lastLandmarksRef.current = result.landmarks[0];
 
       if (stabilityStartRef.current === null) {
         stabilityStartRef.current = now;
@@ -308,12 +421,10 @@ export default function useCameraPipeline({
         if (capturedRef.current) return;
         capturedRef.current = true;
 
-        // Compute and store element hint from last valid landmarks
-        if (lastLandmarksRef.current) {
-          const hint = computeElementHint(lastLandmarksRef.current);
-          if (hint) {
-            setElementHint(hint);
-          }
+        // Use mode of collected element samples for authoritative hint
+        const hint = elementMode(elementSamplesRef.current);
+        if (hint !== undefined) {
+          setElementHint(hint);
         }
 
         const v = videoRef.current;

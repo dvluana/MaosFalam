@@ -54,6 +54,7 @@ Landscape guard, failure counter with method-switch suggestion, and screenshot d
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] ScreenOrientation.lock not in TS lib.dom.d.ts**
+
 - **Found during:** Task 1
 - **Issue:** `screen.orientation?.lock?.("portrait")` — TypeScript error TS2339: Property 'lock' does not exist on type 'ScreenOrientation'
 - **Fix:** Cast `screen.orientation` to intersection type `ScreenOrientation & { lock?: (o: string) => Promise<void> }`
@@ -61,6 +62,7 @@ Landscape guard, failure counter with method-switch suggestion, and screenshot d
 - **Commit:** 91d4ed7
 
 **2. [Rule 2 - Missing] normalizeImage import missing from useUploadValidation**
+
 - **Found during:** Task 2 — linter was intermittently removing import due to reformatting
 - **Fix:** Wrote complete file with correct import order (mediapipe before normalize-image per ESLint import/order), stable Write tool operation
 - **Files modified:** src/hooks/useUploadValidation.ts

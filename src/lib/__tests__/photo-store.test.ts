@@ -29,9 +29,8 @@ describe("photo-store", () => {
   });
 
   it("clearPhotoStore resets both photo and elementHint to null", async () => {
-    const { setPhoto, setElementHint, clearPhotoStore, getPhoto, getElementHint } = await import(
-      "@/lib/photo-store"
-    );
+    const { setPhoto, setElementHint, clearPhotoStore, getPhoto, getElementHint } =
+      await import("@/lib/photo-store");
     setPhoto("some-photo-data");
     setElementHint("water");
     clearPhotoStore();

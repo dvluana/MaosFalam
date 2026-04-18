@@ -42,10 +42,10 @@ Remove share_token/share_expires_at from Reading type and all consumers, delete 
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-| ---- | ---- | ------ | ----- |
-| 1 | Remove share_token and share_expires_at from Reading type and all consumers | f53790c | report.ts, reading-client.ts, completo/page, compartilhar/page, conta/leituras/page, conta/leituras/[id]/page, share/page |
-| 2 | Remove VALID_MOCK_IDS and fallbackName="Marina" | a3d6fe4 | resultado/page, completo/page, ElementHero.tsx, useStoredName.ts |
+| Task | Name                                                                        | Commit  | Files                                                                                                                     |
+| ---- | --------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Remove share_token and share_expires_at from Reading type and all consumers | f53790c | report.ts, reading-client.ts, completo/page, compartilhar/page, conta/leituras/page, conta/leituras/[id]/page, share/page |
+| 2    | Remove VALID_MOCK_IDS and fallbackName="Marina"                             | a3d6fe4 | resultado/page, completo/page, ElementHero.tsx, useStoredName.ts                                                          |
 
 ## Decisions Made
 

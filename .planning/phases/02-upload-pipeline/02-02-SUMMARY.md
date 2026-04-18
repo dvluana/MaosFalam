@@ -38,10 +38,10 @@ metrics:
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-| ---- | ---- | ------ | ----- |
-| 1 | Hook useUploadValidation | 8142bb8 | src/hooks/useUploadValidation.ts |
-| 2 | UploadValidationScreen + UploadConfirmScreen | c32cc6b | src/components/camera/UploadValidationScreen.tsx, src/components/camera/UploadConfirmScreen.tsx |
+| Task | Name                                         | Commit  | Files                                                                                           |
+| ---- | -------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------- |
+| 1    | Hook useUploadValidation                     | 8142bb8 | src/hooks/useUploadValidation.ts                                                                |
+| 2    | UploadValidationScreen + UploadConfirmScreen | c32cc6b | src/components/camera/UploadValidationScreen.tsx, src/components/camera/UploadConfirmScreen.tsx |
 
 ## What Was Built
 
@@ -64,6 +64,7 @@ Full-screen component showing the 5 checks animating in real-time. Status icons:
 ### UploadConfirmScreen
 
 Preview photo + 2-column checklist + action block with 3 cases:
+
 - Case A (canProceed=true, qualityOk=true): gold "Tudo certo. Essa mao fala." + primary CTA
 - Case B (canProceed=true, qualityOk=false): "A mao esta aqui. A foto podia ser melhor." + "PODE AFETAR A LEITURA" + "Usar mesmo assim" primary + "Tirar outra" secondary
 - Case C (canProceed=false): rose error message + "Tentar de novo" + "Voltar"
@@ -73,6 +74,7 @@ Preview photo + 2-column checklist + action block with 3 cases:
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Lint errors on initial implementation**
+
 - **Found during:** Task 2 verification
 - **Issue:** `import()` type annotation in hook body (forbidden by `@typescript-eslint/consistent-type-imports`); empty line within import group in UploadConfirmScreen; import order placing `@mediapipe/tasks-vision` before `@/lib/mediapipe`
 - **Fix:** Moved type imports to file-level `import type` block; removed extra blank line; reordered to respect `internal` (before) group for `@/**` paths
@@ -86,11 +88,13 @@ None. All logic is wired. UploadConfirmScreen receives real ValidationResult fro
 ## Self-Check: PASSED
 
 Files exist:
+
 - src/hooks/useUploadValidation.ts — FOUND
 - src/components/camera/UploadValidationScreen.tsx — FOUND
 - src/components/camera/UploadConfirmScreen.tsx — FOUND
 
 Commits exist:
+
 - 8142bb8 — FOUND
 - c32cc6b — FOUND
 

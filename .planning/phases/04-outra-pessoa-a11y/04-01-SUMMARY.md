@@ -49,10 +49,10 @@ Three camera components received optional props for "outra pessoa" context, and 
 
 ## Commits
 
-| Task | Name | Commit | Files |
-| ---- | ---- | ------ | ----- |
-| 1 | Props em camera components | 439cf27 | HandInstructionOverlay, HandExpectedBadge, WrongHandFeedback, CameraViewport |
-| 2 | Wire readingContext na camera page | 573601f | src/app/ler/camera/page.tsx |
+| Task | Name                               | Commit  | Files                                                                        |
+| ---- | ---------------------------------- | ------- | ---------------------------------------------------------------------------- |
+| 1    | Props em camera components         | 439cf27 | HandInstructionOverlay, HandExpectedBadge, WrongHandFeedback, CameraViewport |
+| 2    | Wire readingContext na camera page | 573601f | src/app/ler/camera/page.tsx                                                  |
 
 ## Verification
 
@@ -70,6 +70,7 @@ None. All props are wired from real `readingContext` data; no hardcoded values.
 ## Self-Check: PASSED
 
 Files exist:
+
 - src/components/camera/HandInstructionOverlay.tsx — FOUND
 - src/components/camera/HandExpectedBadge.tsx — FOUND
 - src/components/camera/WrongHandFeedback.tsx — FOUND

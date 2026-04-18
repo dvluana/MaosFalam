@@ -45,10 +45,10 @@ Added `computeElementHint(landmarks)` to `src/lib/mediapipe.ts`. Uses palm aspec
 
 ## Commits
 
-| Task | Hash | Message |
-|------|------|---------|
-| 1 | 6a65769 | feat(05-01): add photo-store module with tests |
-| 2 | ee895cc | feat(05-01): add computeElementHint + reduce captureFrame quality to 0.82 |
+| Task | Hash    | Message                                                                   |
+| ---- | ------- | ------------------------------------------------------------------------- |
+| 1    | 6a65769 | feat(05-01): add photo-store module with tests                            |
+| 2    | ee895cc | feat(05-01): add computeElementHint + reduce captureFrame quality to 0.82 |
 
 ## Deviations from Plan
 
@@ -77,7 +77,7 @@ None — this plan creates pure utility modules with no UI rendering or data flo
 ## Self-Check: PASSED
 
 - src/lib/photo-store.ts: FOUND
-- src/lib/__tests__/photo-store.test.ts: FOUND
-- src/lib/__tests__/mediapipe-element-hint.test.ts: FOUND
+- src/lib/**tests**/photo-store.test.ts: FOUND
+- src/lib/**tests**/mediapipe-element-hint.test.ts: FOUND
 - Commit 6a65769: FOUND
 - Commit ee895cc: FOUND

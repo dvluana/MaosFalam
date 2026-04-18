@@ -6,7 +6,12 @@ tags: [a11y, upload, outra-pessoa, aria]
 dependency_graph:
   requires: [04-01]
   provides: [OTHER-03, A11Y-01]
-  affects: [src/components/camera/UploadInstructionScreen.tsx, src/components/camera/UploadConfirmScreen.tsx, src/app/ler/nome/page.tsx]
+  affects:
+    [
+      src/components/camera/UploadInstructionScreen.tsx,
+      src/components/camera/UploadConfirmScreen.tsx,
+      src/app/ler/nome/page.tsx,
+    ]
 tech_stack:
   added: []
   patterns: [aria-pressed on toggle buttons, optional props for personalization]
@@ -43,6 +48,7 @@ Upload screens personalize text for the other person's name; all toggles on /ler
 Camera page: `targetName` and `isSelf` were already extracted and passed to upload components by plan 04-01. No code change needed — confirmed correct wiring.
 
 Nome page:
+
 - Added `ariaLabel?: string` prop to `ToggleButton` interface
 - Added `aria-label={ariaLabel}` and `aria-pressed={selected}` to the `<button>` element
 - All 8 toggle instances updated with descriptive labels:
@@ -50,14 +56,15 @@ Nome page:
   - Logged-in flow: "Leitura para mim", "Leitura para outra pessoa", plus gender and dominant hand labels same as visitor
 
 **A11Y-02 and A11Y-03 confirmed not regressed:**
+
 - `WrongHandFeedback`: `aria-live="assertive"` present
 - `HandExpectedBadge`: `aria-live="polite"` present
 - `HandOutlineSVG`: `role="img"` and `aria-label` present
 
 ## Commits
 
-| Task | Commit  | Description                                                         |
-| ---- | ------- | ------------------------------------------------------------------- |
+| Task | Commit  | Description                                                          |
+| ---- | ------- | -------------------------------------------------------------------- |
 | 1    | 46370ec | feat(04-02): adapt upload screens to outra pessoa context (OTHER-03) |
 | 2    | 2f78772 | feat(04-02): pass outra pessoa context to upload; add aria-labels    |
 

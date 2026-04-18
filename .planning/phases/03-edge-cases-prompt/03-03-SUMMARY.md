@@ -6,7 +6,8 @@ tags: [openai, prompt-engineering, dominant-hand, accessories]
 dependency_graph:
   requires: []
   provides: [PROMPT-01, PROMPT-02]
-  affects: [src/server/lib/openai.ts, src/app/api/reading/capture/route.ts, src/lib/reading-client.ts]
+  affects:
+    [src/server/lib/openai.ts, src/app/api/reading/capture/route.ts, src/lib/reading-client.ts]
 tech_stack:
   added: []
   patterns: [dynamic-user-turn-context, zod-default-retrocompat]
@@ -33,10 +34,10 @@ GPT-4o analyzeHand now receives dominant hand context and instructs the model to
 
 ## Tasks Completed
 
-| # | Name | Commit | Files |
-|---|------|--------|-------|
-| 1 | Atualizar analyzeHand e PROMPT em openai.ts | 459974a | src/server/lib/openai.ts |
-| 2 | Atualizar rota de captura e adapter front-end | 5fbfc6f | src/app/api/reading/capture/route.ts, src/lib/reading-client.ts, src/server/lib/__tests__/openai.test.ts |
+| #   | Name                                          | Commit  | Files                                                                                                    |
+| --- | --------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| 1   | Atualizar analyzeHand e PROMPT em openai.ts   | 459974a | src/server/lib/openai.ts                                                                                 |
+| 2   | Atualizar rota de captura e adapter front-end | 5fbfc6f | src/app/api/reading/capture/route.ts, src/lib/reading-client.ts, src/server/lib/**tests**/openai.test.ts |
 
 ## What Was Built
 
@@ -60,10 +61,11 @@ The capture API route's Zod schema now accepts `dominant_hand: "right" | "left"`
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Updated test assertions for 3-item content array**
+
 - **Found during:** Task 2
 - **Issue:** Test `AI-01: content array has text before image_url` asserted `userContent[1].type === "image_url"` but the content array now has 3 items (dominanceContext text, "Analise esta palma." text, image_url).
 - **Fix:** Updated assertion to check `userContent[2].type === "image_url"` and added assertion for `userContent[1].type === "text"`.
-- **Files modified:** src/server/lib/__tests__/openai.test.ts
+- **Files modified:** src/server/lib/**tests**/openai.test.ts
 - **Commit:** 5fbfc6f
 
 ### Out-of-Scope Issues (Deferred)
@@ -79,7 +81,7 @@ None. `dominant_hand` flows through the full stack: client adapter -> route -> a
 - [x] src/server/lib/openai.ts modified — analyzeHand signature updated
 - [x] src/app/api/reading/capture/route.ts modified — schema + call updated
 - [x] src/lib/reading-client.ts modified — captureReading type updated
-- [x] src/server/lib/__tests__/openai.test.ts modified — all calls pass "right" as second arg
+- [x] src/server/lib/**tests**/openai.test.ts modified — all calls pass "right" as second arg
 - [x] Commits 459974a and 5fbfc6f exist
 - [x] No TypeScript errors in modified files
 - [x] No ESLint errors in modified files

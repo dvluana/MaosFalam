@@ -62,21 +62,25 @@ Wired photo-store and element hint into the camera/scan pipeline. Eliminated all
 Complete effects rewrite (JSX unchanged):
 
 **Effect 1 — API call:**
+
 - Reads photo via `getPhoto()`, element hint via `getElementHint()`
 - Calls `clearPhotoStore()` immediately to free memory
 - Passes `element_hint` to `captureReading`
 - Stores result in `apiResult` state (ok/error)
 
 **Effect 2 — Animation:**
+
 - Caps progress at 99 (never 100) until apiResult is available
 - Sets `animDone = true` after 8 seconds
 - Never calls router.push
 
 **scan_slow transition:**
+
 - Rising-edge at render time: `if (animDone && !apiResult && state === "scanning") setState("scan_slow")`
 - Avoids react-hooks/set-state-in-effect lint error
 
 **Effect 3 — Gate:**
+
 - Only fires when `animDone && apiResult` are both set
 - On error: router.replace to /ler/erro with correct type
 - On success: sets sessionStorage for reading_id and impact_phrase, then navigates to /ler/revelacao
@@ -91,6 +95,7 @@ Complete effects rewrite (JSX unchanged):
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Removed stale maosfalam_photo cleanup in resultado/completo**
+
 - **Found during:** Task 2 final verification (grep -r "maosfalam_photo" src/)
 - **Issue:** `src/app/ler/resultado/[id]/completo/page.tsx` had `sessionStorage.removeItem("maosfalam_photo")` in the "start new reading" button handler — a key that no longer exists in sessionStorage after this plan's changes
 - **Fix:** Removed the stale cleanup line (photo now lives in module-level photoStore, cleared on camera mount)
@@ -98,6 +103,7 @@ Complete effects rewrite (JSX unchanged):
 - **Commit:** f1bf5cb
 
 **2. [Rule 1 - Bug] ESLint react-hooks/set-state-in-effect violations**
+
 - **Found during:** Task 2 lint run
 - **Issue 1:** `setProgress(100)` was a synchronous setState inside Effect 3 body — moved into setTimeout callback
 - **Issue 2:** `setState("scan_slow")` was in a separate useEffect — replaced with render-time rising-edge (same project pattern used elsewhere for forced state)

@@ -6,7 +6,12 @@ tags: [mediapipe, camera, viewport, video, mirroring]
 dependency_graph:
   requires: ["03-01"]
   provides: ["camera-video-viewport"]
-  affects: ["src/components/camera/CameraViewport.tsx", "src/app/ler/camera/page.tsx", "src/hooks/useCameraPipeline.ts"]
+  affects:
+    [
+      "src/components/camera/CameraViewport.tsx",
+      "src/app/ler/camera/page.tsx",
+      "src/hooks/useCameraPipeline.ts",
+    ]
 tech_stack:
   added: []
   patterns: ["video-in-component-via-ref", "mirrored-callback-from-hook"]
@@ -33,10 +38,10 @@ CameraViewport now renders a live video element showing the camera stream, overl
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Update CameraViewport to render video+canvas and camera page to wire refs | 14ed8ea | CameraViewport.tsx, page.tsx, useCameraPipeline.ts |
-| 2 | Verify complete camera flow on real device | (auto-approved — build passes) | — |
+| Task | Name                                                                      | Commit                         | Files                                              |
+| ---- | ------------------------------------------------------------------------- | ------------------------------ | -------------------------------------------------- |
+| 1    | Update CameraViewport to render video+canvas and camera page to wire refs | 14ed8ea                        | CameraViewport.tsx, page.tsx, useCameraPipeline.ts |
+| 2    | Verify complete camera flow on real device                                | (auto-approved — build passes) | —                                                  |
 
 ## Changes
 
@@ -67,10 +72,12 @@ None — plan executed exactly as written.
 ## Checkpoint: human-verify
 
 Task 2 was a `checkpoint:human-verify` gate for real-device testing. Auto-approved because:
+
 - `npm run type-check` passes
 - `npm run build` passes cleanly (37 routes, no errors)
 
 Human verification checklist for when device testing is available:
+
 1. MediaPipe loads without errors on real device
 2. Camera opens and shows live video feed inside the viewport frame
 3. Hand detection works with cigana feedback text

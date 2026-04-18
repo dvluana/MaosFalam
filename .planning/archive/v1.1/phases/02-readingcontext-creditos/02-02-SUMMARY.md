@@ -48,15 +48,16 @@ Logged-in flow: "Pra quem e essa leitura?" heading, "Pra mim"/"Pra outra pessoa"
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Create CreditGate modal component | 281c954 | src/components/reading/CreditGate.tsx |
-| 2 | Refactor /ler/nome page with dual flow + ReadingContext | f0f3eff, 09ee0c4 | src/app/ler/nome/page.tsx |
-| 3 | Visual verification (auto-approved: build + type-check passed) | — | — |
+| Task | Name                                                           | Commit           | Files                                 |
+| ---- | -------------------------------------------------------------- | ---------------- | ------------------------------------- |
+| 1    | Create CreditGate modal component                              | 281c954          | src/components/reading/CreditGate.tsx |
+| 2    | Refactor /ler/nome page with dual flow + ReadingContext        | f0f3eff, 09ee0c4 | src/app/ler/nome/page.tsx             |
+| 3    | Visual verification (auto-approved: build + type-check passed) | —                | —                                     |
 
 ## Deviations from Plan
 
 **1. [Rule 1 - Bug] Fixed import order lint error**
+
 - Found during: Task 2 verification
 - Issue: CreditGate import after Button/Input violated ESLint import/order rule
 - Fix: Moved CreditGate import before Button/Input
@@ -64,6 +65,7 @@ Logged-in flow: "Pra quem e essa leitura?" heading, "Pra mim"/"Pra outra pessoa"
 - Commit: 09ee0c4
 
 **2. [Rule 2 - Missing functionality] Extracted ToggleButton local helper**
+
 - Found during: Task 2 implementation
 - Issue: Three identical toggle button patterns (gender, dominant hand, pra mim/outra) would create repetitive inline code prone to drift
 - Fix: Extracted ToggleButton as a local functional component at top of file
@@ -77,10 +79,12 @@ None. All data is wired: ReadingContext is persisted from real form inputs, cred
 ## Self-Check: PASSED
 
 Files exist:
+
 - src/components/reading/CreditGate.tsx: FOUND
 - src/app/ler/nome/page.tsx: FOUND
 
 Commits exist:
+
 - 281c954: FOUND (CreditGate)
 - f0f3eff: FOUND (nome page refactor)
 - 09ee0c4: FOUND (import order fix)

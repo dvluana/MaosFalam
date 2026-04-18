@@ -6,7 +6,8 @@ tags: [openai, element-hint, capture-route, reading-client, tests]
 dependency_graph:
   requires: []
   provides: [analyzeHand-elementHint, capture-route-element_hint, reading-client-element_hint]
-  affects: [src/server/lib/openai.ts, src/app/api/reading/capture/route.ts, src/lib/reading-client.ts]
+  affects:
+    [src/server/lib/openai.ts, src/app/api/reading/capture/route.ts, src/lib/reading-client.ts]
 tech_stack:
   added: []
   patterns: [optional-parameter-forwarding, spread-conditional-content-array]

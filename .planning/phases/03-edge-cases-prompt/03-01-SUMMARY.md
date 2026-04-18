@@ -35,10 +35,10 @@ HEIC-to-JPEG conversion, EXIF rotation correction, and 1280px compression wired 
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Criar src/lib/normalize-image.ts | 362e317 | src/lib/normalize-image.ts, package.json, package-lock.json |
-| 2 | Integrar normalizeImage em useUploadValidation | a1441b0 | src/hooks/useUploadValidation.ts |
+| Task | Name                                           | Commit  | Files                                                       |
+| ---- | ---------------------------------------------- | ------- | ----------------------------------------------------------- |
+| 1    | Criar src/lib/normalize-image.ts               | 362e317 | src/lib/normalize-image.ts, package.json, package-lock.json |
+| 2    | Integrar normalizeImage em useUploadValidation | a1441b0 | src/hooks/useUploadValidation.ts                            |
 
 ## What Was Built
 

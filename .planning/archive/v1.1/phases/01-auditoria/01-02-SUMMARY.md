@@ -91,6 +91,7 @@ completed: 2026-04-11
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Fixed ElementHero fallbackName prop removed by parallel agent**
+
 - **Found during:** Task 2 verification (type-check)
 - **Issue:** Plan 01-01 (parallel agent) refactored `ElementHero` to use `targetName` instead of `fallbackName`. The `completo/page.tsx` still passed `fallbackName="Marina"` causing TS2554 error
 - **Fix:** Changed `fallbackName="Marina"` to `targetName={data.target_name}` — uses real reading data
@@ -127,5 +128,6 @@ None — `getVariant` now uses real `target_name` data from the backend. The `fa
 - `npm run build` — passes
 
 ---
-*Phase: 01-auditoria*
-*Completed: 2026-04-11*
+
+_Phase: 01-auditoria_
+_Completed: 2026-04-11_

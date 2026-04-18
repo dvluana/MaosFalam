@@ -89,7 +89,7 @@ Each task was committed atomically:
 ## Decisions Made
 
 - **Handedness mapping:** Front camera (mirrored) — MediaPipe Left/Right maps directly to user's hand. Back camera (not mirrored) — labels are flipped. The caller handles this via `mirroredRef`.
-- **isOpen threshold:** Finger spread (THUMB_TIP to PINKY_TIP) > 0.35 * palm height (WRIST to MIDDLE_MCP). Palm height as reference makes the check aspect-ratio-independent.
+- **isOpen threshold:** Finger spread (THUMB_TIP to PINKY_TIP) > 0.35 \* palm height (WRIST to MIDDLE_MCP). Palm height as reference makes the check aspect-ratio-independent.
 - **Stability by timestamps:** Date.now() deltas instead of frame counting — handles variable frame rates on different devices.
 - **captureFrame un-mirrors:** Front camera video appears mirrored on screen; we un-mirror when drawing to canvas so GPT-4o receives natural palm orientation for accurate line detection.
 - **camera_wrong_hand not an error state:** User can simply switch hands — no need to retry the whole flow.
@@ -99,6 +99,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] Added videoRef/canvasRef wiring to camera page**
+
 - **Found during:** Task 2 (type-check after rewriting useCameraPipeline)
 - **Issue:** useCameraPipeline now requires videoRef and canvasRef params, but camera page didn't provide them — TypeScript error TS2345
 - **Fix:** Added `useRef<HTMLVideoElement | null>(null)` and `useRef<HTMLCanvasElement | null>(null)` to camera page, passed both to useCameraPipeline, added hidden `<video>` and `<canvas>` elements (sr-only) to the JSX
@@ -126,5 +127,6 @@ None - no external service configuration required.
 - CameraViewport still shows SVG overlay only — real video feed overlay is a potential visual enhancement but not required for functionality
 
 ---
-*Phase: 03-mediapipe-real*
-*Completed: 2026-04-11*
+
+_Phase: 03-mediapipe-real_
+_Completed: 2026-04-11_

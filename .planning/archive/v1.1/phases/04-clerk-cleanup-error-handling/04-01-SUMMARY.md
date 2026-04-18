@@ -56,6 +56,7 @@ completed: 2026-04-11
 - **Files modified:** 3
 
 ## Accomplishments
+
 - /esqueci-senha and /redefinir-senha now redirect immediately to /login as server components
 - /conta/perfil uses Clerk UserProfile for name and password editing with matching dark/gold theme
 - Logout confirmation block retained with useAuth().logout() and router.push("/")
@@ -69,11 +70,13 @@ Each task was committed atomically:
 2. **Task 2: Replace manual profile forms with Clerk UserProfile** - `4c917ab` (feat)
 
 ## Files Created/Modified
+
 - `src/app/esqueci-senha/page.tsx` - Removed custom form, now a server component that redirects to /login
 - `src/app/redefinir-senha/[token]/page.tsx` - Removed token validation form, redirects to /login
 - `src/app/conta/perfil/page.tsx` - Removed manual name/password forms, uses Clerk UserProfile + logout block
 
 ## Decisions Made
+
 - Clerk handles password recovery entirely via SignIn with hash routing — no reason to maintain custom forgot-password and reset-password pages
 - Logout is not delegated to Clerk because it requires calling useAuth().logout() to clear localStorage and fire the custom auth event
 
@@ -82,15 +85,19 @@ Each task was committed atomically:
 None - plan executed exactly as written.
 
 ## Issues Encountered
+
 None.
 
 ## User Setup Required
+
 None - no external service configuration required.
 
 ## Next Phase Readiness
+
 - CLK-01 through CLK-04 complete
 - Phase 04 plan 02 (error handling) can proceed
 
 ---
-*Phase: 04-clerk-cleanup-error-handling*
-*Completed: 2026-04-11*
+
+_Phase: 04-clerk-cleanup-error-handling_
+_Completed: 2026-04-11_
