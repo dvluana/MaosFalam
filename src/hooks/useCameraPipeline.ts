@@ -5,14 +5,11 @@ import { useEffect, useRef } from "react";
 import {
   captureFrame,
   clearLandmarkCanvas,
-  computeElementHint,
   detectHandedness,
   drawHandLandmarks,
   loadHandLandmarker,
   validateLandmarks,
 } from "@/lib/mediapipe";
-import type { HandElement } from "@/lib/mediapipe";
-import { setElementHint } from "@/lib/photo-store";
 import { loadReadingContext } from "@/lib/reading-context";
 import type { CamState } from "@/types/camera";
 
@@ -36,8 +33,6 @@ const STABLE_TO_CAPTURE_DELAY_MS = 500;
 const JITTER_THRESHOLD = 0.025;
 // Number of consecutive frames that must be still to confirm stability
 const STABLE_FRAMES_REQUIRED = 5;
-// Number of element samples to collect before picking mode
-const ELEMENT_SAMPLES_REQUIRED = 8;
 // Max hand tilt angle (degrees) — above this triggers camera_adjusting
 const MAX_ANGLE_DEG = 45;
 
@@ -95,9 +90,6 @@ export default function useCameraPipeline({
   const landmarkHistoryRef = useRef<
     Array<{ wristX: number; wristY: number; middleX: number; middleY: number }>
   >([]);
-  // Element samples collected across stable frames
-  const elementSamplesRef = useRef<Array<HandElement>>([]);
-
   // Keep stateRef in sync so the rAF callback reads fresh state
   useEffect(() => {
     stateRef.current = state;
@@ -238,32 +230,10 @@ export default function useCameraPipeline({
       return true;
     }
 
-    /**
-     * Returns the most frequently occurring element in the samples array.
-     * Returns undefined if fewer than 3 samples are available.
-     */
-    function elementMode(samples: HandElement[]): HandElement | undefined {
-      if (samples.length < 3) return undefined;
-      const counts: Partial<Record<HandElement, number>> = {};
-      for (const el of samples) {
-        counts[el] = (counts[el] ?? 0) + 1;
-      }
-      let best: HandElement | undefined;
-      let bestCount = 0;
-      for (const [el, count] of Object.entries(counts) as [HandElement, number][]) {
-        if (count > bestCount) {
-          bestCount = count;
-          best = el;
-        }
-      }
-      return best;
-    }
-
-    /** Resets all stability and sampling buffers. */
+    /** Resets all stability and jitter buffers. */
     function resetBuffers() {
       stabilityStartRef.current = null;
       landmarkHistoryRef.current = [];
-      elementSamplesRef.current = [];
     }
 
     function loop() {
@@ -361,21 +331,6 @@ export default function useCameraPipeline({
         history.splice(0, history.length - STABLE_FRAMES_REQUIRED);
       }
 
-      // ---- Element hint sampling from worldLandmarks ----
-      const worldLm = result.worldLandmarks?.[0];
-      if (worldLm && worldLm.length >= 21) {
-        const el = computeElementHint(worldLm);
-        if (el !== undefined) {
-          elementSamplesRef.current.push(el);
-          if (elementSamplesRef.current.length > ELEMENT_SAMPLES_REQUIRED) {
-            elementSamplesRef.current.splice(
-              0,
-              elementSamplesRef.current.length - ELEMENT_SAMPLES_REQUIRED,
-            );
-          }
-        }
-      }
-
       // ---- Jitter check ----
       if (!isHandStill()) {
         // Hand is moving — reset stability timer but keep jitter history accumulating
@@ -420,12 +375,6 @@ export default function useCameraPipeline({
       setTimeout(() => {
         if (capturedRef.current) return;
         capturedRef.current = true;
-
-        // Use mode of collected element samples for authoritative hint
-        const hint = elementMode(elementSamplesRef.current);
-        if (hint !== undefined) {
-          setElementHint(hint);
-        }
 
         const v = videoRef.current;
         const c = canvasRef.current;

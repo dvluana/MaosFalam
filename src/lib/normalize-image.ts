@@ -6,7 +6,7 @@
 // Runs 3 steps in sequence before any validation or upload:
 //   1. HEIC/HEIF → JPEG via heic2any (Edge-01)
 //   2. EXIF rotation correction via createImageBitmap (Edge-02)
-//   3. Resize to max 1280px + JPEG 0.85 compression (Edge-03)
+//   3. Resize to max 2048px + JPEG 0.92 compression (Edge-03)
 // ============================================================
 
 function isHeic(file: File): boolean {
@@ -35,7 +35,7 @@ async function correctExifAndCompress(file: File): Promise<File> {
 
   const bitmap = await createImageBitmap(file);
 
-  const maxWidth = 1280;
+  const maxWidth = 2048;
   let width = bitmap.width;
   let height = bitmap.height;
 
@@ -58,7 +58,7 @@ async function correctExifAndCompress(file: File): Promise<File> {
   ctx.drawImage(bitmap, 0, 0, width, height);
   bitmap.close();
 
-  const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+  const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
   const blob = await (await fetch(dataUrl)).blob();
 
   const outputName = file.name.replace(/\.[^.]+$/, ".jpg");
@@ -69,7 +69,7 @@ async function correctExifAndCompress(file: File): Promise<File> {
  * Normalizes a hand photo before validation and upload:
  * - Converts HEIC/HEIF to JPEG (iPhone photos)
  * - Corrects EXIF rotation via createImageBitmap
- * - Resizes to max 1280px wide at JPEG 0.85 quality
+ * - Resizes to max 2048px wide at JPEG 0.92 quality
  *
  * Returns a new File ready for validation checks.
  */

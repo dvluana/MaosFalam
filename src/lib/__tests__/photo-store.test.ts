@@ -17,25 +17,11 @@ describe("photo-store", () => {
     expect(getPhoto()).toBe("abc123base64==");
   });
 
-  it("getElementHint returns undefined when nothing stored", async () => {
-    const { getElementHint } = await import("@/lib/photo-store");
-    expect(getElementHint()).toBeUndefined();
-  });
-
-  it("setElementHint stores element; getElementHint returns it", async () => {
-    const { setElementHint, getElementHint } = await import("@/lib/photo-store");
-    setElementHint("fire");
-    expect(getElementHint()).toBe("fire");
-  });
-
-  it("clearPhotoStore resets both photo and elementHint to null", async () => {
-    const { setPhoto, setElementHint, clearPhotoStore, getPhoto, getElementHint } =
-      await import("@/lib/photo-store");
+  it("clearPhotoStore resets photo to null", async () => {
+    const { setPhoto, clearPhotoStore, getPhoto } = await import("@/lib/photo-store");
     setPhoto("some-photo-data");
-    setElementHint("water");
     clearPhotoStore();
     expect(getPhoto()).toBe("");
-    expect(getElementHint()).toBeUndefined();
   });
 
   it("after clearPhotoStore, getPhoto returns empty string", async () => {

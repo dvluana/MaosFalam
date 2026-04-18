@@ -1,8 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 
-import { computeElementHint, detectHandedness, validateLandmarks } from "@/lib/mediapipe";
+import { detectHandedness, validateLandmarks } from "@/lib/mediapipe";
 import { normalizeImage } from "@/lib/normalize-image";
-import { setElementHint } from "@/lib/photo-store";
 
 import type { Category, NormalizedLandmark } from "@mediapipe/tasks-vision";
 
@@ -218,8 +217,6 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
       let landmarks: NormalizedLandmark[] = [];
       let handednessCategories: Category[] = [];
       let mediapipeLoaded = false;
-      // worldLandmarks from the detection result (3D real-world coords in meters)
-      let worldLm: Array<{ x: number; y: number; z: number }> = [];
 
       try {
         // Dynamic import to avoid SSR issues
@@ -249,8 +246,6 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
         const detection = landmarker.detect(imgEl);
         landmarks = detection.landmarks[0] ?? [];
         handednessCategories = detection.handedness[0] ?? [];
-        // Extract worldLandmarks for element hint + they're aspect-ratio-independent (meters)
-        worldLm = detection.worldLandmarks?.[0] ?? [];
         mediapipeLoaded = true;
 
         landmarker.close();
@@ -369,15 +364,6 @@ export function useUploadValidation(dominantHand: "right" | "left"): {
           error: "A mao ta muito inclinada. Tente uma foto mais reta.",
         }));
         return;
-      }
-
-      // Compute element hint from worldLandmarks (3D, aspect-ratio-independent)
-      // Used by the server to skip element classification in GPT-4o
-      if (worldLm.length >= 21) {
-        const elementHint = computeElementHint(worldLm);
-        if (elementHint !== undefined) {
-          setElementHint(elementHint);
-        }
       }
 
       setResult((prev) => ({
