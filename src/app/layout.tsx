@@ -6,15 +6,29 @@ import {
   Cormorant_Garamond,
   JetBrains_Mono,
   Raleway,
+  DM_Sans,
+  Lora,
+  Outfit,
+  Playfair_Display,
+  Fraunces,
 } from "next/font/google";
 import Script from "next/script";
 
 import ComingSoon from "@/components/ComingSoon";
 import { OfflineDetector, SiteHeader, ToastProvider } from "@/components/ui";
+import { cn } from "@/lib/utils";
 
 import type { Metadata } from "next";
 
 import "./globals.css";
+
+const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" });
+
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
+
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 
 const ENV_LABEL = process.env.NEXT_PUBLIC_ENV_LABEL;
 const COMING_SOON = process.env.NEXT_PUBLIC_COMING_SOON === "true";
@@ -111,16 +125,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         },
       }}
     >
-      <html lang="pt-BR">
+      <html lang="pt-BR" className={cn("font-sans", dmSans.variable, loraHeading.variable)}>
         <head>
           <meta name="theme-color" content="#08050E" />
         </head>
         <body
-          className={`${cinzel.variable} ${cormorant.variable} ${raleway.variable} ${jetbrains.variable} ${cinzelDecorative.variable} font-raleway antialiased`}
+          className={`${cinzel.variable} ${cormorant.variable} ${raleway.variable} ${jetbrains.variable} ${cinzelDecorative.variable} ${outfit.variable} ${playfair.variable} ${fraunces.variable} font-raleway antialiased`}
         >
           <svg
             aria-hidden="true"
-            className="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-[0.025] mix-blend-overlay"
+            className="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-[0.06] mix-blend-overlay"
           >
             <filter id="grain">
               <feTurbulence
