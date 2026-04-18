@@ -5,17 +5,15 @@ import { useEffect, useRef } from "react";
 import {
   captureFrame,
   clearLandmarkCanvas,
-  computeElementHint,
   detectHandedness,
   drawHandLandmarks,
   loadHandLandmarker,
   validateLandmarks,
 } from "@/lib/mediapipe";
-import { setElementHint } from "@/lib/photo-store";
 import { loadReadingContext } from "@/lib/reading-context";
 import type { CamState } from "@/types/camera";
 
-import type { HandLandmarker, NormalizedLandmark } from "@mediapipe/tasks-vision";
+import type { HandLandmarker } from "@mediapipe/tasks-vision";
 import type React from "react";
 
 // States where the detection rAF loop should run
@@ -31,6 +29,11 @@ const DETECTION_STATES: ReadonlySet<CamState> = new Set([
 const STABILITY_MS = 1500;
 // Delay after entering camera_stable before capturing (ms)
 const STABLE_TO_CAPTURE_DELAY_MS = 500;
+// Maximum tilt angle (degrees) before rejecting frame
+const MAX_ANGLE_DEG = 25;
+// Number of consecutive valid-angle frames required before angle is considered stable.
+// Prevents single-frame spikes above 25 deg from resetting the stability timer.
+const ANGLE_HYSTERESIS_FRAMES = 3;
 
 interface Params {
   state: CamState;
@@ -81,7 +84,8 @@ export default function useCameraPipeline({
   const stabilityStartRef = useRef<number | null>(null);
   const capturedRef = useRef<boolean>(false);
   const stateRef = useRef<CamState>(state);
-  const lastLandmarksRef = useRef<NormalizedLandmark[] | null>(null);
+  // Tracks consecutive frames where angle < MAX_ANGLE_DEG (hysteresis buffer)
+  const angleConsecutiveRef = useRef<number>(0);
 
   // Keep stateRef in sync so the rAF callback reads fresh state
   useEffect(() => {
@@ -230,6 +234,7 @@ export default function useCameraPipeline({
       if (!hasHand) {
         // No hand visible — reset to no_hand and clear stability
         stabilityStartRef.current = null;
+        angleConsecutiveRef.current = 0;
         if (currentState !== "camera_active_no_hand") {
           setState("camera_active_no_hand");
         }
@@ -243,12 +248,20 @@ export default function useCameraPipeline({
       // Back camera (mirrored=false): labels are inverted — MediaPipe "Left" = user's right hand.
       // (Upload/photo path inverts separately — see useUploadValidation.)
       const rawHandedness = detectHandedness(result.handednesses[0]);
-      // Handedness inversion temporarily disabled for debugging
-      const userHandedness: "left" | "right" = rawHandedness === "Left" ? "left" : "right";
+      // Back camera (mirrored=false): MediaPipe labels are inverted relative to user's hand.
+      // Front camera (mirrored=true): labels map directly.
+      const userHandedness: "left" | "right" = mirroredRef.current
+        ? rawHandedness === "Left"
+          ? "left"
+          : "right"
+        : rawHandedness === "Left"
+          ? "right"
+          : "left";
 
       const expectedHand = dominantHandRef.current;
       if (userHandedness !== expectedHand) {
         stabilityStartRef.current = null;
+        angleConsecutiveRef.current = 0;
         if (currentState !== "camera_wrong_hand") {
           setState("camera_wrong_hand");
         }
@@ -257,7 +270,7 @@ export default function useCameraPipeline({
       }
 
       // ---- Landmark validation ----
-      const { isOpen, isCentered } = validateLandmarks(
+      const { isOpen, isCentered, angleDeg } = validateLandmarks(
         result.landmarks[0],
         vid.videoWidth,
         vid.videoHeight,
@@ -265,6 +278,34 @@ export default function useCameraPipeline({
 
       if (!isOpen || !isCentered) {
         stabilityStartRef.current = null;
+        angleConsecutiveRef.current = 0;
+        if (currentState !== "camera_adjusting") {
+          setState("camera_adjusting");
+        }
+        rafIdRef.current = requestAnimationFrame(loop);
+        return;
+      }
+
+      // ---- Angle check with hysteresis ----
+      // A single frame above MAX_ANGLE_DEG resets the counter but does NOT
+      // immediately reset stability. Only N consecutive valid frames allow stability to
+      // accumulate. A single spike above threshold resets the counter but not the timer.
+      if (angleDeg > MAX_ANGLE_DEG) {
+        angleConsecutiveRef.current = 0;
+        if (currentState !== "camera_adjusting") {
+          setState("camera_adjusting");
+        }
+        rafIdRef.current = requestAnimationFrame(loop);
+        return;
+      } else {
+        angleConsecutiveRef.current = Math.min(
+          angleConsecutiveRef.current + 1,
+          ANGLE_HYSTERESIS_FRAMES,
+        );
+      }
+
+      // Angle not yet stable enough (not enough consecutive valid frames)
+      if (angleConsecutiveRef.current < ANGLE_HYSTERESIS_FRAMES) {
         if (currentState !== "camera_adjusting") {
           setState("camera_adjusting");
         }
@@ -274,8 +315,6 @@ export default function useCameraPipeline({
 
       // ---- Stability accumulation ----
       const now = Date.now();
-      // Valid frame — keep track of landmarks for element hint computation
-      lastLandmarksRef.current = result.landmarks[0];
 
       if (stabilityStartRef.current === null) {
         stabilityStartRef.current = now;
@@ -307,14 +346,6 @@ export default function useCameraPipeline({
       setTimeout(() => {
         if (capturedRef.current) return;
         capturedRef.current = true;
-
-        // Compute and store element hint from last valid landmarks
-        if (lastLandmarksRef.current) {
-          const hint = computeElementHint(lastLandmarksRef.current);
-          if (hint) {
-            setElementHint(hint);
-          }
-        }
 
         const v = videoRef.current;
         const c = canvasRef.current;
