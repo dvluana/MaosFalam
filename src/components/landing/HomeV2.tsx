@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Check, Star, User, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import Menu from "@/components/landing/Menu";
 import { Badge } from "@/components/shadcn/badge";
@@ -80,12 +80,19 @@ function getSecsUntilMidnight() {
   return Math.floor((end.getTime() - now.getTime()) / 1000);
 }
 
+function useCountdown() {
+  return useSyncExternalStore(
+    (cb) => {
+      const t = setInterval(cb, 1000);
+      return () => clearInterval(t);
+    },
+    getSecsUntilMidnight,
+    () => 0,
+  );
+}
+
 function CountdownTimer() {
-  const [secs, setSecs] = useState(getSecsUntilMidnight);
-  useEffect(() => {
-    const t = setInterval(() => setSecs((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(t);
-  }, []);
+  const secs = useCountdown();
   const pad = (n: number) => String(n).padStart(2, "0");
   const h = Math.floor(secs / 3600);
   const m = Math.floor((secs % 3600) / 60);
