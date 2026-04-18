@@ -146,6 +146,6 @@ Phase 16 → 17 (parallel com 18) → 18 → 19
 | 14. Email & Hardening             | v2        | 1/1            | Complete    | 2026-04-14 |
 | 15. Bug Fixes                     | v2        | 1/1            | Complete    | 2026-04-14 |
 | 16. GPT-4o Schema e Image Quality | v1.4      | 1/2            | In Progress |            |
-| 17. MediaPipe Validation Refactor | v1.4      | 0/1            | Not started | -          |
+| 17. MediaPipe Validation Refactor | v1.4      | 0/1            | Planned     |            |
 | 18. Block Engine e Conteudo Misto | v1.4      | 0/TBD          | Not started | -          |
 | 19. Frontend Mao Mista            | v1.4      | 0/TBD          | Not started | -          |

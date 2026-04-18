@@ -16,17 +16,17 @@
 
 ### MediaPipe Validation
 
-- [ ] **MEDIA-01**: computeElementHint removida completamente (e todas as refs)
-- [ ] **MEDIA-02**: Handedness inversion restaurada pra camera traseira
-- [ ] **MEDIA-03**: Angulo < 25 graus com hysteresis (buffer N=3 frames)
-- [ ] **MEDIA-04**: Jitter detection (5 frames, threshold 2.5%)
-- [ ] **MEDIA-05**: Countdown visual durante estabilidade
+- [x] **MEDIA-01**: computeElementHint removida completamente (e todas as refs)
+- [x] **MEDIA-02**: Handedness inversion restaurada pra camera traseira
+- [x] **MEDIA-03**: Angulo < 25 graus com hysteresis (buffer N=3 frames)
+- [x] **MEDIA-04**: Jitter detection (5 frames, threshold 2.5%)
+- [x] **MEDIA-05**: Countdown visual durante estabilidade
 
 ### Image Quality
 
-- [ ] **IMG-01**: JPEG quality 0.92 no captureFrame
-- [ ] **IMG-02**: Max dimension 2048px no normalizeImage
-- [ ] **IMG-03**: Body limit 4MB na capture route
+- [x] **IMG-01**: JPEG quality 0.92 no captureFrame
+- [x] **IMG-02**: Max dimension 2048px no normalizeImage
+- [x] **IMG-03**: Body limit 4MB na capture route
 
 ### Mixed Hands
 
@@ -64,14 +64,14 @@
 | ELEM-04  | Phase 16 | Complete |
 | ELEM-05  | Phase 16 | Complete |
 | ELEM-06  | Phase 16 | Complete |
-| IMG-01   | Phase 16 | Pending  |
-| IMG-02   | Phase 16 | Pending  |
-| IMG-03   | Phase 16 | Pending  |
-| MEDIA-01 | Phase 17 | Pending  |
-| MEDIA-02 | Phase 17 | Pending  |
-| MEDIA-03 | Phase 17 | Pending  |
-| MEDIA-04 | Phase 17 | Pending  |
-| MEDIA-05 | Phase 17 | Pending  |
+| IMG-01   | Phase 16 | Complete |
+| IMG-02   | Phase 16 | Complete |
+| IMG-03   | Phase 16 | Complete |
+| MEDIA-01 | Phase 17 | Complete |
+| MEDIA-02 | Phase 17 | Complete |
+| MEDIA-03 | Phase 17 | Complete |
+| MEDIA-04 | Phase 17 | Complete |
+| MEDIA-05 | Phase 17 | Complete |
 | MIX-01   | Phase 18 | Pending  |
 | MIX-02   | Phase 18 | Pending  |
 | MIX-03   | Phase 18 | Pending  |
