@@ -4,11 +4,21 @@ Claude: leia este arquivo no inicio de cada sessao. Quando completar uma tarefa,
 
 ## AGORA
 
-### Testar no staging (manual)
+### Testar v1.4 no staging (manual)
+
+- [ ] Elemento: fazer leitura, verificar que retorna Type A/B/C/D (nao palm_proportions)
+- [ ] Consistencia: mesma foto 2x deve dar mesmo elemento
+- [ ] Mao mista: verificar "Com tracos de [secundario]" no ElementHero quando secondary existe
+- [ ] Bridge text: verificar frase de bridge na ElementSection apos body do primario
+- [ ] Camera: mao inclinada > 25 graus mostra "Ajuste a posicao da mao"
+- [ ] Camera: mao parada por 1.5s mostra countdown e captura
+- [ ] Handedness: camera traseira + mao direita deve aceitar (handedness inversion fix)
+- [ ] Leitura antiga: abrir leitura anterior (sem secondary) deve renderizar sem erro
+- [ ] Apos validar: subir develop pra main
+
+### Testar bugs anteriores no staging (manual)
 
 - [ ] Bug 2: logar com conta sem creditos, ir em /ler/nome, verificar bifurcacao "Leitura free" / "Comprar creditos"
-- [ ] Item 3A: fazer leitura completa, verificar que revelacao mostra segunda linha sobre elemento antes de "Continuar"
-- [ ] Item 3C: no resultado, verificar que ELEMENT_INTRO conecta formato da mao ao elemento (ex: "Palma quadrada. Dedos curtos. Mao de Fogo...")
 - [ ] Apos validar: subir develop pra main
 
 ### Clerk Dashboard (manual)
