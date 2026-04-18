@@ -118,7 +118,11 @@ Plans:
 3. ELEMENT_EXCLUSIVITY_MIXED tem 12 strings e todas passam o checklist de brand-voice (zero palavras proibidas)
 4. ReportJSON.element.secondary_key e element.bridge sao opcionais e absent em leituras sem mao mista
 5. Unit test falha se secondary_element modificar a variacao textual dos blocos primarios
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 18-01-PLAN.md — Fix seed hash + types + ELEMENT_BRIDGE/EXCLUSIVITY_MIXED + bridge injection
 
 ### Phase 19: Frontend Mao Mista
 
