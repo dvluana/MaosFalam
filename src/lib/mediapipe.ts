@@ -118,7 +118,7 @@ export function captureFrame(
   video: HTMLVideoElement,
   canvas: HTMLCanvasElement,
   mirrored: boolean,
-  quality = 0.82,
+  quality = 0.92,
 ): string {
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";

@@ -112,7 +112,6 @@ export async function POST(req: NextRequest) {
       reading_id: reading.id,
       report,
       tier,
-      attributes, // GPT-4o attributes with primary_type, element, etc. — for debug/testing
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
