@@ -7,7 +7,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Eyebrow from "@/components/ui/Eyebrow";
 import PageLoading from "@/components/ui/PageLoading";
 import ProgressBar from "@/components/ui/ProgressBar";
-import { clearPhotoStore, getElementHint, getPhoto } from "@/lib/photo-store";
+import { clearPhotoStore, getPhoto } from "@/lib/photo-store";
 import { captureReading } from "@/lib/reading-client";
 import { loadReadingContext } from "@/lib/reading-context";
 import { STORAGE_KEYS } from "@/lib/storage-keys";
@@ -50,7 +50,6 @@ function ScanInner() {
     didCapture.current = true;
 
     const photo = getPhoto();
-    const elementHint = getElementHint();
     clearPhotoStore(); // free memory immediately
 
     const leadId = sessionStorage.getItem(STORAGE_KEYS.lead_id) ?? undefined;
@@ -73,7 +72,6 @@ function ScanInner() {
       target_gender: targetGender,
       is_self: isSelf,
       dominant_hand: dominantHand,
-      element_hint: elementHint,
     })
       .then(({ reading_id, report, tier }) => {
         sessionStorage.setItem(STORAGE_KEYS.reading_tier, tier ?? "free");

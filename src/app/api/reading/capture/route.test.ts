@@ -130,7 +130,6 @@ const validBody = {
   target_name: "Ana",
   target_gender: "female",
   is_self: true,
-  element_hint: "fire" as const,
 };
 
 describe("POST /api/reading/capture", () => {
@@ -204,15 +203,9 @@ describe("POST /api/reading/capture", () => {
     expect(res.status).toBe(500);
   });
 
-  it("passes element_hint to analyzeHand when present", async () => {
+  it("analyzeHand is called with photo_base64 and dominant_hand only", async () => {
     await POST(makeRequest(validBody));
-    expect(analyzeHand).toHaveBeenCalledWith(validBody.photo_base64, "right", "fire");
-  });
-
-  it("passes undefined element_hint when not in body", async () => {
-    const { element_hint: _, ...bodyWithout } = validBody;
-    await POST(makeRequest(bodyWithout));
-    expect(analyzeHand).toHaveBeenCalledWith(validBody.photo_base64, "right", undefined);
+    expect(analyzeHand).toHaveBeenCalledWith(validBody.photo_base64, "right");
   });
 
   // New atomic debit tests

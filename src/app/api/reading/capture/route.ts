@@ -23,7 +23,6 @@ const schema = z.object({
   target_gender: z.enum(["female", "male"]),
   is_self: z.boolean(),
   dominant_hand: z.enum(["right", "left"]).default("right"),
-  element_hint: z.enum(["fire", "water", "earth", "air"]).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -35,33 +34,20 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    // Limits request body to 2MB — base64 JPEG at 1024px is ~150KB, so 2MB gives headroom
+    // Limits request body to 4MB — JPEG 0.92 at 2048px is ~1-2MB, 4MB gives headroom
     const bodyStr = JSON.stringify(body);
-    if (bodyStr.length > 2 * 1024 * 1024) {
+    if (bodyStr.length > 4 * 1024 * 1024) {
       return NextResponse.json({ error: "Imagem muito grande" }, { status: 413 });
     }
 
     const data = schema.parse(body);
 
     // 1. Analyze with GPT-4o
-    const attributes = await analyzeHand(data.photo_base64, data.dominant_hand, data.element_hint);
-
-    // MediaPipe element is authoritative for camera path (deterministic geometric ratios).
-    // Upload path has no MediaPipe — GPT-4o remains the fallback.
-    const finalAttributes = data.element_hint
-      ? { ...attributes, element: data.element_hint }
-      : attributes;
-
-    if (data.element_hint) {
-      logger.info(
-        { gptElement: attributes.element, mediapiElement: data.element_hint },
-        "Element overridden by MediaPipe",
-      );
-    }
+    const attributes = await analyzeHand(data.photo_base64, data.dominant_hand);
 
     // 2. Check confidence
-    if (finalAttributes.confidence < 0.3) {
-      logger.info({ confidence: finalAttributes.confidence }, "Low confidence, rejecting");
+    if (attributes.confidence < 0.3) {
+      logger.info({ confidence: attributes.confidence }, "Low confidence, rejecting");
       return NextResponse.json(
         {
           error: "Suas linhas estao timidas hoje. Tente de novo com mais luz.",
@@ -72,7 +58,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Select blocks
-    const report = selectBlocks(finalAttributes, data.target_name, data.target_gender);
+    const report = selectBlocks(attributes, data.target_name, data.target_gender);
 
     // 4. Determine tier server-side via atomic credit debit.
     //    The client cannot influence this — credit_used is not in the schema.
@@ -94,19 +80,19 @@ export async function POST(req: NextRequest) {
         targetName: data.target_name,
         targetGender: data.target_gender,
         isSelf: data.is_self,
-        attributes: JSON.parse(JSON.stringify(finalAttributes)),
+        attributes: JSON.parse(JSON.stringify(attributes)),
         report: JSON.parse(JSON.stringify(report)),
         tier,
         clerkUserId: clerkUserId ?? undefined,
-        confidence: finalAttributes.confidence,
+        confidence: attributes.confidence,
       },
     });
 
     logger.info(
       {
         readingId: reading.id,
-        element: finalAttributes.element,
-        confidence: finalAttributes.confidence,
+        element: attributes.element,
+        confidence: attributes.confidence,
       },
       "Reading created",
     );
@@ -126,6 +112,7 @@ export async function POST(req: NextRequest) {
       reading_id: reading.id,
       report,
       tier,
+      attributes, // GPT-4o attributes with primary_type, element, etc. — for debug/testing
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
