@@ -36,10 +36,10 @@
 - [x] **MIX-04**: ELEMENT_EXCLUSIVITY_MIXED com 12 combinacoes
 - [x] **MIX-05**: selectBlocks() inclui bridge quando secondary existe
 - [x] **MIX-06**: Seed hash do selectBlocks exclui secondary_element
-- [ ] **MIX-07**: ElementHero mostra "Com tracos de [secundario]"
-- [ ] **MIX-08**: ElementSection insere bridge text apos body primario
-- [ ] **MIX-09**: HandSummary usa exclusivity mista
-- [ ] **MIX-10**: Leituras antigas sem secondary renderizam normalmente
+- [x] **MIX-07**: ElementHero mostra "Com tracos de [secundario]"
+- [x] **MIX-08**: ElementSection insere bridge text apos body primario
+- [x] **MIX-09**: HandSummary usa exclusivity mista
+- [x] **MIX-10**: Leituras antigas sem secondary renderizam normalmente
 
 ## Future Requirements
 
@@ -78,7 +78,7 @@
 | MIX-04   | Phase 18 | Complete |
 | MIX-05   | Phase 18 | Complete |
 | MIX-06   | Phase 18 | Complete |
-| MIX-07   | Phase 19 | Pending  |
-| MIX-08   | Phase 19 | Pending  |
-| MIX-09   | Phase 19 | Pending  |
-| MIX-10   | Phase 19 | Pending  |
+| MIX-07   | Phase 19 | Complete |
+| MIX-08   | Phase 19 | Complete |
+| MIX-09   | Phase 19 | Complete |
+| MIX-10   | Phase 19 | Complete |
