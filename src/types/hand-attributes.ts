@@ -40,6 +40,9 @@ export type FateVariation =
   | "late_start"
   | "absent";
 
+export type HandElement = "fire" | "water" | "earth" | "air";
+export type HandType = "A" | "B" | "C" | "D";
+
 export type MountKey = "jupiter" | "saturn" | "apollo" | "mercury" | "mars" | "moon";
 
 export type MountState = "pronounced" | "normal" | "flat";
@@ -53,8 +56,12 @@ export type RareSignKey =
   | "protection_marks";
 
 export interface HandAttributes {
-  element: "fire" | "water" | "earth" | "air";
-  secondary_element?: "fire" | "water" | "earth" | "air"; // ausente quando mao nao e mista
+  element: HandElement;
+  secondary_element?: HandElement;
+
+  type_reasoning: string;
+  primary_type: HandType;
+  secondary_type: HandType | "none";
 
   heart: {
     variation: HeartVariation;

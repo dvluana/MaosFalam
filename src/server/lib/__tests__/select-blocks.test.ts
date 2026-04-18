@@ -15,6 +15,9 @@ import { selectBlocks } from "../select-blocks";
 
 const VALID_ATTRIBUTES: HandAttributes = {
   element: "fire",
+  type_reasoning: "C:4 A:2 B:1 D:1",
+  primary_type: "C",
+  secondary_type: "none",
   heart: { variation: "long_straight", modifiers: [] },
   head: { variation: "medium_curved", modifiers: [] },
   life: { variation: "long_deep" },
